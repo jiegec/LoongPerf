@@ -7,6 +7,7 @@ theme:
 
 nav:
   - Overview: index.md
+  - Table: table.html
   - la664:
       - adc.b: la664/adc.b.md
   - Methodology: methodology.md

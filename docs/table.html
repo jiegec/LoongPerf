@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>loongperf - Instruction table</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #ffffff;
+      --fg: #1b1f24;
+      --muted: #667085;
+      --line: #d0d7de;
+      --head: #f6f8fa;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --pill: #eef2f6;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1500px; margin: 0 auto; padding: 24px 20px 60px; }
+    header { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; }
+    h1 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); }
+    .controls {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: end;
+      padding: 16px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 16px;
+    }
+    .control { display: flex; flex-direction: column; gap: 4px; }
+    .control label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    input, select, button {
+      font: inherit; color: var(--fg); background: var(--bg);
+      border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px;
+    }
+    input[type="search"] { min-width: 280px; }
+    input[type="number"] { width: 110px; }
+    button { cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    .meta { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+    .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+    table { border-collapse: collapse; width: 100%; min-width: 980px; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    th { background: var(--head); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); white-space: nowrap; position: sticky; top: 0; z-index: 2; }
+    th[data-sort] { cursor: pointer; user-select: none; }
+    th[data-sort]:hover { color: var(--accent); }
+    th .arrow { color: var(--accent); }
+    tbody tr.instr:hover { background: var(--accent-soft); }
+    tbody tr.instr { cursor: pointer; }
+    tbody tr.details { display: none; background: var(--head); }
+    tbody tr.details.open { display: table-row; }
+    td.details-cell { padding: 16px; }
+    code, .mono { font-family: var(--mono); font-size: 0.92em; }
+    .pill {
+      display: inline-block; margin: 2px 4px 2px 0; padding: 1px 7px;
+      border-radius: 999px; background: var(--pill); font-family: var(--mono);
+      font-size: 0.82em; white-space: nowrap;
+    }
+    .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .muted { color: var(--muted); }
+    .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+    .details-grid h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .details-grid table { min-width: 0; }
+    .details-grid th, .details-grid td { padding: 5px 7px; font-size: 13px; }
+    .links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
+    .empty { padding: 30px; text-align: center; color: var(--muted); }
+    .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>LoongArch instruction table</h1>
+    <span class="sub">loongperf measurements</span>
+  </header>
+  <p class="sub">Click a row to show latency operand pairs, throughput experiments, and links to the full measurement page and raw JSON.</p>
+
+  <div class="controls">
+    <div class="control">
+      <label for="q">Search</label>
+      <input id="q" type="search" placeholder="instruction, form, operand, assembly ..." autocomplete="off">
+    </div>
+    <div class="control">
+      <label for="uarch">Microarchitecture</label>
+      <select id="uarch"><option value="">All</option></select>
+    </div>
+    <div class="control">
+      <label for="max-lat">Max latency</label>
+      <input id="max-lat" type="number" min="0" step="0.01" placeholder="cycles">
+    </div>
+    <div class="control">
+      <label for="max-cpi">Max CPI</label>
+      <input id="max-cpi" type="number" min="0" step="0.01" placeholder="cycles/insn">
+    </div>
+    <div class="control">
+      <label>&nbsp;</label>
+      <button id="reset" type="button">Reset</button>
+    </div>
+  </div>
+
+  <p class="meta" id="meta">Loading...</p>
+  <div id="error"></div>
+  <div class="table-scroll">
+    <table id="table">
+      <thead>
+        <tr>
+          <th data-sort="uarch">Microarchitecture</th>
+          <th data-sort="name">Instruction</th>
+          <th data-sort="form">Form</th>
+          <th data-sort="minLatency">Latency (cycles)</th>
+          <th data-sort="minCpi">Throughput (CPI)</th>
+          <th data-sort="maxIpc">Throughput (IPC)</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Add one path per JSON file under docs/data/.
+  const DATA_FILES = [
+    "data/la664/adc.b.json",
+  ];
+
+  let rows = [];
+  let sortKey = "name";
+  let sortDir = 1;
+  let openRows = new Set();
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[ch]));
+
+  function fmt(value) {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "number") return Number.isInteger(value) ? String(value) : value.toFixed(2);
+    return String(value);
+  }
+
+  function operandName(doc, index) {
+    const op = (doc.operands || []).find((item) => item.index === index);
+    return op ? op.name : String(index);
+  }
+
+  function operandRef(doc, indices) {
+    const names = indices.map((index) => operandName(doc, index)).join(", ");
+    return names + " (" + indices.join(", ") + ")";
+  }
+
+  function dataPathToParts(path) {
+    const parts = path.split("/");
+    return { uarch: parts[1], name: parts[2].replace(/\.json$/, "") };
+  }
+
+  function flatten(uarch, path, doc) {
+    const latencies = (doc.latencies || []).map((item) => ({
+      from: operandRef(doc, item.from_operands),
+      fromIndices: item.from_operands,
+      to: operandRef(doc, [item.to_operand]),
+      toIndex: item.to_operand,
+      cycles: item.cycles,
+      notes: item.notes || ""
+    }));
+    const throughput = doc.throughput || [];
+    const cpis = throughput.map((item) => item.throughput && item.throughput.cpi).filter((v) => typeof v === "number");
+    const ipcs = throughput.map((item) => item.throughput && item.throughput.ipc).filter((v) => typeof v === "number");
+    const allLatencies = latencies.map((item) => item.cycles).filter((v) => typeof v === "number");
+
+    return {
+      uarch,
+      path,
+      name: doc.instruction.name,
+      form: doc.instruction.form,
+      description: doc.instruction.description,
+      operands: doc.operands || [],
+      latencies,
+      throughput,
+      minLatency: allLatencies.length ? Math.min(...allLatencies) : null,
+      maxLatency: allLatencies.length ? Math.max(...allLatencies) : null,
+      minCpi: cpis.length ? Math.min(...cpis) : null,
+      maxCpi: cpis.length ? Math.max(...cpis) : null,
+      minIpc: ipcs.length ? Math.min(...ipcs) : null,
+      maxIpc: ipcs.length ? Math.max(...ipcs) : null,
+      page: uarch + "/" + doc.instruction.name + "/",
+      raw: path
+    };
+  }
+
+  async function load() {
+    try {
+      const docs = await Promise.all(DATA_FILES.map(async (path) => {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(path + ": HTTP " + response.status);
+        return { path, doc: await response.json() };
+      }));
+      rows = docs.map(({ path, doc }) => {
+        const parts = dataPathToParts(path);
+        return flatten(parts.uarch, path, doc);
+      });
+
+      const uarches = [...new Set(rows.map((row) => row.uarch))].sort();
+      for (const uarch of uarches) {
+        const option = document.createElement("option");
+        option.value = uarch;
+        option.textContent = uarch;
+        $("uarch").appendChild(option);
+      }
+      render();
+    } catch (error) {
+      $("meta").textContent = "Failed to load measurement data.";
+      $("error").innerHTML = '<div class="error">' + esc(error.message) +
+        '<br>Serve the site over HTTP (for example, <code>zensical serve</code>) rather than opening this file directly.</div>';
+    }
+  }
+
+  function matches(row, query, uarch, maxLatency, maxCpi) {
+    if (uarch && row.uarch !== uarch) return false;
+    if (maxLatency !== null && (row.minLatency === null || row.minLatency > maxLatency)) return false;
+    if (maxCpi !== null && (row.minCpi === null || row.minCpi > maxCpi)) return false;
+    if (!query) return true;
+    const haystack = [
+      row.uarch, row.name, row.form, row.description,
+      ...row.operands.map((op) => op.name + " " + op.kind + " " + op.access),
+      ...row.latencies.map((lat) => lat.from + " " + lat.to + " " + lat.cycles),
+      ...row.throughput.map((t) => (t.asm || "") + " " + JSON.stringify(t.throughput || {}))
+    ].join(" ").toLowerCase();
+    return haystack.includes(query.toLowerCase());
+  }
+
+  function sortedRows() {
+    return rows
+      .map((row, index) => ({ row, index }))
+      .sort((a, b) => {
+        const av = a.row[sortKey];
+        const bv = b.row[sortKey];
+        if (av === null || av === undefined) return 1;
+        if (bv === null || bv === undefined) return -1;
+        if (typeof av === "number" && typeof bv === "number") return (av - bv) * sortDir;
+        return String(av).localeCompare(String(bv), undefined, { numeric: true }) * sortDir;
+      });
+  }
+
+  function render() {
+    const query = $("q").value.trim();
+    const uarch = $("uarch").value;
+    const maxLatency = $("max-lat").value === "" ? null : Number($("max-lat").value);
+    const maxCpi = $("max-cpi").value === "" ? null : Number($("max-cpi").value);
+
+    const visible = sortedRows().filter(({ row }) => matches(row, query, uarch, maxLatency, maxCpi));
+    const tbody = $("tbody");
+    tbody.innerHTML = "";
+
+    if (!visible.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">No matching instructions.</td></tr>';
+    }
+
+    for (const { row, index } of visible) {
+      const tr = document.createElement("tr");
+      tr.className = "instr";
+      tr.dataset.index = String(index);
+      tr.innerHTML =
+        "<td>" + esc(row.uarch) + "</td>" +
+        '<td><a href="' + esc(row.page) + '"><code>' + esc(row.name) + "</code></a></td>" +
+        '<td><code>' + esc(row.form) + "</code></td>" +
+        '<td class="num">' + latencyCell(row) + "</td>" +
+        '<td class="num">' + cpiCell(row) + "</td>" +
+        '<td class="num">' + ipcCell(row) + "</td>" +
+        '<td><a href="#" class="toggle">' + (openRows.has(index) ? "Hide" : "Show") + "</a></td>";
+
+      const details = document.createElement("tr");
+      details.className = "details" + (openRows.has(index) ? " open" : "");
+      details.dataset.index = String(index);
+      details.innerHTML = '<td class="details-cell" colspan="7">' + detailsHtml(row) + "</td>";
+      tbody.appendChild(tr);
+      tbody.appendChild(details);
+
+      tr.querySelector(".toggle").addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleRow(index);
+      });
+      tr.addEventListener("click", () => toggleRow(index));
+    }
+
+    $("meta").textContent = visible.length + " of " + rows.length + " instructions";
+    updateHeader();
+    updateUrl();
+  }
+
+  function latencyCell(row) {
+    if (row.minLatency === null) return '<span class="muted">-</span>';
+    if (row.minLatency === row.maxLatency) return fmt(row.minLatency);
+    return fmt(row.minLatency) + " – " + fmt(row.maxLatency);
+  }
+
+  function cpiCell(row) {
+    if (row.minCpi === null) return '<span class="muted">-</span>';
+    if (row.minCpi === row.maxCpi) return fmt(row.minCpi);
+    return fmt(row.minCpi) + " – " + fmt(row.maxCpi);
+  }
+
+  function ipcCell(row) {
+    if (row.maxIpc === null) return '<span class="muted">-</span>';
+    if (row.minIpc === row.maxIpc) return fmt(row.maxIpc);
+    return fmt(row.minIpc) + " – " + fmt(row.maxIpc);
+  }
+
+  function detailsHtml(row) {
+    const latencyRows = row.latencies.map((lat) =>
+      "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + "</td><td class=\"num\">" + fmt(lat.cycles) + "</td></tr>"
+    ).join("");
+    const throughputRows = row.throughput.map((item) => {
+      const t = item.throughput || {};
+      return "<tr><td>" + esc(item.name || "") + "</td><td class=\"num\">" + fmt(t.lanes) +
+        "</td><td class=\"num\">" + fmt(item.result.instructions_retired) +
+        "</td><td class=\"num\">" + fmt(item.result.core_cycles) +
+        "</td><td class=\"num\">" + fmt(t.cpi) + "</td><td class=\"num\">" + fmt(t.ipc) + "</td></tr>";
+    }).join("");
+    const operandRows = row.operands.map((op) =>
+      "<tr><td class=\"num\">" + esc(op.index) + "</td><td><code>" + esc(op.name) + "</code></td><td>" +
+      esc(op.kind) + "</td><td>" + esc(op.access) + "</td></tr>"
+    ).join("");
+
+    return '<div class="details-grid">' +
+      '<div><h3>Operands</h3><table><thead><tr><th>#</th><th>Operand</th><th>Kind</th><th>Access</th></tr></thead><tbody>' +
+      operandRows + "</tbody></table></div>" +
+      '<div><h3>Latency</h3><table><thead><tr><th>From</th><th>To</th><th>Cycles</th></tr></thead><tbody>' +
+      (latencyRows || '<tr><td colspan="3" class="muted">No data</td></tr>') + "</tbody></table></div>" +
+      '<div><h3>Throughput</h3><table><thead><tr><th>Experiment</th><th>Lanes</th><th>Insns</th><th>Cycles</th><th>CPI</th><th>IPC</th></tr></thead><tbody>' +
+      (throughputRows || '<tr><td colspan="6" class="muted">No data</td></tr>') + "</tbody></table></div>" +
+      '</div><div class="links"><a href="' + esc(row.page) + '">Full measurement page</a>' +
+      '<a href="' + esc(row.raw) + '">Raw JSON</a></div>';
+  }
+
+  function toggleRow(index) {
+    if (openRows.has(index)) openRows.delete(index);
+    else openRows.add(index);
+    render();
+  }
+
+  function updateHeader() {
+    document.querySelectorAll("th[data-sort]").forEach((th) => {
+      th.querySelector(".arrow")?.remove();
+      if (th.dataset.sort === sortKey) {
+        const span = document.createElement("span");
+        span.className = "arrow";
+        span.textContent = sortDir > 0 ? " ↑" : " ↓";
+        th.appendChild(span);
+      }
+    });
+  }
+
+  function updateUrl() {
+    const params = new URLSearchParams();
+    if ($("q").value.trim()) params.set("q", $("q").value.trim());
+    if ($("uarch").value) params.set("uarch", $("uarch").value);
+    if ($("max-lat").value) params.set("max_latency", $("max-lat").value);
+    if ($("max-cpi").value) params.set("max_cpi", $("max-cpi").value);
+    const query = params.toString();
+    history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
+  }
+
+  function restoreFromUrl() {
+    const params = new URLSearchParams(location.search);
+    $("q").value = params.get("q") || "";
+    $("max-lat").value = params.get("max_latency") || "";
+    $("max-cpi").value = params.get("max_cpi") || "";
+    return params.get("uarch") || "";
+  }
+
+  document.querySelectorAll("th[data-sort]").forEach((th) => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.sort;
+      if (sortKey === key) sortDir *= -1;
+      else { sortKey = key; sortDir = 1; }
+      render();
+    });
+  });
+
+  ["q", "max-lat", "max-cpi"].forEach((id) => $(id).addEventListener("input", render));
+  $("uarch").addEventListener("change", render);
+  $("reset").addEventListener("click", () => {
+    $("q").value = "";
+    $("uarch").value = "";
+    $("max-lat").value = "";
+    $("max-cpi").value = "";
+    openRows.clear();
+    render();
+  });
+
+  restoreFromUrl();
+  load().then(() => {
+    const fromUrl = new URLSearchParams(location.search).get("uarch");
+    if (fromUrl) { $("uarch").value = fromUrl; render(); }
+  });
+</script>
+</body>
+</html>
