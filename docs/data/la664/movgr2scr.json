@@ -1,0 +1,63 @@
+{
+  "instruction": {
+    "name": "movgr2scr",
+    "form": "movgr2scr scrd, rj",
+    "description": "Copy the value in rj to the scratch register selected by scrd (0-3)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "scrd",
+      "kind": "other",
+      "access": "write",
+      "description": "scratch register number (0-3)"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source GPR"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 10000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "movgr2scr $scr0, $r4; movgr2scr $scr1, $r5; movgr2scr $scr2, $r6; movgr2scr $scr3, $r7; movgr2scr $scr0, $r8; movgr2scr $scr1, $r9; movgr2scr $scr2, $r10; movgr2scr $scr3, $r11",
+      "init": "movgr2scr $scr0, $r0; movgr2scr $scr1, $r0; movgr2scr $scr2, $r0; movgr2scr $scr3, $r0",
+      "machine_code": [
+        "00000880  movgr2scr $scr0, $a0",
+        "000008a1  movgr2scr $scr1, $a1",
+        "000008c2  movgr2scr $scr2, $a2",
+        "000008e3  movgr2scr $scr3, $a3",
+        "00000900  movgr2scr $scr0, $a4",
+        "00000921  movgr2scr $scr1, $a5",
+        "00000942  movgr2scr $scr2, $a6",
+        "00000963  movgr2scr $scr3, $a7"
+      ],
+      "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'movgr2scr $scr0, $r0; movgr2scr $scr1, $r0; movgr2scr $scr2, $r0; movgr2scr $scr3, $r0' --asm 'movgr2scr $scr0, $r4; movgr2scr $scr1, $r5; movgr2scr $scr2, $r6; movgr2scr $scr3, $r7; movgr2scr $scr0, $r8; movgr2scr $scr1, $r9; movgr2scr $scr2, $r10; movgr2scr $scr3, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.01
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 instructions take 8.01 cycles: 1.00 cycle per instruction."
+    }
+  ],
+  "notes": "Individual latency cannot be separated from movscr2gr with the available dependent chain. Round trip: ./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; movgr2scr $scr0, $r0' --asm 'movgr2scr $scr0, $r12; movscr2gr $r12, $scr0' gives 2 instructions and 3.99 cycles for the pair."
+}
