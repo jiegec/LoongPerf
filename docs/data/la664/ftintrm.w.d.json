@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "ftintrm.w.d",
+    "extension": "Base",
+    "form": "ftintrm.w.d fd, fj",
+    "description": "Floating-point to integer conversion."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "ftintrm.w.d $f0, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "011a0800  ftintrm.w.d \t$fa0, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'ftintrm.w.d $f0, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ftintrm.w.d $f0, $f8; ftintrm.w.d $f1, $f9; ftintrm.w.d $f2, $f10; ftintrm.w.d $f3, $f11; ftintrm.w.d $f4, $f12; ftintrm.w.d $f5, $f13; ftintrm.w.d $f6, $f14; ftintrm.w.d $f7, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "011a0900  ftintrm.w.d \t$fa0, $ft0",
+        "011a0921  ftintrm.w.d \t$fa1, $ft1",
+        "011a0942  ftintrm.w.d \t$fa2, $ft2",
+        "011a0963  ftintrm.w.d \t$fa3, $ft3",
+        "011a0984  ftintrm.w.d \t$fa4, $ft4",
+        "011a09a5  ftintrm.w.d \t$fa5, $ft5",
+        "011a09c6  ftintrm.w.d \t$fa6, $ft6",
+        "011a09e7  ftintrm.w.d \t$fa7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'ftintrm.w.d $f0, $f8; ftintrm.w.d $f1, $f9; ftintrm.w.d $f2, $f10; ftintrm.w.d $f3, $f11; ftintrm.w.d $f4, $f12; ftintrm.w.d $f5, $f13; ftintrm.w.d $f6, $f14; ftintrm.w.d $f7, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

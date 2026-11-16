@@ -70,7 +70,7 @@
       ],
       "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
       "cycles_min": 5,
-      "cycles_max": 7
+      "cycles_max": 38
     },
     {
       "from_operands": [
@@ -101,7 +101,7 @@
       ],
       "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
       "cycles_min": 5,
-      "cycles_max": 7
+      "cycles_max": 38
     }
   ],
   "throughput": [
@@ -129,8 +129,8 @@
         "cpi": 3.49875,
         "ipc": 0.28581636298678104,
         "cpi_min": 3.5,
-        "cpi_max": 4.5,
-        "ipc_min": 0.2222,
+        "cpi_max": 20.0,
+        "ipc_min": 0.05,
         "ipc_max": 0.2857
       },
       "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes."
