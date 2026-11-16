@@ -57,6 +57,13 @@ def define_env(env):
         out += [f"**Microarchitecture:** `{uarch}`", ""]
         out += [f"**Form:** `{ins['form']}`", ""]
         out += [ins["description"], ""]
+        m = data["measurement"]
+        out += [
+            "**Measurement defaults:** "
+            f"unroll {m['unroll']}, iters {m['iters']}, warmup {m['warmup']}, "
+            f"reps {m['reps']}, core {m['core']}.",
+            "",
+        ]
 
         out += ["## Operands", ""]
         out += [table(
@@ -137,6 +144,10 @@ def render_experiment(exp: dict, heading: str = "###") -> list[str]:
     out += ["**Instruction sequence:**", "", code_block("asm", exp["asm"]), ""]
     if exp.get("init"):
         out += ["**Init:**", "", code_block("asm", exp["init"]), ""]
+    if exp.get("measurement"):
+        m = exp["measurement"]
+        parts = [f"{k} {v}" for k, v in m.items() if k != "notes"]
+        out += ["**Measurement override:** " + ", ".join(parts), ""]
     if exp.get("chain_instructions"):
         out += [
             "**Chain instructions:**",

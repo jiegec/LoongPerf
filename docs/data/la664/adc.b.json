@@ -55,21 +55,25 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.99,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "rd == rj",
           "asm": "adc.b $r12, $r12, $r13",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
           "machine_code": [
             "0030358c  adc.b $t0, $t0, $t1"
           ],
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r13'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r13'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 1.99
+            "core_cycles": 2.0
           },
-          "notes": "Consecutive copies form a $r12 dependency chain through rj."
+          "notes": "Consecutive copies form a $r12 dependency chain through rj. Measured with a 100000-instruction unrolled chain to remove call-boundary overlap.",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          }
         }
       ]
     },
@@ -78,21 +82,25 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 1.99,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "rd == rk",
           "asm": "adc.b $r12, $r13, $r12",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
           "machine_code": [
             "003031ac  adc.b $t0, $t1, $t0"
           ],
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r12'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r12'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 1.99
+            "core_cycles": 2.0
           },
-          "notes": "Consecutive copies form a $r12 dependency chain through rk."
+          "notes": "Consecutive copies form a $r12 dependency chain through rk. Measured with a 100000-instruction unrolled chain to remove call-boundary overlap.",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          }
         }
       ]
     },
@@ -102,21 +110,25 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 1.99,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "rd == rj == rk",
           "asm": "adc.b $r12, $r12, $r12",
-          "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
           "machine_code": [
             "0030318c  adc.b $t0, $t0, $t0"
           ],
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r12'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r12'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 1.99
+            "core_cycles": 2.0
           },
-          "notes": "Consecutive copies form a $r12 dependency chain through both source operands."
+          "notes": "Consecutive copies form a $r12 dependency chain through both source operands. Measured with a 100000-instruction unrolled chain to remove call-boundary overlap.",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          }
         }
       ]
     },
@@ -200,6 +212,93 @@
         }
       ],
       "notes": "x86mfflag latency F = 5.00 - 4.00 = 1.00. x86mtflag latency M = (x86mtflag + x86mfflag) - F = 4.00 - 1.00 = 3.00. adc.b CF -> rd = (adc.b + x86mtflag) - M = 4.00 - 3.00 = 1.00."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 2,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "rd -> rj through a two-instruction cycle",
+          "role": "measurement",
+          "asm": "adc.b $r12, $r13, $r14; adc.b $r13, $r12, $r15",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "003039ac  adc.b $t0, $t1, $t2",
+            "00303d8d  adc.b $t1, $t0, $t3"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; adc.b $r13, $r12, $r15'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "notes": "The first adc.b writes rd; the second reads it as rj. Two instructions take 4.00 cycles, so the loop-carried latency is 2.00 cycles per instruction."
+        }
+      ],
+      "notes": "Reverse dependency edge: output operand 1 (rd) feeds input operand 2 (rj) of the next instruction."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 3,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "rd -> rk through a two-instruction cycle",
+          "role": "measurement",
+          "asm": "adc.b $r12, $r14, $r13; adc.b $r13, $r14, $r12",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "003035cc  adc.b $t0, $t2, $t1",
+            "003031cd  adc.b $t1, $t2, $t0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r14, $r13; adc.b $r13, $r14, $r12'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "notes": "The first adc.b writes rd; the second reads it as rk. Two instructions take 4.00 cycles, so the loop-carried latency is 2.00 cycles per instruction."
+        }
+      ],
+      "notes": "Reverse dependency edge: output operand 1 (rd) feeds input operand 3 (rk) of the next instruction."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 4,
+      "cycles": 3.0,
+      "experiments": [
+        {
+          "name": "rd -> CF via x86mtflag",
+          "role": "measurement",
+          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "chain_latency": 1.0,
+          "machine_code": [
+            "003039ac  adc.b $t0, $t1, $t2",
+            "005c042c  x86mtflag $t0, 0x1"
+          ],
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "notes": "adc.b does not write CF. x86mtflag moves rd to CF; the adc.b CF -> rd component is 1.00 cycles, so the rd -> CF path is 4.00 - 1.00 = 3.00 cycles."
+        }
+      ],
+      "notes": "Reverse dependency edge: output operand 1 (rd) feeds input operand 4 (CF) through x86mtflag."
     }
   ],
   "throughput": [
@@ -249,5 +348,5 @@
       "notes": "cycles_per_instruction = core_cycles / 8."
     }
   ],
-  "notes": "All latency operand pairs that are currently measurable have been recorded."
+  "notes": "Forward latency pairs are input -> output. Reverse pairs are output -> input dependency edges. adc.b does not write EFLAGS, so 1 -> 4 requires the x86mtflag helper."
 }

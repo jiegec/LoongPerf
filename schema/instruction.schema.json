@@ -276,6 +276,9 @@
         },
         "notes": {
           "type": "string"
+        },
+        "measurement": {
+          "$ref": "#/$defs/measurement_override"
         }
       },
       "additionalProperties": false
@@ -327,6 +330,34 @@
         "ipc": {
           "type": "number",
           "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "measurement_override": {
+      "type": "object",
+      "properties": {
+        "unroll": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "iters": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "warmup": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "core": {
+          "type": "integer"
+        },
+        "notes": {
+          "type": "string"
         }
       },
       "additionalProperties": false
