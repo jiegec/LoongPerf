@@ -1,0 +1,131 @@
+{
+  "instruction": {
+    "name": "fmul.d",
+    "extension": "Base",
+    "form": "fmul.d fd, fj, fk",
+    "description": "Double-precision floating-point multiply."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "fk",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fmul.d $f0, $f0, $f1",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01050400  fmul.d      \t$fa0, $fa0, $fa1"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fmul.d $f0, $f0, $f1'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fmul.d $f0, $f1, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01050020  fmul.d      \t$fa0, $fa1, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fmul.d $f0, $f1, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fmul.d $f0, $f8, $f8; fmul.d $f1, $f9, $f9; fmul.d $f2, $f10, $f10; fmul.d $f3, $f11, $f11; fmul.d $f4, $f12, $f12; fmul.d $f5, $f13, $f13; fmul.d $f6, $f14, $f14; fmul.d $f7, $f15, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "01052100  fmul.d      \t$fa0, $ft0, $ft0",
+        "01052521  fmul.d      \t$fa1, $ft1, $ft1",
+        "01052942  fmul.d      \t$fa2, $ft2, $ft2",
+        "01052d63  fmul.d      \t$fa3, $ft3, $ft3",
+        "01053184  fmul.d      \t$fa4, $ft4, $ft4",
+        "010535a5  fmul.d      \t$fa5, $ft5, $ft5",
+        "010539c6  fmul.d      \t$fa6, $ft6, $ft6",
+        "01053de7  fmul.d      \t$fa7, $ft7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fmul.d $f0, $f8, $f8; fmul.d $f1, $f9, $f9; fmul.d $f2, $f10, $f10; fmul.d $f3, $f11, $f11; fmul.d $f4, $f12, $f12; fmul.d $f5, $f13, $f13; fmul.d $f6, $f14, $f14; fmul.d $f7, $f15, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

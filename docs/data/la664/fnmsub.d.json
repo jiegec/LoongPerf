@@ -1,0 +1,168 @@
+{
+  "instruction": {
+    "name": "fnmsub.d",
+    "extension": "Base",
+    "form": "fnmsub.d fd, fj, fk, fa",
+    "description": "Double-precision negated fused multiply-subtract."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "multiplicand"
+    },
+    {
+      "index": 3,
+      "name": "fk",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "multiplier"
+    },
+    {
+      "index": 4,
+      "name": "fa",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "addend"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fnmsub.d $f0, $f0, $f1, $f2",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "08e10400  fnmsub.d    \t$fa0, $fa0, $fa1, $fa2"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fnmsub.d $f0, $f0, $f1, $f2'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fnmsub.d $f0, $f1, $f0, $f2",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "08e10020  fnmsub.d    \t$fa0, $fa1, $fa0, $fa2"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fnmsub.d $f0, $f1, $f0, $f2'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    },
+    {
+      "from_operands": [
+        4
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fnmsub.d $f0, $f1, $f2, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "08e00820  fnmsub.d    \t$fa0, $fa1, $fa2, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fnmsub.d $f0, $f1, $f2, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fnmsub.d $f0, $f8, $f16, $f24; fnmsub.d $f1, $f9, $f17, $f25; fnmsub.d $f2, $f10, $f18, $f26; fnmsub.d $f3, $f11, $f19, $f27; fnmsub.d $f4, $f12, $f20, $f28; fnmsub.d $f5, $f13, $f21, $f29; fnmsub.d $f6, $f14, $f22, $f30; fnmsub.d $f7, $f15, $f23, $f31",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f16, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f17, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f18, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f19, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f20, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f21, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f22, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f23, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f24, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f25, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f26, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f27, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f28, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f29, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f30, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f31, $r4",
+      "machine_code": [
+        "08ec4100  fnmsub.d    \t$fa0, $ft0, $ft8, $fs0",
+        "08ecc521  fnmsub.d    \t$fa1, $ft1, $ft9, $fs1",
+        "08ed4942  fnmsub.d    \t$fa2, $ft2, $ft10, $fs2",
+        "08edcd63  fnmsub.d    \t$fa3, $ft3, $ft11, $fs3",
+        "08ee5184  fnmsub.d    \t$fa4, $ft4, $ft12, $fs4",
+        "08eed5a5  fnmsub.d    \t$fa5, $ft5, $ft13, $fs5",
+        "08ef59c6  fnmsub.d    \t$fa6, $ft6, $ft14, $fs6",
+        "08efdde7  fnmsub.d    \t$fa7, $ft7, $ft15, $fs7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f16, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f17, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f18, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f19, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f20, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f21, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f22, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f23, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f24, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f25, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f26, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f27, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f28, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f29, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f30, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f31, $r4' --asm 'fnmsub.d $f0, $f8, $f16, $f24; fnmsub.d $f1, $f9, $f17, $f25; fnmsub.d $f2, $f10, $f18, $f26; fnmsub.d $f3, $f11, $f19, $f27; fnmsub.d $f4, $f12, $f20, $f28; fnmsub.d $f5, $f13, $f21, $f29; fnmsub.d $f6, $f14, $f22, $f30; fnmsub.d $f7, $f15, $f23, $f31'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}
