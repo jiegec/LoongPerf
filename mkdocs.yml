@@ -1,0 +1,29 @@
+site_name: loongperf
+site_description: LoongArch instruction-level performance data
+site_url: https://jia.je/loongperf
+
+theme:
+  name: material
+
+nav:
+  - Overview: index.md
+  - la664:
+      - adc.b: la664/adc.b.md
+  - Methodology: methodology.md
+
+plugins:
+  - search
+  - macros:
+      module_name: main
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
