@@ -1,4 +1,4 @@
-# loongperf
+# LoongPerf
 
 LoongArch instruction-level performance data, measured on real hardware.
 
