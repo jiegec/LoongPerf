@@ -39,6 +39,7 @@ struct Options {
   int core = 0;
   bool verbose = false;
   std::string asm_text;
+  std::string init_text;
 };
 
 struct Counts {
@@ -68,6 +69,8 @@ void usage(const char *argv0) {
       << "Options:\n"
       << "  --asm STRING       LoongArch assembly to measure. Separate\n"
       << "                     instructions with ';' or newlines.\n"
+      << "  --init STRING      Assembly to run once before each measurement\n"
+      << "                     (e.g. register/flag setup).\n"
       << "  --unroll N         Unroll factor (default: 100)\n"
       << "  --warmup N         Number of warm-up function calls (default: 10)\n"
       << "  --iters N          Function calls per measurement (default: 10000)\n"
@@ -92,6 +95,8 @@ Options parse_args(int argc, char **argv) {
 
     if (arg == "--asm") {
       opt.asm_text = need_value("--asm");
+    } else if (arg == "--init") {
+      opt.init_text = need_value("--init");
     } else if (arg == "--unroll") {
       opt.unroll = parse_u64("--unroll", need_value("--unroll"));
     } else if (arg == "--warmup") {
@@ -191,6 +196,7 @@ void write_file(const std::string &path, const std::string &contents) {
 }
 
 std::string generate_assembly(const std::vector<std::string> &insns,
+                              const std::vector<std::string> &init_insns,
                               uint64_t unroll) {
   const char *save_regs[] = {"$r1",  "$r22", "$r23", "$r24", "$r25", "$r26",
                              "$r27", "$r28", "$r29", "$r30", "$r31"};
@@ -208,6 +214,8 @@ std::string generate_assembly(const std::vector<std::string> &insns,
     out << "    addi.d $sp, $sp, -" << frame_size << "\n";
     for (int i = 0; i < nregs; ++i)
       out << "    st.d " << save_regs[i] << ", $sp, " << i * 8 << "\n";
+    for (const auto &insn : init_insns)
+      out << "    " << insn << "\n";
     if (with_body) {
       out << "    .rept " << unroll << "\n";
       for (const auto &insn : insns)
@@ -324,6 +332,9 @@ template <typename T> T minimum(T a, T b) { return a < b ? a : b; }
 int main(int argc, char **argv) {
   Options opt = parse_args(argc, argv);
   std::vector<std::string> insns = split_asm(opt.asm_text);
+  std::vector<std::string> init_insns;
+  if (!opt.init_text.empty())
+    init_insns = split_asm(opt.init_text);
 
   bind_to_cpu(opt.core);
 
@@ -332,7 +343,7 @@ int main(int argc, char **argv) {
   const std::string so_path = dir + "/bench.so";
   const std::string log_path = dir + "/build.log";
 
-  write_file(src_path, generate_assembly(insns, opt.unroll));
+  write_file(src_path, generate_assembly(insns, init_insns, opt.unroll));
 
   std::string cmd = "gcc -shared -nostdlib -fPIC -o " + so_path + " " +
                     src_path + " >" + log_path + " 2>&1";
@@ -393,6 +404,8 @@ int main(int argc, char **argv) {
 
   if (opt.verbose) {
     std::cout << "asm: " << opt.asm_text << "\n";
+    if (!opt.init_text.empty())
+      std::cout << "init: " << opt.init_text << "\n";
     std::cout << "instructions per unrolled copy: " << insns.size() << "\n";
     std::cout << "unroll: " << opt.unroll << "\n";
     std::cout << "warmup: " << opt.warmup << "\n";
