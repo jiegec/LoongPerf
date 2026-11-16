@@ -126,16 +126,8 @@
 </div>
 
 <script>
-  // Add one path per JSON file under docs/data/.
-  const DATA_FILES = [
-    "data/la664/adc.b.json",
-    "data/la664/x86mtflag.json",
-    "data/la664/x86mfflag.json",
-    "data/la664/armmtflag.json",
-    "data/la664/armmfflag.json",
-    "data/la664/movgr2scr.json",
-    "data/la664/movscr2gr.json",
-  ];
+  // Generated during the site build by the instruction_index() macro.
+  const AGGREGATE = "data/measurements.json";
 
   let rows = [];
   let sortKey = "name";
@@ -161,11 +153,6 @@
   function operandRef(doc, indices) {
     const names = indices.map((index) => operandName(doc, index)).join(", ");
     return names + " (" + indices.join(", ") + ")";
-  }
-
-  function dataPathToParts(path) {
-    const parts = path.split("/");
-    return { uarch: parts[1], name: parts[2].replace(/\.json$/, "") };
   }
 
   function flatten(uarch, path, doc) {
@@ -204,15 +191,12 @@
 
   async function load() {
     try {
-      const docs = await Promise.all(DATA_FILES.map(async (path) => {
-        const response = await fetch(path);
-        if (!response.ok) throw new Error(path + ": HTTP " + response.status);
-        return { path, doc: await response.json() };
-      }));
-      rows = docs.map(({ path, doc }) => {
-        const parts = dataPathToParts(path);
-        return flatten(parts.uarch, path, doc);
-      });
+      const response = await fetch(AGGREGATE);
+      if (!response.ok) throw new Error(AGGREGATE + ": HTTP " + response.status);
+      const payload = await response.json();
+      rows = payload.instructions.map(({ uarch, source, data }) =>
+        flatten(uarch, source, data)
+      );
 
       const uarches = [...new Set(rows.map((row) => row.uarch))].sort();
       for (const uarch of uarches) {

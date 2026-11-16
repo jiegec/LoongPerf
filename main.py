@@ -7,14 +7,21 @@ import json
 from pathlib import Path
 
 DATA_DIR: Path
+AGGREGATE_PATH: Path
 
 
 def define_env(env):
-    global DATA_DIR
-    DATA_DIR = Path(env.project_dir) / "docs" / "data"
+    global DATA_DIR, AGGREGATE_PATH
+    project_dir = Path(env.project_dir).resolve()
+    DATA_DIR = project_dir / "docs" / "data"
+    site_dir = Path(env.conf.get("site_dir", "site"))
+    if not site_dir.is_absolute():
+        site_dir = project_dir / site_dir
+    AGGREGATE_PATH = site_dir / "data" / "measurements.json"
 
     @env.macro
     def instruction_index() -> str:
+        write_aggregate()
         rows = []
         for path in sorted(DATA_DIR.glob("*/*.json")):
             uarch = path.parent.name
@@ -177,6 +184,23 @@ def render_experiment(exp: dict, heading: str = "###") -> list[str]:
     if exp.get("notes"):
         out += [exp["notes"], ""]
     return out
+
+
+def write_aggregate() -> None:
+    """Write one JSON file containing every measurement for table.html."""
+    entries = []
+    for path in sorted(DATA_DIR.glob("*/*.json")):
+        uarch = path.parent.name
+        entries.append({
+            "uarch": uarch,
+            "source": f"data/{uarch}/{path.name}",
+            "data": json.loads(path.read_text()),
+        })
+    AGGREGATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    AGGREGATE_PATH.write_text(
+        json.dumps({"instructions": entries}, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
 
 
 def operand_ref(data: dict, indices: list[int]) -> str:
