@@ -1,3 +1,7 @@
+---
+hide:
+  - navigation
+---
 # Methodology
 
 Measurements are produced with `./bench`, a small nanoBench-style tool for

@@ -55,6 +55,11 @@ def define_env(env):
         )
 
     @env.macro
+    def generate_aggregate() -> str:
+        write_aggregate()
+        return ""
+
+    @env.macro
     def render_instruction(uarch: str, name: str) -> str:
         path = DATA_DIR / uarch / f"{name}.json"
         data = json.loads(path.read_text())

@@ -1,7 +1,14 @@
+---
+hide:
+  - navigation
+---
 # LoongPerf
 
 LoongArch instruction-level performance data, measured on real hardware.
 
-The table below is generated from the JSON files under `docs/data/`.
+[Open the instruction table](table.html){ .md-button .md-button--primary }
 
-{{ instruction_index() }}
+The table lets you choose microarchitectures and instruction-set extensions,
+then shows latency and throughput side by side.
+
+{{ generate_aggregate() }}
