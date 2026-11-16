@@ -30,11 +30,12 @@ def define_env(env):
             latencies = "; ".join(
                 f"{operand_ref(data, item['from_operands'])} -> "
                 f"{operand_ref(data, [item['to_operand']])}: "
-                f"{fmt(item['cycles'])}"
+                f"{fmt_range(item, 'cycles')}"
                 for item in data.get("latencies", [])
             )
             tput = min(
-                (item["throughput"]["cpi"] for item in data.get("throughput", [])
+                (item["throughput"].get("cpi_min", item["throughput"]["cpi"])
+                 for item in data.get("throughput", [])
                  if "throughput" in item),
                 default=None,
             )
@@ -101,7 +102,7 @@ def define_env(env):
                 [
                     operand_ref(data, item["from_operands"]),
                     operand_ref(data, [item["to_operand"]]),
-                    fmt(item["cycles"]),
+                    fmt_range(item, "cycles"),
                 ]
                 for item in data.get("latencies", [])
             ],
@@ -118,8 +119,8 @@ def define_env(env):
                         str(item.get("throughput", {}).get("lanes", "")),
                         fmt(item["result"]["instructions_retired"]),
                         fmt(item["result"]["core_cycles"]),
-                        fmt(item.get("throughput", {}).get("cpi")),
-                        fmt(item.get("throughput", {}).get("ipc")),
+                        fmt_range(item.get("throughput", {}), "cpi"),
+                        fmt_range(item.get("throughput", {}), "ipc"),
                     ]
                     for item in data["throughput"]
                 ],
@@ -239,6 +240,16 @@ def fmt(value) -> str:
     if isinstance(value, float):
         return f"{value:.2f}"
     return str(value)
+
+
+def fmt_range(obj: dict, key: str) -> str:
+    lo = obj.get(key + "_min", obj.get(key))
+    hi = obj.get(key + "_max", obj.get(key))
+    if lo is None or hi is None:
+        return ""
+    if lo == hi:
+        return fmt(lo)
+    return f"{fmt(lo)} – {fmt(hi)}"
 
 
 def code_block(lang: str, text: str) -> str:

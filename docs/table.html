@@ -143,16 +143,33 @@
     return names + " (" + indices.join(", ") + ")";
   }
 
+  function fmtRange(lo, hi) {
+    if (lo === null || lo === undefined || hi === null || hi === undefined) return "";
+    return lo === hi ? fmt(lo) : fmt(lo) + " – " + fmt(hi);
+  }
+
   function flatten(uarch, source, doc) {
-    const latencies = (doc.latencies || []).map((item) => ({
-      from: operandRef(doc, item.from_operands),
-      to: operandRef(doc, [item.to_operand]),
-      cycles: item.cycles
-    }));
+    const latencies = (doc.latencies || []).map((item) => {
+      const minCycles = item.cycles_min ?? item.cycles;
+      const maxCycles = item.cycles_max ?? item.cycles;
+      return {
+        from: operandRef(doc, item.from_operands),
+        to: operandRef(doc, [item.to_operand]),
+        cycles: item.cycles,
+        minCycles,
+        maxCycles
+      };
+    });
     const throughput = doc.throughput || [];
-    const cpis = throughput.map((item) => item.throughput && item.throughput.cpi).filter((v) => typeof v === "number");
-    const ipcs = throughput.map((item) => item.throughput && item.throughput.ipc).filter((v) => typeof v === "number");
-    const lats = latencies.map((item) => item.cycles).filter((v) => typeof v === "number");
+    const cpiValues = throughput.flatMap((item) => {
+      const t = item.throughput || {};
+      return [t.cpi_min ?? t.cpi, t.cpi_max ?? t.cpi].filter((v) => typeof v === "number");
+    });
+    const ipcValues = throughput.flatMap((item) => {
+      const t = item.throughput || {};
+      return [t.ipc_min ?? t.ipc, t.ipc_max ?? t.ipc].filter((v) => typeof v === "number");
+    });
+    const lats = latencies.flatMap((item) => [item.minCycles, item.maxCycles]).filter((v) => typeof v === "number");
 
     return {
       uarch,
@@ -166,10 +183,10 @@
       throughput,
       minLatency: lats.length ? Math.min(...lats) : null,
       maxLatency: lats.length ? Math.max(...lats) : null,
-      minCpi: cpis.length ? Math.min(...cpis) : null,
-      maxCpi: cpis.length ? Math.max(...cpis) : null,
-      minIpc: ipcs.length ? Math.min(...ipcs) : null,
-      maxIpc: ipcs.length ? Math.max(...ipcs) : null,
+      minCpi: cpiValues.length ? Math.min(...cpiValues) : null,
+      maxCpi: cpiValues.length ? Math.max(...cpiValues) : null,
+      minIpc: ipcValues.length ? Math.min(...ipcValues) : null,
+      maxIpc: ipcValues.length ? Math.max(...ipcValues) : null,
       page: uarch + "/" + doc.instruction.name + "/",
       raw: source
     };
@@ -353,14 +370,17 @@
 
   function detailsHtml(row) {
     const latencyRows = row.latencies.map((lat) =>
-      "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + '</td><td class="num">' + fmt(lat.cycles) + "</td></tr>"
+      "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + '</td><td class="num">' +
+      fmtRange(lat.minCycles, lat.maxCycles) + "</td></tr>"
     ).join("");
     const throughputRows = row.throughput.map((item) => {
       const t = item.throughput || {};
+      const cpi = fmtRange(t.cpi_min ?? t.cpi, t.cpi_max ?? t.cpi);
+      const ipc = fmtRange(t.ipc_min ?? t.ipc, t.ipc_max ?? t.ipc);
       return "<tr><td>" + esc(item.name || "") + '</td><td class="num">' + fmt(t.lanes) +
         '</td><td class="num">' + fmt(item.result.instructions_retired) +
         '</td><td class="num">' + fmt(item.result.core_cycles) +
-        '</td><td class="num">' + fmt(t.cpi) + '</td><td class="num">' + fmt(t.ipc) + "</td></tr>";
+        '</td><td class="num">' + cpi + '</td><td class="num">' + ipc + "</td></tr>";
     }).join("");
     const operandRows = row.operands.map((op) =>
       '<tr><td class="num">' + esc(op.index) + '</td><td><code>' + esc(op.name) + "</code></td><td>" +

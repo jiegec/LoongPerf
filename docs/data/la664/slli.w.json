@@ -1,0 +1,101 @@
+{
+  "instruction": {
+    "name": "slli.w",
+    "extension": "Base",
+    "form": "slli.w rd, rj, imm",
+    "description": "Shift the low 32-bit word left by an immediate."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "slli.w $r12, $r12, 1",
+          "init": "addi.d $r12, $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "0040858c  slli.w      \t$t0, $t0, 0x1"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1' --asm 'slli.w $r12, $r12, 1'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Consecutive unrolled copies form a dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "slli.w $r12, $r4, 1; slli.w $r13, $r5, 1; slli.w $r14, $r6, 1; slli.w $r15, $r7, 1; slli.w $r16, $r8, 1; slli.w $r17, $r9, 1; slli.w $r18, $r10, 1; slli.w $r19, $r11, 1",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
+      "machine_code": [
+        "0040848c  slli.w      \t$t0, $a0, 0x1",
+        "004084ad  slli.w      \t$t1, $a1, 0x1",
+        "004084ce  slli.w      \t$t2, $a2, 0x1",
+        "004084ef  slli.w      \t$t3, $a3, 0x1",
+        "00408510  slli.w      \t$t4, $a4, 0x1",
+        "00408531  slli.w      \t$t5, $a5, 0x1",
+        "00408552  slli.w      \t$t6, $a6, 0x1",
+        "00408573  slli.w      \t$t7, $a7, 0x1"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'slli.w $r12, $r4, 1; slli.w $r13, $r5, 1; slli.w $r14, $r6, 1; slli.w $r15, $r7, 1; slli.w $r16, $r8, 1; slli.w $r17, $r9, 1; slli.w $r18, $r10, 1; slli.w $r19, $r11, 1'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

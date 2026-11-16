@@ -1,0 +1,139 @@
+{
+  "instruction": {
+    "name": "div.w",
+    "extension": "Base",
+    "form": "div.w rd, rj, rk",
+    "description": "div.w operation."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "dividend"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "divisor"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "div.w $r12, $r12, $r13",
+          "init": "addi.d $r12, $r0, 10; addi.d $r13, $r0, 3",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "0020358c  div.w       \t$t0, $t0, $t1"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 10; addi.d $r13, $r0, 3' --asm 'div.w $r12, $r12, $r13'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Consecutive unrolled copies form a dependency chain."
+        }
+      ],
+      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
+      "cycles_min": 5,
+      "cycles_max": 7
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 7.5,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "div.w $r12, $r13, $r12",
+          "init": "addi.d $r12, $r0, 10; addi.d $r13, $r0, 3",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "002031ac  div.w       \t$t0, $t1, $t0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 10; addi.d $r13, $r0, 3' --asm 'div.w $r12, $r13, $r12'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 7.5
+          },
+          "notes": "Consecutive unrolled copies form a dependency chain."
+        }
+      ],
+      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
+      "cycles_min": 7,
+      "cycles_max": 7
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "div.w $r12, $r4, $r20; div.w $r13, $r5, $r21; div.w $r14, $r6, $r23; div.w $r15, $r7, $r24; div.w $r16, $r8, $r25; div.w $r17, $r9, $r26; div.w $r18, $r10, $r27; div.w $r19, $r11, $r28",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
+      "machine_code": [
+        "0020508c  div.w       \t$t0, $a0, $t8",
+        "002054ad  div.w       \t$t1, $a1, $r21",
+        "00205cce  div.w       \t$t2, $a2, $s0",
+        "002060ef  div.w       \t$t3, $a3, $s1",
+        "00206510  div.w       \t$t4, $a4, $s2",
+        "00206931  div.w       \t$t5, $a5, $s3",
+        "00206d52  div.w       \t$t6, $a6, $s4",
+        "00207173  div.w       \t$t7, $a7, $s5"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'div.w $r12, $r4, $r20; div.w $r13, $r5, $r21; div.w $r14, $r6, $r23; div.w $r15, $r7, $r24; div.w $r16, $r8, $r25; div.w $r17, $r9, $r26; div.w $r18, $r10, $r27; div.w $r19, $r11, $r28'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 27.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 3.49875,
+        "ipc": 0.28581636298678104,
+        "cpi_min": 3.5,
+        "cpi_max": 4.5,
+        "ipc_min": 0.2222,
+        "ipc_max": 0.2857
+      },
+      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes."
+    }
+  ]
+}

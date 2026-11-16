@@ -220,6 +220,14 @@
         },
         "notes": {
           "type": "string"
+        },
+        "cycles_min": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cycles_max": {
+          "type": "number",
+          "minimum": 0
         }
       },
       "additionalProperties": false
@@ -336,6 +344,22 @@
           "exclusiveMinimum": 0
         },
         "ipc": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "cpi_min": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "cpi_max": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "ipc_min": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "ipc_max": {
           "type": "number",
           "exclusiveMinimum": 0
         }

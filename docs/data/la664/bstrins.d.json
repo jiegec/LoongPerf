@@ -1,0 +1,137 @@
+{
+  "instruction": {
+    "name": "bstrins.d",
+    "extension": "Base",
+    "form": "bstrins.d rd, rj, msb, lsb",
+    "description": "Insert bits from rj into rd at positions msb..lsb (d operation)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "base and result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "inserted bits"
+    },
+    {
+      "index": 3,
+      "name": "msb",
+      "kind": "immediate",
+      "access": "read",
+      "description": "most significant bit"
+    },
+    {
+      "index": 4,
+      "name": "lsb",
+      "kind": "immediate",
+      "access": "read",
+      "description": "least significant bit"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "bstrins.d $r12, $r13, 63, 0",
+          "init": "addi.d $r12, $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "00bf01ac  bstrins.d   \t$t0, $t1, 0x3f, 0x0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1' --asm 'bstrins.d $r12, $r13, 63, 0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Consecutive unrolled copies form a dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "bstrins.d $r12, $r12, 63, 0",
+          "init": "addi.d $r12, $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "00bf018c  bstrins.d   \t$t0, $t0, 0x3f, 0x0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1' --asm 'bstrins.d $r12, $r12, 63, 0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Consecutive unrolled copies form a dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "bstrins.d $r12, $r4, 63, 0; bstrins.d $r13, $r5, 63, 0; bstrins.d $r14, $r6, 63, 0; bstrins.d $r15, $r7, 63, 0; bstrins.d $r16, $r8, 63, 0; bstrins.d $r17, $r9, 63, 0; bstrins.d $r18, $r10, 63, 0; bstrins.d $r19, $r11, 63, 0",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
+      "machine_code": [
+        "00bf008c  bstrins.d   \t$t0, $a0, 0x3f, 0x0",
+        "00bf00ad  bstrins.d   \t$t1, $a1, 0x3f, 0x0",
+        "00bf00ce  bstrins.d   \t$t2, $a2, 0x3f, 0x0",
+        "00bf00ef  bstrins.d   \t$t3, $a3, 0x3f, 0x0",
+        "00bf0110  bstrins.d   \t$t4, $a4, 0x3f, 0x0",
+        "00bf0131  bstrins.d   \t$t5, $a5, 0x3f, 0x0",
+        "00bf0152  bstrins.d   \t$t6, $a6, 0x3f, 0x0",
+        "00bf0173  bstrins.d   \t$t7, $a7, 0x3f, 0x0"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'bstrins.d $r12, $r4, 63, 0; bstrins.d $r13, $r5, 63, 0; bstrins.d $r14, $r6, 63, 0; bstrins.d $r15, $r7, 63, 0; bstrins.d $r16, $r8, 63, 0; bstrins.d $r17, $r9, 63, 0; bstrins.d $r18, $r10, 63, 0; bstrins.d $r19, $r11, 63, 0'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}
