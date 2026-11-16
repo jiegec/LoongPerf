@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "flogb.d",
+    "extension": "Base",
+    "form": "flogb.d fd, fj",
+    "description": "flogb.d floating-point binary logarithm exponent."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "flogb.d $f0, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01142800  flogb.d     \t$fa0, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'flogb.d $f0, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "flogb.d $f0, $f8; flogb.d $f1, $f9; flogb.d $f2, $f10; flogb.d $f3, $f11; flogb.d $f4, $f12; flogb.d $f5, $f13; flogb.d $f6, $f14; flogb.d $f7, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "01142900  flogb.d     \t$fa0, $ft0",
+        "01142921  flogb.d     \t$fa1, $ft1",
+        "01142942  flogb.d     \t$fa2, $ft2",
+        "01142963  flogb.d     \t$fa3, $ft3",
+        "01142984  flogb.d     \t$fa4, $ft4",
+        "011429a5  flogb.d     \t$fa5, $ft5",
+        "011429c6  flogb.d     \t$fa6, $ft6",
+        "011429e7  flogb.d     \t$fa7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'flogb.d $f0, $f8; flogb.d $f1, $f9; flogb.d $f2, $f10; flogb.d $f3, $f11; flogb.d $f4, $f12; flogb.d $f5, $f13; flogb.d $f6, $f14; flogb.d $f7, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

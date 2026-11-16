@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "fneg.s",
+    "extension": "Base",
+    "form": "fneg.s fd, fj",
+    "description": "fneg.s floating-point sign operation."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fneg.s $f0, $f0",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01141400  fneg.s      \t$fa0, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'fneg.s $f0, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fneg.s $f0, $f8; fneg.s $f1, $f9; fneg.s $f2, $f10; fneg.s $f3, $f11; fneg.s $f4, $f12; fneg.s $f5, $f13; fneg.s $f6, $f14; fneg.s $f7, $f15",
+      "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
+      "machine_code": [
+        "01141500  fneg.s      \t$fa0, $ft0",
+        "01141521  fneg.s      \t$fa1, $ft1",
+        "01141542  fneg.s      \t$fa2, $ft2",
+        "01141563  fneg.s      \t$fa3, $ft3",
+        "01141584  fneg.s      \t$fa4, $ft4",
+        "011415a5  fneg.s      \t$fa5, $ft5",
+        "011415c6  fneg.s      \t$fa6, $ft6",
+        "011415e7  fneg.s      \t$fa7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'fneg.s $f0, $f8; fneg.s $f1, $f9; fneg.s $f2, $f10; fneg.s $f3, $f11; fneg.s $f4, $f12; fneg.s $f5, $f13; fneg.s $f6, $f14; fneg.s $f7, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

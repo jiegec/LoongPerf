@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "frecip.d",
+    "extension": "Base",
+    "form": "frecip.d fd, fj",
+    "description": "frecip.d floating-point reciprocal."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 10.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "frecip.d $f0, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01145800  frecip.d    \t$fa0, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'frecip.d $f0, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 10.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "frecip.d $f0, $f8; frecip.d $f1, $f9; frecip.d $f2, $f10; frecip.d $f3, $f11; frecip.d $f4, $f12; frecip.d $f5, $f13; frecip.d $f6, $f14; frecip.d $f7, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "01145900  frecip.d    \t$fa0, $ft0",
+        "01145921  frecip.d    \t$fa1, $ft1",
+        "01145942  frecip.d    \t$fa2, $ft2",
+        "01145963  frecip.d    \t$fa3, $ft3",
+        "01145984  frecip.d    \t$fa4, $ft4",
+        "011459a5  frecip.d    \t$fa5, $ft5",
+        "011459c6  frecip.d    \t$fa6, $ft6",
+        "011459e7  frecip.d    \t$fa7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'frecip.d $f0, $f8; frecip.d $f1, $f9; frecip.d $f2, $f10; frecip.d $f3, $f11; frecip.d $f4, $f12; frecip.d $f5, $f13; frecip.d $f6, $f14; frecip.d $f7, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 16.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.0,
+        "ipc": 0.5
+      },
+      "notes": "8 independent instructions take 16.00 cycles."
+    }
+  ]
+}

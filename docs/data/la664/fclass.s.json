@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "fclass.s",
+    "extension": "Base",
+    "form": "fclass.s fd, fj",
+    "description": "fclass.s floating-point classify."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fclass.s $f0, $f0",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01143400  fclass.s    \t$fa0, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'fclass.s $f0, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fclass.s $f0, $f8; fclass.s $f1, $f9; fclass.s $f2, $f10; fclass.s $f3, $f11; fclass.s $f4, $f12; fclass.s $f5, $f13; fclass.s $f6, $f14; fclass.s $f7, $f15",
+      "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
+      "machine_code": [
+        "01143500  fclass.s    \t$fa0, $ft0",
+        "01143521  fclass.s    \t$fa1, $ft1",
+        "01143542  fclass.s    \t$fa2, $ft2",
+        "01143563  fclass.s    \t$fa3, $ft3",
+        "01143584  fclass.s    \t$fa4, $ft4",
+        "011435a5  fclass.s    \t$fa5, $ft5",
+        "011435c6  fclass.s    \t$fa6, $ft6",
+        "011435e7  fclass.s    \t$fa7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'fclass.s $f0, $f8; fclass.s $f1, $f9; fclass.s $f2, $f10; fclass.s $f3, $f11; fclass.s $f4, $f12; fclass.s $f5, $f13; fclass.s $f6, $f14; fclass.s $f7, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

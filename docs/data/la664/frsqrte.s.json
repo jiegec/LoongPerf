@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "frsqrte.s",
+    "extension": "Base",
+    "form": "frsqrte.s fd, fj",
+    "description": "frsqrte.s approximate floating-point reciprocal square root."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "frsqrte.s $f0, $f0",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01148400  frsqrte.s   \t$fa0, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'frsqrte.s $f0, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "frsqrte.s $f0, $f8; frsqrte.s $f1, $f9; frsqrte.s $f2, $f10; frsqrte.s $f3, $f11; frsqrte.s $f4, $f12; frsqrte.s $f5, $f13; frsqrte.s $f6, $f14; frsqrte.s $f7, $f15",
+      "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
+      "machine_code": [
+        "01148500  frsqrte.s   \t$fa0, $ft0",
+        "01148521  frsqrte.s   \t$fa1, $ft1",
+        "01148542  frsqrte.s   \t$fa2, $ft2",
+        "01148563  frsqrte.s   \t$fa3, $ft3",
+        "01148584  frsqrte.s   \t$fa4, $ft4",
+        "011485a5  frsqrte.s   \t$fa5, $ft5",
+        "011485c6  frsqrte.s   \t$fa6, $ft6",
+        "011485e7  frsqrte.s   \t$fa7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'frsqrte.s $f0, $f8; frsqrte.s $f1, $f9; frsqrte.s $f2, $f10; frsqrte.s $f3, $f11; frsqrte.s $f4, $f12; frsqrte.s $f5, $f13; frsqrte.s $f6, $f14; frsqrte.s $f7, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

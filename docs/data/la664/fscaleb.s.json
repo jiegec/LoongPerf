@@ -1,0 +1,131 @@
+{
+  "instruction": {
+    "name": "fscaleb.s",
+    "extension": "Base",
+    "form": "fscaleb.s fd, fj, fk",
+    "description": "fscaleb.s floating-point scale by exponent."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "fk",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fscaleb.s $f0, $f0, $f1",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01108400  fscaleb.s   \t$fa0, $fa0, $fa1"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fscaleb.s $f0, $f0, $f1'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fscaleb.s $f0, $f1, $f0",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "01108020  fscaleb.s   \t$fa0, $fa1, $fa0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fscaleb.s $f0, $f1, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fscaleb.s $f0, $f8, $f8; fscaleb.s $f1, $f9, $f9; fscaleb.s $f2, $f10, $f10; fscaleb.s $f3, $f11, $f11; fscaleb.s $f4, $f12, $f12; fscaleb.s $f5, $f13, $f13; fscaleb.s $f6, $f14, $f14; fscaleb.s $f7, $f15, $f15",
+      "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
+      "machine_code": [
+        "0110a100  fscaleb.s   \t$fa0, $ft0, $ft0",
+        "0110a521  fscaleb.s   \t$fa1, $ft1, $ft1",
+        "0110a942  fscaleb.s   \t$fa2, $ft2, $ft2",
+        "0110ad63  fscaleb.s   \t$fa3, $ft3, $ft3",
+        "0110b184  fscaleb.s   \t$fa4, $ft4, $ft4",
+        "0110b5a5  fscaleb.s   \t$fa5, $ft5, $ft5",
+        "0110b9c6  fscaleb.s   \t$fa6, $ft6, $ft6",
+        "0110bde7  fscaleb.s   \t$fa7, $ft7, $ft7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'fscaleb.s $f0, $f8, $f8; fscaleb.s $f1, $f9, $f9; fscaleb.s $f2, $f10, $f10; fscaleb.s $f3, $f11, $f11; fscaleb.s $f4, $f12, $f12; fscaleb.s $f5, $f13, $f13; fscaleb.s $f6, $f14, $f14; fscaleb.s $f7, $f15, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}
