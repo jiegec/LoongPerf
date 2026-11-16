@@ -26,49 +26,50 @@
     }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .wrap { max-width: 1500px; margin: 0 auto; padding: 24px 20px 60px; }
+    .wrap { max-width: 1700px; margin: 0 auto; padding: 24px 20px 60px; }
     header { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; }
     h1 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
     .sub { color: var(--muted); }
     .controls {
-      display: flex; gap: 12px; flex-wrap: wrap; align-items: end;
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: end;
       padding: 16px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 16px;
     }
     .control { display: flex; flex-direction: column; gap: 4px; }
-    .control label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .control > label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
     input, select, button {
       font: inherit; color: var(--fg); background: var(--bg);
       border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px;
     }
     input[type="search"] { min-width: 280px; }
-    input[type="number"] { width: 110px; }
     button { cursor: pointer; }
     button:hover { border-color: var(--accent); }
+    .checks { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 7px 0; }
+    .checks label { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; color: var(--fg); text-transform: none; letter-spacing: 0; }
+    .checks input { margin: 0; }
     .meta { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
     .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
     table { border-collapse: collapse; width: 100%; min-width: 980px; }
     th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
     th { background: var(--head); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); white-space: nowrap; position: sticky; top: 0; z-index: 2; }
+    thead tr:nth-child(2) th { top: 34px; }
     th[data-sort] { cursor: pointer; user-select: none; }
     th[data-sort]:hover { color: var(--accent); }
-    th .arrow { color: var(--accent); }
+    .uarch-head { text-align: center; border-left: 1px solid var(--line); }
+    .uarch-cell { border-left: 1px solid var(--line); }
     tbody tr.instr:hover { background: var(--accent-soft); }
     tbody tr.instr { cursor: pointer; }
     tbody tr.details { display: none; background: var(--head); }
     tbody tr.details.open { display: table-row; }
     td.details-cell { padding: 16px; }
     code, .mono { font-family: var(--mono); font-size: 0.92em; }
-    .pill {
-      display: inline-block; margin: 2px 4px 2px 0; padding: 1px 7px;
-      border-radius: 999px; background: var(--pill); font-family: var(--mono);
-      font-size: 0.82em; white-space: nowrap;
-    }
     .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .muted { color: var(--muted); }
     .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
     .details-grid h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
     .details-grid table { min-width: 0; }
     .details-grid th, .details-grid td { padding: 5px 7px; font-size: 13px; }
+    .uarch-detail + .uarch-detail { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
+    .uarch-detail > h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0 0 8px; }
     .links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
     .empty { padding: 30px; text-align: center; color: var(--muted); }
     .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
@@ -80,7 +81,7 @@
     <h1>LoongArch instruction table</h1>
     <span class="sub">LoongPerf measurements</span>
   </header>
-  <p class="sub">Click a row to show latency operand pairs, throughput experiments, and links to the full measurement page and raw JSON.</p>
+  <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / CPI / IPC columns for each of them. Click a row for details.</p>
 
   <div class="controls">
     <div class="control">
@@ -88,16 +89,12 @@
       <input id="q" type="search" placeholder="instruction, form, operand, assembly ..." autocomplete="off">
     </div>
     <div class="control">
-      <label for="uarch">Microarchitecture</label>
-      <select id="uarch"><option value="">All</option></select>
+      <label>Microarchitectures</label>
+      <div id="uarchs" class="checks"></div>
     </div>
     <div class="control">
-      <label for="max-lat">Max latency</label>
-      <input id="max-lat" type="number" min="0" step="0.01" placeholder="cycles">
-    </div>
-    <div class="control">
-      <label for="max-cpi">Max CPI</label>
-      <input id="max-cpi" type="number" min="0" step="0.01" placeholder="cycles/insn">
+      <label>Extensions</label>
+      <div id="exts" class="checks"></div>
     </div>
     <div class="control">
       <label>&nbsp;</label>
@@ -109,30 +106,21 @@
   <div id="error"></div>
   <div class="table-scroll">
     <table id="table">
-      <thead>
-        <tr>
-          <th data-sort="uarch">Microarchitecture</th>
-          <th data-sort="name">Instruction</th>
-          <th data-sort="form">Form</th>
-          <th data-sort="minLatency">Latency (cycles)</th>
-          <th data-sort="minCpi">Throughput (CPI)</th>
-          <th data-sort="maxIpc">Throughput (IPC)</th>
-          <th>Details</th>
-        </tr>
-      </thead>
+      <thead id="thead"></thead>
       <tbody id="tbody"></tbody>
     </table>
   </div>
 </div>
 
 <script>
-  // Generated during the site build by the instruction_index() macro.
   const AGGREGATE = "data/measurements.json";
 
   let rows = [];
+  let groups = [];
+  let allUarches = [];
   let sortKey = "name";
   let sortDir = 1;
-  let openRows = new Set();
+  const openRows = new Set();
 
   const $ = (id) => document.getElementById(id);
   const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
@@ -155,37 +143,108 @@
     return names + " (" + indices.join(", ") + ")";
   }
 
-  function flatten(uarch, path, doc) {
+  function flatten(uarch, source, doc) {
     const latencies = (doc.latencies || []).map((item) => ({
       from: operandRef(doc, item.from_operands),
-      fromIndices: item.from_operands,
       to: operandRef(doc, [item.to_operand]),
-      toIndex: item.to_operand,
-      cycles: item.cycles,
-      notes: item.notes || ""
+      cycles: item.cycles
     }));
     const throughput = doc.throughput || [];
     const cpis = throughput.map((item) => item.throughput && item.throughput.cpi).filter((v) => typeof v === "number");
     const ipcs = throughput.map((item) => item.throughput && item.throughput.ipc).filter((v) => typeof v === "number");
-    const allLatencies = latencies.map((item) => item.cycles).filter((v) => typeof v === "number");
+    const lats = latencies.map((item) => item.cycles).filter((v) => typeof v === "number");
 
     return {
       uarch,
-      path,
+      extension: doc.instruction.extension || "",
+      path: source,
       name: doc.instruction.name,
       form: doc.instruction.form,
       description: doc.instruction.description,
       operands: doc.operands || [],
       latencies,
       throughput,
-      minLatency: allLatencies.length ? Math.min(...allLatencies) : null,
-      maxLatency: allLatencies.length ? Math.max(...allLatencies) : null,
+      minLatency: lats.length ? Math.min(...lats) : null,
+      maxLatency: lats.length ? Math.max(...lats) : null,
       minCpi: cpis.length ? Math.min(...cpis) : null,
       maxCpi: cpis.length ? Math.max(...cpis) : null,
       minIpc: ipcs.length ? Math.min(...ipcs) : null,
       maxIpc: ipcs.length ? Math.max(...ipcs) : null,
       page: uarch + "/" + doc.instruction.name + "/",
-      raw: path
+      raw: source
+    };
+  }
+
+  function groupRows(flatRows) {
+    const map = new Map();
+    for (const row of flatRows) {
+      const key = [row.extension, row.name, row.form].join("\u0000");
+      let group = map.get(key);
+      if (!group) {
+        group = {
+          key,
+          extension: row.extension,
+          name: row.name,
+          form: row.form,
+          description: row.description,
+          variants: new Map()
+        };
+        map.set(key, group);
+      }
+      group.variants.set(row.uarch, row);
+    }
+    return [...map.values()];
+  }
+
+  function buildUarchCheckboxes(wanted) {
+    const box = $("uarchs");
+    box.innerHTML = "";
+    for (const uarch of allUarches) {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = uarch;
+      input.checked = wanted === null || wanted.includes(uarch);
+      input.addEventListener("change", render);
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(uarch.toUpperCase()));
+      box.appendChild(label);
+    }
+  }
+
+  function buildExtensionCheckboxes(wanted) {
+    const all = ["Base", "LBT", "LSX", "LASX"];
+    const box = $("exts");
+    box.innerHTML = "";
+    for (const extension of all) {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.value = extension;
+      input.checked = wanted === null || wanted.includes(extension);
+      input.addEventListener("change", render);
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(extension));
+      box.appendChild(label);
+    }
+  }
+
+  function selectedUarches() {
+    return [...document.querySelectorAll("#uarchs input:checked")].map((input) => input.value);
+  }
+
+  function selectedExtensions() {
+    return [...document.querySelectorAll("#exts input:checked")].map((input) => input.value);
+  }
+
+  function loadUrlSettings() {
+    const params = new URLSearchParams(location.search);
+    $("q").value = params.get("q") || "";
+    const uarch = params.get("uarch");
+    const extension = params.get("extension");
+    return {
+      uarch: uarch ? uarch.split(",").filter(Boolean) : null,
+      extensions: extension ? extension.split(",").filter(Boolean) : null
     };
   }
 
@@ -197,14 +256,11 @@
       rows = payload.instructions.map(({ uarch, source, data }) =>
         flatten(uarch, source, data)
       );
-
-      const uarches = [...new Set(rows.map((row) => row.uarch))].sort();
-      for (const uarch of uarches) {
-        const option = document.createElement("option");
-        option.value = uarch;
-        option.textContent = uarch;
-        $("uarch").appendChild(option);
-      }
+      allUarches = [...new Set(rows.map((row) => row.uarch))].sort();
+      const settings = loadUrlSettings();
+      buildUarchCheckboxes(settings.uarch);
+      buildExtensionCheckboxes(settings.extensions);
+      groups = groupRows(rows);
       render();
     } catch (error) {
       $("meta").textContent = "Failed to load measurement data.";
@@ -213,26 +269,35 @@
     }
   }
 
-  function matches(row, query, uarch, maxLatency, maxCpi) {
-    if (uarch && row.uarch !== uarch) return false;
-    if (maxLatency !== null && (row.minLatency === null || row.minLatency > maxLatency)) return false;
-    if (maxCpi !== null && (row.minCpi === null || row.minCpi > maxCpi)) return false;
+  function rowMatches(group, query, extensions, selected) {
+    if (extensions.length && !extensions.includes(group.extension)) return false;
+    const variants = selected.map((uarch) => group.variants.get(uarch)).filter(Boolean);
+    if (!variants.length) return false;
     if (!query) return true;
     const haystack = [
-      row.uarch, row.name, row.form, row.description,
-      ...row.operands.map((op) => op.name + " " + op.kind + " " + op.access),
-      ...row.latencies.map((lat) => lat.from + " " + lat.to + " " + lat.cycles),
-      ...row.throughput.map((t) => (t.asm || "") + " " + JSON.stringify(t.throughput || {}))
+      group.extension, group.name, group.form, group.description,
+      ...variants.flatMap((row) => [
+        ...row.operands.map((op) => op.name + " " + op.kind + " " + op.access),
+        ...row.latencies.map((lat) => lat.from + " " + lat.to + " " + lat.cycles),
+        ...row.throughput.map((t) => (t.asm || "") + " " + JSON.stringify(t.throughput || {}))
+      ])
     ].join(" ").toLowerCase();
     return haystack.includes(query.toLowerCase());
   }
 
-  function sortedRows() {
-    return rows
-      .map((row, index) => ({ row, index }))
+  function sortValue(group, key) {
+    if (key.startsWith("lat:")) return group.variants.get(key.slice(4))?.minLatency;
+    if (key.startsWith("cpi:")) return group.variants.get(key.slice(4))?.minCpi;
+    if (key.startsWith("ipc:")) return group.variants.get(key.slice(4))?.maxIpc;
+    return group[key];
+  }
+
+  function sortedGroups(selected, query, extensions) {
+    return groups
+      .filter((group) => rowMatches(group, query, extensions, selected))
       .sort((a, b) => {
-        const av = a.row[sortKey];
-        const bv = b.row[sortKey];
+        const av = sortValue(a, sortKey);
+        const bv = sortValue(b, sortKey);
         if (av === null || av === undefined) return 1;
         if (bv === null || bv === undefined) return -1;
         if (typeof av === "number" && typeof bv === "number") return (av - bv) * sortDir;
@@ -240,84 +305,65 @@
       });
   }
 
-  function render() {
-    const query = $("q").value.trim();
-    const uarch = $("uarch").value;
-    const maxLatency = $("max-lat").value === "" ? null : Number($("max-lat").value);
-    const maxCpi = $("max-cpi").value === "" ? null : Number($("max-cpi").value);
+  function sortLabel(key, label) {
+    if (sortKey !== key) return label;
+    return label + (sortDir > 0 ? " ↑" : " ↓");
+  }
 
-    const visible = sortedRows().filter(({ row }) => matches(row, query, uarch, maxLatency, maxCpi));
-    const tbody = $("tbody");
-    tbody.innerHTML = "";
-
-    if (!visible.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="empty">No matching instructions.</td></tr>';
+  function renderHeader(selected) {
+    const thead = $("thead");
+    let top = '<tr>' +
+      '<th rowspan="2" data-sort="extension">Extension</th>' +
+      '<th rowspan="2" data-sort="name">Instruction</th>' +
+      '<th rowspan="2" data-sort="form">Form</th>';
+    let bottom = "<tr>";
+    for (const uarch of selected) {
+      top += '<th colspan="3" class="uarch-head">' + esc(uarch.toUpperCase()) + "</th>";
+      bottom += '<th data-sort="lat:' + esc(uarch) + '" class="uarch-cell">' + sortLabel("lat:" + uarch, "Latency") + "</th>";
+      bottom += '<th data-sort="cpi:' + esc(uarch) + '">' + sortLabel("cpi:" + uarch, "CPI") + "</th>";
+      bottom += '<th data-sort="ipc:' + esc(uarch) + '">' + sortLabel("ipc:" + uarch, "IPC") + "</th>";
     }
-
-    for (const { row, index } of visible) {
-      const tr = document.createElement("tr");
-      tr.className = "instr";
-      tr.dataset.index = String(index);
-      tr.innerHTML =
-        "<td>" + esc(row.uarch) + "</td>" +
-        '<td><a href="' + esc(row.page) + '"><code>' + esc(row.name) + "</code></a></td>" +
-        '<td><code>' + esc(row.form) + "</code></td>" +
-        '<td class="num">' + latencyCell(row) + "</td>" +
-        '<td class="num">' + cpiCell(row) + "</td>" +
-        '<td class="num">' + ipcCell(row) + "</td>" +
-        '<td><a href="#" class="toggle">' + (openRows.has(index) ? "Hide" : "Show") + "</a></td>";
-
-      const details = document.createElement("tr");
-      details.className = "details" + (openRows.has(index) ? " open" : "");
-      details.dataset.index = String(index);
-      details.innerHTML = '<td class="details-cell" colspan="7">' + detailsHtml(row) + "</td>";
-      tbody.appendChild(tr);
-      tbody.appendChild(details);
-
-      tr.querySelector(".toggle").addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        toggleRow(index);
+    top += "</tr>";
+    bottom += "</tr>";
+    thead.innerHTML = top + bottom;
+    thead.querySelectorAll("th[data-sort]").forEach((th) => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.sort;
+        if (sortKey === key) sortDir *= -1;
+        else { sortKey = key; sortDir = 1; }
+        render();
       });
-      tr.addEventListener("click", () => toggleRow(index));
-    }
-
-    $("meta").textContent = visible.length + " of " + rows.length + " instructions";
-    updateHeader();
-    updateUrl();
+    });
   }
 
   function latencyCell(row) {
-    if (row.minLatency === null) return '<span class="muted">-</span>';
-    if (row.minLatency === row.maxLatency) return fmt(row.minLatency);
-    return fmt(row.minLatency) + " – " + fmt(row.maxLatency);
+    if (!row || row.minLatency === null) return '<span class="muted">-</span>';
+    return row.minLatency === row.maxLatency ? fmt(row.minLatency) : fmt(row.minLatency) + " – " + fmt(row.maxLatency);
   }
 
   function cpiCell(row) {
-    if (row.minCpi === null) return '<span class="muted">-</span>';
-    if (row.minCpi === row.maxCpi) return fmt(row.minCpi);
-    return fmt(row.minCpi) + " – " + fmt(row.maxCpi);
+    if (!row || row.minCpi === null) return '<span class="muted">-</span>';
+    return row.minCpi === row.maxCpi ? fmt(row.minCpi) : fmt(row.minCpi) + " – " + fmt(row.maxCpi);
   }
 
   function ipcCell(row) {
-    if (row.maxIpc === null) return '<span class="muted">-</span>';
-    if (row.minIpc === row.maxIpc) return fmt(row.maxIpc);
-    return fmt(row.minIpc) + " – " + fmt(row.maxIpc);
+    if (!row || row.maxIpc === null) return '<span class="muted">-</span>';
+    return row.minIpc === row.maxIpc ? fmt(row.maxIpc) : fmt(row.minIpc) + " – " + fmt(row.maxIpc);
   }
 
   function detailsHtml(row) {
     const latencyRows = row.latencies.map((lat) =>
-      "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + "</td><td class=\"num\">" + fmt(lat.cycles) + "</td></tr>"
+      "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + '</td><td class="num">' + fmt(lat.cycles) + "</td></tr>"
     ).join("");
     const throughputRows = row.throughput.map((item) => {
       const t = item.throughput || {};
-      return "<tr><td>" + esc(item.name || "") + "</td><td class=\"num\">" + fmt(t.lanes) +
-        "</td><td class=\"num\">" + fmt(item.result.instructions_retired) +
-        "</td><td class=\"num\">" + fmt(item.result.core_cycles) +
-        "</td><td class=\"num\">" + fmt(t.cpi) + "</td><td class=\"num\">" + fmt(t.ipc) + "</td></tr>";
+      return "<tr><td>" + esc(item.name || "") + '</td><td class="num">' + fmt(t.lanes) +
+        '</td><td class="num">' + fmt(item.result.instructions_retired) +
+        '</td><td class="num">' + fmt(item.result.core_cycles) +
+        '</td><td class="num">' + fmt(t.cpi) + '</td><td class="num">' + fmt(t.ipc) + "</td></tr>";
     }).join("");
     const operandRows = row.operands.map((op) =>
-      "<tr><td class=\"num\">" + esc(op.index) + "</td><td><code>" + esc(op.name) + "</code></td><td>" +
+      '<tr><td class="num">' + esc(op.index) + '</td><td><code>' + esc(op.name) + "</code></td><td>" +
       esc(op.kind) + "</td><td>" + esc(op.access) + "</td></tr>"
     ).join("");
 
@@ -332,67 +378,94 @@
       '<a href="' + esc(row.raw) + '">Raw JSON</a></div>';
   }
 
-  function toggleRow(index) {
-    if (openRows.has(index)) openRows.delete(index);
-    else openRows.add(index);
-    render();
+  function detailsForGroup(group, selected) {
+    return selected.map((uarch) => {
+      const row = group.variants.get(uarch);
+      return '<div class="uarch-detail"><h3>' + esc(uarch.toUpperCase()) + "</h3>" +
+        (row ? detailsHtml(row) : '<span class="muted">No data for this microarchitecture.</span>') +
+        "</div>";
+    }).join("");
   }
 
-  function updateHeader() {
-    document.querySelectorAll("th[data-sort]").forEach((th) => {
-      th.querySelector(".arrow")?.remove();
-      if (th.dataset.sort === sortKey) {
-        const span = document.createElement("span");
-        span.className = "arrow";
-        span.textContent = sortDir > 0 ? " ↑" : " ↓";
-        th.appendChild(span);
+  function render() {
+    const selected = selectedUarches();
+    const extensions = selectedExtensions();
+    const query = $("q").value.trim();
+
+    renderHeader(selected);
+    const visible = selected.length && extensions.length
+      ? sortedGroups(selected, query, extensions)
+      : [];
+
+    const tbody = $("tbody");
+    tbody.innerHTML = "";
+    const columns = 3 + selected.length * 3;
+
+    if (!selected.length) {
+      tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">Select at least one microarchitecture.</td></tr>';
+    } else if (!extensions.length) {
+      tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">Select at least one extension.</td></tr>';
+    } else if (!visible.length) {
+      tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">No matching instructions.</td></tr>';
+    }
+
+    for (const group of visible) {
+      const first = selected.map((uarch) => group.variants.get(uarch)).find(Boolean);
+      const tr = document.createElement("tr");
+      tr.className = "instr";
+      tr.dataset.key = group.key;
+
+      let cells = "<td>" + esc(group.extension) + "</td>" +
+        '<td><a class="instr-link" href="' + esc(first.page) + '"><code>' + esc(group.name) + "</code></a></td>" +
+        "<td><code>" + esc(group.form) + "</code></td>";
+      for (const uarch of selected) {
+        const row = group.variants.get(uarch);
+        cells += '<td class="num uarch-cell">' + latencyCell(row) + "</td>";
+        cells += '<td class="num">' + cpiCell(row) + "</td>";
+        cells += '<td class="num">' + ipcCell(row) + "</td>";
       }
-    });
+      tr.innerHTML = cells;
+
+      const details = document.createElement("tr");
+      details.className = "details" + (openRows.has(group.key) ? " open" : "");
+      details.innerHTML = '<td class="details-cell" colspan="' + columns + '">' +
+        detailsForGroup(group, selected) + "</td>";
+
+      tr.querySelector(".instr-link").addEventListener("click", (event) => event.stopPropagation());
+      tr.addEventListener("click", () => {
+        if (openRows.has(group.key)) openRows.delete(group.key);
+        else openRows.add(group.key);
+        render();
+      });
+
+      tbody.appendChild(tr);
+      tbody.appendChild(details);
+    }
+
+    $("meta").textContent = visible.length + " of " + groups.length +
+      " instructions, " + selected.length + " microarchitecture" +
+      (selected.length === 1 ? "" : "s");
+    updateUrl(selected, extensions);
   }
 
-  function updateUrl() {
+  function updateUrl(selected, extensions) {
     const params = new URLSearchParams();
     if ($("q").value.trim()) params.set("q", $("q").value.trim());
-    if ($("uarch").value) params.set("uarch", $("uarch").value);
-    if ($("max-lat").value) params.set("max_latency", $("max-lat").value);
-    if ($("max-cpi").value) params.set("max_cpi", $("max-cpi").value);
+    if (selected.length) params.set("uarch", selected.join(","));
+    if (extensions.length) params.set("extension", extensions.join(","));
     const query = params.toString();
     history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
   }
 
-  function restoreFromUrl() {
-    const params = new URLSearchParams(location.search);
-    $("q").value = params.get("q") || "";
-    $("max-lat").value = params.get("max_latency") || "";
-    $("max-cpi").value = params.get("max_cpi") || "";
-    return params.get("uarch") || "";
-  }
-
-  document.querySelectorAll("th[data-sort]").forEach((th) => {
-    th.addEventListener("click", () => {
-      const key = th.dataset.sort;
-      if (sortKey === key) sortDir *= -1;
-      else { sortKey = key; sortDir = 1; }
-      render();
-    });
-  });
-
-  ["q", "max-lat", "max-cpi"].forEach((id) => $(id).addEventListener("input", render));
-  $("uarch").addEventListener("change", render);
+  $("q").addEventListener("input", render);
   $("reset").addEventListener("click", () => {
     $("q").value = "";
-    $("uarch").value = "";
-    $("max-lat").value = "";
-    $("max-cpi").value = "";
+    document.querySelectorAll("#uarchs input, #exts input").forEach((input) => { input.checked = true; });
     openRows.clear();
     render();
   });
 
-  restoreFromUrl();
-  load().then(() => {
-    const fromUrl = new URLSearchParams(location.search).get("uarch");
-    if (fromUrl) { $("uarch").value = fromUrl; render(); }
-  });
+  load();
 </script>
 </body>
 </html>

@@ -2,7 +2,8 @@
   "instruction": {
     "name": "armmtflag",
     "form": "armmtflag rd, mask",
-    "description": "Write selected ARM flags in ARMFLAGS from the corresponding bit positions in rd, as determined by mask. Only ARMFLAGS is modified."
+    "description": "Write selected ARM flags in ARMFLAGS from the corresponding bit positions in rd, as determined by mask. Only ARMFLAGS is modified.",
+    "extension": "LBT"
   },
   "operands": [
     {

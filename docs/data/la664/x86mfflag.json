@@ -2,7 +2,8 @@
   "instruction": {
     "name": "x86mfflag",
     "form": "x86mfflag rd, mask",
-    "description": "Read selected x86 flags from EFLAGS, as determined by mask, and pack them into rd."
+    "description": "Read selected x86 flags from EFLAGS, as determined by mask, and pack them into rd.",
+    "extension": "LBT"
   },
   "operands": [
     {

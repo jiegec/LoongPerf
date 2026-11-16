@@ -2,7 +2,8 @@
   "instruction": {
     "name": "x86mtflag",
     "form": "x86mtflag rd, mask",
-    "description": "Write selected x86 flags in EFLAGS from the corresponding bit positions in rd, as determined by mask. Only EFLAGS is modified."
+    "description": "Write selected x86 flags in EFLAGS from the corresponding bit positions in rd, as determined by mask. Only EFLAGS is modified.",
+    "extension": "LBT"
   },
   "operands": [
     {

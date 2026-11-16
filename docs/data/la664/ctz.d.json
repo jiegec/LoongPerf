@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "ctz.d",
+    "form": "ctz.d rd, rj",
+    "description": "Count trailing zeros in the low 64 bits of rj and write the count to rd.",
+    "extension": "Base"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "count result, 0..64"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "64-bit source value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "ctz.d $r12, $r12",
+          "init": "addi.d $r12, $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "00002d8c  ctz.d       \t$t0, $t0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1' --asm 'ctz.d $r12, $r12'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "rd == rj; consecutive unrolled copies form a $r12 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain to remove call-boundary overlap."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ctz.d $r12, $r4; ctz.d $r13, $r5; ctz.d $r14, $r6; ctz.d $r15, $r7; ctz.d $r16, $r8; ctz.d $r17, $r9; ctz.d $r18, $r10; ctz.d $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "00002c8c  ctz.d       \t$t0, $a0",
+        "00002cad  ctz.d       \t$t1, $a1",
+        "00002cce  ctz.d       \t$t2, $a2",
+        "00002cef  ctz.d       \t$t3, $a3",
+        "00002d10  ctz.d       \t$t4, $a4",
+        "00002d31  ctz.d       \t$t5, $a5",
+        "00002d52  ctz.d       \t$t6, $a6",
+        "00002d73  ctz.d       \t$t7, $a7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'ctz.d $r12, $r4; ctz.d $r13, $r5; ctz.d $r14, $r6; ctz.d $r15, $r7; ctz.d $r16, $r8; ctz.d $r17, $r9; ctz.d $r18, $r10; ctz.d $r19, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles: 0.25 cycles per instruction (4 IPC)."
+    }
+  ]
+}

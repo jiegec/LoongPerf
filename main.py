@@ -40,7 +40,8 @@ def define_env(env):
             )
             rows.append(
                 [
-                    uarch,
+                    uarch.upper(),
+                    data["instruction"].get("extension", ""),
                     f"`{name}`",
                     latencies,
                     fmt(tput) if tput is not None else "",
@@ -48,7 +49,7 @@ def define_env(env):
                 ]
             )
         return table(
-            ["Microarchitecture", "Instruction", "Latency (cycles)",
+            ["Microarchitecture", "Extension", "Instruction", "Latency (cycles)",
              "Throughput (CPI)", "Details"],
             rows,
         )
@@ -61,7 +62,8 @@ def define_env(env):
 
         ins = data["instruction"]
         out += [f"# `{ins['name']}`", ""]
-        out += [f"**Microarchitecture:** `{uarch}`", ""]
+        out += [f"**Microarchitecture:** `{uarch.upper()}`", ""]
+        out += [f"**Extension:** `{ins.get('extension', '')}`", ""]
         out += [f"**Form:** `{ins['form']}`", ""]
         out += [ins["description"], ""]
         m = data["measurement"]

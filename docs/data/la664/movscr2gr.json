@@ -2,7 +2,8 @@
   "instruction": {
     "name": "movscr2gr",
     "form": "movscr2gr rd, scrj",
-    "description": "Copy the value in the scratch register selected by scrj (0-3) to rd."
+    "description": "Copy the value in the scratch register selected by scrj (0-3) to rd.",
+    "extension": "LBT"
   },
   "operands": [
     {

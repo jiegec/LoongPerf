@@ -2,7 +2,8 @@
   "instruction": {
     "name": "armmfflag",
     "form": "armmfflag rd, mask",
-    "description": "Read selected ARM flags from ARMFLAGS, as determined by mask, and pack them into rd."
+    "description": "Read selected ARM flags from ARMFLAGS, as determined by mask, and pack them into rd.",
+    "extension": "LBT"
   },
   "operands": [
     {

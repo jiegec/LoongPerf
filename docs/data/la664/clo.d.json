@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "clo.d",
+    "form": "clo.d rd, rj",
+    "description": "Count leading ones in the low 64 bits of rj and write the count to rd.",
+    "extension": "Base"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "count result, 0..64"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "64-bit source value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "clo.d $r12, $r12",
+          "init": "addi.d $r12, $r0, -1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "0000218c  clo.d       \t$t0, $t0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, -1' --asm 'clo.d $r12, $r12'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "rd == rj; consecutive unrolled copies form a $r12 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain to remove call-boundary overlap."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "clo.d $r12, $r4; clo.d $r13, $r5; clo.d $r14, $r6; clo.d $r15, $r7; clo.d $r16, $r8; clo.d $r17, $r9; clo.d $r18, $r10; clo.d $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "0000208c  clo.d       \t$t0, $a0",
+        "000020ad  clo.d       \t$t1, $a1",
+        "000020ce  clo.d       \t$t2, $a2",
+        "000020ef  clo.d       \t$t3, $a3",
+        "00002110  clo.d       \t$t4, $a4",
+        "00002131  clo.d       \t$t5, $a5",
+        "00002152  clo.d       \t$t6, $a6",
+        "00002173  clo.d       \t$t7, $a7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'clo.d $r12, $r4; clo.d $r13, $r5; clo.d $r14, $r6; clo.d $r15, $r7; clo.d $r16, $r8; clo.d $r17, $r9; clo.d $r18, $r10; clo.d $r19, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles: 0.25 cycles per instruction (4 IPC)."
+    }
+  ]
+}

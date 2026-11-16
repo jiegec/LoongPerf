@@ -2,7 +2,8 @@
   "instruction": {
     "name": "adc.b",
     "form": "adc.b rd, rj, rk",
-    "description": "Add the low 8 bits of rj and rk plus the x86 carry flag (CF), sign-extend the result to 64 bits, and write it to rd. EFLAGS is not updated."
+    "description": "Add the low 8 bits of rj and rk plus the x86 carry flag (CF), sign-extend the result to 64 bits, and write it to rd. EFLAGS is not updated.",
+    "extension": "LBT"
   },
   "operands": [
     {
