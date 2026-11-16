@@ -227,6 +227,14 @@
         "name": {
           "type": "string"
         },
+        "role": {
+          "enum": [
+            "measurement",
+            "calibration",
+            "baseline",
+            "dependency-breaking"
+          ]
+        },
         "asm": {
           "type": "string",
           "minLength": 1

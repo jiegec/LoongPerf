@@ -119,6 +119,87 @@
           "notes": "Consecutive copies form a $r12 dependency chain through both source operands."
         }
       ]
+    },
+    {
+      "from_operands": [
+        4
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "CF -> rd via x86mtflag",
+          "role": "measurement",
+          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "chain_instructions": [
+            "x86mtflag $r12, 0x1"
+          ],
+          "chain_latency": 3.0,
+          "machine_code": [
+            "003039ac  adc.b $t0, $t1, $t2",
+            "005c042c  x86mtflag $t0, 0x1"
+          ],
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Chain: adc.b writes r12; x86mtflag reads r12 and writes CF; the next adc.b reads CF."
+        },
+        {
+          "name": "x86mtflag + x86mfflag calibration",
+          "role": "calibration",
+          "asm": "x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "machine_code": [
+            "005c042c  x86mtflag $t0, 0x1",
+            "005c040c  x86mfflag $t0, 0x1"
+          ],
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Used to obtain L(x86mtflag) + L(x86mfflag) = 4.00."
+        },
+        {
+          "name": "adc.b + x86mtflag + x86mfflag calibration",
+          "role": "calibration",
+          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "machine_code": [
+            "003039ac  adc.b $t0, $t1, $t2",
+            "005c042c  x86mtflag $t0, 0x1",
+            "005c040c  x86mfflag $t0, 0x1"
+          ],
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Difference from the main experiment gives L(x86mfflag) = 5.00 - 4.00 = 1.00."
+        },
+        {
+          "name": "second x86mfflag calibration",
+          "role": "calibration",
+          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "machine_code": [
+            "003039ac  adc.b $t0, $t1, $t2",
+            "005c042c  x86mtflag $t0, 0x1",
+            "005c040c  x86mfflag $t0, 0x1",
+            "005c040c  x86mfflag $t0, 0x1"
+          ],
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1'",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 6.0
+          },
+          "notes": "Confirms another 1.00 cycle for an additional x86mfflag in the dependency chain."
+        }
+      ],
+      "notes": "x86mfflag latency F = 5.00 - 4.00 = 1.00. x86mtflag latency M = (x86mtflag + x86mfflag) - F = 4.00 - 1.00 = 3.00. adc.b CF -> rd = (adc.b + x86mtflag) - M = 4.00 - 3.00 = 1.00."
     }
   ],
   "throughput": [
@@ -168,5 +249,5 @@
       "notes": "cycles_per_instruction = core_cycles / 8."
     }
   ],
-  "notes": "Latency from operand 4 (CF) to operand 1 (rd) has not been measured yet because adc.b does not write EFLAGS, so a helper chain is needed."
+  "notes": "All latency operand pairs that are currently measurable have been recorded."
 }
