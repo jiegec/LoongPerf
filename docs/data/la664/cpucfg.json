@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "cpucfg",
+    "extension": "Base",
+    "form": "cpucfg rd, rj",
+    "description": "Read the CPUCFG word indexed by rj into rd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "CPUCFG value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "CPUCFG index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 11.09,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "cpucfg $r12, $r12",
+          "init": "addi.d $r12, $r0, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "00006d8c  cpucfg      \t$t0, $t0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 0' --asm 'cpucfg $r12, $r12'",
+          "result": {
+            "instructions_retired": 0.0,
+            "core_cycles": 11.09
+          },
+          "notes": "CPUCFG is not counted by the instruction-retired event on this machine; cycles are the meaningful result."
+        }
+      ],
+      "notes": "Measured with a self-dependent index chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "cpucfg $r12, $r4; cpucfg $r13, $r5; cpucfg $r14, $r6; cpucfg $r15, $r7; cpucfg $r16, $r8; cpucfg $r17, $r9; cpucfg $r18, $r10; cpucfg $r19, $r11",
+      "init": "addi.d $r4, $r0, 0; addi.d $r5, $r0, 0; addi.d $r6, $r0, 0; addi.d $r7, $r0, 0; addi.d $r8, $r0, 0; addi.d $r9, $r0, 0; addi.d $r10, $r0, 0; addi.d $r11, $r0, 0",
+      "machine_code": [
+        "00006c8c  cpucfg      \t$t0, $a0",
+        "00006cad  cpucfg      \t$t1, $a1",
+        "00006cce  cpucfg      \t$t2, $a2",
+        "00006cef  cpucfg      \t$t3, $a3",
+        "00006d10  cpucfg      \t$t4, $a4",
+        "00006d31  cpucfg      \t$t5, $a5",
+        "00006d52  cpucfg      \t$t6, $a6",
+        "00006d73  cpucfg      \t$t7, $a7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 0; addi.d $r5, $r0, 0; addi.d $r6, $r0, 0; addi.d $r7, $r0, 0; addi.d $r8, $r0, 0; addi.d $r9, $r0, 0; addi.d $r10, $r0, 0; addi.d $r11, $r0, 0' --asm 'cpucfg $r12, $r4; cpucfg $r13, $r5; cpucfg $r14, $r6; cpucfg $r15, $r7; cpucfg $r16, $r8; cpucfg $r17, $r9; cpucfg $r18, $r10; cpucfg $r19, $r11'",
+      "result": {
+        "instructions_retired": 0.0,
+        "core_cycles": 88.69
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 11.09,
+        "ipc": 0.09
+      },
+      "notes": "8 independent CPUCFG operations take 88.69 cycles. Instruction-retired is 0 for CPUCFG on this machine."
+    }
+  ]
+}

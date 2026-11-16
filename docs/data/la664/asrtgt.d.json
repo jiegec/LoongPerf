@@ -1,0 +1,65 @@
+{
+  "instruction": {
+    "name": "asrtgt.d",
+    "extension": "Base",
+    "form": "asrtgt.d rj, rk",
+    "description": "Check that signed rj > signed rk; raise BCE otherwise."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first compared value"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second compared value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "asrtgt.d $r4, $r12; asrtgt.d $r5, $r13; asrtgt.d $r6, $r14; asrtgt.d $r7, $r15; asrtgt.d $r8, $r16; asrtgt.d $r9, $r17; asrtgt.d $r10, $r18; asrtgt.d $r11, $r19",
+      "init": "addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8",
+      "machine_code": [
+        "0001b080  asrtgt.d    \t$a0, $t0",
+        "0001b4a0  asrtgt.d    \t$a1, $t1",
+        "0001b8c0  asrtgt.d    \t$a2, $t2",
+        "0001bce0  asrtgt.d    \t$a3, $t3",
+        "0001c100  asrtgt.d    \t$a4, $t4",
+        "0001c520  asrtgt.d    \t$a5, $t5",
+        "0001c940  asrtgt.d    \t$a6, $t6",
+        "0001cd60  asrtgt.d    \t$a7, $t7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8' --asm 'asrtgt.d $r4, $r12; asrtgt.d $r5, $r13; asrtgt.d $r6, $r14; asrtgt.d $r7, $r15; asrtgt.d $r8, $r16; asrtgt.d $r9, $r17; asrtgt.d $r10, $r18; asrtgt.d $r11, $r19'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 condition checks take 8.00 cycles. No destination register, so latency is not defined."
+    }
+  ],
+  "notes": "No destination register; latency is not defined. Throughput only."
+}

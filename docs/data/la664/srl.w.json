@@ -1,0 +1,131 @@
+{
+  "instruction": {
+    "name": "srl.w",
+    "extension": "Base",
+    "form": "srl.w rd, rj, rk",
+    "description": "Shift the low 32-bit word of rj right logically by the amount in rk, sign-extend the result."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "srl.w $r12, $r12, $r13",
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "0017b58c  srl.w       \t$t0, $t0, $t1"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'srl.w $r12, $r12, $r13'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "rd == rj; consecutive unrolled copies form a $r12 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "srl.w $r12, $r13, $r12",
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "0017b1ac  srl.w       \t$t0, $t1, $t0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'srl.w $r12, $r13, $r12'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "rd == rk; consecutive unrolled copies form a $r12 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "srl.w $r12, $r4, $r20; srl.w $r13, $r5, $r21; srl.w $r14, $r6, $r23; srl.w $r15, $r7, $r24; srl.w $r16, $r8, $r25; srl.w $r17, $r9, $r26; srl.w $r18, $r10, $r27; srl.w $r19, $r11, $r28",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
+      "machine_code": [
+        "0017d08c  srl.w       \t$t0, $a0, $t8",
+        "0017d4ad  srl.w       \t$t1, $a1, $r21",
+        "0017dcce  srl.w       \t$t2, $a2, $s0",
+        "0017e0ef  srl.w       \t$t3, $a3, $s1",
+        "0017e510  srl.w       \t$t4, $a4, $s2",
+        "0017e931  srl.w       \t$t5, $a5, $s3",
+        "0017ed52  srl.w       \t$t6, $a6, $s4",
+        "0017f173  srl.w       \t$t7, $a7, $s5"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'srl.w $r12, $r4, $r20; srl.w $r13, $r5, $r21; srl.w $r14, $r6, $r23; srl.w $r15, $r7, $r24; srl.w $r16, $r8, $r25; srl.w $r17, $r9, $r26; srl.w $r18, $r10, $r27; srl.w $r19, $r11, $r28'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

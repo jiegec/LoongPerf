@@ -1,0 +1,65 @@
+{
+  "instruction": {
+    "name": "rdtime.d",
+    "extension": "Base",
+    "form": "rdtime.d rd, rj",
+    "description": "Read the stable counter into rd and the timer ID into rj."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "stable counter value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "timer ID"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "rdtime.d $r4, $r12; rdtime.d $r5, $r13; rdtime.d $r6, $r14; rdtime.d $r7, $r15; rdtime.d $r8, $r16; rdtime.d $r9, $r17; rdtime.d $r10, $r18; rdtime.d $r11, $r19",
+      "init": "",
+      "machine_code": [
+        "00006984  rdtime.d    \t$a0, $t0",
+        "000069a5  rdtime.d    \t$a1, $t1",
+        "000069c6  rdtime.d    \t$a2, $t2",
+        "000069e7  rdtime.d    \t$a3, $t3",
+        "00006a08  rdtime.d    \t$a4, $t4",
+        "00006a29  rdtime.d    \t$a5, $t5",
+        "00006a4a  rdtime.d    \t$a6, $t6",
+        "00006a6b  rdtime.d    \t$a7, $t7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --asm 'rdtime.d $r4, $r12; rdtime.d $r5, $r13; rdtime.d $r6, $r14; rdtime.d $r7, $r15; rdtime.d $r8, $r16; rdtime.d $r9, $r17; rdtime.d $r10, $r18; rdtime.d $r11, $r19'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 16.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.0,
+        "ipc": 0.5
+      },
+      "notes": "Each instruction writes two GPRs and is counted as 2 retired instructions: 8 instructions take 16.00 cycles, 2.00 cycles per instruction."
+    }
+  ],
+  "notes": "No input operands; latency is not defined. Throughput only."
+}

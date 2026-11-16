@@ -21,6 +21,12 @@ DOCS_DIR = ROOT / "docs"
 SCHEMA_PATH = ROOT / "schema" / "instruction.schema.json"
 
 EPS = 0.02
+RETIRED_MULTIPLIER = {
+    "cpucfg": 0,
+    "rdtimel.w": 2,
+    "rdtimeh.w": 2,
+    "rdtime.d": 2,
+}
 errors: list[str] = []
 warnings: list[str] = []
 
@@ -74,10 +80,11 @@ def check_command(path: Path, data: dict, experiment: dict) -> None:
 
 
 def check_result_count(path: Path, data: dict, experiment: dict) -> None:
-    expected = asm_instruction_count(experiment["asm"])
+    name = data["instruction"]["name"]
+    expected = asm_instruction_count(experiment["asm"]) * RETIRED_MULTIPLIER.get(name, 1)
     actual = experiment["result"]["instructions_retired"]
     if not close(actual, expected):
-        error(path, f"instructions_retired {actual} != asm instruction count {expected} for {experiment.get('name', '<unnamed>')}")
+        error(path, f"instructions_retired {actual} != expected {expected} for {experiment.get('name', '<unnamed>')}")
 
 
 def check_experiment(path: Path, data: dict, experiment: dict) -> None:
@@ -152,9 +159,9 @@ def check_throughput(path: Path, data: dict) -> None:
         if lanes != count:
             error(path, f"throughput lanes {lanes} != asm instruction count {count}")
         result = experiment["result"]
-        expected_cpi = result["core_cycles"] / result["instructions_retired"]
+        expected_cpi = result["core_cycles"] / lanes
         if not close(throughput["cpi"], expected_cpi):
-            error(path, f"throughput CPI {throughput['cpi']} != core_cycles/instructions_retired ({expected_cpi})")
+            error(path, f"throughput CPI {throughput['cpi']} != core_cycles/lanes ({expected_cpi})")
         if not close(throughput["ipc"], 1.0 / throughput["cpi"]):
             error(path, f"throughput IPC {throughput['ipc']} != 1/CPI")
 
