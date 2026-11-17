@@ -1,0 +1,91 @@
+{
+  "instruction": {
+    "name": "setx86loope",
+    "extension": "LBT",
+    "form": "setx86loope rd, rj",
+    "description": "x86-style loop-while-equal counter probe."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "decremented counter"
+    },
+    {
+      "index": 3,
+      "name": "EFLAGS",
+      "kind": "flags",
+      "access": "read",
+      "bits": 1,
+      "description": "x86 flags"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.09,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "setx86loope $r12, $r12",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0' --asm 'setx86loope $r12, $r12'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.09
+          },
+          "notes": "rj -> rd chain."
+        }
+      ],
+      "notes": "rj -> rd chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "setx86loope $r12, $r4; setx86loope $r13, $r5; setx86loope $r14, $r6; setx86loope $r15, $r7; setx86loope $r16, $r8; setx86loope $r17, $r9; setx86loope $r18, $r10; setx86loope $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 0",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 0' --asm 'setx86loope $r12, $r4; setx86loope $r13, $r5; setx86loope $r14, $r6; setx86loope $r15, $r7; setx86loope $r16, $r8; setx86loope $r17, $r9; setx86loope $r18, $r10; setx86loope $r19, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.82
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.1025,
+        "ipc": 0.907
+      },
+      "notes": "8 independent instructions take 8.82 cycles."
+    }
+  ],
+  "notes": "LBT instruction. Latency is recorded for the rj counter path and the EFLAGS path."
+}

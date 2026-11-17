@@ -3,7 +3,7 @@
     "name": "rotri.b",
     "extension": "LBT",
     "form": "rotri.b rd, rj, imm",
-    "description": "x86 rotate right by immediate"
+    "description": "x86-style rotate right by immediate on b-bit values."
   },
   "operands": [
     {
@@ -12,7 +12,7 @@
       "kind": "gpr",
       "access": "write",
       "bits": 64,
-      "description": ""
+      "description": "result"
     },
     {
       "index": 2,
@@ -20,14 +20,14 @@
       "kind": "gpr",
       "access": "read",
       "bits": 64,
-      "description": ""
+      "description": "source"
     },
     {
       "index": 3,
       "name": "imm",
       "kind": "immediate",
       "access": "read",
-      "description": ""
+      "description": "immediate"
     }
   ],
   "measurement": {
@@ -45,46 +45,46 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2.03,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "operand dependency chain",
           "role": "measurement",
           "asm": "rotri.b $r12, $r12, 1",
           "init": "addi.d $r12, $r0, 1",
           "measurement": {
             "unroll": 100000,
             "iters": 100,
-            "reps": 7
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r12, $r0, 1' --asm 'rotri.b $r12, $r12, 1'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1' --asm 'rotri.b $r12, $r12, 1'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "core_cycles": 2.03
           },
-          "notes": "Consecutive unrolled copies form a dependency chain."
+          "notes": "rj -> rd chain."
         }
       ],
-      "notes": "Register dependency latency."
+      "notes": "rj -> rd chain."
     }
   ],
   "throughput": [
     {
       "name": "8 independent lanes",
       "asm": "rotri.b $r12, $r4, 1; rotri.b $r13, $r5, 1; rotri.b $r14, $r6, 1; rotri.b $r15, $r7, 1; rotri.b $r16, $r8, 1; rotri.b $r17, $r9, 1; rotri.b $r18, $r10, 1; rotri.b $r19, $r11, 1",
-      "init": "addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16' --asm 'rotri.b $r12, $r4, 1; rotri.b $r13, $r5, 1; rotri.b $r14, $r6, 1; rotri.b $r15, $r7, 1; rotri.b $r16, $r8, 1; rotri.b $r17, $r9, 1; rotri.b $r18, $r10, 1; rotri.b $r19, $r11, 1'",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'rotri.b $r12, $r4, 1; rotri.b $r13, $r5, 1; rotri.b $r14, $r6, 1; rotri.b $r15, $r7, 1; rotri.b $r16, $r8, 1; rotri.b $r17, $r9, 1; rotri.b $r18, $r10, 1; rotri.b $r19, $r11, 1'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "core_cycles": 8.61
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1.0762,
+        "ipc": 0.9292
       },
-      "notes": "8 independent instructions take 8.00 cycles."
+      "notes": "8 independent instructions take 8.61 cycles."
     }
   ],
-  "notes": "LBT instruction measured on LA664."
+  "notes": "LBT instruction. Only the register source feeds the result."
 }

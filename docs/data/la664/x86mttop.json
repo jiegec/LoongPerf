@@ -1,0 +1,46 @@
+{
+  "instruction": {
+    "name": "x86mttop",
+    "extension": "LBT",
+    "form": "x86mttop imm",
+    "description": "Set the x87 TOP pointer to imm."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "new TOP value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1",
+      "init": "x86mttop 0",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'x86mttop 0' --asm 'x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.47
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0588,
+        "ipc": 0.9445
+      },
+      "notes": "8 independent instructions take 8.47 cycles."
+    }
+  ],
+  "notes": "The TOP pointer is renamed; a mttop/mftop loop runs at about 1.2 cycles per pair, so no latency chain through TOP is observable. Only throughput is recorded."
+}

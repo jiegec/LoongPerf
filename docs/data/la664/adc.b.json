@@ -1,9 +1,9 @@
 {
   "instruction": {
     "name": "adc.b",
-    "form": "adc.b rd, rj, rk",
-    "description": "Add the low 8 bits of rj and rk plus the x86 carry flag (CF), sign-extend the result to 64 bits, and write it to rd. EFLAGS is not updated.",
-    "extension": "LBT"
+    "extension": "LBT",
+    "form": "adc.b rd, rj, rk, CF",
+    "description": "x86-style add with carry on b-bit values."
   },
   "operands": [
     {
@@ -12,7 +12,7 @@
       "kind": "gpr",
       "access": "write",
       "bits": 64,
-      "description": "8-bit result, sign-extended to 64 bits"
+      "description": "result"
     },
     {
       "index": 2,
@@ -20,7 +20,7 @@
       "kind": "gpr",
       "access": "read",
       "bits": 64,
-      "description": "first 8-bit addend"
+      "description": "first source"
     },
     {
       "index": 3,
@@ -28,27 +28,25 @@
       "kind": "gpr",
       "access": "read",
       "bits": 64,
-      "description": "second 8-bit addend"
+      "description": "second source"
     },
     {
       "index": 4,
       "name": "CF",
       "kind": "flags",
       "access": "read",
-      "implicit": true,
-      "suppressed": true,
       "bits": 1,
       "description": "x86 carry flag"
     }
   ],
   "measurement": {
     "tool": "./bench",
-    "unroll": 10000,
+    "unroll": 1000,
     "iters": 1000,
     "warmup": 10,
     "reps": 5,
     "core": 0,
-    "date": "2026-11-16"
+    "date": "2026-11-17"
   },
   "latencies": [
     {
@@ -56,54 +54,55 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2.01,
       "experiments": [
         {
-          "name": "rd == rj",
+          "name": "operand dependency chain",
+          "role": "measurement",
           "asm": "adc.b $r12, $r12, $r13",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
-          "machine_code": [
-            "0030358c  adc.b $t0, $t0, $t1"
-          ],
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r13'",
-          "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
-          },
-          "notes": "Consecutive copies form a $r12 dependency chain through rj. Measured with a 100000-instruction unrolled chain to remove call-boundary overlap.",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
           "measurement": {
             "unroll": 100000,
-            "iters": 100
-          }
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.b $r12, $r12, $r13'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.01
+          },
+          "notes": "rj -> rd chain: rj and rd are the same register."
         }
-      ]
+      ],
+      "notes": "rj -> rd chain: rj and rd are the same register."
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2.03,
       "experiments": [
         {
-          "name": "rd == rk",
-          "asm": "adc.b $r12, $r13, $r12",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
-          "machine_code": [
-            "003031ac  adc.b $t0, $t1, $t0"
-          ],
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r12'",
-          "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
-          },
-          "notes": "Consecutive copies form a $r12 dependency chain through rk. Measured with a 100000-instruction unrolled chain to remove call-boundary overlap.",
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "adc.b $r13, $r14, $r12; adc.b $r12, $r14, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
           "measurement": {
             "unroll": 100000,
-            "iters": 100
-          }
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.b $r13, $r14, $r12; adc.b $r12, $r14, $r13'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.06
+          },
+          "notes": "rk -> rd chain: two copies alternate rd/rk, latency is half the measured cycle count."
         }
-      ]
+      ],
+      "notes": "rk -> rd chain: two copies alternate rd/rk, latency is half the measured cycle count.",
+      "cycles_divisor": 2
     },
     {
       "from_operands": [
@@ -111,156 +110,74 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2.02,
       "experiments": [
         {
-          "name": "rd == rj == rk",
+          "name": "operand dependency chain",
+          "role": "measurement",
           "asm": "adc.b $r12, $r12, $r12",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
-          "machine_code": [
-            "0030318c  adc.b $t0, $t0, $t0"
-          ],
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r12'",
-          "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
-          },
-          "notes": "Consecutive copies form a $r12 dependency chain through both source operands. Measured with a 100000-instruction unrolled chain to remove call-boundary overlap.",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
           "measurement": {
             "unroll": 100000,
-            "iters": 100
-          }
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.b $r12, $r12, $r12'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.02
+          },
+          "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
         }
-      ]
+      ],
+      "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
     },
     {
       "from_operands": [
         4
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1.05,
       "experiments": [
         {
-          "name": "CF -> rd via x86mtflag",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
-          "chain_instructions": [
-            "x86mtflag $r12, 0x1"
-          ],
-          "chain_latency": 3.0,
-          "machine_code": [
-            "003039ac  adc.b $t0, $t1, $t2",
-            "005c042c  x86mtflag $t0, 0x1"
-          ],
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1'",
+          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 1'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "core_cycles": 4.05
           },
-          "notes": "Chain: adc.b writes r12; x86mtflag reads r12 and writes CF; the next adc.b reads CF."
-        },
-        {
-          "name": "x86mtflag + x86mfflag calibration",
-          "role": "calibration",
-          "asm": "x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
-          "machine_code": [
-            "005c042c  x86mtflag $t0, 0x1",
-            "005c040c  x86mfflag $t0, 0x1"
-          ],
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
-          "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
-          },
-          "notes": "Used to obtain L(x86mtflag) + L(x86mfflag) = 4.00."
-        },
-        {
-          "name": "adc.b + x86mtflag + x86mfflag calibration",
-          "role": "calibration",
-          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
-          "machine_code": [
-            "003039ac  adc.b $t0, $t1, $t2",
-            "005c042c  x86mtflag $t0, 0x1",
-            "005c040c  x86mfflag $t0, 0x1"
-          ],
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
-          "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 5.0
-          },
-          "notes": "Difference from the main experiment gives L(x86mfflag) = 5.00 - 4.00 = 1.00."
-        },
-        {
-          "name": "second x86mfflag calibration",
-          "role": "calibration",
-          "asm": "adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
-          "machine_code": [
-            "003039ac  adc.b $t0, $t1, $t2",
-            "005c042c  x86mtflag $t0, 0x1",
-            "005c040c  x86mfflag $t0, 0x1",
-            "005c040c  x86mfflag $t0, 0x1"
-          ],
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1'",
-          "result": {
-            "instructions_retired": 4.0,
-            "core_cycles": 6.0
-          },
-          "notes": "Confirms another 1.00 cycle for an additional x86mfflag in the dependency chain."
+          "notes": "CF -> rd: the chain closes through x86mtflag, so 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted.",
+          "chain_latency": 3.0
         }
       ],
-      "notes": "x86mfflag latency F = 5.00 - 4.00 = 1.00. x86mtflag latency M = (x86mtflag + x86mfflag) - F = 4.00 - 1.00 = 3.00. adc.b CF -> rd = (adc.b + x86mtflag) - M = 4.00 - 3.00 = 1.00."
+      "notes": "CF -> rd: the chain closes through x86mtflag, so 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted."
     }
   ],
   "throughput": [
     {
-      "name": "1 independent lane",
-      "asm": "adc.b $r12, $r4, $r4",
-      "init": "addi.d $r12, $r0, 1; addi.d $r4, $r0, 9; x86mtflag $r0, 0x1",
-      "machine_code": [
-        "0030108c  adc.b $t0, $a0, $a0"
-      ],
-      "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r4, $r0, 9; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r4, $r4'",
-      "result": {
-        "instructions_retired": 1.0,
-        "core_cycles": 1.0
-      },
-      "throughput": {
-        "lanes": 1,
-        "cpi": 1.0,
-        "ipc": 1.0
-      },
-      "notes": "r12 is written but not read by later copies."
-    },
-    {
       "name": "8 independent lanes",
-      "asm": "adc.b $r12, $r4, $r4; adc.b $r13, $r5, $r5; adc.b $r14, $r6, $r6; adc.b $r15, $r7, $r7; adc.b $r16, $r8, $r8; adc.b $r17, $r9, $r9; adc.b $r18, $r10, $r10; adc.b $r19, $r11, $r11",
-      "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; x86mtflag $r0, 0x1",
-      "machine_code": [
-        "0030108c  adc.b $t0, $a0, $a0",
-        "003014ad  adc.b $t1, $a1, $a1",
-        "003018ce  adc.b $t2, $a2, $a2",
-        "00301cef  adc.b $t3, $a3, $a3",
-        "00302110  adc.b $t4, $a4, $a4",
-        "00302531  adc.b $t5, $a5, $a5",
-        "00302952  adc.b $t6, $a6, $a6",
-        "00302d73  adc.b $t7, $a7, $a7"
-      ],
-      "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r4, $r4; adc.b $r13, $r5, $r5; adc.b $r14, $r6, $r6; adc.b $r15, $r7, $r7; adc.b $r16, $r8, $r8; adc.b $r17, $r9, $r9; adc.b $r18, $r10, $r10; adc.b $r19, $r11, $r11'",
+      "asm": "adc.b $r12, $r4, $r5; adc.b $r13, $r5, $r6; adc.b $r14, $r6, $r7; adc.b $r15, $r7, $r8; adc.b $r16, $r8, $r9; adc.b $r17, $r9, $r10; adc.b $r18, $r10, $r11; adc.b $r19, $r11, $r12",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'adc.b $r12, $r4, $r5; adc.b $r13, $r5, $r6; adc.b $r14, $r6, $r7; adc.b $r15, $r7, $r8; adc.b $r16, $r8, $r9; adc.b $r17, $r9, $r10; adc.b $r18, $r10, $r11; adc.b $r19, $r11, $r12'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.01
+        "core_cycles": 8.76
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1.095,
+        "ipc": 0.9132
       },
-      "notes": "cycles_per_instruction = core_cycles / 8."
+      "notes": "8 independent instructions take 8.76 cycles."
     }
   ],
-  "notes": "Only input -> output latency pairs are recorded. adc.b writes rd but does not read it, and does not write EFLAGS; therefore reverse output -> input pairs and rd -> CF are not instruction latencies. A rd -> CF path requires x86mtflag and measures the helper, not adc.b."
+  "notes": "LBT instruction. Every source-to-result path is recorded separately: rj, rk, rj+rk, and CF."
 }

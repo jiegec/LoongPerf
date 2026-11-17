@@ -1,0 +1,83 @@
+{
+  "instruction": {
+    "name": "fcvt.ld.d",
+    "extension": "LBT",
+    "form": "fcvt.ld.d fd, fj",
+    "description": "Convert double in fj to the low 64 bits of x87 80-bit extended format."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source double"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "fcvt.ld.d $f0, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'fcvt.ld.d $f0, $f0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.01
+          },
+          "notes": "fj -> fd chain."
+        }
+      ],
+      "notes": "fj -> fd chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fcvt.ld.d $f0, $f8; fcvt.ld.d $f1, $f9; fcvt.ld.d $f2, $f10; fcvt.ld.d $f3, $f11; fcvt.ld.d $f4, $f12; fcvt.ld.d $f5, $f13; fcvt.ld.d $f6, $f14; fcvt.ld.d $f7, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4' --asm 'fcvt.ld.d $f0, $f8; fcvt.ld.d $f1, $f9; fcvt.ld.d $f2, $f10; fcvt.ld.d $f3, $f11; fcvt.ld.d $f4, $f12; fcvt.ld.d $f5, $f13; fcvt.ld.d $f6, $f14; fcvt.ld.d $f7, $f15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.02
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5025,
+        "ipc": 1.99
+      },
+      "notes": "8 independent instructions take 4.02 cycles."
+    }
+  ],
+  "notes": "LBT x87 conversion instruction."
+}

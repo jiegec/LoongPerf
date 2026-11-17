@@ -1,0 +1,175 @@
+{
+  "instruction": {
+    "name": "x86rcr.b",
+    "extension": "LBT",
+    "form": "x86rcr.b rd, rk",
+    "description": "x86-style rotate right through carry on 8-bit values."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "accumulator and destination"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    },
+    {
+      "index": 3,
+      "name": "EFLAGS",
+      "kind": "flags",
+      "access": "read-write",
+      "bits": 1,
+      "description": "x86 flags"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86rcr.b $r12, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.b $r12, $r13'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "rd -> rd chain: the destination is also a source."
+        }
+      ],
+      "notes": "rd -> rd chain: the destination is also a source."
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86rcr.b $r13, $r12; x86rcr.b $r12, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.b $r13, $r12; x86rcr.b $r12, $r13'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.02
+          },
+          "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved."
+        }
+      ],
+      "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved.",
+      "cycles_divisor": 2
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.02,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86rcr.b $r12, $r13; x86mtflag $r12, 1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.b $r12, $r13; x86mtflag $r12, 1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.02
+          },
+          "notes": "EFLAGS -> rd chain closed by x86mtflag; 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted.",
+          "chain_latency": 3.0
+        }
+      ],
+      "notes": "EFLAGS -> rd chain closed by x86mtflag; 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 3,
+      "cycles": 3.03,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86rcr.b $r12, $r13; x86mfflag $r12, 1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.b $r12, $r13; x86mfflag $r12, 1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.03
+          },
+          "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted.",
+          "chain_latency": 1.0
+        }
+      ],
+      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86rcr.b $r12, $r4; x86rcr.b $r13, $r5; x86rcr.b $r14, $r6; x86rcr.b $r15, $r7; x86rcr.b $r16, $r8; x86rcr.b $r17, $r9; x86rcr.b $r18, $r10; x86rcr.b $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'x86rcr.b $r12, $r4; x86rcr.b $r13, $r5; x86rcr.b $r14, $r6; x86rcr.b $r15, $r7; x86rcr.b $r16, $r8; x86rcr.b $r17, $r9; x86rcr.b $r18, $r10; x86rcr.b $r19, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 16.01
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.0013,
+        "ipc": 0.4997
+      },
+      "notes": "8 independent instructions take 16.01 cycles."
+    }
+  ],
+  "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path."
+}

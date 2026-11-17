@@ -1,0 +1,125 @@
+{
+  "instruction": {
+    "name": "armsrai.w",
+    "extension": "LBT",
+    "form": "armsrai.w rd, imm, cond",
+    "description": "ARM-style arithmetic shift right by immediate on 32-bit values."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "accumulator and destination"
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "shift amount"
+    },
+    {
+      "index": 3,
+      "name": "cond",
+      "kind": "immediate",
+      "access": "read",
+      "description": "ARM condition field"
+    },
+    {
+      "index": 4,
+      "name": "ARMFLAGS",
+      "kind": "flags",
+      "access": "write",
+      "bits": 4,
+      "description": "ARM flags"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armsrai.w $r12, 1, 14",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrai.w $r12, 1, 14'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "rd -> rd chain."
+        }
+      ],
+      "notes": "rd -> rd chain."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 4,
+      "cycles": 3.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armsrai.w $r12, 1, 14; armmfflag $r12, 0x39",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrai.w $r12, 1, 14; armmfflag $r12, 0x39'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.01
+          },
+          "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
+          "chain_latency": 1.0
+        }
+      ],
+      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "armsrai.w $r12, 1, 14; armsrai.w $r13, 1, 14; armsrai.w $r14, 1, 14; armsrai.w $r15, 1, 14; armsrai.w $r16, 1, 14; armsrai.w $r17, 1, 14; armsrai.w $r18, 1, 14; armsrai.w $r19, 1, 14",
+      "init": "armmtflag $r0, 0x39",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'armmtflag $r0, 0x39' --asm 'armsrai.w $r12, 1, 14; armsrai.w $r13, 1, 14; armsrai.w $r14, 1, 14; armsrai.w $r15, 1, 14; armsrai.w $r16, 1, 14; armsrai.w $r17, 1, 14; armsrai.w $r18, 1, 14; armsrai.w $r19, 1, 14'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 16.01
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.0013,
+        "ipc": 0.4997
+      },
+      "notes": "8 independent instructions take 16.01 cycles."
+    }
+  ],
+  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path."
+}

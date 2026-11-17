@@ -1,0 +1,146 @@
+{
+  "instruction": {
+    "name": "armrrx.w",
+    "extension": "LBT",
+    "form": "armrrx.w rd, cond",
+    "description": "ARM-style rotate right extended on 32-bit values."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "accumulator and destination"
+    },
+    {
+      "index": 2,
+      "name": "cond",
+      "kind": "immediate",
+      "access": "read",
+      "description": "ARM condition field"
+    },
+    {
+      "index": 3,
+      "name": "ARMFLAGS",
+      "kind": "flags",
+      "access": "read-write",
+      "bits": 4,
+      "description": "ARM flags"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 2.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armrrx.w $r12, 14",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.01
+          },
+          "notes": "rd -> rd chain."
+        }
+      ],
+      "notes": "rd -> rd chain."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armrrx.w $r12, 14; armmtflag $r12, 0x39",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14; armmtflag $r12, 0x39'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.01
+          },
+          "notes": "ARMFLAGS -> rd chain closed by armmtflag; 3 cycles subtracted.",
+          "chain_latency": 3.0
+        }
+      ],
+      "notes": "ARMFLAGS -> rd chain closed by armmtflag; 3 cycles subtracted."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 3,
+      "cycles": 3.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armrrx.w $r12, 14; armmfflag $r12, 0x39",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14; armmfflag $r12, 0x39'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.01
+          },
+          "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
+          "chain_latency": 1.0
+        }
+      ],
+      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "armrrx.w $r12, 14; armrrx.w $r13, 14; armrrx.w $r14, 14; armrrx.w $r15, 14; armrrx.w $r16, 14; armrrx.w $r17, 14; armrrx.w $r18, 14; armrrx.w $r19, 14",
+      "init": "armmtflag $r0, 0x39",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14; armrrx.w $r13, 14; armrrx.w $r14, 14; armrrx.w $r15, 14; armrrx.w $r16, 14; armrrx.w $r17, 14; armrrx.w $r18, 14; armrrx.w $r19, 14'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 16.04
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.005,
+        "ipc": 0.4988
+      },
+      "notes": "8 independent instructions take 16.04 cycles."
+    }
+  ],
+  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path."
+}

@@ -3,7 +3,7 @@
     "name": "rcr.b",
     "extension": "LBT",
     "form": "rcr.b rd, rj, rk",
-    "description": "x86 rotate right"
+    "description": "x86-style rotate right through carry on b-bit values."
   },
   "operands": [
     {
@@ -12,7 +12,7 @@
       "kind": "gpr",
       "access": "write",
       "bits": 64,
-      "description": ""
+      "description": "result"
     },
     {
       "index": 2,
@@ -20,7 +20,7 @@
       "kind": "gpr",
       "access": "read",
       "bits": 64,
-      "description": ""
+      "description": "first source"
     },
     {
       "index": 3,
@@ -28,7 +28,7 @@
       "kind": "gpr",
       "access": "read",
       "bits": 64,
-      "description": ""
+      "description": "second source"
     }
   ],
   "measurement": {
@@ -43,50 +43,105 @@
   "latencies": [
     {
       "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.03,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "rcr.b $r12, $r12, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3' --asm 'rcr.b $r12, $r12, $r13'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.03
+          },
+          "notes": "rj -> rd chain."
+        }
+      ],
+      "notes": "rj -> rd chain."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.04,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "rcr.b $r13, $r14, $r12; rcr.b $r12, $r14, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3' --asm 'rcr.b $r13, $r14, $r12; rcr.b $r12, $r14, $r13'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.07
+          },
+          "notes": "rk -> rd chain: two copies alternate rd/rk."
+        }
+      ],
+      "notes": "rk -> rd chain: two copies alternate rd/rk.",
+      "cycles_divisor": 2
+    },
+    {
+      "from_operands": [
         2,
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2.02,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "rcr.b $r12, $r12, $r13",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2",
+          "asm": "rcr.b $r12, $r12, $r12",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3",
           "measurement": {
             "unroll": 100000,
             "iters": 100,
-            "reps": 7
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2' --asm 'rcr.b $r12, $r12, $r13'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3' --asm 'rcr.b $r12, $r12, $r12'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "core_cycles": 2.02
           },
-          "notes": "Consecutive unrolled copies form a dependency chain."
+          "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
         }
       ],
-      "notes": "Register dependency latency."
+      "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
     }
   ],
   "throughput": [
     {
       "name": "8 independent lanes",
       "asm": "rcr.b $r12, $r4, $r4; rcr.b $r13, $r5, $r5; rcr.b $r14, $r6, $r6; rcr.b $r15, $r7, $r7; rcr.b $r16, $r8, $r8; rcr.b $r17, $r9, $r9; rcr.b $r18, $r10, $r10; rcr.b $r19, $r11, $r11",
-      "init": "addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16' --asm 'rcr.b $r12, $r4, $r4; rcr.b $r13, $r5, $r5; rcr.b $r14, $r6, $r6; rcr.b $r15, $r7, $r7; rcr.b $r16, $r8, $r8; rcr.b $r17, $r9, $r9; rcr.b $r18, $r10, $r10; rcr.b $r19, $r11, $r11'",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'rcr.b $r12, $r4, $r4; rcr.b $r13, $r5, $r5; rcr.b $r14, $r6, $r6; rcr.b $r15, $r7, $r7; rcr.b $r16, $r8, $r8; rcr.b $r17, $r9, $r9; rcr.b $r18, $r10, $r10; rcr.b $r19, $r11, $r11'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "core_cycles": 8.82
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1.1025,
+        "ipc": 0.907
       },
-      "notes": "8 independent instructions take 8.00 cycles."
+      "notes": "8 independent instructions take 8.82 cycles."
     }
   ],
-  "notes": "LBT instruction measured on LA664."
+  "notes": "LBT instruction. Each source-to-result path is recorded separately."
 }

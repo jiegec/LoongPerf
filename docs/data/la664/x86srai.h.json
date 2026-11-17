@@ -1,0 +1,118 @@
+{
+  "instruction": {
+    "name": "x86srai.h",
+    "extension": "LBT",
+    "form": "x86srai.h rd, imm",
+    "description": "x86-style arithmetic shift right by immediate on 16-bit values."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "accumulator and destination"
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    },
+    {
+      "index": 3,
+      "name": "EFLAGS",
+      "kind": "flags",
+      "access": "write",
+      "bits": 1,
+      "description": "x86 flags"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86srai.h $r12, 1",
+          "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86srai.h $r12, 1'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "rd -> rd chain: the destination is also a source."
+        }
+      ],
+      "notes": "rd -> rd chain: the destination is also a source."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 3,
+      "cycles": 3.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86srai.h $r12, 1; x86mfflag $r12, 1",
+          "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86srai.h $r12, 1; x86mfflag $r12, 1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted.",
+          "chain_latency": 1.0
+        }
+      ],
+      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86srai.h $r12, 1; x86srai.h $r13, 1; x86srai.h $r14, 1; x86srai.h $r15, 1; x86srai.h $r16, 1; x86srai.h $r17, 1; x86srai.h $r18, 1; x86srai.h $r19, 1",
+      "init": "x86mtflag $r0, 1",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'x86mtflag $r0, 1' --asm 'x86srai.h $r12, 1; x86srai.h $r13, 1; x86srai.h $r14, 1; x86srai.h $r15, 1; x86srai.h $r16, 1; x86srai.h $r17, 1; x86srai.h $r18, 1; x86srai.h $r19, 1'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 16.01
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.0013,
+        "ipc": 0.4997
+      },
+      "notes": "8 independent instructions take 16.01 cycles."
+    }
+  ],
+  "notes": "LBT x86-style instruction with an immediate operand. Latency is recorded for the rd accumulator path and the EFLAGS path."
+}

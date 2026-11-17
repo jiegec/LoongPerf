@@ -3,7 +3,7 @@
     "name": "adc.d",
     "extension": "LBT",
     "form": "adc.d rd, rj, rk, CF",
-    "description": "x86 add/subtract with carry"
+    "description": "x86-style add with carry on d-bit values."
   },
   "operands": [
     {
@@ -12,7 +12,7 @@
       "kind": "gpr",
       "access": "write",
       "bits": 64,
-      "description": ""
+      "description": "result"
     },
     {
       "index": 2,
@@ -20,7 +20,7 @@
       "kind": "gpr",
       "access": "read",
       "bits": 64,
-      "description": ""
+      "description": "first source"
     },
     {
       "index": 3,
@@ -28,7 +28,7 @@
       "kind": "gpr",
       "access": "read",
       "bits": 64,
-      "description": ""
+      "description": "second source"
     },
     {
       "index": 4,
@@ -36,7 +36,7 @@
       "kind": "flags",
       "access": "read",
       "bits": 1,
-      "description": ""
+      "description": "x86 carry flag"
     }
   ],
   "measurement": {
@@ -51,50 +51,133 @@
   "latencies": [
     {
       "from_operands": [
-        2,
-        4
+        2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2.01,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "operand dependency chain",
           "role": "measurement",
           "asm": "adc.d $r12, $r12, $r13",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
           "measurement": {
             "unroll": 100000,
             "iters": 100,
-            "reps": 7
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1' --asm 'adc.d $r12, $r12, $r13'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.d $r12, $r12, $r13'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "core_cycles": 2.01
           },
-          "notes": "Consecutive unrolled copies form a dependency chain."
+          "notes": "rj -> rd chain: rj and rd are the same register."
         }
       ],
-      "notes": "Register dependency latency."
+      "notes": "rj -> rd chain: rj and rd are the same register."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.02,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "adc.d $r13, $r14, $r12; adc.d $r12, $r14, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.d $r13, $r14, $r12; adc.d $r12, $r14, $r13'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.04
+          },
+          "notes": "rk -> rd chain: two copies alternate rd/rk, latency is half the measured cycle count."
+        }
+      ],
+      "notes": "rk -> rd chain: two copies alternate rd/rk, latency is half the measured cycle count.",
+      "cycles_divisor": 2
+    },
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.03,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "adc.d $r12, $r12, $r12",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.d $r12, $r12, $r12'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.03
+          },
+          "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
+        }
+      ],
+      "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
+    },
+    {
+      "from_operands": [
+        4
+      ],
+      "to_operand": 1,
+      "cycles": 1.04,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "adc.d $r12, $r13, $r14; x86mtflag $r12, 1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.d $r12, $r13, $r14; x86mtflag $r12, 1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.04
+          },
+          "notes": "CF -> rd: the chain closes through x86mtflag, so 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted.",
+          "chain_latency": 3.0
+        }
+      ],
+      "notes": "CF -> rd: the chain closes through x86mtflag, so 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted."
     }
   ],
   "throughput": [
     {
       "name": "8 independent lanes",
-      "asm": "adc.d $r12, $r4, $r4; adc.d $r13, $r5, $r5; adc.d $r14, $r6, $r6; adc.d $r15, $r7, $r7; adc.d $r16, $r8, $r8; adc.d $r17, $r9, $r9; adc.d $r18, $r10, $r10; adc.d $r19, $r11, $r11",
-      "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; x86mtflag $r0, 0x1",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; x86mtflag $r0, 0x1' --asm 'adc.d $r12, $r4, $r4; adc.d $r13, $r5, $r5; adc.d $r14, $r6, $r6; adc.d $r15, $r7, $r7; adc.d $r16, $r8, $r8; adc.d $r17, $r9, $r9; adc.d $r18, $r10, $r10; adc.d $r19, $r11, $r11'",
+      "asm": "adc.d $r12, $r4, $r5; adc.d $r13, $r5, $r6; adc.d $r14, $r6, $r7; adc.d $r15, $r7, $r8; adc.d $r16, $r8, $r9; adc.d $r17, $r9, $r10; adc.d $r18, $r10, $r11; adc.d $r19, $r11, $r12",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'adc.d $r12, $r4, $r5; adc.d $r13, $r5, $r6; adc.d $r14, $r6, $r7; adc.d $r15, $r7, $r8; adc.d $r16, $r8, $r9; adc.d $r17, $r9, $r10; adc.d $r18, $r10, $r11; adc.d $r19, $r11, $r12'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.01
+        "core_cycles": 8.74
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0012,
-        "ipc": 0.9988
+        "cpi": 1.0925,
+        "ipc": 0.9153
       },
-      "notes": "8 independent instructions take 8.01 cycles."
+      "notes": "8 independent instructions take 8.74 cycles."
     }
   ],
-  "notes": "LBT instruction measured on LA664."
+  "notes": "LBT instruction. Every source-to-result path is recorded separately: rj, rk, rj+rk, and CF."
 }

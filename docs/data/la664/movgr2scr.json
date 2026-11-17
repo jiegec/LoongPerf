@@ -60,5 +60,5 @@
       "notes": "8 instructions take 8.01 cycles: 1.00 cycle per instruction."
     }
   ],
-  "notes": "Individual latency cannot be separated from movscr2gr with the available dependent chain. Round trip: ./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; movgr2scr $scr0, $r0' --asm 'movgr2scr $scr0, $r12; movscr2gr $r12, $scr0' gives 2 instructions and 3.99 cycles for the pair."
+  "notes": "LBT scratch register move. The movgr2scr + movscr2gr round trip is 4.01 cycles and only the sum is observable; there is no separate handle on either direction, so no per-direction latency is recorded."
 }

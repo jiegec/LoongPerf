@@ -43,32 +43,59 @@
   "latencies": [
     {
       "from_operands": [
-        2,
-        3
+        2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4.04,
       "experiments": [
         {
-          "name": "high-unroll load-to-ALU chain",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "ldle.h $r4, $r20, $r5; add.d $r20, $r20, $r4",
-          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8; li.d $r5, 0x7fffffffffffffff",
+          "asm": "ldle.h $r4, $r20, $r21; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8; li.d $r21, 9223372036854775807; li.d $r5, 0",
           "measurement": {
             "unroll": 100000,
             "iters": 100,
-            "reps": 7
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8; li.d $r5, 0x7fffffffffffffff' --asm 'ldle.h $r4, $r20, $r5; add.d $r20, $r20, $r4'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8; li.d $r21, 9223372036854775807; li.d $r5, 0' --asm 'ldle.h $r4, $r20, $r21; add.d $r20, $r20, $r4'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 5.0
+            "instructions_retired": 2.0,
+            "core_cycles": 5.04
           },
           "chain_latency": 1.0,
-          "notes": "L1D hit, bound-checked load-to-ALU latency 4 cycles. Bound is max signed so address <= bound is true without making the bound loop-carried; chain_latency subtracts add.d. Measured with unroll=100000."
+          "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes."
         }
       ],
-      "notes": "L1D hit, bound-checked load-to-ALU latency 4 cycles. Bound is max signed so address <= bound is true without making the bound loop-carried; chain_latency subtracts add.d. Measured with unroll=100000."
+      "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.04,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "ldle.h $r4, $r20, $r4",
+          "init": "addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807' --asm 'ldle.h $r4, $r20, $r4'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.04
+          },
+          "chain_latency": 0.0,
+          "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check."
+        }
+      ],
+      "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check."
     }
   ],
   "throughput": [
@@ -99,5 +126,5 @@
       "notes": "8 bound-checked memory operations take 8.00 cycles."
     }
   ],
-  "notes": "L1D-hit load-to-ALU latency 4 cycles. Throughput is 1 CPI."
+  "notes": "L1D-hit bound-checked load. The address path and the bound path are recorded separately."
 }
