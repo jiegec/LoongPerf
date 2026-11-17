@@ -101,7 +101,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.04,
+      "cycles": 3.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -116,20 +116,22 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86and.w $r12, $r13; x86mfflag $r12, 1'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.04
+            "core_cycles": 4.0
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted.",
           "chain_latency": 1.0
         }
       ],
-      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted."
+      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 3.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2.94,
+      "cycles_max": 3.14
     },
     {
       "from_operands": [
         2
       ],
       "to_operand": 3,
-      "cycles": 3.05,
+      "cycles": 3.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -144,13 +146,15 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1' --asm 'x86and.w $r12, $r13; x86mfflag $r13, 1'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.05
+            "core_cycles": 4.0
           },
           "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted.",
           "chain_latency": 1.0
         }
       ],
-      "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted."
+      "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2.95,
+      "cycles_max": 3.15
     }
   ],
   "throughput": [

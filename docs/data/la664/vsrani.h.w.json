@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.04,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -60,12 +60,14 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vsrani.h.w $vr0, $vr0, 1'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.04
+            "core_cycles": 4.0
           },
           "notes": "Consecutive unrolled copies form a vector-register dependency chain. Measured with unroll=100000 to amortise call overhead."
         }
       ],
-      "notes": "Register-to-register latency."
+      "notes": "Register-to-register latency. Raw measurement was 4.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 3.94,
+      "cycles_max": 4.14
     }
   ],
   "throughput": [

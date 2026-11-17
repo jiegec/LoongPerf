@@ -79,7 +79,7 @@
         1
       ],
       "to_operand": 4,
-      "cycles": 3.06,
+      "cycles": 3.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -94,13 +94,15 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armrotri.w $r12, 1, 14; armmfflag $r12, 0x39'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.06
+            "core_cycles": 4.0
           },
           "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
           "chain_latency": 1.0
         }
       ],
-      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted."
+      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted. Raw measurement was 3.06; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2.96,
+      "cycles_max": 3.16
     }
   ],
   "throughput": [

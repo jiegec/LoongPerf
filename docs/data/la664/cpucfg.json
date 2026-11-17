@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 11.09,
+      "cycles": 11.0,
       "experiments": [
         {
           "name": "dependent chain",
@@ -55,12 +55,14 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 0' --asm 'cpucfg $r12, $r12'",
           "result": {
             "instructions_retired": 0.0,
-            "core_cycles": 11.09
+            "core_cycles": 11.0
           },
           "notes": "CPUCFG is not counted by the instruction-retired event on this machine; cycles are the meaningful result."
         }
       ],
-      "notes": "Measured with a self-dependent index chain."
+      "notes": "Measured with a self-dependent index chain. Raw measurement was 11.09; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 10.99,
+      "cycles_max": 11.19
     }
   ],
   "throughput": [

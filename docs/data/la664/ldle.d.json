@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.06,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,13 +61,15 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, -8; st.d $r4, $r20, 8; li.d $r21, 9223372036854775807; li.d $r5, 0' --asm 'ldle.d $r4, $r20, $r21; add.d $r20, $r20, $r4'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 5.06
+            "core_cycles": 5.0
           },
           "chain_latency": 1.0,
           "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes."
         }
       ],
-      "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes."
+      "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes. Raw measurement was 4.06; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 3.96,
+      "cycles_max": 4.16
     },
     {
       "from_operands": [

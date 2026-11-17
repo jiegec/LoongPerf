@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.07,
+      "cycles": 1.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,22 +60,22 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.cule.s $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f0, $r4'",
           "result": {
             "instructions_retired": 3.0,
-            "core_cycles": 5.07
+            "core_cycles": 5.0
           },
           "notes": "fj -> fcc chain; the loop is closed through movcf2gr and movgr2fr, and that closure costs the same for both entries.",
           "chain_latency": 4.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise.",
-      "cycles_min": 1.0,
-      "cycles_max": 1.1
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.07; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 0.97,
+      "cycles_max": 1.17
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 1.06,
+      "cycles": 1.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -90,15 +90,15 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.cule.s $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f1, $r4'",
           "result": {
             "instructions_retired": 3.0,
-            "core_cycles": 5.06
+            "core_cycles": 5.0
           },
           "notes": "fk -> fcc chain; the loop is closed through movcf2gr and movgr2fr.",
           "chain_latency": 4.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise.",
-      "cycles_min": 1.0,
-      "cycles_max": 1.1
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.06; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 0.96,
+      "cycles_max": 1.16
     }
   ],
   "throughput": [

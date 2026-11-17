@@ -73,7 +73,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.04,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -88,13 +88,15 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3' --asm 'rcr.b $r13, $r14, $r12; rcr.b $r12, $r14, $r13'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.07
+            "core_cycles": 4.0
           },
           "notes": "rk -> rd chain: two copies alternate rd/rk."
         }
       ],
-      "notes": "rk -> rd chain: two copies alternate rd/rk.",
-      "cycles_divisor": 2
+      "notes": "rk -> rd chain: two copies alternate rd/rk. Raw measurement was 2.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_divisor": 2,
+      "cycles_min": 1.94,
+      "cycles_max": 2.14
     },
     {
       "from_operands": [

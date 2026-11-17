@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.04,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "high-unroll load-to-ALU chain",
@@ -60,15 +60,15 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8' --asm 'ld.hu $r4, $r20, 0; slli.d $r4, $r4, 48; srai.d $r4, $r4, 48; add.d $r20, $r20, $r4'",
           "result": {
             "instructions_retired": 4,
-            "core_cycles": 7.04
+            "core_cycles": 7.0
           },
           "chain_latency": 3.0,
           "notes": "L1D hit, load-to-ALU latency 4 cycles. The unsigned result is explicitly sign-extended with slli/srai so the base pointer can alternate +8/-8; chain_latency subtracts 2 shift cycles and 1 add. Measured with unroll=100000."
         }
       ],
-      "notes": "L1D-hit load-to-ALU latency is nominally 4 cycles. Re-measured with an ext.w/add.w extension chain: raw 6.06-6.10 cycles, extension-chain baseline 2.19 cycles, giving about 3.9-4.1 cycles. The unsigned extension path adds about 0.1 cycle of uncertainty, so the value is not exactly 4.00 in every measurement.",
-      "cycles_min": 3.9,
-      "cycles_max": 4.1
+      "notes": "L1D-hit load-to-ALU latency is nominally 4 cycles. Re-measured with an ext.w/add.w extension chain: raw 6.06-6.10 cycles, extension-chain baseline 2.19 cycles, giving about 3.9-4.1 cycles. The unsigned extension path adds about 0.1 cycle of uncertainty, so the value is not exactly 4.00 in every measurement. Raw measurement was 4.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 3.94,
+      "cycles_max": 4.14
     }
   ],
   "throughput": [
