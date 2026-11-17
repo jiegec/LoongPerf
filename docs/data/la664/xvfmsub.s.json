@@ -10,9 +10,9 @@
       "index": 1,
       "name": "xd",
       "kind": "vector",
-      "access": "read-write",
+      "access": "write",
       "bits": 256,
-      "description": "accumulator/destination"
+      "description": "result"
     },
     {
       "index": 2,
@@ -51,30 +51,84 @@
   "latencies": [
     {
       "from_operands": [
-        1
+        2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5.03,
       "experiments": [
         {
-          "name": "accumulator dependency chain",
+          "name": "operand dependency chain",
           "role": "measurement",
           "asm": "xvfmsub.s $xr0, $xr0, $xr2, $xr3",
-          "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr2, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr3, $r4",
+          "init": "li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4",
           "measurement": {
             "unroll": 100000,
             "iters": 100,
-            "reps": 7
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr2, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr3, $r4' --asm 'xvfmsub.s $xr0, $xr0, $xr2, $xr3'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4' --asm 'xvfmsub.s $xr0, $xr0, $xr2, $xr3'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "core_cycles": 5.03
           },
-          "notes": "The destination/accumulator vd is also the first source; this measures the accumulator-to-result path. Other source paths are not separately measured yet."
+          "notes": "vj -> vd chain."
         }
       ],
-      "notes": "Accumulator-to-result latency. The FMA has three source operands; this entry covers the vd path only."
+      "notes": "vj -> vd chain."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 5.03,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "xvfmsub.s $xr0, $xr1, $xr0, $xr3",
+          "init": "li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4' --asm 'xvfmsub.s $xr0, $xr1, $xr0, $xr3'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.03
+          },
+          "notes": "vk -> vd chain."
+        }
+      ],
+      "notes": "vk -> vd chain."
+    },
+    {
+      "from_operands": [
+        4
+      ],
+      "to_operand": 1,
+      "cycles": 5.03,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "xvfmsub.s $xr0, $xr1, $xr2, $xr0",
+          "init": "li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4' --asm 'xvfmsub.s $xr0, $xr1, $xr2, $xr0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.03
+          },
+          "notes": "va -> vd chain."
+        }
+      ],
+      "notes": "va -> vd chain."
     }
   ],
   "throughput": [
@@ -95,5 +149,5 @@
       "notes": "8 independent instructions take 3.98 cycles."
     }
   ],
-  "notes": "LASX vector FMA. Measured on LA664 with normal float operands; latency uses the accumulator dependency chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+  "notes": "LBT-free LASX/LSX fused multiply-add. vd is write-only: it is not read as an accumulator (a vd -> vd chain runs at about 0.5 cycles). The vj, vk, and va paths each cost 5 cycles."
 }

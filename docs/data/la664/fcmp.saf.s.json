@@ -42,32 +42,63 @@
   "latencies": [
     {
       "from_operands": [
-        2,
-        3
+        2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1.08,
       "experiments": [
         {
-          "name": "condition-code dependency chain",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "fcmp.saf.s $fcc0, $f0, $f1; movcf2fr $f0, $fcc0",
-          "init": "li.d $r4, 0x3f800000; movgr2fr.w $f0, $r4; movgr2fr.w $f1, $r4",
+          "asm": "fcmp.saf.s $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f0, $r4",
+          "init": "li.d $r4, 0x3f800000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4",
           "measurement": {
             "unroll": 100000,
             "iters": 100,
-            "reps": 7
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0x3f800000; movgr2fr.w $f0, $r4; movgr2fr.w $f1, $r4' --asm 'fcmp.saf.s $fcc0, $f0, $f1; movcf2fr $f0, $fcc0'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.saf.s $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f0, $r4'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 2.0
+            "instructions_retired": 3.0,
+            "core_cycles": 5.08
           },
-          "chain_latency": 1.0,
-          "notes": "FCMP writes FCC in 1 cycle. The fcmp+movcf2fr chain is 2 cycles; movcf2fr is 1 cycle (movcf2fr+movfr2cf round trip = 2). The fcmp+movcf2gr+movgr2fr chain is 5 cycles (1+3+1), consistent. All conditions measured the same."
+          "notes": "fj -> fcc chain; the loop is closed through movcf2gr and movgr2fr, and that closure costs the same for both entries.",
+          "chain_latency": 4.0
         }
       ],
-      "notes": "Latency from either floating-point source to the FCC result is 1 cycle."
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.1
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.08,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "fcmp.saf.s $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f1, $r4",
+          "init": "li.d $r4, 0x3f800000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.saf.s $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f1, $r4'",
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 5.08
+          },
+          "notes": "fk -> fcc chain; the loop is closed through movcf2gr and movgr2fr.",
+          "chain_latency": 4.0
+        }
+      ],
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.1
     }
   ],
   "throughput": [
@@ -98,5 +129,5 @@
       "notes": "8 independent comparisons take 3.98 cycles."
     }
   ],
-  "notes": "FCMP writes the condition-code register. Latency to FCC is 1 cycle. Throughput is 0.5 CPI (8 independent comparisons in 4 cycles). The measured fcmp+movcf2fr chain is 2 cycles; the fcmp+movcf2gr+movgr2fr chain is 5 cycles."
+  "notes": "Both floating-point sources reach the FCC result in 1 cycle. The recorded chain values include the constant movcf2gr/movgr2fr closure."
 }
