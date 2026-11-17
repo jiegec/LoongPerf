@@ -394,10 +394,26 @@ bound, so they measured the 4-cycle address path, while the `ldgt` chains kept a
 `xori` and measured the 5-cycle ALU path. With the same chain the two
 instructions are identical, which is what the cases now record.
 
-Notice that 4, not 3, is the cost of feeding a *value* to the address generator
-here. The 3-cycle path of `ld.d` is the base register becoming the next address
-directly, which needs the loaded value to be a complete 64-bit address; a value
-used as an index still pays the second address-generation pass.
+LA464 was measured per source operand and shows a simpler rule than LA664:
+every operand reads **4** cycles when the loaded value feeds the address or the
+range check directly, and **5** when an ALU operation sits between the load and
+the next use. The base operand of `ldx.*`/`ldgt.*`/`ldle.*`/`fldx.*`/`fldgt.*`/
+`fldle.*` reads 5 (4 for the `*`-chased `.d` forms), the index operand of
+`ldx.*`/`fldx.*` reads 4 (5 with `andi` in the path), the bound of `ldgt.*` and
+`fldgt.*` reads 4, and the bound of `ldle.*`/`fldle.*` reads 5 only because the
+`rj <= rk` check forces an `add.d` into every chain -- the direct form is not
+constructible there. So the LA464 numbers are the same shape as the plain-load
+ladder (4 on the bypass, 5 through the ALU), while LA664 charges one extra cycle
+on the index and bound operands.
+
+One LA464 trap is worth recording: `ldgt.*`/`ldle.*` raise a bounds-check
+exception instead of writing zero when the range check fails, and this kernel
+does not emulate it, so a failing check kills the process with `SIGSEGV` at the
+load address (`si_addr` = `rj`, which can be a mapped address). Every chain has
+to keep the check passing, which is why the `ldle.*` bound recipes add the
+loaded value back to the base. `ldgt` loads when `rj > rk` and `ldle` when
+`rj <= rk`; otherwise the two instructions behave identically, including the
+per-operand latencies.
 
 ### What does not change the latency
 
@@ -451,9 +467,9 @@ Load latency does not depend on the data, only on the path:
 | plain `ld.*`, `vld`, `xvld` to a consumer | 4 | 5 |
 | plain `fld.*` to a GPR consumer | 5 | 5 |
 | `ld.d`, `ldptr.d` feeding the next address | 3 | 4 |
-| `ldx.*`, `ldgt.*`, `ldle.*` base / index or bound | 4 / 5 | 5, split unmeasured |
-| `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 5 / 6 | 5, split unmeasured |
-| integer `ldle.*` bound fed back as the next bound | 4 | not measured |
+| `ldx.*`, `ldgt.*`, `ldle.*` base / index or bound | 4 / 5 | 5 / 4 |
+| `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 5 / 6 | 5 / 4 |
+| integer `ldle.*` bound fed back as the next bound | 4 | 5 (the `rj <= rk` check needs an `add.d` in the chain) |
 
 The floating-point classes are a fixed set that covers every possible operand,
 so the JSON lists them as an exhaustive `cases` array, and no formula is needed

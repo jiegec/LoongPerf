@@ -143,5 +143,5 @@
       "notes": "8 independent instructions take 4.00 cycles."
     }
   ],
-  "notes": "L1D-hit single-precision floating-point load: 5 cycles from the base address register to the loaded value, measured with movfr2gr.s (3 cycles) and add.d (1 cycle) in the chain. The 4-cycle address-bypass path that fld.d shows cannot be constructed here, because a 32-bit load result is never a complete 64-bit address. Measured with --method slope on LA464, core 0."
+  "notes": "L1D-hit single-precision floating-point load: 5 cycles from the base address register to the loaded value through an ALU consumer, measured with movfr2gr.s (3 cycles) and add.d (1 cycle) in the chain. The 4-cycle bypass path that fld.d shows cannot be constructed here, because a 32-bit load result is never a complete 64-bit address (the chase would need a buffer below 2 GiB, and a low mmap made by the parent does not survive the exec into the benchmark). Within that limit the two widths behave identically: fld.s with the add.d reads 8.98 cycles against 8.94-8.98 for the same fld.d chain, so the 4/5 split of fld.d carries over and the difference between the two recorded numbers is the closure, not the hardware. Measured with --method slope, unroll 800/1600, on LA464 core 0."
 }
