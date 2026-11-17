@@ -439,9 +439,11 @@
     $("q").value = params.get("q") || "";
     const uarch = params.get("uarch");
     const extension = params.get("extension");
+    const pageParam = Number(params.get("page"));
     return {
       uarch: uarch ? uarch.split(",").filter(Boolean) : null,
-      extensions: extension ? extension.split(",").filter(Boolean) : null
+      extensions: extension ? extension.split(",").filter(Boolean) : null,
+      page: Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1
     };
   }
 
@@ -466,6 +468,7 @@
       renderDataMeta(payload.metadata);
 
       const settings = loadUrlSettings();
+      page = settings.page;
       allUarches = [...new Set(entries.map((entry) => entry.uarch))].sort();
       buildUarchCheckboxes(settings.uarch);
       buildExtensionCheckboxes(settings.extensions);
@@ -750,6 +753,7 @@
     if ($("q").value.trim()) params.set("q", $("q").value.trim());
     if (selected.length) params.set("uarch", selected.join(","));
     if (extensions.length) params.set("extension", extensions.join(","));
+    if (page > 1) params.set("page", String(page));
     const query = params.toString();
     history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
   }
