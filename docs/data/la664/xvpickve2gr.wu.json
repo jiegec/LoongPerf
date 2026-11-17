@@ -48,17 +48,17 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfa --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4' --asm 'xvpickve2gr.wu $r12, $xr8, 0; xvpickve2gr.wu $r13, $xr9, 0; xvpickve2gr.wu $r14, $xr10, 0; xvpickve2gr.wu $r15, $xr11, 0; xvpickve2gr.wu $r16, $xr12, 0; xvpickve2gr.wu $r17, $xr13, 0; xvpickve2gr.wu $r18, $xr14, 0; xvpickve2gr.wu $r19, $xr15, 0'",
       "result": {
         "instructions_retired": 16.0,
-        "core_cycles": 7.99,
+        "core_cycles": 8.0,
         "counters": {
           "0xfa": 2.0
         }
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.9988,
-        "ipc": 1.0013
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfa normalised per instruction."
+      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfa normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure."
     }
   ],
   "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes."

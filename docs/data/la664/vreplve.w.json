@@ -77,17 +77,17 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 0; li.d $r5, 0; li.d $r6, 0; li.d $r7, 0; li.d $r8, 0; li.d $r9, 0; li.d $r10, 0; li.d $r11, 0' --asm 'vreplve.w $vr0, $vr8, $r4; vreplve.w $vr1, $vr9, $r5; vreplve.w $vr2, $vr10, $r6; vreplve.w $vr3, $vr11, $r7; vreplve.w $vr4, $vr12, $r8; vreplve.w $vr5, $vr13, $r9; vreplve.w $vr6, $vr14, $r10; vreplve.w $vr7, $vr15, $r11'",
       "result": {
         "instructions_retired": 16.0,
-        "core_cycles": 8.01,
+        "core_cycles": 8.0,
         "counters": {
           "0xfb": 1.0
         }
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0012,
-        "ipc": 0.9988
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 independent instructions take 8.01 cycles. Counter 0xfb normalised per instruction."
+      "notes": "8 independent instructions take 8.01 cycles. Counter 0xfb normalised per instruction. The measured CPI 1.0012 is the nominal 1 within measurement noise; the value is reported as the nominal figure."
     }
   ],
   "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes."

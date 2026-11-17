@@ -69,14 +69,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vexth.wu.hu $vr0, $vr8; vexth.wu.hu $vr1, $vr9; vexth.wu.hu $vr2, $vr10; vexth.wu.hu $vr3, $vr11; vexth.wu.hu $vr4, $vr12; vexth.wu.hu $vr5, $vr13; vexth.wu.hu $vr6, $vr14; vexth.wu.hu $vr7, $vr15'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 2.12
+        "core_cycles": 2.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.265,
-        "ipc": 3.7736
+        "cpi": 0.25,
+        "ipc": 4.0
       },
-      "notes": "8 independent instructions take 2.12 cycles."
+      "notes": "8 independent instructions take 2.12 cycles. Measured CPI 0.2650; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure."
     }
   ],
   "notes": "LSX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000). Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."

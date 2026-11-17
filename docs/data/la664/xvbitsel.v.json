@@ -114,14 +114,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 2; xvreplgr2vr.b $xr16, $r4; li.d $r4, 2; xvreplgr2vr.b $xr17, $r4; li.d $r4, 2; xvreplgr2vr.b $xr18, $r4; li.d $r4, 2; xvreplgr2vr.b $xr19, $r4; li.d $r4, 2; xvreplgr2vr.b $xr20, $r4; li.d $r4, 2; xvreplgr2vr.b $xr21, $r4; li.d $r4, 2; xvreplgr2vr.b $xr22, $r4; li.d $r4, 2; xvreplgr2vr.b $xr23, $r4; li.d $r4, 3; xvreplgr2vr.b $xr24, $r4; li.d $r4, 3; xvreplgr2vr.b $xr25, $r4; li.d $r4, 3; xvreplgr2vr.b $xr26, $r4; li.d $r4, 3; xvreplgr2vr.b $xr27, $r4; li.d $r4, 3; xvreplgr2vr.b $xr28, $r4; li.d $r4, 3; xvreplgr2vr.b $xr29, $r4; li.d $r4, 3; xvreplgr2vr.b $xr30, $r4; li.d $r4, 3; xvreplgr2vr.b $xr31, $r4' --asm 'xvbitsel.v $xr0, $xr8, $xr16, $xr24; xvbitsel.v $xr1, $xr9, $xr17, $xr25; xvbitsel.v $xr2, $xr10, $xr18, $xr26; xvbitsel.v $xr3, $xr11, $xr19, $xr27; xvbitsel.v $xr4, $xr12, $xr20, $xr28; xvbitsel.v $xr5, $xr13, $xr21, $xr29; xvbitsel.v $xr6, $xr14, $xr22, $xr30; xvbitsel.v $xr7, $xr15, $xr23, $xr31'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 3.98
+        "core_cycles": 4.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.4975,
-        "ipc": 2.0101
+        "cpi": 0.5,
+        "ipc": 2.0
       },
-      "notes": "8 independent instructions take 3.98 cycles."
+      "notes": "8 independent instructions take 3.98 cycles. The measured CPI 0.4975 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure."
     }
   ],
   "notes": "LASX vector instruction. Measured on LA664 with integer vector operands. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."

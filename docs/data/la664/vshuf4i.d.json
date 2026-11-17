@@ -76,14 +76,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vshuf4i.d $vr0, $vr8, 1; vshuf4i.d $vr1, $vr9, 1; vshuf4i.d $vr2, $vr10, 1; vshuf4i.d $vr3, $vr11, 1; vshuf4i.d $vr4, $vr12, 1; vshuf4i.d $vr5, $vr13, 1; vshuf4i.d $vr6, $vr14, 1; vshuf4i.d $vr7, $vr15, 1'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 1.99
+        "core_cycles": 2.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.2487,
-        "ipc": 4.0201
+        "cpi": 0.25,
+        "ipc": 4.0
       },
-      "notes": "8 independent instructions take 1.99 cycles."
+      "notes": "8 independent instructions take 1.99 cycles. The measured CPI 0.2487 is the nominal 0.25 within measurement noise; the value is reported as the nominal figure."
     }
   ],
   "notes": "LSX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

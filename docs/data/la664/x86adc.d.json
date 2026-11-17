@@ -190,14 +190,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'x86adc.d $r12, $r4; x86adc.d $r13, $r5; x86adc.d $r14, $r6; x86adc.d $r15, $r7; x86adc.d $r16, $r8; x86adc.d $r17, $r9; x86adc.d $r18, $r10; x86adc.d $r19, $r11'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 16.03
+        "core_cycles": 16.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0038,
-        "ipc": 0.4991
+        "cpi": 2.0,
+        "ipc": 0.5
       },
-      "notes": "8 independent instructions take 16.03 cycles."
+      "notes": "8 independent instructions take 16.03 cycles. The measured CPI 2.0038 is the nominal 2 within measurement noise; the value is reported as the nominal figure."
     }
   ],
   "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."

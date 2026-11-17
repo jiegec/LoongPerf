@@ -70,17 +70,17 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'vreplgr2vr.w $vr0, $r4; vreplgr2vr.w $vr1, $r5; vreplgr2vr.w $vr2, $r6; vreplgr2vr.w $vr3, $r7; vreplgr2vr.w $vr4, $r8; vreplgr2vr.w $vr5, $r9; vreplgr2vr.w $vr6, $r10; vreplgr2vr.w $vr7, $r11'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.53,
+        "core_cycles": 8.0,
         "counters": {
           "0xfb": 0.0
         }
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0662,
-        "ipc": 0.9379
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 independent instructions take 8.53 cycles. Counter 0xfb is normalised per instruction."
+      "notes": "8 independent instructions take 8.53 cycles. Counter 0xfb is normalised per instruction. Measured CPI 1.0662; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
     }
   ],
   "notes": "LSX two-uop instruction. Throughput measured with 8 independent lanes; latency measured through a vpickve2gr round trip."

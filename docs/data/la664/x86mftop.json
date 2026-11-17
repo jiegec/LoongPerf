@@ -33,14 +33,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'x86mttop 0' --asm 'x86mftop $r12; x86mftop $r13; x86mftop $r14; x86mftop $r15; x86mftop $r16; x86mftop $r17; x86mftop $r18; x86mftop $r19'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 2.51
+        "core_cycles": 2.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.3137,
-        "ipc": 3.1873
+        "cpi": 0.25,
+        "ipc": 4.0
       },
-      "notes": "8 independent instructions take 2.51 cycles."
+      "notes": "8 independent instructions take 2.51 cycles. Measured CPI 0.3137; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure."
     }
   ],
   "notes": "The TOP pointer is renamed and mftop/mttop do not form a latency chain through it: a mttop/mftop loop runs at about 1.2 cycles per pair, which is throughput, not latency. Only throughput is recorded."

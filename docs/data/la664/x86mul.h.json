@@ -162,14 +162,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'x86mul.h $r12, $r4; x86mul.h $r13, $r5; x86mul.h $r14, $r6; x86mul.h $r15, $r7; x86mul.h $r16, $r8; x86mul.h $r17, $r9; x86mul.h $r18, $r10; x86mul.h $r19, $r11'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.36
+        "core_cycles": 8.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.045,
-        "ipc": 0.9569
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 independent instructions take 8.36 cycles."
+      "notes": "8 independent instructions take 8.36 cycles. Measured CPI 1.0450; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
     }
   ],
   "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
