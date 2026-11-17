@@ -48,21 +48,24 @@
         "00000c13  movscr2gr $t7, $scr0"
       ],
       "result": {
-        "instructions_retired": 8,
-        "core_cycles": 7.35
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
       },
       "measurement": {
-        "unroll": 10000,
-        "iters": 1000
+        "unroll": 100,
+        "iters": 2000,
+        "reps": 9
       },
-      "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'movgr2scr $scr0, $r0; movgr2scr $scr1, $r0; movgr2scr $scr2, $r0; movgr2scr $scr3, $r0' --asm 'movscr2gr $r12, $scr0; movscr2gr $r13, $scr0; movscr2gr $r14, $scr0; movscr2gr $r15, $scr0; movscr2gr $r16, $scr0; movscr2gr $r17, $scr0; movscr2gr $r18, $scr0; movscr2gr $r19, $scr0'",
+      "command": "./bench --unroll 100 --unroll2 200 --iters 2000 --warmup 10 --reps 9 --core 0 --init 'movgr2scr $scr0, $r0; movgr2scr $scr1, $r0; movgr2scr $scr2, $r0; movgr2scr $scr3, $r0' --asm 'movscr2gr $r12, $scr0; movscr2gr $r13, $scr0; movscr2gr $r14, $scr0; movscr2gr $r15, $scr0; movscr2gr $r16, $scr0; movscr2gr $r17, $scr0; movscr2gr $r18, $scr0; movscr2gr $r19, $scr0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.9187,
-        "ipc": 1.0885
+        "cpi": 0.5,
+        "ipc": 2.0,
+        "cpi_min": 0.5,
+        "cpi_max": 0.5
       },
-      "notes": "8 independent instructions take 7.35 cycles."
+      "notes": "8 independent movscr2gr instructions reading scr0 retire in 4.00 cycles, i.e. 2 per cycle (CPI 0.5). The body must be kept small: with --unroll 5000 (8 x 5000 = 40k instructions, 160 KiB) the sequence no longer fits in L1I and the measured CPI rises to about 1.0, which is a fetch limit rather than the instruction throughput. Measured on 2026-11-17 on LA464, core 0."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "LBT scratch-register move. movgr2scr + movscr2gr round trip is 4.01 cycles and only the sum is observable, so no per-direction latency is recorded. Throughput is 2 per cycle (CPI 0.5) with an L1I-resident body."
 }

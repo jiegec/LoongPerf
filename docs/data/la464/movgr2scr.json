@@ -61,7 +61,7 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.34 cycles."
+      "notes": "8 independent instructions take 8.34 cycles. CPI stays 1.00 for bodies from --unroll 10 to 1000; at --unroll 5000 the 8 x 5000 instruction body leaves L1I and the measured CPI rises to about 1.06."
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput only."
