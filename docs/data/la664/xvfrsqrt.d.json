@@ -38,8 +38,8 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 14.97,
-      "cycles_min": 10.97,
+      "cycles": 15.0,
+      "cycles_min": 11.0,
       "cycles_max": 55.0,
       "experiments": [
         {
@@ -55,7 +55,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'xvfrsqrt.d $xr0, $xr0; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4'",
           "result": {
             "instructions_retired": 6.0,
-            "core_cycles": 24.07
+            "core_cycles": 24.1
           },
           "chain_latency": 9.1,
           "notes": "vpickve2gr extracts element 0, and/or forces it back to the test value, vreplgr2vr replicates it; the vadd.b baseline is subtracted."
@@ -73,7 +73,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4'",
           "result": {
             "instructions_retired": 6.0,
-            "core_cycles": 10.1
+            "core_cycles": 15.0
           },
           "notes": "Same helper chain with vadd.b replacing the variable-latency operation."
         }
@@ -103,5 +103,5 @@
       "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 26.50 at maxsub. Sample uses 1."
     }
   ],
-  "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."
+  "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

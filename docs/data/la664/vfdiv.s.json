@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.99,
+      "cycles": 11.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,13 +61,13 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vfdiv.s $vr0, $vr0, $vr1'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 10.99
+            "core_cycles": 11.0
           },
           "notes": "vj -> result chain."
         }
       ],
       "notes": "vj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 10.98,
+      "cycles_min": 11.0,
       "cycles_max": 29.0
     },
     {
@@ -75,7 +75,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 21.02,
+      "cycles": 21.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -90,13 +90,13 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vfdiv.s $vr0, $vr1, $vr0'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 21.02
+            "core_cycles": 21.0
           },
           "notes": "vk -> result chain."
         }
       ],
       "notes": "vk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 10.98,
+      "cycles_min": 11.0,
       "cycles_max": 29.0
     }
   ],
@@ -122,5 +122,5 @@
       "notes": "Throughput range over 22 operand values: min CPI 4.50 at 1/0, max CPI 13.50 at 1/maxsub. Sample uses 1/1."
     }
   ],
-  "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
+  "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

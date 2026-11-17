@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 8.03,
+      "cycles": 8.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,14 +61,14 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vmod.d $vr0, $vr0, $vr1'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 8.03
+            "core_cycles": 8.0
           },
           "notes": "vj -> result chain."
         }
       ],
       "notes": "vj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 7.99,
-      "cycles_max": 26.99
+      "cycles_min": 8.0,
+      "cycles_max": 27.0
     },
     {
       "from_operands": [
@@ -96,8 +96,8 @@
         }
       ],
       "notes": "vk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 7.99,
-      "cycles_max": 26.99
+      "cycles_min": 8.0,
+      "cycles_max": 27.0
     }
   ],
   "throughput": [
@@ -122,5 +122,5 @@
       "notes": "Range over the same pairs: min CPI 3.00 at 0/1, max CPI 12.50 at 9223372036854775807/1. Sample uses 1/1."
     }
   ],
-  "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
+  "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

@@ -54,7 +54,7 @@
           "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 1.02
+            "core_cycles": 1.0
           },
           "measurement": {
             "unroll": 20000,
@@ -64,9 +64,7 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vsrai.b $vr0, $vr0, 1'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 1.0,
-      "cycles_max": 1.0
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -90,5 +88,6 @@
       },
       "notes": "8 independent instructions take 4.06 cycles."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

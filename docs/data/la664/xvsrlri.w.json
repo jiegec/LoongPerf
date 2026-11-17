@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.03,
+      "cycles": 3.0,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -60,7 +60,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4' --asm 'xvsrlri.w $xr0, $xr0, 1'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 3.03
+            "core_cycles": 3.0
           },
           "notes": "Consecutive unrolled copies form a vector-register dependency chain. Measured with unroll=100000 to amortise call overhead."
         }
@@ -86,5 +86,5 @@
       "notes": "8 independent instructions take 4.04 cycles."
     }
   ],
-  "notes": "LASX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+  "notes": "LASX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000). Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

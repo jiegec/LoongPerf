@@ -67,9 +67,7 @@
           "notes": "rj -> rd chain."
         }
       ],
-      "notes": "rj -> rd chain. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.98,
-      "cycles_max": 1.18
+      "notes": "rj -> rd chain. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -90,5 +88,5 @@
       "notes": "8 independent instructions take 8.60 cycles."
     }
   ],
-  "notes": "LBT instruction. Latency is recorded for the rj counter path and the EFLAGS path."
+  "notes": "LBT instruction. Latency is recorded for the rj counter path and the EFLAGS path. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

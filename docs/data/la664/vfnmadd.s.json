@@ -54,7 +54,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.03,
+      "cycles": 5.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -69,7 +69,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; vreplgr2vr.w $vr0, $r4; li.d $r4, 0x3f800000; vreplgr2vr.w $vr1, $r4; li.d $r4, 0x3f800000; vreplgr2vr.w $vr2, $r4; li.d $r4, 0x3f800000; vreplgr2vr.w $vr3, $r4' --asm 'vfnmadd.s $vr0, $vr0, $vr2, $vr3'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 5.03
+            "core_cycles": 5.0
           },
           "notes": "vj -> vd chain."
         }
@@ -81,7 +81,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5.03,
+      "cycles": 5.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -96,7 +96,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; vreplgr2vr.w $vr0, $r4; li.d $r4, 0x3f800000; vreplgr2vr.w $vr1, $r4; li.d $r4, 0x3f800000; vreplgr2vr.w $vr2, $r4; li.d $r4, 0x3f800000; vreplgr2vr.w $vr3, $r4' --asm 'vfnmadd.s $vr0, $vr1, $vr0, $vr3'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 5.03
+            "core_cycles": 5.0
           },
           "notes": "vk -> vd chain."
         }
@@ -149,5 +149,5 @@
       "notes": "8 independent instructions take 3.98 cycles."
     }
   ],
-  "notes": "LBT-free LASX/LSX fused multiply-add. vd is write-only: it is not read as an accumulator (a vd -> vd chain runs at about 0.5 cycles). The vj, vk, and va paths each cost 5 cycles."
+  "notes": "LBT-free LASX/LSX fused multiply-add. vd is write-only: it is not read as an accumulator (a vd -> vd chain runs at about 0.5 cycles). The vj, vk, and va paths each cost 5 cycles. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

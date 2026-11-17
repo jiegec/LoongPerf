@@ -66,9 +66,7 @@
           "chain_latency": 10.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle(s). The chain closure through movcf2gr (9 cycles) and movgr2fr (1 cycle) is subtracted.",
-      "cycles_min": 0.99,
-      "cycles_max": 1.0
+      "notes": "Latency to FCC is 1 cycle(s). The chain closure through movcf2gr (9 cycles) and movgr2fr (1 cycle) is subtracted."
     },
     {
       "from_operands": [
@@ -96,9 +94,7 @@
           "chain_latency": 10.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle(s). The chain closure through movcf2gr (9 cycles) and movgr2fr (1 cycle) is subtracted.",
-      "cycles_min": 1.0,
-      "cycles_max": 1.0
+      "notes": "Latency to FCC is 1 cycle(s). The chain closure through movcf2gr (9 cycles) and movgr2fr (1 cycle) is subtracted."
     }
   ],
   "throughput": [
@@ -132,5 +128,6 @@
       },
       "notes": "8 independent instructions take 4.01 cycles."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

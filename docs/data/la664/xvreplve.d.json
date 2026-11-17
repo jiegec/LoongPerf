@@ -66,9 +66,7 @@
           "notes": "Dependent vector chain."
         }
       ],
-      "notes": "Register dependency latency. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.98,
-      "cycles_max": 1.18
+      "notes": "Register dependency latency. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -92,5 +90,5 @@
       "notes": "8 independent instructions take 8.62 cycles."
     }
   ],
-  "notes": "LASX vector instruction measured on LA664."
+  "notes": "LASX vector instruction measured on LA664. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

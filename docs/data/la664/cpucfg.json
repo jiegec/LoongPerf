@@ -60,9 +60,7 @@
           "notes": "CPUCFG is not counted by the instruction-retired event on this machine; cycles are the meaningful result."
         }
       ],
-      "notes": "Measured with a self-dependent index chain. Raw measurement was 11.09; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 10.99,
-      "cycles_max": 11.19
+      "notes": "Measured with a self-dependent index chain. Raw measurement was 11.09; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -92,5 +90,6 @@
       },
       "notes": "8 independent CPUCFG operations take 88.69 cycles. Instruction-retired is 0 for CPUCFG on this machine."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

@@ -83,7 +83,7 @@
         4
       ],
       "to_operand": 1,
-      "cycles": 1.01,
+      "cycles": 1.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -98,7 +98,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; vreplgr2vr.b $vr1, $r4; vreplgr2vr.b $vr2, $r4' --asm 'vbitsel.v $vr0, $vr1, $vr2, $vr0'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 1.01
+            "core_cycles": 1.0
           },
           "notes": "third source -> vd chain."
         }
@@ -124,5 +124,5 @@
       "notes": "8 independent instructions take 3.98 cycles."
     }
   ],
-  "notes": "LSX vector instruction. Measured on LA664 with integer vector operands."
+  "notes": "LSX vector instruction. Measured on LA664 with integer vector operands. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

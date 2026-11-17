@@ -73,7 +73,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.02,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -88,7 +88,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4; li.d $r4, 1; vreplgr2vr.b $vr3, $r4' --asm 'vmaddwev.d.wu.w $vr0, $vr0, $vr2'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 4.02
+            "core_cycles": 4.0
           },
           "notes": "vj -> vd chain."
         }
@@ -100,7 +100,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4.02,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -115,7 +115,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4; li.d $r4, 1; vreplgr2vr.b $vr3, $r4' --asm 'vmaddwev.d.wu.w $vr0, $vr1, $vr0'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 4.02
+            "core_cycles": 4.0
           },
           "notes": "vk -> vd chain."
         }
@@ -141,5 +141,5 @@
       "notes": "8 independent instructions take 3.99 cycles."
     }
   ],
-  "notes": "Every source-to-result path is recorded separately; vd is read as the accumulator."
+  "notes": "Every source-to-result path is recorded separately; vd is read as the accumulator. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

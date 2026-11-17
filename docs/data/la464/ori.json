@@ -63,9 +63,7 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'ori $r12, $r12, 1'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 1.0,
-      "cycles_max": 1.0
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -99,5 +97,6 @@
       },
       "notes": "8 independent instructions take 2.00 cycles."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

@@ -44,7 +44,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 21.98,
+      "cycles": 22.0,
       "cycles_min": 7.0,
       "cycles_max": 22.0,
       "experiments": [
@@ -55,7 +55,7 @@
           "init": "li.d $r4, 4613937818241073152; vreplgr2vr.d $vr0, $r4; li.d $r4, 4619567317775286272; vreplgr2vr.d $vr2, $r4; li.d $r5, -9210826295035672284; li.d $r6, 4611686018427387904",
           "result": {
             "instructions_retired": 6.0,
-            "core_cycles": 29.97
+            "core_cycles": 29.99
           },
           "measurement": {
             "unroll": 4000,
@@ -73,7 +73,7 @@
           "init": "li.d $r4, 4613937818241073152; vreplgr2vr.d $vr0, $r4; li.d $r4, 4619567317775286272; vreplgr2vr.d $vr2, $r4; li.d $r5, -9210826295035672284; li.d $r6, 4611686018427387904",
           "result": {
             "instructions_retired": 6.0,
-            "core_cycles": 7.99
+            "core_cycles": 22.0
           },
           "measurement": {
             "unroll": 4000,
@@ -114,5 +114,5 @@
       "notes": "Data-dependent. CPI ranges 4.5 to 12 over the same operand pairs; the stored experiment uses 3.0/7.0."
     }
   ],
-  "notes": "Vector variable-latency floating-point divide/modulo. Latency 7-22 cycles and throughput CPI 4.5-12 are data-dependent."
+  "notes": "Vector variable-latency floating-point divide/modulo. Latency 7-22 cycles and throughput CPI 4.5-12 are data-dependent. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

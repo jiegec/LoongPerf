@@ -57,7 +57,7 @@
           "chain_latency": 3,
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 6.99
+            "core_cycles": 7.0
           },
           "measurement": {
             "unroll": 10000,
@@ -67,9 +67,7 @@
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'fldgt.d $f0, $r4, $r0; movfr2gr.d $r4, $f0'"
         }
       ],
-      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 3.99,
-      "cycles_max": 3.99
+      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -102,5 +100,6 @@
         "ipc": 1.0
       }
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

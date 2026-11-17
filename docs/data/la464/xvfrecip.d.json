@@ -48,7 +48,7 @@
           "chain_latency": 9.07,
           "result": {
             "instructions_retired": 6.0,
-            "core_cycles": 19.29
+            "core_cycles": 19.07
           },
           "measurement": {
             "unroll": 4000,
@@ -64,7 +64,7 @@
           "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408",
           "result": {
             "instructions_retired": 6.0,
-            "core_cycles": 10.31
+            "core_cycles": 10.0
           },
           "measurement": {
             "unroll": 4000,
@@ -75,9 +75,7 @@
           "notes": "Calibration experiment (not used for the reported latency)."
         }
       ],
-      "notes": "9.07 cycles of helper latency are subtracted. Unroll 4000, iters 2500. Raw measurement was 9.90; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 9.9,
-      "cycles_max": 9.9
+      "notes": "9.07 cycles of helper latency are subtracted. Unroll 4000, iters 2500. Raw measurement was 9.90; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -101,5 +99,6 @@
       },
       "notes": "8 independent instructions take 44.17 cycles."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

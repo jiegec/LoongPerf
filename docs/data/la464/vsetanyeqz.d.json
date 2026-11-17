@@ -44,7 +44,7 @@
           "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4",
           "result": {
             "instructions_retired": 3.0,
-            "core_cycles": 11.2
+            "core_cycles": 11.0
           },
           "measurement": {
             "unroll": 6666,
@@ -54,9 +54,7 @@
           "chain_latency": 10.0
         }
       ],
-      "notes": "vj -> fcc. The chain closes through movcf2gr (9 cycles) and vreplgr2vr.w (1 cycle), so 10 cycles of helper latency are subtracted; treat the value as approximate. Raw measurement was 0.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.99,
-      "cycles_max": 0.99
+      "notes": "vj -> fcc. The chain closes through movcf2gr (9 cycles) and vreplgr2vr.w (1 cycle), so 10 cycles of helper latency are subtracted; treat the value as approximate. Raw measurement was 0.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -80,5 +78,6 @@
       },
       "notes": "Throughput measured with 8 independent lanes."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

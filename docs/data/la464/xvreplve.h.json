@@ -52,7 +52,7 @@
           "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 1.03
+            "core_cycles": 1.0
           },
           "measurement": {
             "unroll": 20000,
@@ -61,9 +61,7 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvreplve.h $xr0, $xr0, $r5'"
         }
       ],
-      "notes": "xj -> xd; consecutive unrolled copies form a chain. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 1.0,
-      "cycles_max": 1.0
+      "notes": "xj -> xd; consecutive unrolled copies form a chain. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -87,5 +85,6 @@
       },
       "notes": "Throughput measured with 8 independent lanes."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

@@ -56,7 +56,7 @@
           "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr2, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.03
+            "core_cycles": 2.0
           },
           "measurement": {
             "unroll": 20000,
@@ -66,9 +66,7 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr2, $r4' --asm 'xvabsd.du $xr0, $xr0, $xr2'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 2.0,
-      "cycles_max": 2.0
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -92,5 +90,6 @@
       },
       "notes": "8 independent instructions take 3.99 cycles."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

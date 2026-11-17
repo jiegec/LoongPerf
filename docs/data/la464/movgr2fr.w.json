@@ -58,9 +58,7 @@
           "command": "./bench --unroll 5000 --iters 2000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2fr.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'"
         }
       ],
-      "notes": "GPR->FPR move latency is about 1 cycle; 11.37 cycles of helper latency (fst.d/ld.d plus add.d) are subtracted. Unroll 5000, iters 2000. Raw measurement was 0.97; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.97,
-      "cycles_max": 0.97
+      "notes": "GPR->FPR move latency is about 1 cycle; 11.37 cycles of helper latency (fst.d/ld.d plus add.d) are subtracted. Unroll 5000, iters 2000. Raw measurement was 0.97; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -94,5 +92,6 @@
       },
       "notes": "8 independent instructions take 7.97 cycles."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

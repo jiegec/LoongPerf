@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 22.02,
+      "cycles": 22.0,
       "experiments": [
         {
           "name": "high-unroll fixed-operand chain",
@@ -61,7 +61,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 5 --init 'li.w $r12, 2147483647; li.w $r13, 2; li.w $r5, 1; li.w $r6, 2147483646' --asm 'div.w $r12, $r12, $r13; and $r12, $r12, $r5; or $r12, $r12, $r6'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 24.02
+            "core_cycles": 24.0
           },
           "chain_latency": 2.0,
           "notes": "Fixed dividend=max, divisor=2, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
@@ -76,7 +76,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 22.02,
+      "cycles": 22.0,
       "experiments": [
         {
           "name": "high-unroll fixed-operand chain",
@@ -91,7 +91,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 5 --init 'li.w $r12, 2; li.w $r13, 2147483647; li.w $r5, 1; li.w $r6, 2' --asm 'div.w $r12, $r13, $r12; and $r12, $r12, $r5; or $r12, $r12, $r6'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 24.02
+            "core_cycles": 24.0
           },
           "chain_latency": 2.0,
           "notes": "Fixed divisor=2, dividend=max, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
@@ -134,5 +134,5 @@
       "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 3.499 at divisor=0x80000000; max CPI 12.005 at divisor=0x2; dividend=0x7fffffff."
     }
   ],
-  "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent."
+  "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

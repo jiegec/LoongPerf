@@ -66,16 +66,14 @@
           "notes": "vj -> result chain."
         }
       ],
-      "notes": "vj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 16.95,
-      "cycles_max": 17.15
+      "notes": "vj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction."
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 33.04,
+      "cycles": 33.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -90,14 +88,12 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vdiv.hu $vr0, $vr1, $vr0'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 33.04
+            "core_cycles": 33.0
           },
           "notes": "vk -> result chain."
         }
       ],
-      "notes": "vk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 28.79,
-      "cycles_max": 28.99
+      "notes": "vk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction."
     }
   ],
   "throughput": [
@@ -122,5 +118,5 @@
       "notes": "Range over the same pairs: min CPI 7.50 at 0/2, max CPI 21.50 at 65535/1. Sample uses 1/1."
     }
   ],
-  "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
+  "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

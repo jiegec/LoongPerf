@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.01,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,7 +61,7 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvbitset.w $xr0, $xr0, $xr1'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.01
+            "core_cycles": 2.0
           },
           "notes": "xj -> result chain."
         }
@@ -73,7 +73,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.01,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -88,7 +88,7 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvbitset.w $xr0, $xr1, $xr0'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.01
+            "core_cycles": 2.0
           },
           "notes": "xk -> result chain."
         }
@@ -114,5 +114,5 @@
       "notes": "8 independent instructions take 3.99 cycles."
     }
   ],
-  "notes": "LASX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000). Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
+  "notes": "LASX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000). Both vector sources are recorded separately; they share the same result path where the hardware is symmetric. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

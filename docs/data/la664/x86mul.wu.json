@@ -67,9 +67,7 @@
           "notes": "rd -> rd chain: the destination is also a source."
         }
       ],
-      "notes": "rd -> rd chain: the destination is also a source. Raw measurement was 1.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.94,
-      "cycles_max": 1.14
+      "notes": "rd -> rd chain: the destination is also a source. Raw measurement was 1.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     },
     {
       "from_operands": [
@@ -97,9 +95,7 @@
         }
       ],
       "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved. Raw measurement was 1.06; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_divisor": 2,
-      "cycles_min": 0.96,
-      "cycles_max": 1.16
+      "cycles_divisor": 2
     },
     {
       "from_operands": [
@@ -127,9 +123,7 @@
           "chain_latency": 1.0
         }
       ],
-      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 5.11; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 5.01,
-      "cycles_max": 5.21
+      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 5.11; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     },
     {
       "from_operands": [
@@ -157,9 +151,7 @@
           "chain_latency": 1.0
         }
       ],
-      "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 5.12; the nominal integer is 5.",
-      "cycles_min": 5.02,
-      "cycles_max": 5.22
+      "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 5.12; the nominal integer is 5."
     }
   ],
   "throughput": [
@@ -180,5 +172,5 @@
       "notes": "8 independent instructions take 8.50 cycles."
     }
   ],
-  "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path."
+  "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

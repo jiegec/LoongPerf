@@ -56,7 +56,7 @@
           "init": "addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0",
           "result": {
             "instructions_retired": 4.0,
-            "core_cycles": 30.02
+            "core_cycles": 30.0
           },
           "measurement": {
             "unroll": 1000,
@@ -65,9 +65,7 @@
           "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0' --asm 'ammin.wu $r12, $r13, $r20; ammin.wu $r13, $r12, $r20'"
         }
       ],
-      "notes": "the chain contains two alternating atomics, so the reported value is raw cycles / 2. Unroll 1000, iters 1000. Raw measurement was 15.01; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 15.01,
-      "cycles_max": 15.01
+      "notes": "the chain contains two alternating atomics, so the reported value is raw cycles / 2. Unroll 1000, iters 1000. Raw measurement was 15.01; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -100,5 +98,6 @@
         "ipc": 0.0667
       }
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

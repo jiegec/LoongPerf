@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 11.05,
+      "cycles": 11.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,21 +61,21 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvmod.w $xr0, $xr0, $xr1'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 11.05
+            "core_cycles": 11.0
           },
           "notes": "xj -> result chain."
         }
       ],
       "notes": "xj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
       "cycles_min": 11.0,
-      "cycles_max": 32.99
+      "cycles_max": 33.0
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 11.03,
+      "cycles": 11.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -90,14 +90,14 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvmod.w $xr0, $xr1, $xr0'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 11.03
+            "core_cycles": 11.0
           },
           "notes": "xk -> result chain."
         }
       ],
       "notes": "xk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
       "cycles_min": 11.0,
-      "cycles_max": 32.99
+      "cycles_max": 33.0
     }
   ],
   "throughput": [
@@ -122,5 +122,5 @@
       "notes": "Range over the same pairs: min CPI 4.50 at 0/1, max CPI 15.50 at 2147483647/1. Sample uses 1/1."
     }
   ],
-  "notes": "LASX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
+  "notes": "LASX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

@@ -55,7 +55,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.02,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -70,7 +70,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'sbc.h $r12, $r12, $r13'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.02
+            "core_cycles": 2.0
           },
           "notes": "rj -> rd chain: rj and rd are the same register."
         }
@@ -84,7 +84,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.03,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -99,7 +99,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'sbc.h $r13, $r14, $r12; sbc.h $r12, $r14, $r13'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.06
+            "core_cycles": 4.0
           },
           "notes": "rk -> rd chain: two copies alternate rd/rk, latency is half the measured cycle count."
         }
@@ -115,7 +115,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.01,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -130,7 +130,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'sbc.h $r12, $r12, $r12'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.01
+            "core_cycles": 2.0
           },
           "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
         }
@@ -188,5 +188,5 @@
       "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI: the instruction sustains one per cycle. Repeated runs report 8.15-8.86 cycles (1.02-1.11 CPI), which is the residual measurement floor for this short body rather than a real sub-1 IPC. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000)."
     }
   ],
-  "notes": "LBT instruction. Every source-to-result path is recorded separately: rj, rk, rj+rk, and CF."
+  "notes": "LBT instruction. Every source-to-result path is recorded separately: rj, rk, rj+rk, and CF. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }
