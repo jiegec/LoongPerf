@@ -54,10 +54,10 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.41625,
-        "ipc": 2.4024024024024024
+        "cpi": 0.4167,
+        "ipc": 2.4
       },
-      "notes": "pcalau12i has no GPR source; latency is not defined. 8 operations take 3.33 cycles."
+      "notes": "PC-relative address generation. Measured with 8, 17 and 30 independent destinations at --unroll 50/200: 3.24, 7.08 and 12.42 cycles, that is 0.405-0.417 CPI (2.4 instructions per cycle), independent of the lane count and of whether the destinations repeat. A mixed body of 15 `pcaddi` and 15 `add.d` takes 9.97 cycles, which is 15*5/12 + 15*0.25, so the two share the same issue slots and the PC adder costs five slots per twelve instructions rather than the four of a plain ALU operation. It is therefore neither 2 IPC nor 4 IPC: the ceiling is 2.4."
     }
   ],
   "notes": "No GPR source; latency is not defined. Throughput only."
