@@ -64,7 +64,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f0, $f1'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
+      "notes": "Data-dependent latency: 8 cycles for 0/0, x/0, 0/x, Inf/NaN; 10 for 1/1 and 1/2; 16 for general quotients; 15 for 1/max; 9 for max/minnorm or minnorm/max; 17 for 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
+      "cycles_min": 8.0,
+      "cycles_max": 17.0
     },
     {
       "from_operands": [
@@ -89,7 +91,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f1, $f0'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
+      "notes": "Data-dependent latency: 8 cycles for 0/0, x/0, 0/x, Inf/NaN; 10 for 1/1 and 1/2; 16 for general quotients; 15 for 1/max; 9 for max/minnorm or minnorm/max; 17 for 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
+      "cycles_min": 8.0,
+      "cycles_max": 17.0
     }
   ],
   "throughput": [
@@ -119,9 +123,14 @@
       "throughput": {
         "lanes": 8,
         "cpi": 5.5,
-        "ipc": 0.1818
+        "ipc": 0.1818,
+        "cpi_min": 4.5,
+        "cpi_max": 9.0,
+        "ipc_min": 0.1111,
+        "ipc_max": 0.2222
       },
-      "notes": "Data-dependent throughput; one representative operand sample is shown."
+      "notes": "Data-dependent throughput: CPI 4.5 for special values; 5.5 for 1/1 and 1/2; 8.5 for general quotients; 8.0 for 1/max; 5.0 for max/minnorm; 9.0 for 1/maxsub. Throughput is initiation-interval bound."
     }
-  ]
+  ],
+  "notes": "Latency 8-17 cycles and throughput CPI 4.5-9 are data-dependent; the stored experiments use representative operand samples."
 }

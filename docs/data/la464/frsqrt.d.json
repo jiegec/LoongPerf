@@ -56,7 +56,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'frsqrt.d $f0, $f0'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
+      "notes": "Data-dependent latency: 11 cycles for 0/Inf/NaN/negative; 15 for exact squares 1, 4, 0.25 and minnorm; 54 for general inputs; 55 for maxsub; 16 for minsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
+      "cycles_min": 11.0,
+      "cycles_max": 55.0
     }
   ],
   "throughput": [
@@ -86,9 +88,14 @@
       "throughput": {
         "lanes": 8,
         "cpi": 8.0,
-        "ipc": 0.125
+        "ipc": 0.125,
+        "cpi_min": 6.0,
+        "cpi_max": 28.0,
+        "ipc_min": 0.0357,
+        "ipc_max": 0.1667
       },
-      "notes": "Data-dependent throughput; one representative operand sample is shown."
+      "notes": "Data-dependent throughput: CPI 6.0 for special values; 8.0 for exact squares; 27.5 for general inputs; 28.0 for maxsub; 8.5 for minsub. Throughput is initiation-interval bound."
     }
-  ]
+  ],
+  "notes": "Latency 11-55 cycles and throughput CPI 6-28 are data-dependent; the stored experiments use representative operand samples."
 }

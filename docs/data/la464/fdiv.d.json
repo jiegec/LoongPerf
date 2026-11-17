@@ -64,7 +64,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fdiv.d $f0, $f0, $f1'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
+      "notes": "Data-dependent latency: 8 cycles for special values; 10 for 1/1 and 1/2; 23 for general quotients and max/1; 9 for max/minnorm or minnorm/max; 24 for maxsub/1 and 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
+      "cycles_min": 8.0,
+      "cycles_max": 24.0
     },
     {
       "from_operands": [
@@ -89,7 +91,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fdiv.d $f0, $f1, $f0'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
+      "notes": "Data-dependent latency: 8 cycles for special values; 10 for 1/1 and 1/2; 23 for general quotients and max/1; 9 for max/minnorm or minnorm/max; 24 for maxsub/1 and 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
+      "cycles_min": 8.0,
+      "cycles_max": 24.0
     }
   ],
   "throughput": [
@@ -119,9 +123,14 @@
       "throughput": {
         "lanes": 8,
         "cpi": 5.5,
-        "ipc": 0.1818
+        "ipc": 0.1818,
+        "cpi_min": 4.5,
+        "cpi_max": 12.5,
+        "ipc_min": 0.08,
+        "ipc_max": 0.2222
       },
-      "notes": "Data-dependent throughput; one representative operand sample is shown."
+      "notes": "Data-dependent throughput: CPI 4.5 for special values; 5.5 for 1/1 and 1/2; 12.0 for general quotients and max/1; 5.0 for max/minnorm; 12.5 for maxsub/1 and 1/maxsub. Throughput is initiation-interval bound."
     }
-  ]
+  ],
+  "notes": "Latency 8-24 cycles and throughput CPI 4.5-12.5 are data-dependent; the stored experiments use representative operand samples."
 }
