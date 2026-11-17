@@ -74,7 +74,9 @@ instructions statically and compare them with `0x01`.
 `0xa8` and `0xb0` are memory-operation counters, not uop counters. Atomics make
 the distinction clear: `amadd.w` retires as two uops, but contributes one load
 and one store. `llacq.w` contributes one load, and `sc.q` contributes one
-store, even though each is a two-uop instruction.
+store, even though each is a two-uop instruction. A 256-bit LASX access can
+retire as two load/store operations depending on alignment and cache-line
+crossing; do not assume `xvld`/`xvst` always contributes exactly one.
 
 ### LA664-specific raw counters
 
