@@ -44,26 +44,26 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 15,
-      "cycles_min": 11,
-      "cycles_max": 17,
+      "cycles": 15.0,
+      "cycles_min": 11.0,
+      "cycles_max": 27.0,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
-          "asm": "vfdiv.s $vr0, $vr0, $vr0; vpickve2gr.w $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.w $vr0, $r7",
-          "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r5, -9205357638345293825; li.d $r6, 0",
-          "chain_latency": 7,
+          "asm": "vfdiv.s $vr0, $vr0, $vr2; vpickve2gr.w $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4",
+          "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr2, $r4; li.d $r5, -1; li.d $r6, 0",
+          "chain_latency": 7.0,
           "result": {
-            "instructions_retired": 6,
-            "core_cycles": 22
+            "instructions_retired": 6.0,
+            "core_cycles": 22.0
           },
           "measurement": {
-            "unroll": 1000,
-            "iters": 200,
+            "unroll": 2000,
+            "iters": 300,
             "reps": 7
           },
-          "command": "./bench --unroll 1000 --iters 200 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r5, -9205357638345293825; li.d $r6, 0' --asm 'vfdiv.s $vr0, $vr0, $vr0; vpickve2gr.w $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.w $vr0, $r7'",
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr2, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vfdiv.s $vr0, $vr0, $vr2; vpickve2gr.w $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4'",
           "machine_code": [
             "147f0004  lu12i.w     \t$a0, 260096",
             "729f0880  vreplgr2vr.w\t$vr0, $a0",
@@ -108,5 +108,5 @@
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 5.9962-9 over the same 26-value sweep; the stored experiment uses 1.0."
     }
   ],
-  "notes": "Vector variable-latency floating-point divide/modulo. Latency 10-26 cycles and throughput CPI 6-14 are data-dependent."
+  "notes": "Latency model (measured with a 1-/2-/3-copy chain so the per-instruction latency is read off the increments, not the closure): 8 cycles when the operands are special (0, Inf or NaN on either side); 10 cycles when the divisor is a power of two (including 1.0); 22-23 cycles for a general divisor; up to 24 with a subnormal operand. Every lane of the vector divider runs in parallel and only the slowest lane matters (1 and 2 slow lanes both measure 24), so vfdiv.d/xvfdiv.d match the scalar numbers exactly. The 32-bit vector variants are slower (11 / 15 / 25-27) because 32-bit lanes are not fully parallel, the same behaviour as the integer .w divides. The stored experiment uses 1.0/1.0, i.e. the power-of-two-divisor path."
 }
