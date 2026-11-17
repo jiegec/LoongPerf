@@ -118,10 +118,21 @@ loads/stores do not count: `movgr2fr.d`, `movfr2gr.d`, `movfrh2gr.s`,
 all read zero. The exceptions are `movgr2frh.w = 1` and `movcf2fr = 1`,
 while `movfr2cf = 0`. Integer instructions count as zero.
 
+### Unaligned vector memory accesses
+
 On LA464, a 256-bit LASX access can retire as two load/store operations
 depending on alignment and cache-line crossing; do not assume `xvld`/`xvst`
-always contributes exactly one. This split behavior was observed on LA464 and
-has not been verified on LA664.
+always contributes exactly one. This split behavior was observed on LA464.
+
+On LA664, the load/store counters were measured with a 64-byte-aligned base
+and unaligned offsets. `0xa8` counts a load twice when the access crosses a
+64-byte cache line: for a 16-byte LSX load, offsets such as 49, 56, 63, and
+127; for a 32-byte LASX load, offsets such as 33 through 63 and 97 through
+127. Loads entirely within one 64-byte line count once. `0xb0` counted one
+store for every tested LSX and LASX store offset, including cache-line
+crossings, so no store split was visible in that counter on LA664. The
+instruction-retired count (`0x01`) remained one per instruction even when
+`0xa8` reported two load operations.
 
 ## Multi-uop instructions
 
