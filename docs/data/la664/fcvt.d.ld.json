@@ -94,34 +94,6 @@
         }
       ],
       "notes": "fk -> fd chain: fk is tied to fd."
-    },
-    {
-      "from_operands": [
-        2,
-        3
-      ],
-      "to_operand": 1,
-      "cycles": 4.0,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "fcvt.d.ld $f0, $f0, $f0",
-          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4",
-          "measurement": {
-            "unroll": 20000,
-            "iters": 100,
-            "reps": 10
-          },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4' --asm 'fcvt.d.ld $f0, $f0, $f0'",
-          "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 4.0
-          },
-          "notes": "combined fj/fk -> fd chain."
-        }
-      ],
-      "notes": "combined fj/fk -> fd chain. Raw slope-method measurement was 4.02; the value is 4 cycle(s) and any earlier range was a rounding artifact."
     }
   ],
   "throughput": [

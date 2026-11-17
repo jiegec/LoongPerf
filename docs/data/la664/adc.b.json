@@ -111,36 +111,6 @@
     },
     {
       "from_operands": [
-        2,
-        3
-      ],
-      "to_operand": 1,
-      "cycles": 2.0,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "adc.b $r12, $r12, $r12",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 20
-          },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.b $r12, $r12, $r12'",
-          "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
-          },
-          "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
-        }
-      ],
-      "notes": "Register source path: 2 cycles. Across all sources the instruction latency spans 1-2 cycles: the EFLAGS/CF input reaches rd in 1 cycle, while rj/rk need 2. Measured with --method slope on 2026-11-17 (LA664, core 0, --unroll 1000 --unroll2 4000).",
-      "cycles_min": 1,
-      "cycles_max": 2
-    },
-    {
-      "from_operands": [
         4
       ],
       "to_operand": 1,
