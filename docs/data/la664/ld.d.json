@@ -45,11 +45,29 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 4.0,
       "experiments": [
         {
-          "name": "high-unroll dependency chain",
+          "name": "high-unroll ALU-consumer chain",
           "role": "measurement",
+          "asm": "ld.d $r4, $r4, 0; add.d $r4, $r4, $r5",
+          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r5'",
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 5.0
+          },
+          "chain_latency": 1.0,
+          "notes": "L1D hit, load-to-ALU latency 4 cycles. The load-to-load address bypass path is 3 cycles, which is why a bare pointer chase underestimates the general latency. Measured with unroll=100000."
+        },
+        {
+          "name": "load-to-AGU bypass calibration",
+          "role": "calibration",
           "asm": "ld.d $r4, $r4, 0",
           "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
           "measurement": {
@@ -62,11 +80,10 @@
             "instructions_retired": 1,
             "core_cycles": 3.0
           },
-          "chain_latency": 0,
-          "notes": "Pointer chase: r4 points to a memory word containing its own address. The buffer is hot in L1D. Measured with unroll=100000."
+          "notes": "Bare pointer chase: the word at address A contains A, so each load result is exactly the next load address. This exercises the load-to-AGU address bypass path (3 cycles), not the general load-to-ALU path (4 cycles)."
         }
       ],
-      "notes": "Pointer chase: r4 points to a memory word containing its own address. The buffer is hot in L1D. Measured with unroll=100000."
+      "notes": "L1D hit. Load-to-ALU latency is 4 cycles; the load-to-AGU address bypass path is 3 cycles. The calibration experiment uses a bare self-referential pointer chase for the 3-cycle path; the measurement experiment adds add.d to force the ALU-consumer path."
     }
   ],
   "throughput": [
@@ -97,5 +114,5 @@
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }
   ],
-  "notes": "L1D-hit latency 3 cycles, measured by pointer chase with unroll=100000. Throughput is 0.5 CPI."
+  "notes": "L1D-hit load-to-ALU latency 4 cycles. A bare pointer chase measures 3 cycles because it only exercises the load-to-AGU address bypass. Throughput is 0.5 CPI."
 }

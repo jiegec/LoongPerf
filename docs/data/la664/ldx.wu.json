@@ -47,11 +47,29 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 5.0,
       "experiments": [
         {
-          "name": "high-unroll dependency chain",
+          "name": "high-unroll ALU-consumer chain",
           "role": "measurement",
+          "asm": "ldx.wu $r4, $r20, $r4; add.d $r4, $r4, $r5",
+          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r4, 0; li.d $r5, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r4, 0; li.d $r5, 0' --asm 'ldx.wu $r4, $r20, $r4; add.d $r4, $r4, $r5'",
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 6.0
+          },
+          "chain_latency": 1.0,
+          "notes": "L1D hit, indexed unsigned word load-to-ALU latency 5 cycles. Indexed address generation adds 1 cycle over ld.w. Measured with unroll=100000."
+        },
+        {
+          "name": "load-to-AGU bypass calibration",
+          "role": "calibration",
           "asm": "ldx.wu $r4, $r20, $r4",
           "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r4, 0",
           "measurement": {
@@ -64,11 +82,10 @@
             "instructions_retired": 1,
             "core_cycles": 4.0
           },
-          "chain_latency": 0,
-          "notes": "Index chase: base r20 plus index r4, with memory holding the next 32-bit offset. The buffer is hot in L1D. Measured with unroll=100000."
+          "notes": "Bare index chase with offsets 8/0. This exercises the load-to-AGU address bypass path (4 cycles); the ALU-consumer path is 5 cycles."
         }
       ],
-      "notes": "Index chase: base r20 plus index r4, with memory holding the next 32-bit offset. The buffer is hot in L1D. Measured with unroll=100000."
+      "notes": "L1D hit. Indexed word load-to-ALU latency is 5 cycles; the load-to-AGU address bypass path is 4 cycles."
     }
   ],
   "throughput": [
@@ -99,5 +116,5 @@
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }
   ],
-  "notes": "L1D-hit latency 4 cycles, measured by index chase with unroll=100000. Throughput is 0.5 CPI."
+  "notes": "L1D-hit load-to-ALU latency 5 cycles; load-to-AGU address path is 4 cycles. Throughput is 0.5 CPI."
 }
