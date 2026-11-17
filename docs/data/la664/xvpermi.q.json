@@ -75,62 +75,25 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
-      "asm": "xvpermi.q $xr0, $xr8, 2; xvpermi.q $xr1, $xr9, 2; xvpermi.q $xr2, $xr10, 2; xvpermi.q $xr3, $xr11, 2; xvpermi.q $xr4, $xr12, 2; xvpermi.q $xr5, $xr13, 2; xvpermi.q $xr6, $xr14, 2; xvpermi.q $xr7, $xr15, 2",
-      "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 2; xvreplgr2vr.b $xr16, $r4; li.d $r4, 2; xvreplgr2vr.b $xr17, $r4; li.d $r4, 2; xvreplgr2vr.b $xr18, $r4; li.d $r4, 2; xvreplgr2vr.b $xr19, $r4; li.d $r4, 2; xvreplgr2vr.b $xr20, $r4; li.d $r4, 2; xvreplgr2vr.b $xr21, $r4; li.d $r4, 2; xvreplgr2vr.b $xr22, $r4; li.d $r4, 2; xvreplgr2vr.b $xr23, $r4",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 2; xvreplgr2vr.b $xr16, $r4; li.d $r4, 2; xvreplgr2vr.b $xr17, $r4; li.d $r4, 2; xvreplgr2vr.b $xr18, $r4; li.d $r4, 2; xvreplgr2vr.b $xr19, $r4; li.d $r4, 2; xvreplgr2vr.b $xr20, $r4; li.d $r4, 2; xvreplgr2vr.b $xr21, $r4; li.d $r4, 2; xvreplgr2vr.b $xr22, $r4; li.d $r4, 2; xvreplgr2vr.b $xr23, $r4' --asm 'xvpermi.q $xr0, $xr8, 2; xvpermi.q $xr1, $xr9, 2; xvpermi.q $xr2, $xr10, 2; xvpermi.q $xr3, $xr11, 2; xvpermi.q $xr4, $xr12, 2; xvpermi.q $xr5, $xr13, 2; xvpermi.q $xr6, $xr14, 2; xvpermi.q $xr7, $xr15, 2'",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 3.05
+      "name": "30 independent lanes, small body inside L1I",
+      "asm": "xvpermi.q $xr0, $xr30, 2; xvpermi.q $xr1, $xr30, 2; xvpermi.q $xr2, $xr30, 2; xvpermi.q $xr3, $xr30, 2; xvpermi.q $xr4, $xr30, 2; xvpermi.q $xr5, $xr30, 2; xvpermi.q $xr6, $xr30, 2; xvpermi.q $xr7, $xr30, 2; xvpermi.q $xr8, $xr30, 2; xvpermi.q $xr9, $xr30, 2; xvpermi.q $xr10, $xr30, 2; xvpermi.q $xr11, $xr30, 2; xvpermi.q $xr12, $xr30, 2; xvpermi.q $xr13, $xr30, 2; xvpermi.q $xr14, $xr30, 2; xvpermi.q $xr15, $xr30, 2; xvpermi.q $xr16, $xr30, 2; xvpermi.q $xr17, $xr30, 2; xvpermi.q $xr18, $xr30, 2; xvpermi.q $xr19, $xr30, 2; xvpermi.q $xr20, $xr30, 2; xvpermi.q $xr21, $xr30, 2; xvpermi.q $xr22, $xr30, 2; xvpermi.q $xr23, $xr30, 2; xvpermi.q $xr24, $xr30, 2; xvpermi.q $xr25, $xr30, 2; xvpermi.q $xr26, $xr30, 2; xvpermi.q $xr27, $xr30, 2; xvpermi.q $xr28, $xr30, 2; xvpermi.q $xr29, $xr30, 2",
+      "init": "li.d $r4, 1; xvreplgr2vr.d $xr30, $r4",
+      "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1; xvreplgr2vr.d $xr30, $r4' --asm 'xvpermi.q $xr0, $xr30, 2; xvpermi.q $xr1, $xr30, 2; xvpermi.q $xr2, $xr30, 2; xvpermi.q $xr3, $xr30, 2; xvpermi.q $xr4, $xr30, 2; xvpermi.q $xr5, $xr30, 2; xvpermi.q $xr6, $xr30, 2; xvpermi.q $xr7, $xr30, 2; xvpermi.q $xr8, $xr30, 2; xvpermi.q $xr9, $xr30, 2; xvpermi.q $xr10, $xr30, 2; xvpermi.q $xr11, $xr30, 2; xvpermi.q $xr12, $xr30, 2; xvpermi.q $xr13, $xr30, 2; xvpermi.q $xr14, $xr30, 2; xvpermi.q $xr15, $xr30, 2; xvpermi.q $xr16, $xr30, 2; xvpermi.q $xr17, $xr30, 2; xvpermi.q $xr18, $xr30, 2; xvpermi.q $xr19, $xr30, 2; xvpermi.q $xr20, $xr30, 2; xvpermi.q $xr21, $xr30, 2; xvpermi.q $xr22, $xr30, 2; xvpermi.q $xr23, $xr30, 2; xvpermi.q $xr24, $xr30, 2; xvpermi.q $xr25, $xr30, 2; xvpermi.q $xr26, $xr30, 2; xvpermi.q $xr27, $xr30, 2; xvpermi.q $xr28, $xr30, 2; xvpermi.q $xr29, $xr30, 2'",
+      "measurement": {
+        "unroll": 50,
+        "iters": 1000,
+        "reps": 20
       },
       "throughput": {
-        "lanes": 8,
-        "cpi": 0.3812,
-        "ipc": 2.623
+        "lanes": 30,
+        "cpi": 0.25,
+        "ipc": 4.0
       },
-      "notes": "8 independent instructions take 3.05 cycles.",
-      "machine_code": [
-        "03800404  li.w        \t$a0, 0x1",
-        "769f0088  xvreplgr2vr.b\t$xr8, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "769f0089  xvreplgr2vr.b\t$xr9, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "769f008a  xvreplgr2vr.b\t$xr10, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "769f008b  xvreplgr2vr.b\t$xr11, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "769f008c  xvreplgr2vr.b\t$xr12, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "769f008d  xvreplgr2vr.b\t$xr13, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "769f008e  xvreplgr2vr.b\t$xr14, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "769f008f  xvreplgr2vr.b\t$xr15, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0090  xvreplgr2vr.b\t$xr16, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0091  xvreplgr2vr.b\t$xr17, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0092  xvreplgr2vr.b\t$xr18, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0093  xvreplgr2vr.b\t$xr19, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0094  xvreplgr2vr.b\t$xr20, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0095  xvreplgr2vr.b\t$xr21, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0096  xvreplgr2vr.b\t$xr22, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "769f0097  xvreplgr2vr.b\t$xr23, $a0",
-        "77ec0900  xvpermi.q   \t$xr0, $xr8, 0x2",
-        "77ec0921  xvpermi.q   \t$xr1, $xr9, 0x2",
-        "77ec0942  xvpermi.q   \t$xr2, $xr10, 0x2",
-        "77ec0963  xvpermi.q   \t$xr3, $xr11, 0x2",
-        "77ec0984  xvpermi.q   \t$xr4, $xr12, 0x2",
-        "77ec09a5  xvpermi.q   \t$xr5, $xr13, 0x2",
-        "77ec09c6  xvpermi.q   \t$xr6, $xr14, 0x2",
-        "77ec09e7  xvpermi.q   \t$xr7, $xr15, 0x2"
-      ]
+      "result": {
+        "instructions_retired": 30,
+        "core_cycles": 7.47
+      },
+      "notes": "The lane-permute unit retires four instructions per cycle. The earlier 8-lane body at --unroll 250/1000 put 8,000 instructions (32 KiB) into L1I and measured 2.6 IPC; a 30-lane body of 6,000 instructions, or even 12 lanes, reaches 0.25 CPI. Four lanes still level off at 3 cycles because the 3-cycle latency cannot be filled by four independent results."
     }
   ],
   "notes": "LASX vector instruction measured on LA664."

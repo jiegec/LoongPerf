@@ -371,6 +371,14 @@ vmaddwev.q.d $vr0, $vr30, $vr31 ; ... ; vmaddwev.q.d $vr29, $vr30, $vr31
 
 Only `vd` has to be distinct per lane; the sources may be shared, which is what
 makes 30 lanes possible with 32 vector registers.
+
+The other side of the same coin is the body size for a unit that retires four
+instructions per cycle: at `--unroll 250/1000` an eight-lane body is 2,000 and
+8,000 instructions, and 8,000 instructions is 32 KiB, right at the L1I limit.
+`xvpermi.q` measured 2.6 IPC that way and exactly 4 IPC with a 30-lane body at
+`--unroll 50/200`, and four lanes measure 3 cycles instead of 1 because the
+3-cycle latency cannot be filled by four independent results. For these units use
+a small unroll and enough lanes.
 * `ldgt.*`/`ldle.*` raise a bounds-check exception on LA464 when the range check
   fails instead of writing zero, and this kernel does not emulate it: the process
   dies with `SIGSEGV` whose `si_addr` is the load address `rj`, even when that
