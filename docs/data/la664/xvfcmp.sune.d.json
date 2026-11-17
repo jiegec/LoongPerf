@@ -1,0 +1,92 @@
+{
+  "instruction": {
+    "name": "xvfcmp.sune.d",
+    "extension": "LASX",
+    "form": "xvfcmp.sune.d, xd, xj, xk",
+    "description": "Compare corresponding double precision elements in `a` and `b`, save the comparison result (all ones if UNE(Unordered or Not Equal), all zeros otherwise) into `dst`. An exception is raised for QNaN."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "mask result"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "xk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "xvfcmp.sune.d $xr0, $xr0, $xr2",
+          "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr2, $r4' --asm 'xvfcmp.sune.d $xr0, $xr0, $xr2'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "Dependent vector-mask chain. Sources are normal float values 1.0 and 2.0."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvfcmp.sune.d $xr0, $xr8, $xr16; xvfcmp.sune.d $xr1, $xr9, $xr17; xvfcmp.sune.d $xr2, $xr10, $xr18; xvfcmp.sune.d $xr3, $xr11, $xr19; xvfcmp.sune.d $xr4, $xr12, $xr20; xvfcmp.sune.d $xr5, $xr13, $xr21; xvfcmp.sune.d $xr6, $xr14, $xr22; xvfcmp.sune.d $xr7, $xr15, $xr23",
+      "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr16, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr17, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr18, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr19, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr20, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr21, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr22, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr23, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr16, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr17, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr18, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr19, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr20, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr21, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr22, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr23, $r4' --asm 'xvfcmp.sune.d $xr0, $xr8, $xr16; xvfcmp.sune.d $xr1, $xr9, $xr17; xvfcmp.sune.d $xr2, $xr10, $xr18; xvfcmp.sune.d $xr3, $xr11, $xr19; xvfcmp.sune.d $xr4, $xr12, $xr20; xvfcmp.sune.d $xr5, $xr13, $xr21; xvfcmp.sune.d $xr6, $xr14, $xr22; xvfcmp.sune.d $xr7, $xr15, $xr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 1.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.2487,
+        "ipc": 4.0201
+      },
+      "notes": "8 independent instructions take 1.99 cycles."
+    }
+  ],
+  "notes": "LASX vector floating-point compare. Measured on LA664 with normal float operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}
