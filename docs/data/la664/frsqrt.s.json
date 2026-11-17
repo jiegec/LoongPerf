@@ -60,7 +60,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Measured with a 100000-instruction unrolled chain."
+      "notes": "Data-dependent. ~10.9 cycles for 0/Inf/NaN/negative fast path; ~14.8 for exact squares (1, 4, 0.25, minnorm); ~32.5 for general inputs (2, 3, 0.5, max); up to ~33.5 with maxsub/minsub. The experiment below uses 1.0.",
+      "cycles_min": 10.9,
+      "cycles_max": 33.5
     }
   ],
   "throughput": [
@@ -86,9 +88,14 @@
       "throughput": {
         "lanes": 8,
         "cpi": 3.25,
-        "ipc": 0.3076923076923077
+        "ipc": 0.3076923076923077,
+        "cpi_min": 2.25,
+        "cpi_max": 8.0,
+        "ipc_min": 0.125,
+        "ipc_max": 0.444
       },
-      "notes": "8 independent instructions take 26.00 cycles."
+      "notes": "Data-dependent. 8 independent lanes. CPI ~2.25 for special values, ~3.25 for exact squares, ~7.75 for general inputs, up to ~8.0 with maxsub/minsub. CPI is unchanged for 1-20 independent lanes; mixed fast/slow lanes are additive."
     }
-  ]
+  ],
+  "notes": "Latency and throughput are data-dependent. Values cover special values, exact squares/powers of two, general inputs, subnormals, and overflow/underflow boundaries. The experiment below uses 1.0. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."
 }

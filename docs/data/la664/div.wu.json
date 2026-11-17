@@ -68,8 +68,8 @@
           "notes": "Consecutive unrolled copies form a dependency chain."
         }
       ],
-      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.\n\nMin 7 cycles at divisor=0x80000000; max 23 cycles at divisor=0x1; dividend=0xffffffff.",
-      "cycles_min": 7,
+      "notes": "Data-dependent. Min/max measured over a range of dividends and divisors with a 10000-operation dependency chain; the experiment below is one sample.\n\nMin 5 cycles at dividend=0 (or 1) with divisor=7; max 23 cycles at dividend=0xffffffff, divisor=0x1.",
+      "cycles_min": 5.0,
       "cycles_max": 23
     },
     {
@@ -99,8 +99,8 @@
           "notes": "Consecutive unrolled copies form a dependency chain."
         }
       ],
-      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.\n\nMin 7 cycles at divisor=0xffffffff; max 23 cycles at divisor=0x1; dividend=0xffffffff.",
-      "cycles_min": 7,
+      "notes": "Data-dependent. Min/max measured over a range of dividends and divisors with a 10000-operation dependency chain; the experiment below is one sample.\n\nMin 5 cycles at dividend=0 (or 1) with divisor=7; max 23 cycles at dividend=0xffffffff, divisor=0x1.",
+      "cycles_min": 5.0,
       "cycles_max": 23
     }
   ],
@@ -128,13 +128,13 @@
         "lanes": 8,
         "cpi": 3.49875,
         "ipc": 0.28581636298678104,
-        "cpi_min": 4.5,
+        "cpi_min": 3.5,
         "cpi_max": 12.5,
         "ipc_min": 0.08,
-        "ipc_max": 0.2222
+        "ipc_max": 0.2857
       },
-      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 4.499 at divisor=0xffffffff; max CPI 12.501 at divisor=0x1; dividend=0xffffffff."
+      "notes": "Data-dependent. Min/max measured over a range of dividends and divisors with 8 independent lanes.\n\nMin CPI 3.5 at dividend=0, divisor=7; max CPI 12.5 at dividend=0xffffffff, divisor=0x1."
     }
   ],
-  "notes": "Latency: 100 outer iterations x 100 divisions; each block is <op>; and; add.d, and the measured cycles/division include the 2-cycle and+add chain, so 2 is subtracted. Throughput: 8 independent lanes with the same dividend/divisor pair."
+  "notes": "Latency: 100 outer iterations x 100 divisions; each block is <op>; and; add.d, and the measured cycles/division include the 2-cycle and+add chain, so 2 is subtracted. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent over the dividend/divisor range."
 }
