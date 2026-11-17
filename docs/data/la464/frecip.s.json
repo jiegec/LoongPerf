@@ -56,7 +56,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'frecip.s $f0, $f0'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
+      "notes": "Data-dependent latency: 8 cycles for 0/Inf/NaN; 10 for 1 and powers of two; 16 for 3, 5, 7, 10, 1/3 and 1/5; 15 for max; 17 for maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
+      "cycles_min": 8.0,
+      "cycles_max": 17.0
     }
   ],
   "throughput": [
@@ -86,9 +88,14 @@
       "throughput": {
         "lanes": 8,
         "cpi": 5.5,
-        "ipc": 0.1818
+        "ipc": 0.1818,
+        "cpi_min": 4.5,
+        "cpi_max": 9.0,
+        "ipc_min": 0.1111,
+        "ipc_max": 0.2222
       },
-      "notes": "Data-dependent throughput; one representative operand sample is shown."
+      "notes": "Data-dependent throughput: CPI 4.5 for special values; 5.5 for powers of two; 8.5 for general inputs; 8.0 for max; 9.0 for maxsub. Throughput is initiation-interval bound."
     }
-  ]
+  ],
+  "notes": "Latency 8-17 cycles and throughput CPI 4.5-9 are data-dependent; the stored experiments use representative operand samples."
 }
