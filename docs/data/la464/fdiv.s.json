@@ -46,68 +46,72 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10,
+      "cycles": 10.0,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
-          "asm": "fdiv.s $f0, $f0, $f1",
-          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4",
+          "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.w $f0, $r4",
+          "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r5, -1; li.d $r6, 0",
           "result": {
-            "instructions_retired": 1,
-            "core_cycles": 10.0
+            "instructions_retired": 5.0,
+            "core_cycles": 16.0
           },
           "measurement": {
-            "unroll": 20000,
-            "iters": 500
+            "unroll": 2000,
+            "iters": 300,
+            "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f0, $f1'",
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.w $f0, $r4'",
           "machine_code": [
             "147f0004  lu12i.w     \t$a0, 260096",
             "0114a480  movgr2fr.w  \t$fa0, $a0",
             "147f0004  lu12i.w     \t$a0, 260096",
             "0114a481  movgr2fr.w  \t$fa1, $a0",
             "01068400  fdiv.s      \t$fa0, $fa0, $fa1"
-          ]
+          ],
+          "chain_latency": 6.0
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/0, x/0, 0/x, Inf/NaN; 10 for 1/1 and 1/2; 16 for general quotients; 15 for 1/max; 9 for max/minnorm or minnorm/max; 17 for 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
-      "cycles_min": 8,
-      "cycles_max": 17
+      "cycles_min": 8.0,
+      "cycles_max": 17.0
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 10,
+      "cycles": 10.0,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
-          "asm": "fdiv.s $f0, $f1, $f0",
-          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4",
+          "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.w $f0, $r4",
+          "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r5, -1; li.d $r6, 0",
           "result": {
-            "instructions_retired": 1,
-            "core_cycles": 10.0
+            "instructions_retired": 5.0,
+            "core_cycles": 16.0
           },
           "measurement": {
-            "unroll": 20000,
-            "iters": 500
+            "unroll": 2000,
+            "iters": 300,
+            "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f1, $f0'",
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.w $f0, $r4'",
           "machine_code": [
             "147f0004  lu12i.w     \t$a0, 260096",
             "0114a480  movgr2fr.w  \t$fa0, $a0",
             "147f0004  lu12i.w     \t$a0, 260096",
             "0114a481  movgr2fr.w  \t$fa1, $a0",
             "01068020  fdiv.s      \t$fa0, $fa1, $fa0"
-          ]
+          ],
+          "chain_latency": 6.0
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/0, x/0, 0/x, Inf/NaN; 10 for 1/1 and 1/2; 16 for general quotients; 15 for 1/max; 9 for max/minnorm or minnorm/max; 17 for 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
-      "cycles_min": 8,
-      "cycles_max": 17
+      "cycles_min": 8.0,
+      "cycles_max": 17.0
     }
   ],
   "throughput": [
@@ -146,5 +150,5 @@
       "notes": "Data-dependent throughput: CPI 4.5 for special values; 5.5 for 1/1 and 1/2; 8.5 for general quotients; 8.0 for 1/max; 5.0 for max/minnorm; 9.0 for 1/maxsub. Throughput is initiation-interval bound."
     }
   ],
-  "notes": "Latency 8-17 cycles and throughput CPI 4.5-9 are data-dependent; the stored experiments use representative operand samples."
+  "notes": "Latency model (measured with a 1-/2-/3-copy chain so the per-instruction latency is read off the increments, not the closure): 8 cycles when the operands are special (0, Inf or NaN on either side); 10 cycles when the divisor is a power of two (including 1.0); 22-23 cycles for a general divisor; up to 24 with a subnormal operand. Every lane of the vector divider runs in parallel and only the slowest lane matters (1 and 2 slow lanes both measure 24), so vfdiv.d/xvfdiv.d match the scalar numbers exactly. The 32-bit vector variants are slower (11 / 15 / 25-27) because 32-bit lanes are not fully parallel, the same behaviour as the integer .w divides. The stored experiment uses 1.0/1.0, i.e. the power-of-two-divisor path."
 }
