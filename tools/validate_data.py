@@ -207,6 +207,10 @@ def expected_instruction_count(asm: str, uarch: str) -> int:
 
 def check_result_count(path: Path, data: dict, experiment: dict) -> None:
     expected = expected_instruction_count(experiment["asm"], path.parent.name)
+    loops = experiment.get("loops")
+    loop_instructions = experiment.get("loop_instructions")
+    if loops and loop_instructions:
+        expected = expected - loop_instructions + loops * loop_instructions
     actual = experiment["result"]["instructions_retired"]
     if not close(actual, expected):
         error(path, f"instructions_retired {actual} != expected {expected} for {experiment.get('name', '<unnamed>')}")

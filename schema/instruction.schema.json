@@ -302,6 +302,16 @@
         "baseline_cycles": {
           "type": "number",
           "minimum": 0
+        },
+        "loops": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of times the loop body in the asm is executed."
+        },
+        "loop_instructions": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of static asm instructions in the loop body, counting backward from the end of the asm."
         }
       },
       "additionalProperties": false
