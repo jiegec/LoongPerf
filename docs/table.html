@@ -78,6 +78,7 @@
       .progress.indeterminate .progress-bar { animation: none; width: 100%; opacity: 0.55; }
     }
     .table-scroll { border: 1px solid var(--line); border-radius: 8px; }
+    .table-scroll.is-scrollable { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .sticky-head {
       position: fixed; top: 0; z-index: 20;
       overflow: hidden; background: var(--head);
@@ -114,10 +115,10 @@
     .details-grid h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
     .details-table { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .details-grid table { min-width: 0; }
+    .details-grid th { position: static; top: auto; z-index: auto; }
     .details-grid th, .details-grid td { padding: 5px 7px; font-size: 13px; }
     td.details-cell { overflow-wrap: anywhere; }
     @media (max-width: 1100px) {
-      .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
       td.details-cell > .uarch-detail {
         position: sticky;
         left: 12px;
@@ -139,6 +140,11 @@
     .page-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .page-links button { min-width: 34px; padding: 5px 8px; font-size: 13px; }
     .page-links button.current { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+    .page-links .ellipsis { display: inline-flex; align-items: center; padding: 0 4px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 520px) {
+      .controls .control:first-child { flex: 1 1 100%; }
+      #q { min-width: 0; width: 100%; }
+    }
     .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
     .sigill { color: #cf222e; font-weight: 600; }
     .sigill-cell { text-align: center; }
@@ -701,6 +707,12 @@
     }
   }
 
+  function updateTableOverflow() {
+    if (!tableScroller) return;
+    const overflow = $("table").getBoundingClientRect().width > tableScroller.clientWidth + 1;
+    tableScroller.classList.toggle("is-scrollable", overflow);
+  }
+
   function buildStickyHeader() {
     const scroller = $("sticky-head-scroll");
     const thead = $("thead");
@@ -737,9 +749,8 @@
     const sticky = $("sticky-head");
     const scroller = $("sticky-head-scroll");
     const thead = $("thead");
-    const narrow = window.matchMedia("(max-width: 1100px)").matches;
-    if (!narrow || !tableScroller || !thead.rows.length ||
-        tableScroller.scrollWidth <= tableScroller.clientWidth + 1) {
+    if (!tableScroller || !tableScroller.classList.contains("is-scrollable") ||
+        !thead.rows.length) {
       sticky.hidden = true;
       return;
     }
@@ -921,6 +932,28 @@
     updateStickyHeader();
   }
 
+  function pageItems(current, total) {
+    if (total <= 11) {
+      return Array.from({ length: total }, (_, index) => index + 1);
+    }
+    const items = new Set([1, total, current - 1, current, current + 1]);
+    if (current <= 4) {
+      [2, 3, 4, 5].forEach((page) => items.add(page));
+    }
+    if (current >= total - 3) {
+      [total - 4, total - 3, total - 2, total - 1].forEach((page) => items.add(page));
+    }
+    const sorted = [...items].filter((page) => page >= 1 && page <= total).sort((a, b) => a - b);
+    const result = [];
+    let previous = 0;
+    for (const page of sorted) {
+      if (page - previous > 1) result.push("…");
+      result.push(page);
+      previous = page;
+    }
+    return result;
+  }
+
   function render(resetPage = false) {
     if (resetPage) page = 1;
     const selected = selectedUarches();
@@ -981,7 +1014,15 @@
     $("export").disabled = !selected.length || !extensions.length || !visible.length;
     const pageLinks = $("page-links");
     pageLinks.innerHTML = "";
-    for (let p = 1; p <= totalPages; p += 1) {
+    for (const p of pageItems(page, totalPages)) {
+      if (p === "…") {
+        const ellipsis = document.createElement("span");
+        ellipsis.className = "ellipsis";
+        ellipsis.setAttribute("aria-hidden", "true");
+        ellipsis.textContent = "…";
+        pageLinks.appendChild(ellipsis);
+        continue;
+      }
       const link = document.createElement("button");
       link.type = "button";
       link.textContent = String(p);
@@ -995,6 +1036,7 @@
     }
     updateUrl(selected, extensions);
     saveSettings();
+    updateTableOverflow();
     buildStickyHeader();
     updateStickyHeader();
   }
@@ -1122,6 +1164,7 @@
 
   window.addEventListener("resize", () => {
     updateStickyHeaderHeight();
+    updateTableOverflow();
     buildStickyHeader();
     updateStickyHeader();
   });
@@ -1130,6 +1173,7 @@
   if (window.ResizeObserver) {
     const stickyObserver = new ResizeObserver(() => {
       updateStickyHeaderHeight();
+      updateTableOverflow();
       buildStickyHeader();
       updateStickyHeader();
     });
