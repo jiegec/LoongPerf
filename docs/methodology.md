@@ -62,8 +62,8 @@ These configs have the same meaning on both microarchitectures:
 | Config | Meaning |
 | --- | --- |
 | `0x01` | Retired uops (`PERF_COUNT_HW_INSTRUCTIONS`) |
-| `0xa8` | Load operations (one per load instruction, not per uop) |
-| `0xb0` | Store operations (one per store instruction, not per uop) |
+| `0xa8` | Load operations (not uops) |
+| `0xb0` | Store operations (not uops) |
 
 `0x01` is a uop count, not an architectural instruction count. On LA664, for
 example, `vpickve2gr.w` retires as two uops and shows up as `2.00`. To obtain
@@ -91,22 +91,37 @@ controlled instruction-mix experiments.
 ### LA464-specific raw counters
 
 The LA464 (Loongson-3C5000) PMU uses a different raw event map. The LA664
-configs `0xfb`, `0xfa`, and `0xfc` read zero on LA464; use these instead:
+configs `0xfb`, `0xfa`, and `0xfc` read zero on LA464; use the following
+mappings instead:
 
 | Config | Meaning |
 | --- | --- |
-| `0x30` | Scalar floating-point uops |
-| `0x25` | Vector instructions (LSX and LASX combined, one per instruction) |
-| `0x31` | Vector uops (LSX and LASX combined) |
+| `0x30` | Scalar FP arithmetic/conversion uops |
+| `0x25` | Vector ALU/conversion instructions (LSX and LASX combined) |
+| `0x31` | Vector ALU/conversion uops (LSX and LASX combined) |
 
-On LA464, `0x25` counts each LSX/LASX instruction once, while `0x31` counts
-the vector uops. For example, `vadd.b` gives `0x25 = 1` and `0x31 = 1`, but a
-two-uop conversion such as `vfcvt.h.s` or `xvfcvt.h.s` gives `0x25 = 1` and
-`0x31 = 2`. A scan of configs `0x00`-`0xff` did not find separate LSX and
+On LA464, `0x25` counts each LSX/LASX ALU or conversion instruction once,
+while `0x31` counts the corresponding vector uops. For example, `vadd.b`,
+`vand.v`, `vpickve2gr.w`, and `xvpickve2gr.w` give `0x25 = 1` and
+`0x31 = 1`, but a two-uop conversion such as `vfcvt.h.s`, `vftint.w.d`,
+`vffint.s.l`, or their LASX forms gives `0x25 = 1` and `0x31 = 2`.
+Vector loads/stores and some vector moves are not included: `vld`, `vst`,
+`xvld`, `xvst`, and `vreplgr2vr.w` all read zero from `0x25` and `0x31`.
+One scalar exception was observed: `movfr2cf` also increments `0x25` and
+`0x31` by one. A scan of configs `0x00`-`0xff` did not find separate LSX and
 LASX uop counters on LA464, so `0x31` is the combined vector-uop counter.
 
 Scalar floating-point examples for `0x30`: `fadd.d = 1`, `fdiv.d = 1`,
-`movgr2frh.w = 1`, and `fsel = 2`. Integer instructions count as zero.
+`fsel = 2`, and `fcmp.slt.d = 1`. Most FP moves, FP CSR transfers, and FP
+loads/stores do not count: `movgr2fr.d`, `movfr2gr.d`, `movfrh2gr.s`,
+`movcf2gr`, `movgr2cf`, `movfcsr2gr`, `movgr2fcsr`, `fld.d`, and `fst.d`
+all read zero. The exceptions are `movgr2frh.w = 1` and `movcf2fr = 1`,
+while `movfr2cf = 0`. Integer instructions count as zero.
+
+On LA464, a 256-bit LASX access can retire as two load/store operations
+depending on alignment and cache-line crossing; do not assume `xvld`/`xvst`
+always contributes exactly one. This split behavior was observed on LA464 and
+has not been verified on LA664.
 
 ## Multi-uop instructions
 
