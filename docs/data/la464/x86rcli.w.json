@@ -140,8 +140,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'x86mtflag $r0, 1' --asm 'x86rcli.w $r12, 1; x86rcli.w $r13, 1; x86rcli.w $r14, 1; x86rcli.w $r15, 1; x86rcli.w $r16, 1; x86rcli.w $r17, 1; x86rcli.w $r18, 1; x86rcli.w $r19, 1'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.9988,
-        "ipc": 0.5003
+        "cpi": 2,
+        "ipc": 0.5
       },
       "notes": "Slope method, 8 independent lanes."
     }

@@ -114,10 +114,10 @@
         "lanes": 8,
         "cpi": 4.4975,
         "ipc": 0.2223,
-        "cpi_min": 2.998,
+        "cpi_min": 3,
         "cpi_max": 12.499,
         "ipc_min": 0.08,
-        "ipc_max": 0.3336
+        "ipc_max": 0.3333
       },
       "notes": "Range over the same pairs: min CPI 3.00 at 0/1, max CPI 12.50 at 18446744073709551615/1. Sample uses 1/1."
     }

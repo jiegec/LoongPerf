@@ -112,12 +112,12 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 3.9975,
-        "ipc": 0.2502,
-        "cpi_min": 2.998,
-        "cpi_max": 10.998,
+        "cpi": 4,
+        "ipc": 0.25,
+        "cpi_min": 3,
+        "cpi_max": 11,
         "ipc_min": 0.0909,
-        "ipc_max": 0.3336
+        "ipc_max": 0.3333
       },
       "notes": "Throughput range over 22 operand values: min CPI 3.00 at 1/0, max CPI 11.00 at 1/maxsub. Sample uses 1/1."
     }

@@ -143,8 +143,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39' --asm 'armand.w $r12, $r4, 14; armand.w $r13, $r5, 14; armand.w $r14, $r6, 14; armand.w $r15, $r7, 14; armand.w $r16, $r8, 14; armand.w $r17, $r9, 14; armand.w $r18, $r10, 14; armand.w $r19, $r11, 14'",
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0013,
-        "ipc": 0.4997
+        "cpi": 2,
+        "ipc": 0.5
       },
       "notes": "Slope method, 8 independent lanes; 16.01 cycles per 8 instructions.",
       "measurement": {

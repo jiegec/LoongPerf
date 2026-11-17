@@ -78,8 +78,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4' --asm 'fcvt.ud.d $f0, $f8; fcvt.ud.d $f1, $f9; fcvt.ud.d $f2, $f10; fcvt.ud.d $f3, $f11; fcvt.ud.d $f4, $f12; fcvt.ud.d $f5, $f13; fcvt.ud.d $f6, $f14; fcvt.ud.d $f7, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.5012,
-        "ipc": 1.9952
+        "cpi": 0.5,
+        "ipc": 2
       },
       "notes": "Slope method, 8 independent lanes."
     }

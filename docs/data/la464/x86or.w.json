@@ -168,8 +168,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'x86or.w $r12, $r4; x86or.w $r13, $r5; x86or.w $r14, $r6; x86or.w $r15, $r7; x86or.w $r16, $r8; x86or.w $r17, $r9; x86or.w $r18, $r10; x86or.w $r19, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.9988,
-        "ipc": 0.5003
+        "cpi": 2,
+        "ipc": 0.5
       },
       "notes": "Slope method, 8 independent lanes."
     }
