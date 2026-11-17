@@ -154,13 +154,13 @@
     <div class="control">
       <label>Display</label>
       <div class="checks">
-        <label><input id="hide-empty" type="checkbox"> Hide rows without data</label>
+        <label title="Hide rows where every selected microarchitecture is missing data or SIGILL."><input id="hide-empty" type="checkbox"> Hide rows without data</label>
       </div>
     </div>
     <div class="control">
       <label>&nbsp;</label>
       <div class="button-row">
-        <button id="export" type="button" title="Download all filtered rows as CSV">Export CSV</button>
+        <button id="export" type="button" title="Download all filtered rows as CSV" disabled>Export CSV</button>
         <button id="reset" type="button">Reset</button>
       </div>
     </div>
@@ -847,7 +847,9 @@
     } else if (!extensions.length) {
       html = '<tr><td colspan="' + columns + '" class="empty">Select at least one extension.</td></tr>';
     } else if (!visible.length) {
-      html = '<tr><td colspan="' + columns + '" class="empty">No matching instructions.</td></tr>';
+      html = '<tr><td colspan="' + columns + '" class="empty">' +
+        (hideEmpty ? "No matching instructions with data." : "No matching instructions.") +
+        "</td></tr>";
     } else {
       for (let i = 0; i < currentPageRows.length; i += 1) {
         html += rowHtml(currentPageRows[i], selected, i, columns);
@@ -856,11 +858,17 @@
     tbody.innerHTML = html;
     if (currentPageRows.length) restoreOpenDetails(selected);
 
-    $("meta").textContent = visible.length + " of " + groups.length +
-      " instructions, " +
-      (pageSize === Infinity ? "all " + visible.length + " rows" : "page " + page + " / " + totalPages) +
-      ", " + selected.length + " microarchitecture" + (selected.length === 1 ? "" : "s") +
-      (hideEmpty ? ", rows without data hidden" : "");
+    if (!selected.length) {
+      $("meta").textContent = "Select at least one microarchitecture.";
+    } else if (!extensions.length) {
+      $("meta").textContent = "Select at least one extension.";
+    } else {
+      $("meta").textContent = visible.length + " of " + groups.length +
+        " instructions, " +
+        (pageSize === Infinity ? "all " + visible.length + " rows" : "page " + page + " / " + totalPages) +
+        ", " + selected.length + " microarchitecture" + (selected.length === 1 ? "" : "s") +
+        (hideEmpty ? ", rows without data hidden" : "");
+    }
     $("page-info").textContent = pageSize === Infinity
       ? "All " + visible.length + " instructions"
       : "Page " + page + " of " + totalPages;
@@ -949,7 +957,7 @@
     document.body.appendChild(link);
     link.click();
     link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 0);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   let searchTimer = 0;
