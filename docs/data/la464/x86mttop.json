@@ -1,0 +1,46 @@
+{
+  "instruction": {
+    "name": "x86mttop",
+    "extension": "LBT",
+    "form": "x86mttop imm",
+    "description": "Set the x87 TOP pointer to imm."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "new TOP value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1",
+      "init": "x86mttop 0",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.04
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'x86mttop 0' --asm 'x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.255,
+        "ipc": 3.9216
+      },
+      "notes": "Slope method, 8 independent lanes."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

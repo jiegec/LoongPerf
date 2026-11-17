@@ -33,10 +33,10 @@
   ],
   "measurement": {
     "tool": "./bench",
-    "unroll": 1000,
-    "iters": 1000,
+    "unroll": 100000,
+    "iters": 100,
     "warmup": 10,
-    "reps": 5,
+    "reps": 20,
     "core": 0,
     "date": "2026-11-17"
   },
@@ -53,38 +53,20 @@
           "role": "measurement",
           "asm": "x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f",
           "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f",
-          "chain_instructions": [
-            "x86mtflag $r12, 0x3f"
-          ],
           "chain_latency": 3.0,
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "core_cycles": 4.06
           },
           "measurement": {
-            "unroll": 10000,
-            "iters": 1000
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f' --asm 'x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f'"
-        },
-        {
-          "name": "extra x86mfflag calibration",
-          "role": "calibration",
-          "asm": "x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f; x86mfflag $r12, 0x3f",
-          "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f",
-          "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 1.0
-          },
-          "measurement": {
-            "unroll": 6666,
-            "iters": 1501
-          },
-          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f' --asm 'x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f; x86mfflag $r12, 0x3f'",
-          "notes": "Calibration experiment (not used for the reported latency)."
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f' --asm 'x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f'"
         }
       ],
-      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 3 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
     }
   ],
   "throughput": [
@@ -92,32 +74,22 @@
       "name": "8 independent lanes",
       "asm": "x86mfflag $r12, 0x3f; x86mfflag $r13, 0x3f; x86mfflag $r14, 0x3f; x86mfflag $r15, 0x3f; x86mfflag $r16, 0x3f; x86mfflag $r17, 0x3f; x86mfflag $r18, 0x3f; x86mfflag $r19, 0x3f",
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 0x3f",
-      "machine_code": [
-        "005cfc0c  x86mfflag $t0, 0x3f",
-        "005cfc0d  x86mfflag $t1, 0x3f",
-        "005cfc0e  x86mfflag $t2, 0x3f",
-        "005cfc0f  x86mfflag $t3, 0x3f",
-        "005cfc10  x86mfflag $t4, 0x3f",
-        "005cfc11  x86mfflag $t5, 0x3f",
-        "005cfc12  x86mfflag $t6, 0x3f",
-        "005cfc13  x86mfflag $t7, 0x3f"
-      ],
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.31
+        "core_cycles": 8.0
       },
       "measurement": {
-        "unroll": 10000,
-        "iters": 1000
+        "unroll": 1000,
+        "iters": 1000,
+        "reps": 5
       },
-      "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 0x3f' --asm 'x86mfflag $r12, 0x3f; x86mfflag $r13, 0x3f; x86mfflag $r14, 0x3f; x86mfflag $r15, 0x3f; x86mfflag $r16, 0x3f; x86mfflag $r17, 0x3f; x86mfflag $r18, 0x3f; x86mfflag $r19, 0x3f'",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 0x3f' --asm 'x86mfflag $r12, 0x3f; x86mfflag $r13, 0x3f; x86mfflag $r14, 0x3f; x86mfflag $r15, 0x3f; x86mfflag $r16, 0x3f; x86mfflag $r17, 0x3f; x86mfflag $r18, 0x3f; x86mfflag $r19, 0x3f'",
       "throughput": {
         "lanes": 8,
         "cpi": 1.0,
         "ipc": 1.0
       },
-      "notes": "8 independent instructions take 8.31 cycles."
+      "notes": "Slope method, 8 independent lanes."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

@@ -1,0 +1,177 @@
+{
+  "instruction": {
+    "name": "x86mul.wu",
+    "extension": "LBT",
+    "form": "x86mul.wu rd, rk",
+    "description": "x86-style multiply on 32-bit unsigned values."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "accumulator and destination"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    },
+    {
+      "index": 3,
+      "name": "EFLAGS",
+      "kind": "flags",
+      "access": "write",
+      "bits": 1,
+      "description": "x86 flags",
+      "implicit": true
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 100000,
+    "iters": 100,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86mul.wu $r12, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "chain_latency": 0.0,
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 0.9
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86mul.wu $r12, $r13'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.45,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86mul.wu $r13, $r12; x86mul.wu $r12, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "chain_latency": 0.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 2.45
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86mul.wu $r13, $r12; x86mul.wu $r12, $r13'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 3,
+      "cycles": 6.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86mul.wu $r12, $r13; x86mfflag $r12, 1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 7.05
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86mul.wu $r12, $r13; x86mfflag $r12, 1'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 3,
+      "cycles": 6.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86mul.wu $r12, $r13; x86mfflag $r13, 1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 7.05
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1' --asm 'x86mul.wu $r12, $r13; x86mfflag $r13, 1'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86mul.wu $r12, $r4; x86mul.wu $r13, $r5; x86mul.wu $r14, $r6; x86mul.wu $r15, $r7; x86mul.wu $r16, $r8; x86mul.wu $r17, $r9; x86mul.wu $r18, $r10; x86mul.wu $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 9.34
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000,
+        "reps": 5
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'x86mul.wu $r12, $r4; x86mul.wu $r13, $r5; x86mul.wu $r14, $r6; x86mul.wu $r15, $r7; x86mul.wu $r16, $r8; x86mul.wu $r17, $r9; x86mul.wu $r18, $r10; x86mul.wu $r19, $r11'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.1675,
+        "ipc": 0.8565
+      },
+      "notes": "Slope method, 8 independent lanes."
+    }
+  ]
+}

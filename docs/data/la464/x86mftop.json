@@ -1,0 +1,47 @@
+{
+  "instruction": {
+    "name": "x86mftop",
+    "extension": "LBT",
+    "form": "x86mftop rd",
+    "description": "Read the x87 TOP pointer into rd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86mftop $r12; x86mftop $r13; x86mftop $r14; x86mftop $r15; x86mftop $r16; x86mftop $r17; x86mftop $r18; x86mftop $r19",
+      "init": "x86mttop 0",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.04
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'x86mttop 0' --asm 'x86mftop $r12; x86mftop $r13; x86mftop $r14; x86mftop $r15; x86mftop $r16; x86mftop $r17; x86mftop $r18; x86mftop $r19'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.255,
+        "ipc": 3.9216
+      },
+      "notes": "Slope method, 8 independent lanes."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}
