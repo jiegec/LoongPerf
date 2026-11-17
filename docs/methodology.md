@@ -145,11 +145,11 @@ The extra counter values are normalised per instruction (the measured
 per-sequence values divided by the eight lanes). They are shown in the
 per-instruction throughput table and in the interactive table details.
 
-The `vpickve2gr` and `vreplgr2vr` pages are now included. Their latencies are
-measured by a round trip through the reverse move, with the reverse-move
-latency separated by a memory-assisted decomposition; the resulting nominal
-latencies are 4 cycles for `vpickve2gr.*`, 6 cycles for `xvpickve2gr.w/d`,
-2 cycles for `vreplgr2vr.b/h`, and 1 cycle for `vreplgr2vr.w/d`.
+The `vpickve2gr` and `vreplgr2vr` latencies are measured by a round trip
+through the reverse move, with the reverse-move latency separated by a
+memory-assisted decomposition. The resulting nominal latencies are 4 cycles
+for `vpickve2gr.*`, 6 cycles for `xvpickve2gr.w/d`, 2 cycles for
+`vreplgr2vr.b/h`, and 1 cycle for `vreplgr2vr.w/d`.
 
 ### LA464
 
@@ -173,9 +173,9 @@ vector uops per instruction = 0x31 / 0x25
 
 For example, `vadd.b` gives `0x25 = 1` and `0x31 = 1`, while a two-uop vector
 conversion gives `0x25 = 1` and `0x31 = 2`. LA464 does not expose separate LSX
-and LASX uop counters; `0x31` is the combined LSX+LASX vector-uop count. The
-current LA464 data set has fewer vector conversion pages than LA664, so this
-counter pair should be used when adding those instructions later.
+and LASX uop counters; `0x31` is the combined LSX+LASX vector-uop count. On
+LA464, the `0x31 / 0x25` ratio is therefore the direct way to identify
+multi-uop vector instructions.
 
 ## CPUCFG and trapped instructions
 
