@@ -265,6 +265,14 @@ exactly the same value back into the next iteration and stays in the same
 latency class. No helper instruction and no operand sweep are needed; setting
 `--init` to a different dividend walks the ladder one rung at a time.
 
+The divider works on the magnitudes of its operands, so the sign of the dividend
+and divisor never changes the timing; only the width of the quotient magnitude
+matters, and the divider skips trailing zero digits. Both effects are visible in
+the data: `div.d` peaks at 38 cycles for `0x7fffffffffffffff / 1` (a 63-bit
+quotient) rather than 39, because a signed quotient magnitude of 64 bits always
+has its low 63 bits clear and is therefore cheap, and `-2^63 / 1` measures 8
+cycles because 62 of its trailing zeros are skipped.
+
 ### Scalar divider
 
 The scalar divider retires two quotient bits per cycle:
@@ -332,3 +340,39 @@ Two properties of the unit are visible in the measurements:
   256-bit datapath that retires 16 quotient bits per cycle in aggregate
   (4 bits per lane for `.d`, 2 for `.w`, 1 for `.h` and one bit every other
   cycle for `.b`).
+
+Like the scalar divider, the vector unit divides magnitudes only, and it skips
+trailing zero digits: `2^40 / 1` (a 41-bit quotient) still measures 11 cycles
+because the 40 trailing zeros cost nothing.
+
+## Floating-point divide latency
+
+Floating-point division has three latency classes rather than a ladder, because
+the divider stops as soon as the remainder is zero. On LA664:
+
+| instruction | dividend 0 | exact quotient | inexact quotient |
+| --- | --- | --- | --- |
+| `fdiv.s` | 8 | 10 | 16 |
+| `fdiv.d` | 8 | 10 | 23 |
+| `vfdiv.s`, `xvfdiv.s` | 11 | 15 | 27 |
+| `vfdiv.d`, `xvfdiv.d` | 8 | 10 | 23 |
+
+An exact quotient is one that terminates in binary, for example `1.0/2.0`,
+`1.5/1.0` or `3.0/4.0`; the quotient of `1.0/3.0`, or of `(1+2^-52)/1.0`, needs
+the full mantissa and takes the long path. The long path produces four quotient
+bits per cycle for `double` (`10 + ceil(52/4) = 23`) and, in the vector unit,
+two bits per cycle for `float` (`15 + 2*ceil(23/4) = 27`), matching the pattern
+seen in the integer vector divider.
+
+Verifying this needs chains whose operands do not change, which floating point
+makes easy:
+
+* divisor `1.0` makes the quotient identical to the dividend, so
+  `fdiv.d $f0, $f0, $f1` is a stable chain, and choosing a dividend with a
+  low-order mantissa bit set selects the long path;
+* a chain started at `3.0` on the divisor side (`fdiv.d $f0, $f1, $f0` with
+  `$f1 = 1.0`) oscillates between `0.333...` and `3.0000000000000004` and never
+  terminates, which selects the long path directly.
+
+Do not reuse the operand bits of an integer as a floating-point constant:
+`li.d $r4, 1; movgr2fr.d $f0, $r4` loads the smallest subnormal, not `1.0`.

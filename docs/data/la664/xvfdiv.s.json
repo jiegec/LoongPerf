@@ -46,76 +46,73 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 11,
+      "cycles": 27,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "xvfdiv.s $xr0, $xr0, $xr1",
-          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4",
+          "init": "li.d $r4, 0x3f800001; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4",
           "measurement": {
             "unroll": 20000,
             "iters": 100,
             "reps": 10
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvfdiv.s $xr0, $xr0, $xr1'",
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 0x3f800001; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4' --asm 'xvfdiv.s $xr0, $xr0, $xr1'",
           "result": {
             "instructions_retired": 1,
-            "core_cycles": 11
+            "core_cycles": 27
           },
           "notes": "xj -> result chain.",
           "machine_code": [
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0081  xvreplgr2vr.b\t$xr1, $a0",
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0082  xvreplgr2vr.b\t$xr2, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "03800484  ori         \t$a0, $a0, 0x1",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0881  xvreplgr2vr.w\t$xr1, $a0",
             "753a8400  xvfdiv.s    \t$xr0, $xr0, $xr1"
           ]
         }
       ],
-      "notes": "xj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
+      "notes": "Data-dependent. Three cases: 11 cycles when the dividend is 0, 15 cycles when the quotient is exact (a terminating binary fraction such as 1.0/2.0 or 1.5/1.0, where the divider stops early), and 27 cycles when the quotient needs the full 23-bit mantissa (1.0/3.0, or (1+2^-23)/1.0). The long case produces 2 quotient bits per cycle: 15 + 15+2*ceil(23/4). Measured with chains that hold both operands constant: divisor 1.0 makes the division exact, so `xvfdiv.s $f0, $f0, $f1` returns its own value, and a divisor chain started at 3.0 oscillates between two inexact quotients.",
       "cycles_min": 11,
-      "cycles_max": 29
+      "cycles_max": 27
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 21,
+      "cycles": 27,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "xvfdiv.s $xr0, $xr1, $xr0",
-          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4",
+          "init": "li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x40400000; xvreplgr2vr.w $xr0, $r4",
           "measurement": {
             "unroll": 20000,
             "iters": 100,
             "reps": 10
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvfdiv.s $xr0, $xr1, $xr0'",
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x40400000; xvreplgr2vr.w $xr0, $r4' --asm 'xvfdiv.s $xr0, $xr1, $xr0'",
           "result": {
             "instructions_retired": 1,
-            "core_cycles": 21
+            "core_cycles": 27
           },
           "notes": "xk -> result chain.",
           "machine_code": [
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0081  xvreplgr2vr.b\t$xr1, $a0",
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0082  xvreplgr2vr.b\t$xr2, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0881  xvreplgr2vr.w\t$xr1, $a0",
+            "14808004  lu12i.w     \t$a0, 263168",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
             "753a8020  xvfdiv.s    \t$xr0, $xr1, $xr0"
           ]
         }
       ],
-      "notes": "xk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
+      "notes": "Data-dependent. Three cases: 11 cycles when the dividend is 0, 15 cycles when the quotient is exact (a terminating binary fraction such as 1.0/2.0 or 1.5/1.0, where the divider stops early), and 27 cycles when the quotient needs the full 23-bit mantissa (1.0/3.0, or (1+2^-23)/1.0). The long case produces 2 quotient bits per cycle: 15 + 15+2*ceil(23/4). Measured with chains that hold both operands constant: divisor 1.0 makes the division exact, so `xvfdiv.s $f0, $f0, $f1` returns its own value, and a divisor chain started at 3.0 oscillates between two inexact quotients.",
       "cycles_min": 11,
-      "cycles_max": 29
+      "cycles_max": 27
     }
   ],
   "throughput": [

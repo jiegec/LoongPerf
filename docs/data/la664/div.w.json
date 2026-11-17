@@ -78,7 +78,7 @@
           ]
         }
       ],
-      "notes": "Data-dependent. The scalar divider retires two quotient bits per cycle, so latency = 7 + floor(quotient_bits/2): 22 for a 31-bit quotient, 23 for a full 32-bit unsigned one. Minimum 5 with a zero dividend and a divisor >= 2 (6 for divisor 1). Measured with an exact chain: with divisor 1 the quotient equals the dividend, so div.w $r4, $r4, $r5 holds its operand constant and needs no helper. Powers of two are fast because the quotient is narrow, and a dividend with an even number of trailing zeros collapses further (0x10 / 1 = 7 cycles).",
+      "notes": "Data-dependent. The scalar divider retires two quotient bits per cycle, so latency = 7 + floor(quotient_bits/2): 22 for a 31-bit quotient, 23 for a full 32-bit unsigned one. The divider works on the magnitudes, so the sign of the operands does not matter and the maximum only depends on how wide the quotient magnitude can get. It also skips trailing zero radix-4 digits, which is why 0x10 / 1 costs 7 cycles instead of 9 and why -2^63 / 1 is fast. Minimum 5 with a zero dividend and a divisor >= 2 (6 for divisor 1). Measured with an exact chain: with divisor 1 the quotient equals the dividend, so div.w $r4, $r4, $r5 holds its operand constant and needs no helper. Powers of two are fast because the quotient is narrow, and a dividend with an even number of trailing zeros collapses further (0x10 / 1 = 7 cycles).",
       "cycles_min": 5,
       "cycles_max": 22
     },
@@ -118,7 +118,7 @@
           ]
         }
       ],
-      "notes": "Data-dependent. The scalar divider retires two quotient bits per cycle, so latency = 7 + floor(quotient_bits/2): 22 for a 31-bit quotient, 23 for a full 32-bit unsigned one. Minimum 5 with a zero dividend and a divisor >= 2 (6 for divisor 1). Measured with an exact chain: with divisor 1 the quotient equals the dividend, so div.w $r4, $r4, $r5 holds its operand constant and needs no helper. Powers of two are fast because the quotient is narrow, and a dividend with an even number of trailing zeros collapses further (0x10 / 1 = 7 cycles).",
+      "notes": "Data-dependent. The scalar divider retires two quotient bits per cycle, so latency = 7 + floor(quotient_bits/2): 22 for a 31-bit quotient, 23 for a full 32-bit unsigned one. The divider works on the magnitudes, so the sign of the operands does not matter and the maximum only depends on how wide the quotient magnitude can get. It also skips trailing zero radix-4 digits, which is why 0x10 / 1 costs 7 cycles instead of 9 and why -2^63 / 1 is fast. Minimum 5 with a zero dividend and a divisor >= 2 (6 for divisor 1). Measured with an exact chain: with divisor 1 the quotient equals the dividend, so div.w $r4, $r4, $r5 holds its operand constant and needs no helper. Powers of two are fast because the quotient is narrow, and a dividend with an even number of trailing zeros collapses further (0x10 / 1 = 7 cycles).",
       "cycles_min": 5,
       "cycles_max": 22
     }
