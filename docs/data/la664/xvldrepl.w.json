@@ -44,19 +44,19 @@
     {
       "name": "8 independent lanes",
       "asm": "xvldrepl.w $xr0, $r20, 0; xvldrepl.w $xr1, $r20, 4; xvldrepl.w $xr2, $r20, 8; xvldrepl.w $xr3, $r20, 12; xvldrepl.w $xr4, $r20, 16; xvldrepl.w $xr5, $r20, 20; xvldrepl.w $xr6, $r20, 24; xvldrepl.w $xr7, $r20, 28",
-      "init": "addi.d $r20, $sp, -1024",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024' --asm 'xvldrepl.w $xr0, $r20, 0; xvldrepl.w $xr1, $r20, 4; xvldrepl.w $xr2, $r20, 8; xvldrepl.w $xr3, $r20, 12; xvldrepl.w $xr4, $r20, 16; xvldrepl.w $xr5, $r20, 20; xvldrepl.w $xr6, $r20, 24; xvldrepl.w $xr7, $r20, 28'",
+      "init": "addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4' --asm 'xvldrepl.w $xr0, $r20, 0; xvldrepl.w $xr1, $r20, 4; xvldrepl.w $xr2, $r20, 8; xvldrepl.w $xr3, $r20, 12; xvldrepl.w $xr4, $r20, 16; xvldrepl.w $xr5, $r20, 20; xvldrepl.w $xr6, $r20, 24; xvldrepl.w $xr7, $r20, 28'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 4.8
+        "core_cycles": 4.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.6,
-        "ipc": 1.6667
+        "cpi": 0.5,
+        "ipc": 2.0
       },
-      "notes": "8 independent memory operations take 4.80 cycles."
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
     }
   ],
-  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+  "notes": "Vector memory operation. Throughput measured with a hot, 64-byte-aligned 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
 }

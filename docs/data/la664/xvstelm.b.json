@@ -51,19 +51,19 @@
     {
       "name": "8 independent lanes",
       "asm": "xvstelm.b $xr0, $r20, 0, 0; xvstelm.b $xr1, $r20, 1, 0; xvstelm.b $xr2, $r20, 2, 0; xvstelm.b $xr3, $r20, 3, 0; xvstelm.b $xr4, $r20, 4, 0; xvstelm.b $xr5, $r20, 5, 0; xvstelm.b $xr6, $r20, 6, 0; xvstelm.b $xr7, $r20, 7, 0",
-      "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024' --asm 'xvstelm.b $xr0, $r20, 0, 0; xvstelm.b $xr1, $r20, 1, 0; xvstelm.b $xr2, $r20, 2, 0; xvstelm.b $xr3, $r20, 3, 0; xvstelm.b $xr4, $r20, 4, 0; xvstelm.b $xr5, $r20, 5, 0; xvstelm.b $xr6, $r20, 6, 0; xvstelm.b $xr7, $r20, 7, 0'",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4' --asm 'xvstelm.b $xr0, $r20, 0, 0; xvstelm.b $xr1, $r20, 1, 0; xvstelm.b $xr2, $r20, 2, 0; xvstelm.b $xr3, $r20, 3, 0; xvstelm.b $xr4, $r20, 4, 0; xvstelm.b $xr5, $r20, 5, 0; xvstelm.b $xr6, $r20, 6, 0; xvstelm.b $xr7, $r20, 7, 0'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 5.15
+        "core_cycles": 4.01
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.6438,
-        "ipc": 1.5534
+        "cpi": 0.5012,
+        "ipc": 1.995
       },
-      "notes": "8 independent memory operations take 5.15 cycles."
+      "notes": "8 independent memory operations take 4.01 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
     }
   ],
-  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+  "notes": "Vector memory operation. Throughput measured with a hot, 64-byte-aligned 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
 }

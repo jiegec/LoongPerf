@@ -44,19 +44,19 @@
     {
       "name": "8 independent lanes",
       "asm": "vld $vr0, $r20, 0; vld $vr1, $r20, 16; vld $vr2, $r20, 32; vld $vr3, $r20, 48; vld $vr4, $r20, 64; vld $vr5, $r20, 80; vld $vr6, $r20, 96; vld $vr7, $r20, 112",
-      "init": "addi.d $r20, $sp, -1024",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024' --asm 'vld $vr0, $r20, 0; vld $vr1, $r20, 16; vld $vr2, $r20, 32; vld $vr3, $r20, 48; vld $vr4, $r20, 64; vld $vr5, $r20, 80; vld $vr6, $r20, 96; vld $vr7, $r20, 112'",
+      "init": "addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4' --asm 'vld $vr0, $r20, 0; vld $vr1, $r20, 16; vld $vr2, $r20, 32; vld $vr3, $r20, 48; vld $vr4, $r20, 64; vld $vr5, $r20, 80; vld $vr6, $r20, 96; vld $vr7, $r20, 112'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 4.4
+        "core_cycles": 4.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.55,
-        "ipc": 1.8182
+        "cpi": 0.5,
+        "ipc": 2.0
       },
-      "notes": "8 independent memory operations take 4.40 cycles."
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
     }
   ],
-  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+  "notes": "Vector memory operation. Throughput measured with a hot, 64-byte-aligned 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
 }

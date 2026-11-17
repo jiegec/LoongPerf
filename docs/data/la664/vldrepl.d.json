@@ -44,19 +44,19 @@
     {
       "name": "8 independent lanes",
       "asm": "vldrepl.d $vr0, $r20, 0; vldrepl.d $vr1, $r20, 8; vldrepl.d $vr2, $r20, 16; vldrepl.d $vr3, $r20, 24; vldrepl.d $vr4, $r20, 32; vldrepl.d $vr5, $r20, 40; vldrepl.d $vr6, $r20, 48; vldrepl.d $vr7, $r20, 56",
-      "init": "addi.d $r20, $sp, -1024",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024' --asm 'vldrepl.d $vr0, $r20, 0; vldrepl.d $vr1, $r20, 8; vldrepl.d $vr2, $r20, 16; vldrepl.d $vr3, $r20, 24; vldrepl.d $vr4, $r20, 32; vldrepl.d $vr5, $r20, 40; vldrepl.d $vr6, $r20, 48; vldrepl.d $vr7, $r20, 56'",
+      "init": "addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4' --asm 'vldrepl.d $vr0, $r20, 0; vldrepl.d $vr1, $r20, 8; vldrepl.d $vr2, $r20, 16; vldrepl.d $vr3, $r20, 24; vldrepl.d $vr4, $r20, 32; vldrepl.d $vr5, $r20, 40; vldrepl.d $vr6, $r20, 48; vldrepl.d $vr7, $r20, 56'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 4.35
+        "core_cycles": 4.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.5437,
-        "ipc": 1.8391
+        "cpi": 0.5,
+        "ipc": 2.0
       },
-      "notes": "8 independent memory operations take 4.35 cycles."
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
     }
   ],
-  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+  "notes": "Vector memory operation. Throughput measured with a hot, 64-byte-aligned 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
 }

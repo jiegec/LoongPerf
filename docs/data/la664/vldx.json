@@ -45,19 +45,19 @@
     {
       "name": "8 independent lanes",
       "asm": "vldx $vr0, $r20, $r4; vldx $vr1, $r20, $r5; vldx $vr2, $r20, $r6; vldx $vr3, $r20, $r7; vldx $vr4, $r20, $r8; vldx $vr5, $r20, $r9; vldx $vr6, $r20, $r10; vldx $vr7, $r20, $r11",
-      "init": "addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112' --asm 'vldx $vr0, $r20, $r4; vldx $vr1, $r20, $r5; vldx $vr2, $r20, $r6; vldx $vr3, $r20, $r7; vldx $vr4, $r20, $r8; vldx $vr5, $r20, $r9; vldx $vr6, $r20, $r10; vldx $vr7, $r20, $r11'",
+      "init": "addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112; li.d $r4, -64; and $r20, $r20, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112; li.d $r4, -64; and $r20, $r20, $r4' --asm 'vldx $vr0, $r20, $r4; vldx $vr1, $r20, $r5; vldx $vr2, $r20, $r6; vldx $vr3, $r20, $r7; vldx $vr4, $r20, $r8; vldx $vr5, $r20, $r9; vldx $vr6, $r20, $r10; vldx $vr7, $r20, $r11'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 4.34
+        "core_cycles": 4.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.5425,
-        "ipc": 1.8433
+        "cpi": 0.5,
+        "ipc": 2.0
       },
-      "notes": "8 independent memory operations take 4.34 cycles."
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
     }
   ],
-  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+  "notes": "Vector memory operation. Throughput measured with a hot, 64-byte-aligned 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
 }
