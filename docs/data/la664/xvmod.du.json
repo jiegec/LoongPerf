@@ -81,11 +81,43 @@
       "cases": [
         {
           "name": "no active lane or zero dividend",
-          "cycles": 8
+          "cycles": 8,
+          "experiment": {
+            "name": "no active lane or zero dividend",
+            "asm": "xvmod.du $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 0; xvreplgr2vr.d $xr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 0; xvreplgr2vr.d $xr3, $r4' --asm 'xvmod.du $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 7.99
+            }
+          }
         },
         {
           "name": "full-width quotient, all lanes active",
-          "cycles": 28
+          "cycles": 28,
+          "experiment": {
+            "name": "full-width quotient, all lanes active",
+            "asm": "xvmod.du $xr0, $xr0, $xr1; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr3",
+            "init": "li.d $r4, 18446744073709551615; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 18446744073709551615; xvreplgr2vr.d $xr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 18446744073709551615; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 18446744073709551615; xvreplgr2vr.d $xr3, $r4' --asm 'xvmod.du $xr0, $xr0, $xr1; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr3'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3,
+              "core_cycles": 29.99
+            },
+            "chain_latency": 2.0,
+            "notes": "reset helper (vand+vor, 2 cycles) calibrated against the same chain with vand.v in place of the divide; chain_latency = 2.0"
+          }
         }
       ]
     },

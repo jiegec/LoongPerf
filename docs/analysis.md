@@ -310,8 +310,11 @@ vfrecip.s, xvfrecip.s      11       15          17             25          27   
 | `vfrecip.d` | 8-24 | identical to `frecip.d` |
 
 The floating-point classes are a fixed set that covers every possible operand,
-so the JSON lists them as an exhaustive `cases` array with the operand setup and
-the `bench` command for each one, and no formula is needed on the instruction
-page. The integer ladders are continuous: their `cases` entries are only the
-named special cases (zero dividend, one-digit quotient, full-width quotient) and
-the notes carry the formula for everything in between.
+so the JSON lists them as an exhaustive `cases` array, and no formula is needed
+on the instruction page. The integer ladders are continuous: their `cases`
+entries are only the named special cases (zero dividend, one-digit quotient,
+full-width quotient) and the notes carry the formula for everything in between.
+Every case, in both families, carries the operand setup and the `bench` command
+that provokes it, so any number on a page can be reproduced by copy and paste.
+Cases that need a helper instruction also record its calibrated cost as
+`chain_latency`.

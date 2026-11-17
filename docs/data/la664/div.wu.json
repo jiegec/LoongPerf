@@ -82,15 +82,60 @@
       "cases": [
         {
           "name": "zero dividend, divisor 2 or more",
-          "cycles": 5
+          "cycles": 5,
+          "experiment": {
+            "name": "zero dividend, divisor 2 or more",
+            "asm": "div.wu $r4, $r4, $r5",
+            "init": "li.d $r4, 0; li.d $r5, 2; li.d $r6, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; li.d $r5, 2; li.d $r6, 0' --asm 'div.wu $r4, $r4, $r5'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 4.99
+            }
+          }
         },
         {
           "name": "one-digit quotient",
-          "cycles": 7
+          "cycles": 7,
+          "experiment": {
+            "name": "one-digit quotient",
+            "asm": "div.wu $r4, $r4, $r5",
+            "init": "li.d $r4, 1; li.d $r5, 1; li.d $r6, 1",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1; li.d $r5, 1; li.d $r6, 1' --asm 'div.wu $r4, $r4, $r5'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 6.98
+            }
+          }
         },
         {
           "name": "full-width quotient (31 bits)",
-          "cycles": 23
+          "cycles": 23,
+          "experiment": {
+            "name": "full-width quotient (32 bits)",
+            "asm": "div.wu $r4, $r4, $r5",
+            "init": "li.d $r4, 4294967295; li.d $r5, 1; li.d $r6, 4294967295",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4294967295; li.d $r5, 1; li.d $r6, 4294967295' --asm 'div.wu $r4, $r4, $r5'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 22.99
+            }
+          }
         }
       ]
     },

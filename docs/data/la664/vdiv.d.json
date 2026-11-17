@@ -81,11 +81,41 @@
       "cases": [
         {
           "name": "no active lane or zero dividend",
-          "cycles": 8
+          "cycles": 8,
+          "experiment": {
+            "name": "no active lane or zero dividend",
+            "asm": "vdiv.d $vr0, $vr0, $vr1",
+            "init": "li.d $r4, 0; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 0; vreplgr2vr.d $vr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 0; vreplgr2vr.d $vr3, $r4' --asm 'vdiv.d $vr0, $vr0, $vr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 7.97
+            }
+          }
         },
         {
           "name": "full-width quotient, all lanes active",
-          "cycles": 26
+          "cycles": 26,
+          "experiment": {
+            "name": "full-width quotient, all lanes active",
+            "asm": "vdiv.d $vr0, $vr0, $vr1",
+            "init": "li.d $r4, 9223372036854775807; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 9223372036854775807; vreplgr2vr.d $vr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9223372036854775807; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 9223372036854775807; vreplgr2vr.d $vr3, $r4' --asm 'vdiv.d $vr0, $vr0, $vr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 26.0
+            }
+          }
         }
       ]
     },
