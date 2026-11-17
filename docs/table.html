@@ -72,6 +72,9 @@
     .uarch-detail > h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0 0 8px; }
     .links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
     .empty { padding: 30px; text-align: center; color: var(--muted); }
+    .pager { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--muted); }
+    .pager button { padding: 6px 12px; }
+    .pager button:disabled { opacity: 0.45; cursor: default; }
     .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
   </style>
 </head>
@@ -110,6 +113,11 @@
       <tbody id="tbody"></tbody>
     </table>
   </div>
+  <div class="pager">
+    <button id="prev-page" type="button">Previous</button>
+    <span id="page-info"></span>
+    <button id="next-page" type="button">Next</button>
+  </div>
 </div>
 
 <script>
@@ -120,6 +128,8 @@
   let allUarches = [];
   let sortKey = "name";
   let sortDir = 1;
+  let page = 1;
+  const PAGE_SIZE = 50;
   const openRows = new Set();
 
   const $ = (id) => document.getElementById(id);
@@ -222,7 +232,7 @@
       input.type = "checkbox";
       input.value = uarch;
       input.checked = wanted === null || wanted.includes(uarch);
-      input.addEventListener("change", render);
+      input.addEventListener("change", () => render(true));
       label.appendChild(input);
       label.appendChild(document.createTextNode(uarch.toUpperCase()));
       box.appendChild(label);
@@ -239,7 +249,7 @@
       input.type = "checkbox";
       input.value = extension;
       input.checked = wanted === null || wanted.includes(extension);
-      input.addEventListener("change", render);
+      input.addEventListener("change", () => render(true));
       label.appendChild(input);
       label.appendChild(document.createTextNode(extension));
       box.appendChild(label);
@@ -348,7 +358,7 @@
         const key = th.dataset.sort;
         if (sortKey === key) sortDir *= -1;
         else { sortKey = key; sortDir = 1; }
-        render();
+        render(true);
       });
     });
   }
@@ -407,7 +417,8 @@
     }).join("");
   }
 
-  function render() {
+  function render(resetPage = false) {
+    if (resetPage) page = 1;
     const selected = selectedUarches();
     const extensions = selectedExtensions();
     const query = $("q").value.trim();
@@ -416,6 +427,9 @@
     const visible = selected.length && extensions.length
       ? sortedGroups(selected, query, extensions)
       : [];
+    const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+    page = Math.min(Math.max(1, page), totalPages);
+    const pageRows = visible.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
     const tbody = $("tbody");
     tbody.innerHTML = "";
@@ -429,7 +443,7 @@
       tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">No matching instructions.</td></tr>';
     }
 
-    for (const group of visible) {
+    for (const group of pageRows) {
       const first = selected.map((uarch) => group.variants.get(uarch)).find(Boolean);
       const tr = document.createElement("tr");
       tr.className = "instr";
@@ -463,8 +477,11 @@
     }
 
     $("meta").textContent = visible.length + " of " + groups.length +
-      " instructions, " + selected.length + " microarchitecture" +
-      (selected.length === 1 ? "" : "s");
+      " instructions, page " + page + " / " + totalPages + ", " +
+      selected.length + " microarchitecture" + (selected.length === 1 ? "" : "s");
+    $("page-info").textContent = "Page " + page + " of " + totalPages;
+    $("prev-page").disabled = page <= 1;
+    $("next-page").disabled = page >= totalPages;
     updateUrl(selected, extensions);
   }
 
@@ -477,12 +494,19 @@
     history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
   }
 
-  $("q").addEventListener("input", render);
+  $("q").addEventListener("input", () => render(true));
   $("reset").addEventListener("click", () => {
     $("q").value = "";
     document.querySelectorAll("#uarchs input, #exts input").forEach((input) => { input.checked = true; });
     openRows.clear();
-    render();
+    render(true);
+  });
+
+  $("prev-page").addEventListener("click", () => {
+    if (page > 1) { page -= 1; render(); }
+  });
+  $("next-page").addEventListener("click", () => {
+    page += 1; render();
   });
 
   load();

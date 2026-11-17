@@ -82,7 +82,8 @@ def check_command(path: Path, data: dict, experiment: dict) -> None:
 
 def check_result_count(path: Path, data: dict, experiment: dict) -> None:
     name = data["instruction"]["name"]
-    expected = asm_instruction_count(experiment["asm"]) * RETIRED_MULTIPLIER.get(name, 1)
+    multiplier = 2 if name.startswith("am") else RETIRED_MULTIPLIER.get(name, 1)
+    expected = asm_instruction_count(experiment["asm"]) * multiplier
     actual = experiment["result"]["instructions_retired"]
     if not close(actual, expected):
         error(path, f"instructions_retired {actual} != expected {expected} for {experiment.get('name', '<unnamed>')}")

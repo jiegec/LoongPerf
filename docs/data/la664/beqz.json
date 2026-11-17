@@ -73,18 +73,21 @@
         "40000480  beqz        \t$a0, 4\t# 0x1c",
         "40000480  beqz        \t$a0, 4\t# 0x20"
       ],
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 0' --asm 'beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4'",
+      "command": "./bench --unroll 8 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 0' --asm 'beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 24.0
+        "core_cycles": 8.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 3.0,
-        "ipc": 0.3333
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 taken conditional branches to the next instruction take 24.0 cycles."
+      "notes": "8 taken branches to the next instruction take 8.00 cycles. Measured with unroll=8 to keep the static branch footprint within BTB capacity.",
+      "measurement": {
+        "unroll": 8
+      }
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches."
+  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches. Taken branches use unroll=8 to stay within BTB capacity."
 }

@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "amswap_db.w",
+    "extension": "Base",
+    "form": "amswap_db.w rd, rk, rj",
+    "description": "Atomic memory operation amswap_db.w."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "old value (and compare value for AMCAS)"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source/update value"
+    },
+    {
+      "index": 3,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "amswap_db.w $r12, $r4, $r21; amswap_db.w $r13, $r5, $r23; amswap_db.w $r14, $r6, $r24; amswap_db.w $r15, $r7, $r25; amswap_db.w $r16, $r8, $r26; amswap_db.w $r17, $r9, $r27; amswap_db.w $r18, $r10, $r28; amswap_db.w $r19, $r11, $r29",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0",
+      "machine_code": [
+        "386912ac  amswap_db.w \t$t0, $a0, $r21",
+        "386916ed  amswap_db.w \t$t1, $a1, $s0",
+        "38691b0e  amswap_db.w \t$t2, $a2, $s1",
+        "38691f2f  amswap_db.w \t$t3, $a3, $s2",
+        "38692350  amswap_db.w \t$t4, $a4, $s3",
+        "38692771  amswap_db.w \t$t5, $a5, $s4",
+        "38692b92  amswap_db.w \t$t6, $a6, $s5",
+        "38692fb3  amswap_db.w \t$t7, $a7, $s6"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0' --asm 'amswap_db.w $r12, $r4, $r21; amswap_db.w $r13, $r5, $r23; amswap_db.w $r14, $r6, $r24; amswap_db.w $r15, $r7, $r25; amswap_db.w $r16, $r8, $r26; amswap_db.w $r17, $r9, $r27; amswap_db.w $r18, $r10, $r28; amswap_db.w $r19, $r11, $r29'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 128.08
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 16.01,
+        "ipc": 0.062460961898813235
+      },
+      "notes": "8 atomic operations on independent addresses take 128.08 cycles."
+    }
+  ],
+  "notes": "Atomic memory operation. Latency depends on cache/coherence state and is not measured; throughput only. Each atomic instruction retires as 2 instructions."
+}

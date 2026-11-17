@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "ammin.du",
+    "extension": "Base",
+    "form": "ammin.du rd, rk, rj",
+    "description": "Atomic memory operation ammin.du."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "old value (and compare value for AMCAS)"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source/update value"
+    },
+    {
+      "index": 3,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "ammin.du $r12, $r4, $r21; ammin.du $r13, $r5, $r23; ammin.du $r14, $r6, $r24; ammin.du $r15, $r7, $r25; ammin.du $r16, $r8, $r26; ammin.du $r17, $r9, $r27; ammin.du $r18, $r10, $r28; ammin.du $r19, $r11, $r29",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0",
+      "machine_code": [
+        "386892ac  ammin.du    \t$t0, $a0, $r21",
+        "386896ed  ammin.du    \t$t1, $a1, $s0",
+        "38689b0e  ammin.du    \t$t2, $a2, $s1",
+        "38689f2f  ammin.du    \t$t3, $a3, $s2",
+        "3868a350  ammin.du    \t$t4, $a4, $s3",
+        "3868a771  ammin.du    \t$t5, $a5, $s4",
+        "3868ab92  ammin.du    \t$t6, $a6, $s5",
+        "3868afb3  ammin.du    \t$t7, $a7, $s6"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0' --asm 'ammin.du $r12, $r4, $r21; ammin.du $r13, $r5, $r23; ammin.du $r14, $r6, $r24; ammin.du $r15, $r7, $r25; ammin.du $r16, $r8, $r26; ammin.du $r17, $r9, $r27; ammin.du $r18, $r10, $r28; ammin.du $r19, $r11, $r29'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 104.05
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 13.00625,
+        "ipc": 0.07688611244593946
+      },
+      "notes": "8 atomic operations on independent addresses take 104.05 cycles."
+    }
+  ],
+  "notes": "Atomic memory operation. Latency depends on cache/coherence state and is not measured; throughput only. Each atomic instruction retires as 2 instructions."
+}

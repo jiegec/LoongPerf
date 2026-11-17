@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "amxor.w",
+    "extension": "Base",
+    "form": "amxor.w rd, rk, rj",
+    "description": "Atomic memory operation amxor.w."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "old value (and compare value for AMCAS)"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source/update value"
+    },
+    {
+      "index": 3,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "amxor.w $r12, $r4, $r21; amxor.w $r13, $r5, $r23; amxor.w $r14, $r6, $r24; amxor.w $r15, $r7, $r25; amxor.w $r16, $r8, $r26; amxor.w $r17, $r9, $r27; amxor.w $r18, $r10, $r28; amxor.w $r19, $r11, $r29",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0",
+      "machine_code": [
+        "386412ac  amxor.w     \t$t0, $a0, $r21",
+        "386416ed  amxor.w     \t$t1, $a1, $s0",
+        "38641b0e  amxor.w     \t$t2, $a2, $s1",
+        "38641f2f  amxor.w     \t$t3, $a3, $s2",
+        "38642350  amxor.w     \t$t4, $a4, $s3",
+        "38642771  amxor.w     \t$t5, $a5, $s4",
+        "38642b92  amxor.w     \t$t6, $a6, $s5",
+        "38642fb3  amxor.w     \t$t7, $a7, $s6"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0' --asm 'amxor.w $r12, $r4, $r21; amxor.w $r13, $r5, $r23; amxor.w $r14, $r6, $r24; amxor.w $r15, $r7, $r25; amxor.w $r16, $r8, $r26; amxor.w $r17, $r9, $r27; amxor.w $r18, $r10, $r28; amxor.w $r19, $r11, $r29'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 104.2
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 13.025,
+        "ipc": 0.07677543186180422
+      },
+      "notes": "8 atomic operations on independent addresses take 104.20 cycles."
+    }
+  ],
+  "notes": "Atomic memory operation. Latency depends on cache/coherence state and is not measured; throughput only. Each atomic instruction retires as 2 instructions."
+}

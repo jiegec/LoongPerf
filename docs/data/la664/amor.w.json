@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "amor.w",
+    "extension": "Base",
+    "form": "amor.w rd, rk, rj",
+    "description": "Atomic memory operation amor.w."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "old value (and compare value for AMCAS)"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source/update value"
+    },
+    {
+      "index": 3,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "amor.w $r12, $r4, $r21; amor.w $r13, $r5, $r23; amor.w $r14, $r6, $r24; amor.w $r15, $r7, $r25; amor.w $r16, $r8, $r26; amor.w $r17, $r9, $r27; amor.w $r18, $r10, $r28; amor.w $r19, $r11, $r29",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0",
+      "machine_code": [
+        "386312ac  amor.w      \t$t0, $a0, $r21",
+        "386316ed  amor.w      \t$t1, $a1, $s0",
+        "38631b0e  amor.w      \t$t2, $a2, $s1",
+        "38631f2f  amor.w      \t$t3, $a3, $s2",
+        "38632350  amor.w      \t$t4, $a4, $s3",
+        "38632771  amor.w      \t$t5, $a5, $s4",
+        "38632b92  amor.w      \t$t6, $a6, $s5",
+        "38632fb3  amor.w      \t$t7, $a7, $s6"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0' --asm 'amor.w $r12, $r4, $r21; amor.w $r13, $r5, $r23; amor.w $r14, $r6, $r24; amor.w $r15, $r7, $r25; amor.w $r16, $r8, $r26; amor.w $r17, $r9, $r27; amor.w $r18, $r10, $r28; amor.w $r19, $r11, $r29'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 104.19
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 13.02375,
+        "ipc": 0.0767828006526538
+      },
+      "notes": "8 atomic operations on independent addresses take 104.19 cycles."
+    }
+  ],
+  "notes": "Atomic memory operation. Latency depends on cache/coherence state and is not measured; throughput only. Each atomic instruction retires as 2 instructions."
+}

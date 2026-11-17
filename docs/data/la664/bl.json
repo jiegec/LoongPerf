@@ -61,5 +61,5 @@
       "notes": "8 taken branch-and-link operations take 24.08 cycles."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches. Taken branches use unroll=8 to stay within BTB capacity."
 }
