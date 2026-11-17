@@ -77,7 +77,7 @@
       ],
       "notes": "vj -> result chain. Data-dependent: latency = 5 + 6*8 + 16*quotient_bits/8 = 53 + 8*floor(bits/4) for a 8-bit element. Min 29 with a zero dividend, max 69 at a full 8-bit unsigned quotient. LSX and LASX are identical for every element width although LASX carries twice the lanes, so the lanes (and both 128-bit halves) are refined in parallel and only the element width sets the per-bit rate. It divides magnitudes, so the sign of the operands does not change the timing, and it skips trailing zero digits (a quotient of 2^40 still costs 11 cycles). Measured with divisor 1, where the quotient equals the dividend, so the chain holds its operand constant and needs no helper. The remainder comes from the same divider. Only the lanes that need work are paid for: a vector with one active lane measures 27 cycles for .du, 22 for .wu, 24 for .hu and 34 for .bu, against 26, 33, 45 and 69 with every lane active, and the saving saturates at 1, 2, 4 and 8 active lanes, that is at 64 bits of active dividend. The recorded range assumes every lane is active, which is the worst case.",
       "cycles_min": 29,
-      "cycles_max": 69
+      "cycles_max": 77
     },
     {
       "from_operands": [
@@ -115,7 +115,7 @@
       ],
       "notes": "vj -> result chain. Data-dependent: latency = 5 + 6*8 + 16*quotient_bits/8 = 53 + 8*floor(bits/4) for a 8-bit element. Min 29 with a zero dividend, max 69 at a full 8-bit unsigned quotient. LSX and LASX are identical for every element width although LASX carries twice the lanes, so the lanes (and both 128-bit halves) are refined in parallel and only the element width sets the per-bit rate. It divides magnitudes, so the sign of the operands does not change the timing, and it skips trailing zero digits (a quotient of 2^40 still costs 11 cycles). Measured with divisor 1, where the quotient equals the dividend, so the chain holds its operand constant and needs no helper. The remainder comes from the same divider. Only the lanes that need work are paid for: a vector with one active lane measures 27 cycles for .du, 22 for .wu, 24 for .hu and 34 for .bu, against 26, 33, 45 and 69 with every lane active, and the saving saturates at 1, 2, 4 and 8 active lanes, that is at 64 bits of active dividend. The recorded range assumes every lane is active, which is the worst case.",
       "cycles_min": 29,
-      "cycles_max": 69
+      "cycles_max": 77
     }
   ],
   "throughput": [

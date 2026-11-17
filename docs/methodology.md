@@ -370,111 +370,169 @@ cycle for 64-bit elements, so `vdiv.d` spans 9-27 cycles while `xvdiv.d` spans
 8-26, whereas LA664 measures 8-26 for both widths. The 32-bit and narrower
 forms are identical on both microarchitectures.
 
-## Floating-point divide, square root and reciprocal latency
+## Floating-point division, square root and reciprocal latency
 
-Floating-point division has a small set of latency classes rather than a ladder,
-because the divider stops as soon as the remainder is zero. A subnormal operand
-adds one more step, and a quotient that overflows or underflows is detected
-early and is cheaper than a normal inexact quotient.
-
-| instruction | zero / Inf / NaN | overflow or underflow | exact | exact, subnormal operand | inexact | inexact, subnormal operand |
-| --- | --- | --- | --- | --- | --- | --- |
-| `fdiv.s`, `frecip.s` | 8 | 9 | 10 | 11 | 16 | 17 |
-| `fdiv.d`, `frecip.d` | 8 | 9 | 10 | 11 | 23 | 24 |
-| `vfdiv.s`, `xvfdiv.s`, `vfrecip.s`, `xvfrecip.s` | 11 | 13 | 15 | 17 | 27 | 29 |
-| `vfdiv.d`, `xvfdiv.d` | 8 | 9 | 10 | 11 | 23 | 24 |
-
-LA464 and LA664 agree on every entry, so the floating-point divider itself did
-not change between the cores.
-
-An exact quotient is one that terminates in binary, for example `1.0/2.0`,
-`1.5/1.0` or `3.0/4.0`. Everything is built from a single "digit time" of four
-mantissa bits:
+All five floating-point units of interest here share one mechanism. A result is
+produced one four-bit "digit" of the mantissa at a time and the unit stops as
+soon as the remainder is zero, so latency is a small set of classes rather than a
+ladder:
 
 ```text
-D = ceil(mantissa / 4)            D = 13 for double, 6 for single
+D = ceil(mantissa / 4)          D = 13 for double (52 bits), 6 for single (23 bits)
 
-fdiv, frecip      10 + 1*D        (.d: 23, .s: 16)
-fsqrt             10 + 2*D        (.d: 36, .s: 22)
-frsqrt            15 + 3*D        (.d: 54, .s: 33)
+fdiv, frecip    base + 1*D      exact -> no digit at all
+fsqrt           base + 2*D
+frsqrt          base + 3*D
 ```
 
-so a square root costs two digit times and a reciprocal square root three. The
-same digit time explains the `sqrt`/`rsqrt` classes: their exact cases are the
-even powers of two, where the result terminates after the first digit.
+"Exact" means the result terminates in binary (`1.0/2.0`, `1.5/1.0`, `3.0/4.0`
+for division and reciprocals; an even power of two for `sqrt` and `rsqrt`).
+Three further effects shift the numbers:
 
-The vector float unit matches the scalar unit exactly for doubles, lane count
-included (`vfdiv.d` and `xvfdiv.d` are both `10 + D`), but runs single precision
-at half rate and with a higher base cost:
+* an input of `0`, `Inf` or `NaN` short-circuits the unit;
+* a quotient or root that overflows to `Inf` or underflows to zero is detected
+  early and is *cheaper* than a normal inexact result;
+* a subnormal operand costs one extra digit time, and a tiny inexact result
+  rather than a tiny operand saves one cycle instead.
+
+### Division
+
+#### Scalar
 
 ```text
-vfdiv.s, vfrecip.s      15 + 2*D      = 27
-vfsqrt.s                15 + 4*D      = 39
-vfrsqrt.s               25 + 6*D      = 61
+                0/Inf/NaN  ovf/unf  exact  exact+subnormal  inexact  inexact+subnormal
+fdiv.s              8        9       10          11           16          17
+fdiv.d              8        9       10          11           23          24
 ```
 
-A single-precision vector divide is therefore *slower* than the scalar one (27
-against 16), while the double-precision forms are identical.
+The long path is `10 + ceil(52/4) = 23` for double and `10 + ceil(23/4) = 16`
+for single, which means four quotient bits per cycle. `1.0/max` (a tiny inexact
+result) measures 15 rather than 16 in single precision, and `minnorm/3` behaves
+the same way.
 
-Subnormals and overflow: a subnormal operand costs one digit step (`maxsub/1`
-and `1/maxsub` measure 24 for `fdiv.d`, 29 for `vfdiv.s`), a result that
-overflows to Inf or underflows to zero is detected early and measures 9 (or 13
-for `vfdiv.s`), and a tiny inexact result rather than a tiny operand loses one
-cycle instead (`1.0/max` is 15 for `fdiv.s`, 25 for `vfdiv.s`). `sqrt(maxsub)` is
-37 and `rsqrt(maxsub)` is 55 because the input is subnormal. These numbers match
-the separate LA464 campaign, which reports the same 9, 15, 17 and 24 cycle
-classes for `fdiv.s`/`fdiv.d`.
+#### Vector
 
-Verifying these needs chains whose operands do not change, which floating point
-makes easy:
+`vfdiv.d` and `xvfdiv.d` reproduce the scalar numbers exactly, lane count
+included, because the vector unit matches the scalar divider for 64-bit
+elements. Single precision runs at half rate:
+
+```text
+                        0/Inf/NaN  ovf/unf  exact  exact+subnormal  inexact  inexact+subnormal
+vfdiv.s, xvfdiv.s           11      13      15          17           27          29
+```
+
+so the vector single-precision divide is *slower* than the scalar one (27
+against 16) while both doubles are identical. Every class obeys
+`latency(32-bit vector) = 2*latency(32-bit scalar) - 5`, and the five saved
+cycles are the setup and rounding steps the two datapath passes share.
+
+### Square root
+
+`fsqrt` costs two digit times, so the long path is `10 + 2*13 = 36` for double
+and `10 + 2*6 = 22` for single. There is no overflow class because a square root
+cannot overflow, and an exact result requires an even power of two as input.
+
+#### Scalar
+
+```text
+                0/Inf/NaN  exact  exact+subnormal  inexact  inexact+subnormal
+fsqrt.s             8       10          11           22          23
+fsqrt.d             8       10          11           36          37
+```
+
+`sqrt(minnorm)` is exact and measures 10, while `sqrt(maxsub)` measures 37
+because the input is subnormal.
+
+#### Vector
+
+```text
+                        0/Inf/NaN  exact  exact+subnormal  inexact  inexact+subnormal
+vfsqrt.d, xvfsqrt.d         8       10          11           36          37
+vfsqrt.s, xvfsqrt.s        11       15          17           39          41
+```
+
+The 64-bit lanes reproduce the scalar numbers; single precision makes the two
+datapath passes the divider also makes for division, giving `2*22 - 5 = 39`.
+
+### Reciprocal square root
+
+`frsqrt` costs three digit times, so the long path is `15 + 3*13 = 54` and
+`15 + 3*6 = 33`. Its exact cases are again the even powers of two, and it has an
+extra intermediate class for inputs just above an exact power of two
+(`1 + 2^-52`), where the result needs one more digit than the exact case.
+
+#### Scalar
+
+```text
+                0/Inf/NaN  exact  exact+subnormal  just above exact  inexact  inexact+subnormal
+frsqrt.s            11      15          16               27            33          34
+frsqrt.d            11      15          16               41            54          55
+```
+
+#### Vector
+
+```text
+                        0/Inf/NaN  exact  exact+subnormal  inexact  inexact+subnormal
+vfrsqrt.d, xvfrsqrt.d       11      15          16           54          55
+vfrsqrt.s, xvfrsqrt.s       17      25          27           61          63
+```
+
+The single-precision vector form measures `2*33 - 5 = 61` for the general case,
+the same `2*x - 5` rule as the other units.
+
+### Reciprocal
+
+`frecip` has a single operand and the same digit time as division, so it repeats
+the division numbers apart from the paths that involve the second operand.
+
+#### Scalar
+
+```text
+                0/Inf/NaN  exact  exact+subnormal  tiny inexact  inexact  inexact+subnormal
+frecip.s            8       10          11             15          16          17
+frecip.d            8       10          11             —           23          24
+```
+
+An exact reciprocal requires a power of two; the subnormal case is `1/maxsub`,
+which measures 24 in double precision.
+
+#### Vector
+
+```text
+                        0/Inf/NaN  exact  exact+subnormal  tiny inexact  inexact  inexact+subnormal
+vfrecip.d, xvfrecip.d       8       10          11             —           23          24
+vfrecip.s, xvfrecip.s      11       15          17             25          27          29
+```
+
+### Building the chains
+
+Division and reciprocals can be measured without any helper instruction, which
+is why their numbers are the most reliable in this database:
 
 * divisor `1.0` makes the quotient identical to the dividend, so
-  `fdiv.d $f0, $f0, $f1` is a stable chain, and choosing a dividend with a
-  low-order mantissa bit set selects the long path;
+  `fdiv.d $f0, $f0, $f1` is a stable chain; a dividend with a low-order mantissa
+  bit set selects the long path;
 * a chain started at `3.0` on the divisor side (`fdiv.d $f0, $f1, $f0` with
   `$f1 = 1.0`) oscillates between `0.333...` and `3.0000000000000004` and never
   terminates, which selects the long path directly;
+* `fsqrt` and `frsqrt` converge to their own fixed points instead (`sqrt(1) = 1`,
+  `rsqrt(1) = 1`), so a chain seeded with `1.0` measures the exact class and the
+  inexact classes need the reset helper;
 * subnormal, overflow and underflow cases cannot chain at all, so they need a
-  reset helper (for example `movfr2gr.d` + `and` + `or` + `movgr2fr.d`), and its
-  cost must be calibrated against a `fadd.d` carried through the same helper
-  rather than assumed.
+  reset helper (`movfr2gr.d` + `and` + `or` + `movgr2fr.d`), and its cost must be
+  calibrated against a `fadd.d` carried through the same helper. The vector reset
+  helper costs two to three cycles more than the instruction count suggests
+  because of the bypass from the divider to the integer pipeline, so calibrating
+  it on a known case (`vfdiv.d` of `1.0/1.0` is 10 cycles) is mandatory.
 
 Do not reuse the operand bits of an integer as a floating-point constant:
 `li.d $r4, 1; movgr2fr.d $f0, $r4` loads the smallest subnormal, not `1.0`.
 
-The square root, reciprocal and reciprocal square root follow the same three
-class structure. Measured on LA464 with the two-copy chain described above:
+### Cross-core comparison
 
-| instruction | special (0, Inf, NaN) | exact / power of two | general on LA464 | general on LA664 |
-| --- | --- | --- | --- | --- |
-| `fsqrt.s` | 8 | 10 | 22 | 23 |
-| `fsqrt.d` | 8 | 10 | 36 | 37 |
-| `frecip.s` | 8 | 10 | 17 | 17 |
-| `frecip.d` | 8 | 10 | 24 | 24 |
-| `frsqrt.s` | 11 | 15 | 33 | 34 |
-| `frsqrt.d` | 11 | 15 | 54 | 55 |
-
-The `fsqrt`/`frsqrt` pipelines are exactly one cycle longer on LA664 per datapath
-pass: one cycle for the scalar and 64-bit vector operations (36 -> 37, 54 -> 55)
-and two cycles for the 32-bit vector forms that make two passes (39 -> 41,
-61 -> 63). `frecip` is unchanged.
-
-The general case is again an iteration count: `fdiv` and `frecip` refine 13
-quotient bits of the 52-bit mantissa in groups of four (`10 + 13 = 23`), `fsqrt`
-runs twice as many iterations (26, giving 36), and `frsqrt` three times (39,
-giving 54). The same relation shows up in single precision, where the mantissa
-is 23 bits and six iterations replace thirteen.
-
-For vectors the 64-bit lanes reproduce the scalar numbers exactly and run in
-parallel — one slow lane costs the same as eight, so `vfdiv.d`, `vfsqrt.d` and
-`vfrsqrt.d` match `fdiv.d`, `fsqrt.d` and `frsqrt.d`. The 32-bit lanes instead
-make two passes over the 64-bit datapath, which gives the empirical rule
-
-```text
-latency(32-bit vector) = 2 * latency(32-bit scalar) - 5
-```
-
-for every class: `vfdiv.s` 2*16-5 = 27, `vfrecip.s` 2*17-5 = 29, `vfsqrt.s`
-2*22-5 = 39 and `vfrsqrt.s` 2*33-5 = 61. The five saved cycles are the setup and
-rounding steps that the two passes share.
-
+The separate LA464 campaign reports the same class structure and the same
+numbers for division (`9`, `15`, `17` and `24` cycles appear there too), so the
+floating-point divider did not change between the cores. The only known
+difference is in the 128-bit integer divide of 64-bit elements, where LA464
+needs one extra cycle (`vdiv.d` 9-27 against `xvdiv.d` 8-26) while LA664 measures
+8-26 for both widths.
