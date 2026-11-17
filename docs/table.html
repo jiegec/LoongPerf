@@ -100,9 +100,19 @@
     .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .muted { color: var(--muted); }
     .details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+    .details-grid > div { min-width: 0; }
     .details-grid h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .details-table { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .details-grid table { min-width: 0; }
     .details-grid th, .details-grid td { padding: 5px 7px; font-size: 13px; }
+    td.details-cell { overflow-wrap: anywhere; }
+    @media (max-width: 1100px) {
+      .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      td.details-cell > .uarch-detail { max-width: calc(100vw - 72px); }
+      .details-grid { grid-template-columns: 1fr; gap: 14px; }
+      td.details-cell { padding: 12px; }
+      .details-grid th, .details-grid td { padding: 4px 6px; font-size: 12px; }
+    }
     .uarch-detail + .uarch-detail { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
     .uarch-detail > h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0 0 8px; }
     .links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
@@ -747,12 +757,12 @@
     ).join("");
 
     return '<div class="details-grid">' +
-      '<div><h3>Operands</h3><table><thead><tr><th>#</th><th>Operand</th><th>Kind</th><th>Access</th></tr></thead><tbody>' +
-      operandRows + "</tbody></table></div>" +
-      '<div><h3>Latency</h3><table><thead><tr><th>From</th><th>To</th><th>Cycles</th></tr></thead><tbody>' +
-      (latencyRows || '<tr><td colspan="3" class="muted">No data</td></tr>') + "</tbody></table></div>" +
-      '<div><h3>Throughput</h3><table><thead><tr><th>Experiment</th><th>Lanes</th><th>Insns</th><th>Cycles</th><th>CPI</th><th>IPC</th><th>Extra counters</th></tr></thead><tbody>' +
-      (throughputRows || '<tr><td colspan="7" class="muted">No data</td></tr>') + "</tbody></table></div>" +
+      '<div><h3>Operands</h3><div class="details-table"><table><thead><tr><th>#</th><th>Operand</th><th>Kind</th><th>Access</th></tr></thead><tbody>' +
+      operandRows + "</tbody></table></div></div>" +
+      '<div><h3>Latency</h3><div class="details-table"><table><thead><tr><th>From</th><th>To</th><th>Cycles</th></tr></thead><tbody>' +
+      (latencyRows || '<tr><td colspan="3" class="muted">No data</td></tr>') + "</tbody></table></div></div>" +
+      '<div><h3>Throughput</h3><div class="details-table"><table><thead><tr><th>Experiment</th><th>Lanes</th><th>Insns</th><th>Cycles</th><th>CPI</th><th>IPC</th><th>Extra counters</th></tr></thead><tbody>' +
+      (throughputRows || '<tr><td colspan="7" class="muted">No data</td></tr>') + "</tbody></table></div></div>" +
       '</div><div class="links"><a href="' + esc(row.page) + '">Full measurement page</a>' +
       '<a href="' + esc(row.raw) + '">Raw JSON</a></div>' +
       (row.notes ? '<div class="note">' + esc(row.notes) + "</div>" : "");
