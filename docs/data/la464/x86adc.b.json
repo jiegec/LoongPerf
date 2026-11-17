@@ -47,16 +47,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86adc.b $r12, $r13",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 0,
+          "chain_latency": 0.0,
           "result": {
-            "instructions_retired": 1,
+            "instructions_retired": 1.0,
             "core_cycles": 1.96
           },
           "measurement": {
@@ -74,16 +74,16 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86adc.b $r13, $r12; x86adc.b $r12, $r13",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 0,
+          "chain_latency": 0.0,
           "result": {
-            "instructions_retired": 2,
+            "instructions_retired": 2.0,
             "core_cycles": 4.07
           },
           "measurement": {
@@ -94,23 +94,24 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86adc.b $r13, $r12; x86adc.b $r12, $r13'"
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "2 dependent copies alternate through rd, so the chain measures 2 instructions; the per-instruction latency is raw/2. Re-measured on 2026-11-17 on LA464, core 0.",
+      "cycles_divisor": 2
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 1.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86adc.b $r12, $r13; x86mtflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 3,
+          "chain_latency": 3.0,
           "result": {
-            "instructions_retired": 2,
+            "instructions_retired": 2.0,
             "core_cycles": 4.04
           },
           "measurement": {
@@ -128,16 +129,16 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 3.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86adc.b $r12, $r13; x86mfflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 1,
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 2,
+            "instructions_retired": 2.0,
             "core_cycles": 4.06
           },
           "measurement": {
@@ -155,16 +156,16 @@
         2
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 3.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86adc.b $r12, $r13; x86mfflag $r13, 1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1",
-          "chain_latency": 1,
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 2,
+            "instructions_retired": 2.0,
             "core_cycles": 4.06
           },
           "measurement": {
@@ -184,7 +185,7 @@
       "asm": "x86adc.b $r12, $r4; x86adc.b $r13, $r5; x86adc.b $r14, $r6; x86adc.b $r15, $r7; x86adc.b $r16, $r8; x86adc.b $r17, $r9; x86adc.b $r18, $r10; x86adc.b $r19, $r11",
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
       "result": {
-        "instructions_retired": 8,
+        "instructions_retired": 8.0,
         "core_cycles": 16.01
       },
       "measurement": {

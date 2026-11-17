@@ -96,7 +96,8 @@
         "lanes": 8,
         "cpi": 15,
         "ipc": 0.0667
-      }
+      },
+      "notes": "8 independent lanes: 120.10 core cycles per 8 instructions, CPI 15. Slope method (--unroll 1000, --unroll2 2000)."
     }
   ]
 }

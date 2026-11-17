@@ -47,17 +47,17 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5,
+      "cycles": 5.0,
       "experiments": [
         {
           "name": "high-unroll load-to-ALU chain",
           "role": "measurement",
           "asm": "ldgt.b $r4, $r20, $r0; add.d $r20, $r20, $r4",
           "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, -8; st.b $r4, $r20, 8",
-          "chain_latency": 1,
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 6
+            "instructions_retired": 2.0,
+            "core_cycles": 6.0
           },
           "measurement": {
             "unroll": 10000,
@@ -86,7 +86,7 @@
         "38787bb3  ldgt.b      \t$t7, $s6, $s7"
       ],
       "result": {
-        "instructions_retired": 8,
+        "instructions_retired": 8.0,
         "core_cycles": 7.98
       },
       "measurement": {
@@ -96,9 +96,11 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, -8; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'ldgt.b $r12, $r21, $r30; ldgt.b $r13, $r23, $r30; ldgt.b $r14, $r24, $r30; ldgt.b $r15, $r25, $r30; ldgt.b $r16, $r26, $r30; ldgt.b $r17, $r27, $r30; ldgt.b $r18, $r28, $r30; ldgt.b $r19, $r29, $r30'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1,
-        "ipc": 1
-      }
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent lanes: 7.98 core cycles per 8 instructions, CPI 1. Slope method (--unroll 1000, --unroll2 2000)."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

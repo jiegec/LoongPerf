@@ -74,7 +74,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.45,
+      "cycles": 1.23,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -94,7 +94,10 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86mul.hu $r13, $r12; x86mul.hu $r12, $r13'"
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "Two dependent copies alternate through rd: 1.23 cycles per instruction (raw 2.45 for the pair, divided by 2). Repeated with a four-copy chain giving the same 1.23 per instruction, so this is above the 1-cycle ALU latency and is not a rounding artefact. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_divisor": 2,
+      "cycles_min": 1.2,
+      "cycles_max": 1.3
     },
     {
       "from_operands": [
