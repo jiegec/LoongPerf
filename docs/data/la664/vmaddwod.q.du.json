@@ -158,62 +158,25 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
-      "asm": "vmaddwod.q.du $vr0, $vr8, $vr16; vmaddwod.q.du $vr1, $vr9, $vr17; vmaddwod.q.du $vr2, $vr10, $vr18; vmaddwod.q.du $vr3, $vr11, $vr19; vmaddwod.q.du $vr4, $vr12, $vr20; vmaddwod.q.du $vr5, $vr13, $vr21; vmaddwod.q.du $vr6, $vr14, $vr22; vmaddwod.q.du $vr7, $vr15, $vr23",
-      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4' --asm 'vmaddwod.q.du $vr0, $vr8, $vr16; vmaddwod.q.du $vr1, $vr9, $vr17; vmaddwod.q.du $vr2, $vr10, $vr18; vmaddwod.q.du $vr3, $vr11, $vr19; vmaddwod.q.du $vr4, $vr12, $vr20; vmaddwod.q.du $vr5, $vr13, $vr21; vmaddwod.q.du $vr6, $vr14, $vr22; vmaddwod.q.du $vr7, $vr15, $vr23'",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 6.99
+      "name": "30 independent accumulators, shared sources",
+      "asm": "vmaddwod.q.du $vr0, $vr30, $vr31; vmaddwod.q.du $vr1, $vr30, $vr31; vmaddwod.q.du $vr2, $vr30, $vr31; vmaddwod.q.du $vr3, $vr30, $vr31; vmaddwod.q.du $vr4, $vr30, $vr31; vmaddwod.q.du $vr5, $vr30, $vr31; vmaddwod.q.du $vr6, $vr30, $vr31; vmaddwod.q.du $vr7, $vr30, $vr31; vmaddwod.q.du $vr8, $vr30, $vr31; vmaddwod.q.du $vr9, $vr30, $vr31; vmaddwod.q.du $vr10, $vr30, $vr31; vmaddwod.q.du $vr11, $vr30, $vr31; vmaddwod.q.du $vr12, $vr30, $vr31; vmaddwod.q.du $vr13, $vr30, $vr31; vmaddwod.q.du $vr14, $vr30, $vr31; vmaddwod.q.du $vr15, $vr30, $vr31; vmaddwod.q.du $vr16, $vr30, $vr31; vmaddwod.q.du $vr17, $vr30, $vr31; vmaddwod.q.du $vr18, $vr30, $vr31; vmaddwod.q.du $vr19, $vr30, $vr31; vmaddwod.q.du $vr20, $vr30, $vr31; vmaddwod.q.du $vr21, $vr30, $vr31; vmaddwod.q.du $vr22, $vr30, $vr31; vmaddwod.q.du $vr23, $vr30, $vr31; vmaddwod.q.du $vr24, $vr30, $vr31; vmaddwod.q.du $vr25, $vr30, $vr31; vmaddwod.q.du $vr26, $vr30, $vr31; vmaddwod.q.du $vr27, $vr30, $vr31; vmaddwod.q.du $vr28, $vr30, $vr31; vmaddwod.q.du $vr29, $vr30, $vr31",
+      "init": "li.d $r4, 1; vreplgr2vr.d $vr30, $r4; vreplgr2vr.d $vr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1; vreplgr2vr.d $vr30, $r4; vreplgr2vr.d $vr31, $r4' --asm 'vmaddwod.q.du $vr0, $vr30, $vr31; vmaddwod.q.du $vr1, $vr30, $vr31; vmaddwod.q.du $vr2, $vr30, $vr31; vmaddwod.q.du $vr3, $vr30, $vr31; vmaddwod.q.du $vr4, $vr30, $vr31; vmaddwod.q.du $vr5, $vr30, $vr31; vmaddwod.q.du $vr6, $vr30, $vr31; vmaddwod.q.du $vr7, $vr30, $vr31; vmaddwod.q.du $vr8, $vr30, $vr31; vmaddwod.q.du $vr9, $vr30, $vr31; vmaddwod.q.du $vr10, $vr30, $vr31; vmaddwod.q.du $vr11, $vr30, $vr31; vmaddwod.q.du $vr12, $vr30, $vr31; vmaddwod.q.du $vr13, $vr30, $vr31; vmaddwod.q.du $vr14, $vr30, $vr31; vmaddwod.q.du $vr15, $vr30, $vr31; vmaddwod.q.du $vr16, $vr30, $vr31; vmaddwod.q.du $vr17, $vr30, $vr31; vmaddwod.q.du $vr18, $vr30, $vr31; vmaddwod.q.du $vr19, $vr30, $vr31; vmaddwod.q.du $vr20, $vr30, $vr31; vmaddwod.q.du $vr21, $vr30, $vr31; vmaddwod.q.du $vr22, $vr30, $vr31; vmaddwod.q.du $vr23, $vr30, $vr31; vmaddwod.q.du $vr24, $vr30, $vr31; vmaddwod.q.du $vr25, $vr30, $vr31; vmaddwod.q.du $vr26, $vr30, $vr31; vmaddwod.q.du $vr27, $vr30, $vr31; vmaddwod.q.du $vr28, $vr30, $vr31; vmaddwod.q.du $vr29, $vr30, $vr31'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 20
       },
       "throughput": {
-        "lanes": 8,
-        "cpi": 0.8738,
-        "ipc": 1.1445
+        "lanes": 30,
+        "cpi": 0.5,
+        "ipc": 2.0
       },
-      "notes": "8 independent instructions take 6.99 cycles.",
-      "machine_code": [
-        "03800404  li.w        \t$a0, 0x1",
-        "729f0088  vreplgr2vr.b\t$vr8, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "729f0089  vreplgr2vr.b\t$vr9, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "729f008a  vreplgr2vr.b\t$vr10, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "729f008b  vreplgr2vr.b\t$vr11, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "729f008c  vreplgr2vr.b\t$vr12, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "729f008d  vreplgr2vr.b\t$vr13, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "729f008e  vreplgr2vr.b\t$vr14, $a0",
-        "03800404  li.w        \t$a0, 0x1",
-        "729f008f  vreplgr2vr.b\t$vr15, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0090  vreplgr2vr.b\t$vr16, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0091  vreplgr2vr.b\t$vr17, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0092  vreplgr2vr.b\t$vr18, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0093  vreplgr2vr.b\t$vr19, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0094  vreplgr2vr.b\t$vr20, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0095  vreplgr2vr.b\t$vr21, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0096  vreplgr2vr.b\t$vr22, $a0",
-        "03800804  li.w        \t$a0, 0x2",
-        "729f0097  vreplgr2vr.b\t$vr23, $a0",
-        "70b7c100  vmaddwod.q.du\t$vr0, $vr8, $vr16",
-        "70b7c521  vmaddwod.q.du\t$vr1, $vr9, $vr17",
-        "70b7c942  vmaddwod.q.du\t$vr2, $vr10, $vr18",
-        "70b7cd63  vmaddwod.q.du\t$vr3, $vr11, $vr19",
-        "70b7d184  vmaddwod.q.du\t$vr4, $vr12, $vr20",
-        "70b7d5a5  vmaddwod.q.du\t$vr5, $vr13, $vr21",
-        "70b7d9c6  vmaddwod.q.du\t$vr6, $vr14, $vr22",
-        "70b7dde7  vmaddwod.q.du\t$vr7, $vr15, $vr23"
-      ]
+      "result": {
+        "instructions_retired": 30,
+        "core_cycles": 15.0
+      },
+      "notes": "`vd` is an accumulator, so a lane can only issue once per latency. The earlier 8-lane body measured 0.8725 CPI purely from that feedback (8 lanes against a 7-cycle latency); with 30 independent accumulators and two shared sources the unit reaches two instructions per cycle."
     }
   ],
   "notes": "Every source-to-result path is recorded separately; vd is read as the accumulator."
