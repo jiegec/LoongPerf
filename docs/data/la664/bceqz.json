@@ -48,15 +48,19 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 1; movgr2cf $fcc0, $r4' --asm 'bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0'",
       "result": {
-        "instructions_retired": 8,
-        "core_cycles": 8
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1,
-        "ipc": 1
+        "cpi": 1.0,
+        "ipc": 1.0,
+        "cpi_min": 0.875,
+        "cpi_max": 1.0,
+        "ipc_min": 1.0,
+        "ipc_max": 1.1429
       },
-      "notes": "8 not-taken FCC conditional branches take 8.00 cycles (1 CPI). Re-measured at unroll 8 and 1000 with offsets 0/4/8; the earlier 0.5 CPI was not reproducible for FCC branches."
+      "notes": "Not-taken-branch throughput saturates at 1.0 CPI (1 per cycle): the marginal cost is 0.875 at 8 static branches, 0.938 at 16 and 0.969 at 32 in a loop, converging to 1.0. Smaller footprints overlap with the loop branch and read low."
     },
     {
       "name": "8 taken branches",
@@ -74,19 +78,23 @@
       ],
       "command": "./bench --unroll 8 --iters 1000 --warmup 10 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4'",
       "result": {
-        "instructions_retired": 8,
-        "core_cycles": 8
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1,
-        "ipc": 1
+        "cpi": 1.0,
+        "ipc": 1.0,
+        "cpi_min": 1.0,
+        "cpi_max": 3.0,
+        "ipc_min": 0.3333,
+        "ipc_max": 1.0
       },
-      "notes": "8 taken branches to the next instruction take 8.00 cycles. Measured with unroll=8 to keep the static branch footprint within BTB capacity.",
+      "notes": "Taken-branch throughput has two regimes. With a small static footprint (8 static branches, reused in a 1000-iteration loop) the branch retires at 1 CPI: measured 1.001, 1.000 and 1.002 for 2, 4 and 8 static branches. Once the static stream exceeds the BTB, each branch costs 3 cycles: 2.857 at 256 static branches and 3.006-3.007 from 1024 static branches on. The two ends are recorded as the range.",
       "measurement": {
         "unroll": 8
       }
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches. FCC conditional branches are 1 CPI both taken and not-taken; unlike integer branches, not-taken FCC branches do not reach 2/cycle. Taken branches use unroll=8 to stay within BTB capacity."
+  "notes": "No destination data dependency; latency is not defined. Taken-branch throughput spans 1 CPI (BTB-friendly) to 3 CPI (static stream beyond BTB capacity); not-taken branches run at 1.0 CPI."
 }

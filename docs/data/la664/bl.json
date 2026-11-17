@@ -50,16 +50,20 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --asm 'bl 4; bl 4; bl 4; bl 4; bl 4; bl 4; bl 4; bl 4'",
       "result": {
-        "instructions_retired": 8,
-        "core_cycles": 24
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 3,
-        "ipc": 0.3333333333333333
+        "cpi": 1.0,
+        "ipc": 1.0,
+        "cpi_min": 1.0,
+        "cpi_max": 3.0,
+        "ipc_min": 0.3333,
+        "ipc_max": 1.0
       },
-      "notes": "8 taken branch-and-link operations take 24.08 cycles."
+      "notes": "Taken-branch throughput has two regimes. With a small static footprint (8 static branches, reused in a 1000-iteration loop) the branch retires at 1 CPI: measured 1.001, 1.000 and 1.002 for 2, 4 and 8 static branches. Once the static stream exceeds the BTB, each branch costs 3 cycles: 2.857 at 256 static branches and 3.006-3.007 from 1024 static branches on. The two ends are recorded as the range."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches. Taken branches use unroll=8 to stay within BTB capacity."
+  "notes": "No destination data dependency; latency is not defined. Taken-branch throughput spans 1 CPI (BTB-friendly) to 3 CPI (static stream beyond BTB capacity); not-taken branches run at 0.5 CPI."
 }
