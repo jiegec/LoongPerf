@@ -299,6 +299,24 @@ integer bypass is not free, so calibrate each one separately. The GPR figure is
 `movfr2gr` + `and` + `or` + `movgr2fr` = 2 + 1 + 1 + 2, which agrees with the
 measured 5.95 and confirms that both cross-domain moves are two cycles.
 
+LA464 shows the same picture and was re-derived the same way. Its register round
+trips measure 4.0 cycles for `movgr2fr` + `movfr2gr` and 5.0 for
+`movgr2frh.w` + `movfrh2gr.s`, so every cross-domain move is 2 cycles per
+direction with `movgr2frh.w` at 3. The flag pair is much slower on this core, 7
+for `movcf2gr` and 15 for `movgr2cf`, a 22-cycle round trip; 7/15 is the split
+that reproduces the `fcmp` closure, and no closed chain can observe it directly.
+The vector register files follow the same pattern with `vpickve2gr` at 3,
+`xvpickve2gr` at 5, and `vreplgr2vr` at 2 (3 for the byte and half-word
+broadcast, whose pick round trip is 6 instead of 5).
+
+Do not trust a single closure for these moves. On LA464 a chain that ends in
+`movfr2gr` and one that ends in `fst` disagree by four cycles, because a store
+whose data comes straight from a GPR bypasses the floating-point register file:
+adding `fadd.d` to that control costs 7 cycles instead of 3. The register round
+trip, which crosses the boundary in both directions and so cancels that bypass,
+is the only shape that stays additive, and even it measures only the *sum* of
+the two directions.
+
 The helper *must* be calibrated, never assumed. Measure the same helper with the
 instruction replaced by a cheap known operation (`fadd.d`, `vadd.b`) and subtract
 the difference from the known control latency:
