@@ -46,72 +46,178 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 38,
+      "cycles": 38.0,
       "experiments": [
         {
-          "name": "fixed-operand chain with add.d reset",
+          "name": "dependent chain with add.d restore",
           "role": "measurement",
-          "asm": "mod.d $r12, $r12, $r13; add.d $r12, $r12, $r5",
-          "init": "li.d $r12, 9223372036854775807; li.d $r13, 2; li.d $r5, 9223372036854775808",
-          "chain_latency": 1,
+          "asm": "mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6",
+          "init": "li.d $r4, 9223372036854775807; li.d $r5, 3; li.d $r6, 9223372036854775806",
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 39
+            "instructions_retired": 2.0,
+            "core_cycles": 38.98
           },
           "measurement": {
-            "unroll": 2000,
-            "iters": 500
+            "unroll": 800,
+            "iters": 40,
+            "reps": 3
           },
-          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 9223372036854775807; li.d $r13, 2; li.d $r5, 9223372036854775808' --asm 'mod.d $r12, $r12, $r13; add.d $r12, $r12, $r5'",
-          "machine_code": [
-            "02bffc0c  addi.w      \t$t0, $zero, -1",
-            "031ffd8c  lu52i.d     \t$t0, $t0, 2047",
-            "0380080d  ori         \t$t1, $zero, 2",
-            "03200005  lu52i.d     \t$a1, $zero, -2048",
-            "0022b58c  mod.d       \t$t0, $t0, $t1",
-            "0010958c  add.d       \t$t0, $t0, $a1"
-          ]
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9223372036854775807; li.d $r5, 3; li.d $r6, 9223372036854775806' --asm 'mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+          "notes": "Dividend 0x7fffffffffffffff, divisor 3: a wide quotient with a non-zero remainder. The result is restored to the dividend by adding back (dividend - remainder), so 1 cycle of add.d is subtracted."
         }
       ],
       "notes": "Data-dependent (rj-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 38 at dividend=0x7fffffffffffffff, divisor=2. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
-      "cycles_min": 5,
-      "cycles_max": 38
+      "cycles_min": 5.0,
+      "cycles_max": 38.0,
+      "cases": [
+        {
+          "name": "zero dividend, divisor 2 or more",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 0; li.d $r5, 2; li.d $r6, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; li.d $r5, 2; li.d $r6, 0' --asm 'mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.97
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "one-digit quotient",
+          "cycles": 7.0,
+          "experiment": {
+            "asm": "mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 3; li.d $r5, 2; li.d $r6, 2",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 3; li.d $r5, 2; li.d $r6, 2' --asm 'mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 7.97
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "full-width quotient with a non-zero remainder",
+          "cycles": 38.0,
+          "experiment": {
+            "asm": "mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 9223372036854775807; li.d $r5, 3; li.d $r6, 9223372036854775806",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9223372036854775807; li.d $r5, 3; li.d $r6, 9223372036854775806' --asm 'mod.d $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 38.98
+            },
+            "chain_latency": 1.0
+          }
+        }
+      ]
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 38,
+      "cycles": 38.0,
       "experiments": [
         {
-          "name": "fixed-operand chain with add.d reset",
+          "name": "dependent chain with add.d restore",
           "role": "measurement",
-          "asm": "mod.d $r12, $r13, $r12; add.d $r12, $r12, $r5",
-          "init": "li.d $r12, 1; li.d $r13, 9223372036854775807; li.d $r5, 2",
-          "chain_latency": 1,
+          "asm": "mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6",
+          "init": "li.d $r4, 3; li.d $r5, 9223372036854775807; li.d $r6, 2",
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 39
+            "instructions_retired": 2.0,
+            "core_cycles": 38.98
           },
           "measurement": {
-            "unroll": 2000,
-            "iters": 500
+            "unroll": 800,
+            "iters": 40,
+            "reps": 3
           },
-          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 1; li.d $r13, 9223372036854775807; li.d $r5, 2' --asm 'mod.d $r12, $r13, $r12; add.d $r12, $r12, $r5'",
-          "machine_code": [
-            "0380040c  ori         \t$t0, $zero, 1",
-            "02bffc0d  addi.w      \t$t1, $zero, -1",
-            "031ffdad  lu52i.d     \t$t1, $t1, 2047",
-            "03800805  ori         \t$a1, $zero, 2",
-            "0022b1ac  mod.d       \t$t0, $t1, $t0",
-            "0010958c  add.d       \t$t0, $t0, $a1"
-          ]
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 3; li.d $r5, 9223372036854775807; li.d $r6, 2' --asm 'mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6'",
+          "notes": "Dividend 0x7fffffffffffffff, divisor 3: a wide quotient with a non-zero remainder. The result is restored to the dividend by adding back (dividend - remainder), so 1 cycle of add.d is subtracted."
         }
       ],
       "notes": "Data-dependent (rk-chained). Measured over 400 dividend/divisor pairs. Min 4 cycles at dividend=0x7fffffffffffffff, divisor=0x7f; max 38 at dividend=0x7fffffffffffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
-      "cycles_min": 4,
-      "cycles_max": 38
+      "cycles_min": 5.0,
+      "cycles_max": 38.0,
+      "cases": [
+        {
+          "name": "zero dividend, divisor 2 or more",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 2; li.d $r5, 0; li.d $r6, 2",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2; li.d $r5, 0; li.d $r6, 2' --asm 'mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.95
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "one-digit quotient",
+          "cycles": 7.0,
+          "experiment": {
+            "asm": "mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 2; li.d $r5, 3; li.d $r6, 1",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2; li.d $r5, 3; li.d $r6, 1' --asm 'mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 7.98
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "full-width quotient with a non-zero remainder",
+          "cycles": 38.0,
+          "experiment": {
+            "asm": "mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 3; li.d $r5, 9223372036854775807; li.d $r6, 2",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 3; li.d $r5, 9223372036854775807; li.d $r6, 2' --asm 'mod.d $r4, $r5, $r4; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 38.98
+            },
+            "chain_latency": 1.0
+          }
+        }
+      ]
     }
   ],
   "throughput": [
@@ -150,5 +256,5 @@
       "notes": "Data-dependent throughput. CPI 3.5 at dividend=0, divisor=2; CPI 20 at dividend=9223372036854775807, divisor=1. Measured with 8 independent lanes."
     }
   ],
-  "notes": "Latency model (fitted on this core, mean |error| 0.6 cycles): 5 cycles when |dividend| < |divisor| (quotient 0); 7 cycles when the quotient is 1; otherwise 7 + round(bits(quotient)/2), i.e. the divider produces two quotient bits per cycle. Hence the extremes are: min 5 at dividend 0 or |dividend| < |divisor|; max 7+32 = 39 for the 64-bit unsigned variant (dividend 0xffffffffffffffff, divisor 1, measured 39) and 38 for the 64-bit signed variant (dividend 0x7fffffffffffffff, divisor 2, measured 38); the 32-bit variants top out at 7+16 = 23. Verified by direct measurement of the model-predicted extremal inputs, not by exhaustive search. mod uses the same divider, so the same model applies. "
+  "notes": "Latency model: 5 cycles with a zero dividend or quotient, otherwise 7 + floor(quotient_bits/2). The remainder path exits early when the remainder is zero, so the divisor-1 recipes used for the divides do not reach the long path here: the full-width case uses a divisor that leaves a non-zero remainder. On LA464 the 32-bit forms also require properly sign-extended operands in their 64-bit registers; a register holding 0x00000000ffffffff instead of 0xffffffffffffffff divides as a tiny value and returns 0. Each case closes its loop with add.d, restoring either the dividend (rj path) or the divisor (rk path) from the remainder, so 1 cycle of helper latency is subtracted."
 }

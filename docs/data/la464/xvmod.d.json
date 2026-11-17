@@ -39,14 +39,7 @@
   },
   "latencies": [
     {
-      "from_operands": [
-        2,
-        3
-      ],
       "to_operand": 1,
-      "cycles": 27.0,
-      "cycles_min": 8,
-      "cycles_max": 27,
       "experiments": [
         {
           "name": "reset-chain measurement",
@@ -116,7 +109,171 @@
           ]
         }
       ],
-      "notes": "Data-dependent. Measured over 8 operand pairs; min 7 cycles at 0/1, max 24 cycles at 4611686018427387903/3. The sample experiment uses the max-latency pair. Latency is derived by subtracting the same closure around vadd.b (calibration experiment)."
+      "notes": "Data-dependent. Measured over 8 operand pairs; min 7 cycles at 0/1, max 24 cycles at 4611686018427387903/3. The sample experiment uses the max-latency pair. Latency is derived by subtracting the same closure around vadd.b (calibration experiment).",
+      "from_operands": [
+        2
+      ],
+      "cycles": 27.0,
+      "cases": [
+        {
+          "name": "no active lane or zero dividend",
+          "cycles": 8.0,
+          "experiment": {
+            "asm": "xvmod.d $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 0; xvreplgr2vr.d $xr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 0; xvreplgr2vr.d $xr3, $r4' --asm 'xvmod.d $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 7.97
+            }
+          }
+        },
+        {
+          "name": "full-width quotient, all lanes active",
+          "cycles": 27.0,
+          "experiment": {
+            "asm": "xvmod.d $xr0, $xr0, $xr1; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr3",
+            "init": "li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr1, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4; li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr3, $r4' --asm 'xvmod.d $xr0, $xr0, $xr1; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr3'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 28.9
+            },
+            "chain_latency": 1.99
+          }
+        }
+      ],
+      "cycles_min": 8.0,
+      "cycles_max": 27.0
+    },
+    {
+      "to_operand": 1,
+      "experiments": [
+        {
+          "name": "reset-chain measurement",
+          "role": "measurement",
+          "asm": "xvmod.d $xr0, $xr0, $xr2; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4",
+          "init": "li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr0, $r4; li.d $r4, 3; xvreplgr2vr.d $xr2, $r4; li.d $r5, -9223372036854775807; li.d $r6, 9223372036854775806",
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 35.99
+          },
+          "measurement": {
+            "unroll": 1000,
+            "iters": 300,
+            "reps": 7
+          },
+          "command": "./bench --unroll 1000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr0, $r4; li.d $r4, 3; xvreplgr2vr.d $xr2, $r4; li.d $r5, -9223372036854775807; li.d $r6, 9223372036854775806' --asm 'xvmod.d $xr0, $xr0, $xr2; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4'",
+          "notes": "Element-0 reset chain; the closure latency is cancelled by the calibration experiment.",
+          "chain_latency": 9.0,
+          "machine_code": [
+            "02bffc04  addi.w      \t$a0, $zero, -1",
+            "030ffc84  lu52i.d     \t$a0, $a0, 1023",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
+            "03800c04  ori         \t$a0, $zero, 3",
+            "769f0c82  xvreplgr2vr.d\t$xr2, $a0",
+            "0383fc05  ori         \t$a1, $zero, 255",
+            "033000a5  lu52i.d     \t$a1, $a1, -1024",
+            "02bc0006  addi.w      \t$a2, $zero, -256",
+            "030ffcc6  lu52i.d     \t$a2, $a2, 1023",
+            "74e38800  xvmod.d     \t$xr0, $xr0, $xr2",
+            "76efe004  xvpickve2gr.d\t$a0, $xr0, 0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0"
+          ]
+        },
+        {
+          "name": "vadd.b reset-helper baseline",
+          "role": "calibration",
+          "asm": "xvadd.b $xr0, $xr0, $xr2; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4",
+          "init": "li.d $r4, 4611686018427387903; xvreplgr2vr.d $xr0, $r4; li.d $r4, 3; xvreplgr2vr.d $xr2, $r4; li.d $r5, -4611686018427387649; li.d $r6, 4611686018427387648",
+          "result": {
+            "instructions_retired": 6,
+            "core_cycles": 24
+          },
+          "measurement": {
+            "unroll": 4000,
+            "iters": 300,
+            "reps": 7
+          },
+          "command": "./bench --unroll 4000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4611686018427387903; xvreplgr2vr.d $xr0, $r4; li.d $r4, 3; xvreplgr2vr.d $xr2, $r4; li.d $r5, -4611686018427387649; li.d $r6, 4611686018427387648' --asm 'xvadd.b $xr0, $xr0, $xr2; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4'",
+          "notes": "Same helper chain with vadd.b replacing the variable-latency operation.",
+          "machine_code": [
+            "02bffc04  addi.w      \t$a0, $zero, -1",
+            "030ffc84  lu52i.d     \t$a0, $a0, 1023",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
+            "03800c04  ori         \t$a0, $zero, 3",
+            "769f0c82  xvreplgr2vr.d\t$xr2, $a0",
+            "0383fc05  ori         \t$a1, $zero, 255",
+            "033000a5  lu52i.d     \t$a1, $a1, -1024",
+            "02bc0006  addi.w      \t$a2, $zero, -256",
+            "030ffcc6  lu52i.d     \t$a2, $a2, 1023",
+            "740a0800  xvadd.b     \t$xr0, $xr0, $xr2",
+            "76efe004  xvpickve2gr.d\t$a0, $xr0, 0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0"
+          ]
+        }
+      ],
+      "notes": "Data-dependent. Measured over 8 operand pairs; min 7 cycles at 0/1, max 24 cycles at 4611686018427387903/3. The sample experiment uses the max-latency pair. Latency is derived by subtracting the same closure around vadd.b (calibration experiment).",
+      "from_operands": [
+        3
+      ],
+      "cycles": 27.0,
+      "cases": [
+        {
+          "name": "no active lane or zero dividend",
+          "cycles": 8.0,
+          "experiment": {
+            "asm": "xvmod.d $xr0, $xr1, $xr0; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr6",
+            "init": "li.d $r4, 0; xvreplgr2vr.d $xr1, $r4; li.d $r4, 1; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr6, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.d $xr1, $r4; li.d $r4, 1; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr6, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4' --asm 'xvmod.d $xr0, $xr1, $xr0; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 9.97
+            },
+            "chain_latency": 2.0
+          }
+        },
+        {
+          "name": "full-width quotient, all lanes active",
+          "cycles": 27.0,
+          "experiment": {
+            "asm": "xvmod.d $xr0, $xr1, $xr0; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr6",
+            "init": "li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr1, $r4; li.d $r4, 1; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr6, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9223372036854775807; xvreplgr2vr.d $xr1, $r4; li.d $r4, 1; xvreplgr2vr.d $xr0, $r4; li.d $r4, 1; xvreplgr2vr.d $xr6, $r4; li.d $r4, 0; xvreplgr2vr.d $xr2, $r4' --asm 'xvmod.d $xr0, $xr1, $xr0; xvand.v $xr0, $xr0, $xr2; xvor.v $xr0, $xr0, $xr6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 28.95
+            },
+            "chain_latency": 1.99
+          }
+        }
+      ],
+      "cycles_min": 8.0,
+      "cycles_max": 27.0
     }
   ],
   "throughput": [

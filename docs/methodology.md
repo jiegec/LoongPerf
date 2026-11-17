@@ -262,8 +262,8 @@ meaningful from the cycle counter.
 Some instructions take a different number of cycles depending on their
 operands: integer divides and remainders, and the floating-point divide, square
 root, reciprocal and reciprocal square root units. The models that come out of
-these measurements are on the [Analysis](analysis.md) page (currently LA664);
-this section is only about how to measure such an instruction.
+these measurements are on the [Analysis](analysis.md) page, which compares LA464
+and LA664; this section is only about how to measure such an instruction.
 
 The goal is always to isolate a single latency class. A chain whose operand
 stays inside one class measures that class exactly, and a `cases` array in the
@@ -312,8 +312,21 @@ reported `vfdiv.d` of `1.0/1.0` as 8 instead of 10. Sanity-check the calibration
 on a case whose latency is already known from a drift-free chain before trusting
 the rest of the sweep.
 
-Two more traps specific to this data:
+A few more traps specific to this data:
 
+* the 32-bit integer divides of LA464 need **sign-extended** operands. A register
+  holding `0x00000000ffffffff` instead of `0xffffffffffffffff` divides as a tiny
+  value: `div.wu` returns 0 and takes the fast path, so the same recipe that
+  measures the full-width quotient on LA664 measures 6 cycles here. Always set
+  32-bit operands with a constant that keeps bit 31 sign-extended
+  (`li.d $r4, -1`, not `li.d $r4, 0xffffffff`);
+* `mod` on LA464 also leaves the long path as soon as the remainder becomes zero,
+  so the divisor-1 recipe used for the divides does not reach a wide quotient
+  here. Use a divisor that leaves a non-zero remainder and pick it per width:
+  `max / 3` works for the signed forms, but `0xffffffff / 3` has remainder zero,
+  so the unsigned 32-bit form wants `0xffffffff / 7`. This is why the recorded
+  `mod.wu` and `mod.du` maxima are one cycle below the divide maxima, while on
+  LA664 they match;
 * `li.d $r4, 1; movgr2fr.d $f0, $r4` loads the smallest subnormal, not `1.0`;
   use `0x3ff0000000000000` for double and `0x3f800000` for single precision.
   Vector floats need the same care, and `vreplgr2vr.b` of an integer is not a
