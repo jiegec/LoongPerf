@@ -100,7 +100,7 @@
           ]
         }
       ],
-      "notes": "Data-dependent. Latency range measured over 11 operand values with the element-0 reset helper. Min 10.97 at -1, max 55.00 at maxsub. Sample uses 1."
+      "notes": "Data-dependent, identical to frsqrt.d and to the LSX form: 11 for 0, Inf or NaN inputs; 15 when the result is exact (an even power of two); 16 for an exact result from a subnormal input; 54 when the reciprocal square root needs the full 52-bit mantissa; 55 for that case with a subnormal input. Long path: 15 + 3*ceil(52/4) = 54."
     }
   ],
   "throughput": [

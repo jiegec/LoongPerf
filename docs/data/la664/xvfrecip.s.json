@@ -100,7 +100,7 @@
           ]
         }
       ],
-      "notes": "Data-dependent. Latency range measured over 11 operand values with the element-0 reset helper. Min 10.98 at inf, max 29.00 at maxsub. Sample uses 1."
+      "notes": "Data-dependent. 11 for 0, Inf or NaN; 15 when the reciprocal is exact (a power of two); 17 for an exact reciprocal of a subnormal; 25 when the inexact reciprocal is tiny (1.0/max); 27 when the reciprocal needs the full 23-bit mantissa; 29 for that case with a subnormal input. Long path: 15 + 2*ceil(23/4) = 27."
     }
   ],
   "throughput": [

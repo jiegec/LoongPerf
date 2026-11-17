@@ -74,9 +74,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. Three cases: 8 cycles when the dividend is 0, 10 cycles when the quotient is exact (a terminating binary fraction such as 1.0/2.0 or 1.5/1.0, where the divider stops early), and 16 cycles when the quotient needs the full 23-bit mantissa (1.0/3.0, or (1+2^-23)/1.0). The long case produces 4 quotient bits per cycle: 10 + 10+ceil(23/4). Measured with chains that hold both operands constant: divisor 1.0 makes the division exact, so `fdiv.s $f0, $f0, $f1` returns its own value, and a divisor chain started at 3.0 oscillates between two inexact quotients.",
+      "notes": "Data-dependent. Measured classes: 8 when an input is 0, Inf or NaN; 9 when the quotient overflows or underflows; 10 when the quotient is exact (1.0/2.0, 1.5/1.0); 11 for an exact quotient with a subnormal operand; 15 when the inexact quotient is tiny (1.0/max, minnorm/3); 16 when the quotient needs the full 23-bit mantissa (1.0/3.0, (1+2^-23)/1.0); 17 for that case with a subnormal operand (maxsub/1, 1/maxsub). The long path retires four quotient bits per cycle: 10 + ceil(23/4) = 16. Measured with drift-free chains: a divisor of 1.0 makes the quotient equal to the dividend, and a divisor chain started at 3.0 oscillates between two inexact quotients; the subnormal, overflow and underflow cases use a GPR reset chain calibrated against fadd.d.",
       "cycles_min": 8,
-      "cycles_max": 16
+      "cycles_max": 17
     },
     {
       "from_operands": [
@@ -110,9 +110,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. Three cases: 8 cycles when the dividend is 0, 10 cycles when the quotient is exact (a terminating binary fraction such as 1.0/2.0 or 1.5/1.0, where the divider stops early), and 16 cycles when the quotient needs the full 23-bit mantissa (1.0/3.0, or (1+2^-23)/1.0). The long case produces 4 quotient bits per cycle: 10 + 10+ceil(23/4). Measured with chains that hold both operands constant: divisor 1.0 makes the division exact, so `fdiv.s $f0, $f0, $f1` returns its own value, and a divisor chain started at 3.0 oscillates between two inexact quotients.",
+      "notes": "Data-dependent. Measured classes: 8 when an input is 0, Inf or NaN; 9 when the quotient overflows or underflows; 10 when the quotient is exact (1.0/2.0, 1.5/1.0); 11 for an exact quotient with a subnormal operand; 15 when the inexact quotient is tiny (1.0/max, minnorm/3); 16 when the quotient needs the full 23-bit mantissa (1.0/3.0, (1+2^-23)/1.0); 17 for that case with a subnormal operand (maxsub/1, 1/maxsub). The long path retires four quotient bits per cycle: 10 + ceil(23/4) = 16. Measured with drift-free chains: a divisor of 1.0 makes the quotient equal to the dividend, and a divisor chain started at 3.0 oscillates between two inexact quotients; the subnormal, overflow and underflow cases use a GPR reset chain calibrated against fadd.d.",
       "cycles_min": 8,
-      "cycles_max": 16
+      "cycles_max": 17
     }
   ],
   "throughput": [

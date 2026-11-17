@@ -60,7 +60,7 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent latency, measured with unroll=100000 and iters=100 to remove per-call overhead. 11 for 0/Inf/NaN/negative; 15 for exact squares 1, 4, 0.25, minnorm; 33 for general inputs; 34 with maxsub. The experiment below uses 1.0.",
+      "notes": "Data-dependent. 11 when the input is 0, Inf or NaN; 15 when the result is exact (an even power of two); 16 for an exact result from a subnormal input; 27 for an input just above an exact power of two (1+2^-23); 33 when the reciprocal square root needs the full 23-bit mantissa; 34 for that case with a subnormal input. Long path: 15 + 3*ceil(23/4) = 33.",
       "cycles_min": 11,
       "cycles_max": 34
     }

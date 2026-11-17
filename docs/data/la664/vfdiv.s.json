@@ -74,9 +74,9 @@
           ]
         }
       ],
-      "notes": "Data-dependent. Three cases: 11 cycles when the dividend is 0, 15 cycles when the quotient is exact (a terminating binary fraction such as 1.0/2.0 or 1.5/1.0, where the divider stops early), and 27 cycles when the quotient needs the full 23-bit mantissa (1.0/3.0, or (1+2^-23)/1.0). The long case produces 2 quotient bits per cycle: 15 + 15+2*ceil(23/4). Measured with chains that hold both operands constant: divisor 1.0 makes the division exact, so `vfdiv.s $f0, $f0, $f1` returns its own value, and a divisor chain started at 3.0 oscillates between two inexact quotients.",
+      "notes": "Data-dependent. The vector float divider runs single precision at half the rate of the scalar one, so the long path is 15 + 2*ceil(23/4) = 27 instead of 16. Measured classes: 11 for 0, Inf or NaN inputs; 13 when the quotient overflows or underflows; 15 when the quotient is exact; 17 for an exact quotient with a subnormal operand; 25 when the inexact quotient is tiny (1.0/max); 27 when the quotient needs the full 23-bit mantissa; 29 for that case with a subnormal operand (1/maxsub). LSX and LASX divide with exactly the same timing as the scalar unit, independent of the lane count.",
       "cycles_min": 11,
-      "cycles_max": 27
+      "cycles_max": 29
     },
     {
       "from_operands": [
@@ -110,9 +110,9 @@
           ]
         }
       ],
-      "notes": "Data-dependent. Three cases: 11 cycles when the dividend is 0, 15 cycles when the quotient is exact (a terminating binary fraction such as 1.0/2.0 or 1.5/1.0, where the divider stops early), and 27 cycles when the quotient needs the full 23-bit mantissa (1.0/3.0, or (1+2^-23)/1.0). The long case produces 2 quotient bits per cycle: 15 + 15+2*ceil(23/4). Measured with chains that hold both operands constant: divisor 1.0 makes the division exact, so `vfdiv.s $f0, $f0, $f1` returns its own value, and a divisor chain started at 3.0 oscillates between two inexact quotients.",
+      "notes": "Data-dependent. The vector float divider runs single precision at half the rate of the scalar one, so the long path is 15 + 2*ceil(23/4) = 27 instead of 16. Measured classes: 11 for 0, Inf or NaN inputs; 13 when the quotient overflows or underflows; 15 when the quotient is exact; 17 for an exact quotient with a subnormal operand; 25 when the inexact quotient is tiny (1.0/max); 27 when the quotient needs the full 23-bit mantissa; 29 for that case with a subnormal operand (1/maxsub). LSX and LASX divide with exactly the same timing as the scalar unit, independent of the lane count.",
       "cycles_min": 11,
-      "cycles_max": 27
+      "cycles_max": 29
     }
   ],
   "throughput": [

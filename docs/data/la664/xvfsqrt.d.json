@@ -100,7 +100,7 @@
           ]
         }
       ],
-      "notes": "Data-dependent. Latency range measured over 11 operand values with the element-0 reset helper. Min 7.98 at 0, max 37.00 at maxsub. Sample uses 1."
+      "notes": "Data-dependent. 8 cycles when the input is zero, Inf or NaN; 10 when the result is exact (the input is an even power of two such as 1.0, 4.0 or 0.25); 11 for an exact result from a subnormal input; 36 when the square root needs the full 52-bit mantissa (sqrt(2.0), sqrt(max)); 37 for that case with a subnormal input (sqrt(maxsub)). The long path retires two mantissa bits per cycle (10 + 2*ceil(52/4) = 36), so a square root costs twice the digit time of a divide."
     }
   ],
   "throughput": [

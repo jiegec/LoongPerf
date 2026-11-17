@@ -345,26 +345,59 @@ Like the scalar divider, the vector unit divides magnitudes only, and it skips
 trailing zero digits: `2^40 / 1` (a 41-bit quotient) still measures 11 cycles
 because the 40 trailing zeros cost nothing.
 
-## Floating-point divide latency
+## Floating-point divide, square root and reciprocal latency
 
-Floating-point division has three latency classes rather than a ladder, because
-the divider stops as soon as the remainder is zero. On LA664:
+Floating-point division has a small set of latency classes rather than a ladder,
+because the divider stops as soon as the remainder is zero. A subnormal operand
+adds one more step, and a quotient that overflows or underflows is detected
+early and is cheaper than a normal inexact quotient.
 
-| instruction | dividend 0 | exact quotient | inexact quotient |
-| --- | --- | --- | --- |
-| `fdiv.s` | 8 | 10 | 16 |
-| `fdiv.d` | 8 | 10 | 23 |
-| `vfdiv.s`, `xvfdiv.s` | 11 | 15 | 27 |
-| `vfdiv.d`, `xvfdiv.d` | 8 | 10 | 23 |
+| instruction | zero / Inf / NaN | overflow or underflow | exact | exact, subnormal operand | inexact | inexact, subnormal operand |
+| --- | --- | --- | --- | --- | --- | --- |
+| `fdiv.s`, `frecip.s` | 8 | 9 | 10 | 11 | 16 | 17 |
+| `fdiv.d`, `frecip.d` | 8 | 9 | 10 | 11 | 23 | 24 |
+| `vfdiv.s`, `xvfdiv.s`, `vfrecip.s`, `xvfrecip.s` | 11 | 13 | 15 | 17 | 27 | 29 |
+| `vfdiv.d`, `xvfdiv.d` | 8 | 9 | 10 | 11 | 23 | 24 |
 
 An exact quotient is one that terminates in binary, for example `1.0/2.0`,
-`1.5/1.0` or `3.0/4.0`; the quotient of `1.0/3.0`, or of `(1+2^-52)/1.0`, needs
-the full mantissa and takes the long path. The long path produces four quotient
-bits per cycle for `double` (`10 + ceil(52/4) = 23`) and, in the vector unit,
-two bits per cycle for `float` (`15 + 2*ceil(23/4) = 27`), matching the pattern
-seen in the integer vector divider.
+`1.5/1.0` or `3.0/4.0`. Everything is built from a single "digit time" of four
+mantissa bits:
 
-Verifying this needs chains whose operands do not change, which floating point
+```text
+D = ceil(mantissa / 4)            D = 13 for double, 6 for single
+
+fdiv, frecip      10 + 1*D        (.d: 23, .s: 16)
+fsqrt             10 + 2*D        (.d: 36, .s: 22)
+frsqrt            15 + 3*D        (.d: 54, .s: 33)
+```
+
+so a square root costs two digit times and a reciprocal square root three. The
+same digit time explains the `sqrt`/`rsqrt` classes: their exact cases are the
+even powers of two, where the result terminates after the first digit.
+
+The vector float unit matches the scalar unit exactly for doubles, lane count
+included (`vfdiv.d` and `xvfdiv.d` are both `10 + D`), but runs single precision
+at half rate and with a higher base cost:
+
+```text
+vfdiv.s, vfrecip.s      15 + 2*D      = 27
+vfsqrt.s                15 + 4*D      = 39
+vfrsqrt.s               25 + 6*D      = 61
+```
+
+A single-precision vector divide is therefore *slower* than the scalar one (27
+against 16), while the double-precision forms are identical.
+
+Subnormals and overflow: a subnormal operand costs one digit step (`maxsub/1`
+and `1/maxsub` measure 24 for `fdiv.d`, 29 for `vfdiv.s`), a result that
+overflows to Inf or underflows to zero is detected early and measures 9 (or 13
+for `vfdiv.s`), and a tiny inexact result rather than a tiny operand loses one
+cycle instead (`1.0/max` is 15 for `fdiv.s`, 25 for `vfdiv.s`). `sqrt(maxsub)` is
+37 and `rsqrt(maxsub)` is 55 because the input is subnormal. These numbers match
+the separate LA464 campaign, which reports the same 9, 15, 17 and 24 cycle
+classes for `fdiv.s`/`fdiv.d`.
+
+Verifying these needs chains whose operands do not change, which floating point
 makes easy:
 
 * divisor `1.0` makes the quotient identical to the dividend, so
@@ -372,7 +405,11 @@ makes easy:
   low-order mantissa bit set selects the long path;
 * a chain started at `3.0` on the divisor side (`fdiv.d $f0, $f1, $f0` with
   `$f1 = 1.0`) oscillates between `0.333...` and `3.0000000000000004` and never
-  terminates, which selects the long path directly.
+  terminates, which selects the long path directly;
+* subnormal, overflow and underflow cases cannot chain at all, so they need a
+  reset helper (for example `movfr2gr.d` + `and` + `or` + `movgr2fr.d`), and its
+  cost must be calibrated against a `fadd.d` carried through the same helper
+  rather than assumed.
 
 Do not reuse the operand bits of an integer as a floating-point constant:
 `li.d $r4, 1; movgr2fr.d $f0, $r4` loads the smallest subnormal, not `1.0`.

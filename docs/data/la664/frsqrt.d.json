@@ -60,7 +60,7 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent latency, measured with unroll=100000 and iters=100 to remove per-call overhead. 11 for 0/Inf/NaN/negative; 15 for exact squares 1, 4, 0.25, minnorm; 54 for general inputs; 55 with maxsub. The experiment below uses 1.0.",
+      "notes": "Data-dependent. 11 when the input is 0, Inf or NaN; 15 when the result is exact (an even power of two such as 1.0 or 4.0); 16 for an exact result from a subnormal input; 41 for an input just above an exact power of two (1+2^-52); 54 when the reciprocal square root needs the full 52-bit mantissa (rsqrt(2.0), rsqrt(max)); 55 for that case with a subnormal input. The long path retires 4/3 mantissa bits per cycle: 15 + 3*ceil(52/4) = 54, so rsqrt costs three digit times.",
       "cycles_min": 11,
       "cycles_max": 55
     }
