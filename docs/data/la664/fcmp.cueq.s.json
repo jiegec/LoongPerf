@@ -1,0 +1,72 @@
+{
+  "instruction": {
+    "name": "fcmp.cueq.s",
+    "extension": "Base",
+    "form": "fcmp.cueq.s cc, fj, fk",
+    "description": "Floating-point compare condition cueq (s)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "cc",
+      "kind": "other",
+      "access": "write",
+      "description": "condition code register"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first operand"
+    },
+    {
+      "index": 3,
+      "name": "fk",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second operand"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fcmp.cueq.s $fcc0, $f8, $f9; fcmp.cueq.s $fcc1, $f10, $f11; fcmp.cueq.s $fcc2, $f12, $f13; fcmp.cueq.s $fcc3, $f14, $f15; fcmp.cueq.s $fcc4, $f16, $f17; fcmp.cueq.s $fcc5, $f18, $f19; fcmp.cueq.s $fcc6, $f20, $f21; fcmp.cueq.s $fcc7, $f22, $f23",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4; movgr2fr.d $f16, $r4; movgr2fr.d $f17, $r4; movgr2fr.d $f18, $r4; movgr2fr.d $f19, $r4; movgr2fr.d $f20, $r4; movgr2fr.d $f21, $r4; movgr2fr.d $f22, $r4; movgr2fr.d $f23, $r4",
+      "machine_code": [
+        "0c162500  fcmp.cueq.s \t$fcc0, $ft0, $ft1",
+        "0c162d41  fcmp.cueq.s \t$fcc1, $ft2, $ft3",
+        "0c163582  fcmp.cueq.s \t$fcc2, $ft4, $ft5",
+        "0c163dc3  fcmp.cueq.s \t$fcc3, $ft6, $ft7",
+        "0c164604  fcmp.cueq.s \t$fcc4, $ft8, $ft9",
+        "0c164e45  fcmp.cueq.s \t$fcc5, $ft10, $ft11",
+        "0c165686  fcmp.cueq.s \t$fcc6, $ft12, $ft13",
+        "0c165ec7  fcmp.cueq.s \t$fcc7, $ft14, $ft15"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4; movgr2fr.d $f16, $r4; movgr2fr.d $f17, $r4; movgr2fr.d $f18, $r4; movgr2fr.d $f19, $r4; movgr2fr.d $f20, $r4; movgr2fr.d $f21, $r4; movgr2fr.d $f22, $r4; movgr2fr.d $f23, $r4' --asm 'fcmp.cueq.s $fcc0, $f8, $f9; fcmp.cueq.s $fcc1, $f10, $f11; fcmp.cueq.s $fcc2, $f12, $f13; fcmp.cueq.s $fcc3, $f14, $f15; fcmp.cueq.s $fcc4, $f16, $f17; fcmp.cueq.s $fcc5, $f18, $f19; fcmp.cueq.s $fcc6, $f20, $f21; fcmp.cueq.s $fcc7, $f22, $f23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.98
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4975,
+        "ipc": 2.0100502512562812
+      },
+      "notes": "8 independent comparisons take 3.98 cycles."
+    }
+  ],
+  "notes": "FCMP writes a condition-code register. Individual latency is not separable without a round trip through movcf2gr/movgr2fr; throughput only. A round trip fcmp+movcf2gr+movgr2fr measured about 5.02 cycles."
+}
