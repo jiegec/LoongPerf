@@ -30,6 +30,7 @@
     header { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; }
     h1 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
     .sub { color: var(--muted); }
+    .home-link { margin-left: auto; font-size: 14px; font-weight: 500; }
     .data-meta {
       display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
       margin: 9px 0 0; color: var(--muted); font-size: 13px;
@@ -123,6 +124,7 @@
   <header>
     <h1>LoongArch instruction table</h1>
     <span class="sub">LoongPerf measurements</span>
+    <a class="home-link" href="./" title="LoongPerf home">← LoongPerf home</a>
   </header>
   <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name or a row for details. SIGILL marks an instruction that is not supported on the selected microarchitecture.</p>
   <p class="data-meta" id="data-meta" hidden></p>
