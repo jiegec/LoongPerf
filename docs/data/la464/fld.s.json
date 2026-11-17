@@ -45,37 +45,70 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5,
+      "cycles": 5.0,
       "experiments": [
         {
-          "name": "high-unroll dependency chain",
-          "role": "measurement",
           "asm": "fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
-          "init": "addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8",
-          "chain_latency": 4,
-          "result": {
-            "instructions_retired": 3,
-            "core_cycles": 9
-          },
+          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8' --asm 'fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
           "measurement": {
-            "unroll": 6666,
-            "iters": 1501,
-            "reps": 7
+            "unroll": 800,
+            "iters": 40,
+            "reps": 5
           },
-          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
-          "machine_code": [
-            "02f00074  addi.d      \t$t8, $sp, -1024",
-            "03802004  ori         \t$a0, $zero, 8",
-            "29800284  st.w        \t$a0, $t8, 0",
-            "02bfe004  addi.w      \t$a0, $zero, -8",
-            "29802284  st.w        \t$a0, $t8, 8",
-            "2b000280  fld.s       \t$fa0, $t8, 0",
-            "0114b404  movfr2gr.s  \t$a0, $fa0",
-            "00109294  add.d       \t$t8, $t8, $a0"
-          ]
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 8.98
+          },
+          "chain_latency": 4.0,
+          "name": "load result combined with the base",
+          "role": "measurement",
+          "notes": "The load returns 32 bits, so the value has to be recombined with the base before it can be used as an address: this chain therefore always contains add.d (1 cycle, subtracted together with movfr2gr.s). The direct address chase that measures the 4-cycle bypass path for fld.d cannot be built for fld.s."
         }
       ],
-      "notes": "4 cycles of helper latency are subtracted. Unroll 6666, iters 1501. Raw measurement was 4.98; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "4 cycles of helper latency are subtracted. Unroll 6666, iters 1501. Raw measurement was 4.98; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cases": [
+        {
+          "name": "load result combined with the base before the next address",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
+            "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8' --asm 'fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 8.98
+            },
+            "chain_latency": 4.0
+          }
+        },
+        {
+          "name": "data path to an FP consumer (fadd.s)",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "fld.s $f0, $r20, 0; fadd.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
+            "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; movgr2fr.w $f1, $r0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; movgr2fr.w $f1, $r0' --asm 'fld.s $f0, $r20, 0; fadd.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 4.0,
+              "core_cycles": 14.0
+            },
+            "chain_latency": 9.0
+          }
+        }
+      ],
+      "cycles_min": 5.0,
+      "cycles_max": 5.0
     }
   ],
   "throughput": [
@@ -109,5 +142,6 @@
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }
-  ]
+  ],
+  "notes": "L1D-hit single-precision floating-point load: 5 cycles from the base address register to the loaded value, measured with movfr2gr.s (3 cycles) and add.d (1 cycle) in the chain. The 4-cycle address-bypass path that fld.d shows cannot be constructed here, because a 32-bit load result is never a complete 64-bit address. Measured with --method slope on LA464, core 0."
 }

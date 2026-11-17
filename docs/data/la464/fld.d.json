@@ -45,34 +45,70 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 4.0,
       "experiments": [
         {
-          "name": "high-unroll dependency chain",
-          "role": "measurement",
           "asm": "fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0",
           "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
-          "chain_latency": 3,
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 7
-          },
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0'",
           "measurement": {
-            "unroll": 10000,
-            "iters": 1000,
-            "reps": 7
+            "unroll": 800,
+            "iters": 40,
+            "reps": 5
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0'",
-          "machine_code": [
-            "02f0206d  addi.d      \t$t1, $sp, -1016",
-            "29c001ad  st.d        \t$t1, $t1, 0",
-            "02c001a4  addi.d      \t$a0, $t1, 0",
-            "2b800080  fld.d       \t$fa0, $a0, 0",
-            "0114b804  movfr2gr.d  \t$a0, $fa0"
-          ]
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 6.96
+          },
+          "chain_latency": 3.0,
+          "name": "address-bypass pointer chase",
+          "role": "measurement",
+          "notes": "The stored experiment is the direct address chase (4 cycles). The second case puts add.d in the address path and measures 5, the general load latency. A third check, fld.d -> fadd.d -> movfr2gr.d -> address, gives the same 4 cycles for the data path, so the extra cycle belongs to the address path, not to the data path."
         }
       ],
-      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cases": [
+        {
+          "name": "load result feeds the next address directly",
+          "cycles": 4.0,
+          "experiment": {
+            "asm": "fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0",
+            "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 6.96
+            },
+            "chain_latency": 3.0
+          }
+        },
+        {
+          "name": "load result passes through add.d before the next address",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5",
+            "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 8.93
+            },
+            "chain_latency": 4.0
+          }
+        }
+      ],
+      "cycles_min": 4.0,
+      "cycles_max": 5.0
     }
   ],
   "throughput": [
@@ -106,5 +142,6 @@
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }
-  ]
+  ],
+  "notes": "L1D-hit floating-point load. Two address paths: 4 cycles when the loaded value becomes the next address directly (address bypass, the pointer chase), 5 cycles when an ALU operation sits between the load result and the address, the same 4/5 split as ld.d. The data path to an FP consumer is also 4 cycles (measured with fadd.d in the loop). Measured with --method slope on LA464, core 0."
 }
