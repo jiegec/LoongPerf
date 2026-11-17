@@ -29,7 +29,12 @@ make -j"$(nproc)"
 
 `bench` needs `perf_event_open(2)`; run it as root or lower
 `perf_event_paranoid`. Pin to one core with `--core` and keep that core for a
-whole batch. Fix the frequency situation (this machine exposes no cpufreq
+whole batch. `--reps` takes the **minimum** over repetitions, so a single fast
+run can win; use `--reps 20` and repeat the whole command a few times when a
+value matters. This machine has no SMT (`thread_siblings_list` is each CPU
+itself) but the 32 cores share one 16 MiB L3, so other users' work still shows up
+as a few percent of drift — always re-check the control measurements above
+before trusting a batch. Fix the frequency situation (this machine exposes no cpufreq
 governor and no SMT: `thread_siblings_list` is each CPU itself).
 
 Known-good control measurements on LA664 — if these drift, the machine is busy
@@ -52,7 +57,7 @@ Every call pays a fixed cost `K` (call/ret, the register-save prologue and
 epilogue, the caller's loop) that the body partially hides. Empirically
 
 ```text
-raw(U) = c - K/U        with K ≈ 77 cycles per call on LA664
+raw(U) = c - K/U        with K ≈ 75-80 cycles per call on LA664
 ```
 
 so a single body measurement is biased low at small unroll and converges from
@@ -93,6 +98,11 @@ Recommended defaults:
 | latency chain (1–4 instructions) | 1000 | 4000 | 1000 |
 | throughput, 8 lanes | 250 | 1000 | 1000 |
 | throughput, tiny CPI (< 0.5) | 250 | 1000 | 1000 |
+| branch loop (self-timed) | 1 | — | 100 |
+
+with `--reps 20` everywhere. Latency chains also work at very large unroll
+(100000) because the dependency chain, not fetch, limits them; throughput bodies
+must stay inside L1I.
 
 ## Branch instructions: the BTB trap
 
@@ -128,9 +138,12 @@ slot with the measured branches the marginal looks smaller than the asymptote
 (0.437 at 8 static branches, converging to 0.5) — record the asymptote, not the
 small-N marginal.
 
-`jirl` uses the same loop protocol and is a normal 1 taken-branch-per-cycle
-instruction; the historical 1.279 CPI number came from a baseline that shared
-instructions with the body.
+`jirl` uses the same loop protocol and retires at one taken branch per cycle:
+a loop with 8 static JIRLs plus the loop branch executes 9 taken branches in
+9.00 cycles (9009.91 cycles per 1000 iterations, reproduced within 0.1%), and
+the same loop with 1 or 2 static JIRLs gives 1.00 cycles each. An earlier
+1.279 CPI value in the data could not be reproduced with any baseline we tried
+and was replaced.
 
 ## Latency chains
 
@@ -195,8 +208,18 @@ Eight independent lanes, each writing a different destination register.
 **The lanes must be genuinely independent.** A lane whose `rd` is another lane's
 `rk` (or an accumulator) creates a dependency and inflates CPI. This alone
 produced a wrong 1.10 CPI for `adc.b`; with disjoint registers the same body
-measures exactly 1.00. Use `$r4..$r11` for sources and `$r20..$r27` for second
-sources if you need eight distinct pairs.
+measures exactly 1.00. Use `$r4..$r11` for one operand and `$r12..$r20` or
+`$r22..$r29` for the other.
+
+Register rules inside `--asm` and `--init`:
+
+- `$r3` is `$sp` and `$r2` is `$tp`; clobbering either one crashes the process
+  immediately (a `$r3` write produced a silent hang in one experiment).
+- The generated body saves and restores `$r1` and `$r22..$r31` around the body,
+  so those are safe to use but their values do not survive across calls.
+- `$r4..$r20` are scratch; `$r21` is reserved by the ABI, so avoid it.
+- `init` runs once per call, before the unrolled body, so values it sets are
+  visible to every copy of the body.
 
 Other rules:
 
@@ -207,18 +230,24 @@ Other rules:
   `lu32i.d` all reach exactly 4 IPC, `lu12i.w` reaches 24/5 = 4.8 IPC (verified
   from 4 to 32 lanes), `pcaddi` only 2.4 IPC. A value above 4 IPC that is not one
   of these is suspicious.
-- Atoms, LL/SC and any memory instruction depend on cache state: keep the buffer
-  small, hot, and **64-byte aligned**. Vector accesses that cross a cache line
-  count twice in the load/store counters. `am*` throughput is 13 CPI (16 for
-  `_db`) whether the eight lanes hit the same line or eight different lines.
+- Atomics, LL/SC and any memory instruction depend on cache state: keep the
+  buffer small, hot and **64-byte aligned**. On LA664 a vector load that crosses
+  a 64-byte line is counted twice by the load counter `0xa8` (an LSX 16-byte load
+  at offsets 49/56/63, a LASX 32-byte load at 33-63 and 97-127), while the store
+  counter `0xb0` did not split in any offset we tried and the retired-uop count
+  stayed at one. `am*` throughput is 13 CPI (16 for `_db`) whether the eight
+  lanes hit the same line or eight different lines.
 - Streaming stores (`vst*`, `xvst*`, `st*`, `fst*`) are 0.5 CPI, LASX included,
-  once the buffer is aligned; unaligned LASX stores can drop to ~2.5 CPI.
+  once the buffer is aligned. Unaligned 32-byte LASX stores degrade: `xvst`
+  measured 16.02 cycles for 8 stores (2.0 CPI) and `xvstx` 20.29 cycles
+  (2.5 CPI) with an unaligned buffer, versus 4.00 cycles when aligned.
 
 ## Multi-uop instructions
 
 `perf`'s instruction event counts **retired uops** on these cores, not
-architectural instructions. `vpickve2gr.w`, `vreplgr2vr.b`, `movgr2frh.w`,
-`vfcvt.*`, `sc.q`, `llacq.*` and the atomics retire two uops, so
+architectural instructions. `vpickve2gr.*`, `vreplgr2vr.b/h`, `movgr2frh.w`,
+`vfcvt.*`, `vffint.*`, `vftint.*`, `sc.q`, `llacq.*` and every `am*` atomic
+retire two uops, so
 `instructions_retired` is twice the static count. When adding such an
 instruction, add it to `RETIRED_MULTIPLIER` in `tools/validate_data.py` (the
 validator compares against the static instruction count).
@@ -231,7 +260,10 @@ Extra raw counters are available with `--counter`:
 | `0xa8` / `0xb0` | load / store operations (per instruction, not per uop) |
 | `0xfb` / `0xfa` / `0xfc` | LSX / LASX / scalar-FP uops (LA664 only) |
 
-At most two extra counters fit (four PMU counters per core).
+LA464 uses a different map for the vector counters: `0x25` counts vector
+instructions, `0x31` vector uops and `0x30` scalar-FP uops; `0x01`, `0xa8` and
+`0xb0` mean the same on both cores. At most two extra counters fit (four PMU
+counters per core).
 
 ## JSON conventions
 
@@ -243,7 +275,11 @@ At most two extra counters fit (four PMU counters per core).
 - The same instruction must use the same `form` on both microarchitectures.
 - Every entry needs a `notes` explaining how the value was obtained, including
   deviations from nominal integers and any measurement that was not possible.
-- Latency/throughput values are whole cycles; keep `cpi == 1/ipc`,
+- Prefer whole-cycle values and round measurement noise (3.97 -> 4, 1.99 -> 2).
+  Genuine averages keep their fraction together with a range: `ll.w`/`ll.d` are
+  9.5 cycles with `cycles_min` 9 and `cycles_max` 10 because consecutive LLs
+  alternate, and LA464 `x86mul.wu`/`hu` hold 1.23 from the vendor campaign.
+- Keep the arithmetic consistent: `cpi == 1/ipc` within rounding,
   `cycles == (core_cycles - chain_latency) / cycles_divisor` and
   `cpi == (core_cycles - baseline_cycles) / lanes`.
 - Do not add `machine_code` by hand; it is optional metadata.
