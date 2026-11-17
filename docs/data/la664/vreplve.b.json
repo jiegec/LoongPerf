@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "vreplve.b",
+    "extension": "LSX",
+    "form": "vreplve.b vd, vj, rk",
+    "description": "Repeat the element in lane `idx` (index modulo 16) of `a` to fill whole vector."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "lane index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "vreplve.b $vr0, $vr0, $r4",
+          "init": "li.d $r4, 0; li.d $r6, 1; vreplgr2vr.b $vr0, $r6",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0; li.d $r6, 1; vreplgr2vr.b $vr0, $r6' --asm 'vreplve.b $vr0, $vr0, $r4'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Dependent chain."
+        }
+      ],
+      "notes": "Register dependency latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vreplve.b $vr0, $vr8, $r4; vreplve.b $vr1, $vr9, $r5; vreplve.b $vr2, $vr10, $r6; vreplve.b $vr3, $vr11, $r7; vreplve.b $vr4, $vr12, $r8; vreplve.b $vr5, $vr13, $r9; vreplve.b $vr6, $vr14, $r10; vreplve.b $vr7, $vr15, $r11",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 0; li.d $r5, 0; li.d $r6, 0; li.d $r7, 0; li.d $r8, 0; li.d $r9, 0; li.d $r10, 0; li.d $r11, 0",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 0; li.d $r5, 0; li.d $r6, 0; li.d $r7, 0; li.d $r8, 0; li.d $r9, 0; li.d $r10, 0; li.d $r11, 0' --asm 'vreplve.b $vr0, $vr8, $r4; vreplve.b $vr1, $vr9, $r5; vreplve.b $vr2, $vr10, $r6; vreplve.b $vr3, $vr11, $r7; vreplve.b $vr4, $vr12, $r8; vreplve.b $vr5, $vr13, $r9; vreplve.b $vr6, $vr14, $r10; vreplve.b $vr7, $vr15, $r11'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 8.0,
+        "counters": {
+          "0xfb": 1.0
+        }
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfb normalised per instruction."
+    }
+  ],
+  "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes."
+}

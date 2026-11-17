@@ -23,6 +23,22 @@ SCHEMA_PATH = ROOT / "schema" / "instruction.schema.json"
 EPS = 0.02
 
 RETIRED_MULTIPLIER = {
+    "xvinsgr2vr.d": 2,
+    "xvinsgr2vr.w": 2,
+    "vinsgr2vr.d": 2,
+    "vinsgr2vr.w": 2,
+    "vinsgr2vr.h": 2,
+    "vinsgr2vr.b": 2,
+    "vreplve.d": 2,
+    "vreplve.w": 2,
+    "vreplve.h": 2,
+    "vreplve.b": 2,
+    "xvpickve2gr.du": 2,
+    "xvpickve2gr.wu": 2,
+    "vpickve2gr.du": 2,
+    "vpickve2gr.wu": 2,
+    "vpickve2gr.hu": 2,
+    "vpickve2gr.bu": 2,
     "xvftintrzl.l.s": 2,
     "xvftintrzh.l.s": 2,
     "xvftintrz.w.d": 2,
