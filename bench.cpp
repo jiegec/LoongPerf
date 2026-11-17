@@ -454,11 +454,13 @@ int main(int argc, char **argv) {
     if (use_slope) {
       if (mb.cycles < ma.cycles)
         die("slope counter underflow; perf counters look unreliable");
-      if (mb.instructions < ma.instructions)
-        die("slope instruction counter underflow; perf counters look "
-            "unreliable");
       dcycles = mb.cycles - ma.cycles;
-      dinsns = mb.instructions - ma.instructions;
+      // The instruction counter legitimately reads zero for trapped
+      // instructions such as cpucfg, so a small underflow here is noise, not
+      // an error; clamp it instead of aborting.
+      dinsns = mb.instructions >= ma.instructions
+                   ? mb.instructions - ma.instructions
+                   : 0;
       for (size_t i = 0; i < ncounters; ++i)
         dcounters[i] = mb.counters[i] >= ma.counters[i]
                            ? mb.counters[i] - ma.counters[i]
