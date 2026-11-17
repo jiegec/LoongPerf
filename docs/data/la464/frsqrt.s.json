@@ -38,32 +38,35 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 15,
+      "cycles": 15.0,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
-          "asm": "frsqrt.s $f0, $f0",
-          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
+          "asm": "frsqrt.s $f0, $f0; frsqrt.s $f0, $f0; movfr2gr.s $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.w $f0, $r4",
+          "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r5, -1; li.d $r6, 0",
           "result": {
-            "instructions_retired": 1,
-            "core_cycles": 15.0
+            "instructions_retired": 6.0,
+            "core_cycles": 36.01
           },
           "measurement": {
-            "unroll": 20000,
-            "iters": 500
+            "unroll": 2000,
+            "iters": 300,
+            "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'frsqrt.s $f0, $f0'",
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'frsqrt.s $f0, $f0; frsqrt.s $f0, $f0; movfr2gr.s $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.w $f0, $r4'",
           "machine_code": [
             "147f0004  lu12i.w     \t$a0, 260096",
             "0114a480  movgr2fr.w  \t$fa0, $a0",
             "01146400  frsqrt.s    \t$fa0, $fa0"
-          ]
+          ],
+          "chain_latency": 6.0
         }
       ],
       "notes": "Data-dependent latency: 11 cycles for 0/Inf/NaN/negative; 15 for exact squares 1, 4, 0.25 and minnorm; 33 for general inputs; 34 for maxsub and minsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
-      "cycles_min": 11,
-      "cycles_max": 34
+      "cycles_min": 11.0,
+      "cycles_max": 33.0,
+      "cycles_divisor": 2
     }
   ],
   "throughput": [
@@ -102,5 +105,5 @@
       "notes": "Data-dependent throughput: CPI 6.0 for special values; 8.0 for exact squares; 17.0 for general inputs; 17.5 for maxsub and minsub. Throughput is initiation-interval bound."
     }
   ],
-  "notes": "Latency 11-34 cycles and throughput CPI 6-17.5 are data-dependent; the stored experiments use representative operand samples."
+  "notes": "Latency model, fitted and validated on this core with a two-copy chain (the stored experiment runs the operation twice, subtracts the 6-cycle closure and divides by 2). Classes: 11 cycles for special operands (0, Inf, NaN), 15 cycles for the exact / power-of-two path (the stored sample uses 1.0), 33 cycles for a general operand. For 32-bit lanes the vector latency equals 2 x the scalar latency - 5, because the 32-bit lanes make two passes over the 64-bit datapath and share the setup/rounding. 64-bit vector lanes match the scalar numbers exactly and run in parallel, only the slowest lane matters. Cross-check with LA664: the square-root/reciprocal-square-root pipeline is exactly one cycle shorter here per datapath pass (LA664 reaches 34 for the general case where LA464 stops one cycle earlier; the 32-bit vector variants shorten by two cycles because they make two passes). The divide and reciprocal pipelines are identical on both cores, and the special/exact classes match exactly."
 }

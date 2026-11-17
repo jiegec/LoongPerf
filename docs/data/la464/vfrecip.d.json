@@ -38,24 +38,24 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10,
+      "cycles": 10.0,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
-          "asm": "vfrecip.d $vr0, $vr0; vpickve2gr.d $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.d $vr0, $r7",
+          "asm": "vfrecip.d $vr0, $vr0; vfrecip.d $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4",
           "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, -1; li.d $r6, 0",
-          "chain_latency": 7,
+          "chain_latency": 7.0,
           "result": {
-            "instructions_retired": 6,
-            "core_cycles": 17
+            "instructions_retired": 7.0,
+            "core_cycles": 27.01
           },
           "measurement": {
-            "unroll": 1000,
-            "iters": 200,
+            "unroll": 2000,
+            "iters": 300,
             "reps": 7
           },
-          "command": "./bench --unroll 1000 --iters 200 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vfrecip.d $vr0, $vr0; vpickve2gr.d $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.d $vr0, $r7'",
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vfrecip.d $vr0, $vr0; vfrecip.d $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'",
           "machine_code": [
             "030ffc04  lu52i.d     \t$a0, $zero, 1023",
             "729f0c80  vreplgr2vr.d\t$vr0, $a0",
@@ -70,8 +70,9 @@
         }
       ],
       "notes": "Data-dependent latency. Chain: tested op, then vpickve2gr.d+and+or+vreplgr2vr.d to restore the input pattern; the 7-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 8-24 cycles, CPI 4.5-12.5. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
-      "cycles_min": 8,
-      "cycles_max": 24
+      "cycles_min": 8.0,
+      "cycles_max": 24.0,
+      "cycles_divisor": 2
     }
   ],
   "throughput": [
@@ -100,5 +101,6 @@
       },
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 4.5-12.5 over the same 26-value sweep; the stored experiment uses 1.0."
     }
-  ]
+  ],
+  "notes": "Latency model, fitted and validated on this core with a two-copy chain (the stored experiment runs the operation twice, subtracts the 7-cycle closure and divides by 2). Classes: 8 cycles for special operands (0, Inf, NaN), 10 cycles for the exact / power-of-two path (the stored sample uses 1.0), 24 cycles for a general operand. For 32-bit lanes the vector latency equals 2 x the scalar latency - 5, because the 32-bit lanes make two passes over the 64-bit datapath and share the setup/rounding. 64-bit vector lanes match the scalar numbers exactly and run in parallel, only the slowest lane matters."
 }

@@ -38,32 +38,35 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10,
+      "cycles": 10.0,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
-          "asm": "frecip.d $f0, $f0",
-          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
+          "asm": "frecip.d $f0, $f0; frecip.d $f0, $f0; movfr2gr.d $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.d $f0, $r4",
+          "init": "li.d $r4, 4607182418800017408; movgr2fr.d $f0, $r4; li.d $r5, -1; li.d $r6, 0",
           "result": {
-            "instructions_retired": 1,
-            "core_cycles": 10.0
+            "instructions_retired": 6.0,
+            "core_cycles": 26.01
           },
           "measurement": {
-            "unroll": 20000,
-            "iters": 500
+            "unroll": 2000,
+            "iters": 300,
+            "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'frecip.d $f0, $f0'",
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; movgr2fr.d $f0, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'frecip.d $f0, $f0; frecip.d $f0, $f0; movfr2gr.d $r4, $f0; and $r4, $r4, $r5; or $r4, $r4, $r6; movgr2fr.d $f0, $r4'",
           "machine_code": [
             "030ffc04  lu52i.d     \t$a0, $zero, 1023",
             "0114a880  movgr2fr.d  \t$fa0, $a0",
             "01145800  frecip.d    \t$fa0, $fa0"
-          ]
+          ],
+          "chain_latency": 6.0
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/Inf/NaN; 10 for 1 and powers of two; 23 for general inputs and max; 24 for maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
-      "cycles_min": 8,
-      "cycles_max": 24
+      "cycles_min": 8.0,
+      "cycles_max": 24.0,
+      "cycles_divisor": 2
     }
   ],
   "throughput": [
@@ -102,5 +105,5 @@
       "notes": "Data-dependent throughput: CPI 4.5 for special values; 5.5 for powers of two; 12.0 for general inputs and max; 12.5 for maxsub. Throughput is initiation-interval bound."
     }
   ],
-  "notes": "Latency 8-24 cycles and throughput CPI 4.5-12.5 are data-dependent; the stored experiments use representative operand samples."
+  "notes": "Latency model, fitted and validated on this core with a two-copy chain (the stored experiment runs the operation twice, subtracts the 6-cycle closure and divides by 2). Classes: 8 cycles for special operands (0, Inf, NaN), 10 cycles for the exact / power-of-two path (the stored sample uses 1.0), 24 cycles for a general operand. For 32-bit lanes the vector latency equals 2 x the scalar latency - 5, because the 32-bit lanes make two passes over the 64-bit datapath and share the setup/rounding. 64-bit vector lanes match the scalar numbers exactly and run in parallel, only the slowest lane matters."
 }
