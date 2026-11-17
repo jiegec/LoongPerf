@@ -52,32 +52,161 @@
   "latencies": [
     {
       "from_operands": [
-        2,
-        4
+        2
       ],
       "to_operand": 1,
       "cycles": 2.0,
       "experiments": [
         {
-          "name": "dependent chain",
-          "role": "measurement",
+          "name": "rd == rj",
           "asm": "sbc.w $r12, $r12, $r13",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.01
+            "core_cycles": 2.0
           },
           "measurement": {
             "unroll": 20000,
-            "iters": 500,
-            "reps": 7
+            "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0x1' --asm 'sbc.w $r12, $r12, $r13'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'sbc.w $r12, $r12, $r13'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "notes": "Re-measured on 2026-11-17 on LA464, core 0, unroll 20000, iters 500, three independent runs; spread 2.00-2.00 cycles.",
       "cycles_min": 2.0,
       "cycles_max": 2.0
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "rd == rk",
+          "asm": "sbc.w $r12, $r13, $r12",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'sbc.w $r12, $r13, $r12'"
+        }
+      ],
+      "notes": "Re-measured on 2026-11-17 on LA464, core 0, unroll 20000, iters 500, three independent runs; spread 2.00-2.00 cycles.",
+      "cycles_min": 2.0,
+      "cycles_max": 2.0
+    },
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "rd == rj == rk",
+          "asm": "sbc.w $r12, $r12, $r12",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'sbc.w $r12, $r12, $r12'"
+        }
+      ],
+      "notes": "Re-measured on 2026-11-17 on LA464, core 0, unroll 20000, iters 500, three independent runs; spread 2.00-2.00 cycles.",
+      "cycles_min": 2.0,
+      "cycles_max": 2.0
+    },
+    {
+      "from_operands": [
+        4
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "CF -> rd via x86mtflag",
+          "role": "measurement",
+          "asm": "sbc.w $r12, $r13, $r14; x86mtflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "chain_instructions": [
+            "x86mtflag $r12, 0x1"
+          ],
+          "chain_latency": 3.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "measurement": {
+            "unroll": 10000,
+            "iters": 1000
+          },
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'sbc.w $r12, $r13, $r14; x86mtflag $r12, 0x1'"
+        },
+        {
+          "name": "x86mtflag + x86mfflag calibration",
+          "role": "calibration",
+          "asm": "x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "measurement": {
+            "unroll": 10000,
+            "iters": 1000
+          },
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
+          "notes": "Calibration experiment (not used for the reported latency)."
+        },
+        {
+          "name": "sbc.w + x86mtflag + x86mfflag calibration",
+          "role": "calibration",
+          "asm": "sbc.w $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 5.0
+          },
+          "measurement": {
+            "unroll": 6666,
+            "iters": 1501
+          },
+          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'sbc.w $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
+          "notes": "Calibration experiment (not used for the reported latency)."
+        },
+        {
+          "name": "second x86mfflag calibration",
+          "role": "calibration",
+          "asm": "sbc.w $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 6.0
+          },
+          "measurement": {
+            "unroll": 5000,
+            "iters": 2000
+          },
+          "command": "./bench --unroll 5000 --iters 2000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'sbc.w $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1'",
+          "notes": "Calibration experiment (not used for the reported latency)."
+        }
+      ],
+      "notes": "CF -> rd: the chain closes through x86mtflag, so the measured L(x86mtflag rd -> EFLAGS) = 3 cycles is subtracted (calibrated by the three experiments below). Re-measured on 2026-11-17 on LA464, core 0; spread 4.00-4.00 cycles.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.0
     }
   ],
   "throughput": [
