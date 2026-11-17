@@ -120,9 +120,14 @@ while `movfr2cf = 0`. Integer instructions count as zero.
 
 ### Unaligned vector memory accesses
 
-On LA464, a 256-bit LASX access can retire as two load/store operations
-depending on alignment and cache-line crossing; do not assume `xvld`/`xvst`
-always contributes exactly one. This split behavior was observed on LA464.
+On LA464, both the load and store counters split when a vector access crosses
+a 64-byte cache line. With a 64-byte-aligned base:
+
+- for a 16-byte LSX access (`vld`/`vst`), `0xa8`/`0xb0` report 2 at offsets
+  49-63 and 113-127, and 1 otherwise;
+- for a 32-byte LASX access (`xvld`/`xvst`), `0xa8`/`0xb0` report 2 at offsets
+  33-63 and 97-127, and 1 otherwise;
+- `0x01` stays at 1 per instruction even when the memory counter reports 2.
 
 On LA664, the load/store counters were measured with a 64-byte-aligned base
 and unaligned offsets. `0xa8` counts a load twice when the access crosses a
@@ -133,6 +138,10 @@ store for every tested LSX and LASX store offset, including cache-line
 crossings, so no store split was visible in that counter on LA664. The
 instruction-retired count (`0x01`) remained one per instruction even when
 `0xa8` reported two load operations.
+
+The load-splitting behavior therefore matches between LA464 and LA664, but
+the store-splitting behavior does not: the LA464 store counter splits on a
+64-byte-line crossing, while no LA664 store split was observed.
 
 ## Multi-uop instructions
 
