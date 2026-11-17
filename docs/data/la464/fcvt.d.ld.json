@@ -46,24 +46,31 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "fcvt.d.ld $f0, $f0, $f1",
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4",
-          "chain_latency": 0,
+          "chain_latency": 0.0,
           "result": {
-            "instructions_retired": 1,
-            "core_cycles": 4
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
           },
           "measurement": {
             "unroll": 100000,
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4' --asm 'fcvt.d.ld $f0, $f0, $f1'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4' --asm 'fcvt.d.ld $f0, $f0, $f1'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "0114a882  movgr2fr.d  \t$fa2, $a0",
+            "01150400  fcvt.d.ld   \t$fa0, $fa0, $fa1"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -73,52 +80,31 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "fcvt.d.ld $f1, $f2, $f1",
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4",
-          "chain_latency": 0,
+          "chain_latency": 0.0,
           "result": {
-            "instructions_retired": 1,
-            "core_cycles": 4
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
           },
           "measurement": {
             "unroll": 100000,
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4' --asm 'fcvt.d.ld $f1, $f2, $f1'"
-        }
-      ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
-    },
-    {
-      "from_operands": [
-        2,
-        3
-      ],
-      "to_operand": 1,
-      "cycles": 4,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "fcvt.d.ld $f0, $f0, $f0",
-          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4",
-          "chain_latency": 0,
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 4
-          },
-          "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 20
-          },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4' --asm 'fcvt.d.ld $f0, $f0, $f0'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4' --asm 'fcvt.d.ld $f1, $f2, $f1'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "0114a882  movgr2fr.d  \t$fa2, $a0",
+            "01150441  fcvt.d.ld   \t$fa1, $fa2, $fa1"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -130,7 +116,7 @@
       "asm": "fcvt.d.ld $f0, $f8, $f16; fcvt.d.ld $f1, $f9, $f17; fcvt.d.ld $f2, $f10, $f18; fcvt.d.ld $f3, $f11, $f19; fcvt.d.ld $f4, $f12, $f20; fcvt.d.ld $f5, $f13, $f21; fcvt.d.ld $f6, $f14, $f22; fcvt.d.ld $f7, $f15, $f23",
       "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f16, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f17, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f18, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f19, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f20, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f21, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f22, $r4; movgr2fr.d $f15, $r4; movgr2fr.d $f23, $r4",
       "result": {
-        "instructions_retired": 8,
+        "instructions_retired": 8.0,
         "core_cycles": 4.02
       },
       "measurement": {

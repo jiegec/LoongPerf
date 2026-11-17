@@ -64,7 +64,13 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0' --asm 'setx86loope $r12, $r12'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 0' --asm 'setx86loope $r12, $r12'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "005c0020  x86mtflag   \t$zero, 0",
+            "0000798c  setx86loope \t$t0, $t0"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."

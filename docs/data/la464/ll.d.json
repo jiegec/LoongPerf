@@ -68,7 +68,8 @@
         "lanes": 8,
         "cpi": 9,
         "ipc": 0.1111
-      }
+      },
+      "notes": "8 independent lanes: 72.03 core cycles per 8 instructions, CPI 9. Slope method (--unroll 1000, --unroll2 2000)."
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput only."

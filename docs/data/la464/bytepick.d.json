@@ -68,7 +68,12 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'bytepick.d $r12, $r12, $r13, 2'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'bytepick.d $r12, $r12, $r13, 2'",
+          "machine_code": [
+            "02fffc0c  addi.d      \t$t0, $zero, -1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "000d358c  bytepick.d  \t$t0, $t0, $t1, 2"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -93,7 +98,12 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'bytepick.d $r12, $r13, $r12, 2'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'bytepick.d $r12, $r13, $r12, 2'",
+          "machine_code": [
+            "02fffc0c  addi.d      \t$t0, $zero, -1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "000d31ac  bytepick.d  \t$t0, $t1, $t0, 2"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

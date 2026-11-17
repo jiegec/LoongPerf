@@ -47,7 +47,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5,
+      "cycles": 5.0,
       "experiments": [
         {
           "name": "high-unroll dependency chain",
@@ -56,15 +56,25 @@
           "init": "addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8",
           "chain_latency": 4,
           "result": {
-            "instructions_retired": 3,
-            "core_cycles": 9
+            "instructions_retired": 3.0,
+            "core_cycles": 9.0
           },
           "measurement": {
             "unroll": 6666,
             "iters": 1501,
             "reps": 7
           },
-          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'fldgt.s $f0, $r20, $r0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'"
+          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'fldgt.s $f0, $r20, $r0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  ori         \t$a0, $zero, 8",
+            "29800284  st.w        \t$a0, $t8, 0",
+            "02bfe004  addi.w      \t$a0, $zero, -8",
+            "29802284  st.w        \t$a0, $t8, 8",
+            "38740280  fldgt.s     \t$fa0, $t8, $zero",
+            "0114b404  movfr2gr.s  \t$a0, $fa0",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "4 cycles of helper latency are subtracted. Unroll 6666, iters 1501. Raw measurement was 4.98; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -86,7 +96,7 @@
         "38747ba7  fldgt.s     \t$fa7, $s6, $s7"
       ],
       "result": {
-        "instructions_retired": 8,
+        "instructions_retired": 8.0,
         "core_cycles": 7.98
       },
       "measurement": {
@@ -96,9 +106,11 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, -8; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4' --asm 'fldgt.s $f0, $r21, $r30; fldgt.s $f1, $r23, $r30; fldgt.s $f2, $r24, $r30; fldgt.s $f3, $r25, $r30; fldgt.s $f4, $r26, $r30; fldgt.s $f5, $r27, $r30; fldgt.s $f6, $r28, $r30; fldgt.s $f7, $r29, $r30'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1,
-        "ipc": 1
-      }
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent lanes: 7.98 core cycles per 8 instructions, CPI 1. Slope method (--unroll 1000, --unroll2 2000)."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

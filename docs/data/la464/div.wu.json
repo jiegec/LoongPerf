@@ -62,7 +62,14 @@
             "unroll": 2000,
             "iters": 500
           },
-          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 18446744073709551614; li.d $r13, 1; li.d $r5, 0' --asm 'div.wu $r12, $r12, $r13; add.d $r12, $r12, $r5'"
+          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 18446744073709551614; li.d $r13, 1; li.d $r5, 0' --asm 'div.wu $r12, $r12, $r13; add.d $r12, $r12, $r5'",
+          "machine_code": [
+            "02bff80c  addi.w      \t$t0, $zero, -2",
+            "0380040d  ori         \t$t1, $zero, 1",
+            "00150005  move        \t$a1, $zero",
+            "0021358c  div.wu      \t$t0, $t0, $t1",
+            "0010958c  add.d       \t$t0, $t0, $a1"
+          ]
         }
       ],
       "notes": "Data-dependent (rj-chained). Measured over 420 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 23 at dividend=0xfffffffe, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
@@ -90,7 +97,14 @@
             "unroll": 2000,
             "iters": 500
           },
-          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 1; li.d $r13, 18446744073709551614; li.d $r5, 3' --asm 'div.wu $r12, $r13, $r12; add.d $r12, $r12, $r5'"
+          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 1; li.d $r13, 18446744073709551614; li.d $r5, 3' --asm 'div.wu $r12, $r13, $r12; add.d $r12, $r12, $r5'",
+          "machine_code": [
+            "0380040c  ori         \t$t0, $zero, 1",
+            "02bff80d  addi.w      \t$t1, $zero, -2",
+            "03800c05  ori         \t$a1, $zero, 3",
+            "002131ac  div.wu      \t$t0, $t1, $t0",
+            "0010958c  add.d       \t$t0, $t0, $a1"
+          ]
         }
       ],
       "notes": "Data-dependent (rk-chained). Measured over 420 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 23 at dividend=0xfffffffe, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",

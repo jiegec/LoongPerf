@@ -70,7 +70,12 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "005ce460  armmtflag   \t$zero, 57",
+            "003d059e  armsrli.w   \t$t0, 1, 14"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 1.93-1.96 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -97,7 +102,13 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14; armmfflag $r12, 0x39'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14; armmfflag $r12, 0x39'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "005ce460  armmtflag   \t$zero, 57",
+            "003d059e  armsrli.w   \t$t0, 1, 14",
+            "005ce44c  armmfflag   \t$t0, 57"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.04-4.12 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."

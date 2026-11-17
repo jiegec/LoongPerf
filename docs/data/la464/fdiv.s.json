@@ -61,7 +61,14 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f0, $f1'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f0, $f1'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a480  movgr2fr.w  \t$fa0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a481  movgr2fr.w  \t$fa1, $a0",
+            "01068400  fdiv.s      \t$fa0, $fa0, $fa1"
+          ]
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/0, x/0, 0/x, Inf/NaN; 10 for 1/1 and 1/2; 16 for general quotients; 15 for 1/max; 9 for max/minnorm or minnorm/max; 17 for 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
@@ -88,7 +95,14 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f1, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fdiv.s $f0, $f1, $f0'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a480  movgr2fr.w  \t$fa0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a481  movgr2fr.w  \t$fa1, $a0",
+            "01068020  fdiv.s      \t$fa0, $fa1, $fa0"
+          ]
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/0, x/0, 0/x, Inf/NaN; 10 for 1/1 and 1/2; 16 for general quotients; 15 for 1/max; 9 for max/minnorm or minnorm/max; 17 for 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",

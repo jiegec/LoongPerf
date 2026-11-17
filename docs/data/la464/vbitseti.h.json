@@ -61,7 +61,12 @@
             "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vbitseti.h $vr0, $vr0, 1'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vbitseti.h $vr0, $vr0, 1'",
+          "machine_code": [
+            "03800404  ori         \t$a0, $zero, 1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "73144400  vbitseti.h  \t$vr0, $vr0, 1"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

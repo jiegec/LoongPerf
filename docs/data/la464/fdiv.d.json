@@ -61,7 +61,14 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fdiv.d $f0, $f0, $f1'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fdiv.d $f0, $f0, $f1'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "01070400  fdiv.d      \t$fa0, $fa0, $fa1"
+          ]
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for special values; 10 for 1/1 and 1/2; 23 for general quotients and max/1; 9 for max/minnorm or minnorm/max; 24 for maxsub/1 and 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
@@ -88,7 +95,14 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fdiv.d $f0, $f1, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fdiv.d $f0, $f1, $f0'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "01070020  fdiv.d      \t$fa0, $fa1, $fa0"
+          ]
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for special values; 10 for 1/1 and 1/2; 23 for general quotients and max/1; 9 for max/minnorm or minnorm/max; 24 for maxsub/1 and 1/maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",

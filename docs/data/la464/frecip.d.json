@@ -53,7 +53,12 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'frecip.d $f0, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'frecip.d $f0, $f0'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "01145800  frecip.d    \t$fa0, $fa0"
+          ]
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/Inf/NaN; 10 for 1 and powers of two; 23 for general inputs and max; 24 for maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",

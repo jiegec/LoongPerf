@@ -55,7 +55,18 @@
             "iters": 200,
             "reps": 7
           },
-          "command": "./bench --unroll 1000 --iters 200 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vfsqrt.s $vr0, $vr0; vpickve2gr.w $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.w $vr0, $r7'"
+          "command": "./bench --unroll 1000 --iters 200 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vfsqrt.s $vr0, $vr0; vpickve2gr.w $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.w $vr0, $r7'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "729f0880  vreplgr2vr.w\t$vr0, $a0",
+            "02bffc05  addi.w      \t$a1, $zero, -1",
+            "00150006  move        \t$a2, $zero",
+            "729ce400  vfsqrt.s    \t$vr0, $vr0",
+            "72efe007  vpickve2gr.w\t$a3, $vr0, 0",
+            "001494e7  and         \t$a3, $a3, $a1",
+            "001518e7  or          \t$a3, $a3, $a2",
+            "729f08e0  vreplgr2vr.w\t$vr0, $a3"
+          ]
         }
       ],
       "notes": "Data-dependent latency. Chain: tested op, then vpickve2gr.w+and+or+vreplgr2vr.w to restore the input pattern; the 7-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 11-41 cycles, CPI 5.9938-21. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",

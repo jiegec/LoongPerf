@@ -55,7 +55,17 @@
             "iters": 2000,
             "reps": 7
           },
-          "command": "./bench --unroll 5000 --iters 2000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2fr.d $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'"
+          "command": "./bench --unroll 5000 --iters 2000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2fr.d $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'",
+          "machine_code": [
+            "03800404  ori         \t$a0, $zero, 1",
+            "03800405  ori         \t$a1, $zero, 1",
+            "02f0006c  addi.d      \t$t0, $sp, -1024",
+            "29c00184  st.d        \t$a0, $t0, 0",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "2bc00180  fst.d       \t$fa0, $t0, 0",
+            "28c00184  ld.d        \t$a0, $t0, 0",
+            "00109484  add.d       \t$a0, $a0, $a1"
+          ]
         }
       ],
       "notes": "GPR->FPR move latency is about 1 cycle; 11.38 cycles of helper latency (fst.d/ld.d plus add.d) are subtracted. Unroll 5000, iters 2000. Raw measurement was 0.94; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

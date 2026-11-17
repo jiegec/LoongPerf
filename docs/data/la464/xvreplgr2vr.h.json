@@ -25,35 +25,63 @@
   ],
   "measurement": {
     "tool": "./bench",
-    "unroll": 1000,
-    "iters": 1000,
+    "unroll": 100000,
+    "iters": 100,
     "warmup": 10,
-    "reps": 5,
+    "reps": 20,
     "core": 0,
     "date": "2026-11-17"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "round trip through the reverse move",
+          "role": "measurement",
+          "asm": "xvreplgr2vr.h $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0",
+          "init": "li.d $r4, 1",
+          "chain_latency": 6,
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 8.05
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 1' --asm 'xvreplgr2vr.h $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 6 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
       "asm": "xvreplgr2vr.h $xr0, $r4; xvreplgr2vr.h $xr1, $r5; xvreplgr2vr.h $xr2, $r6; xvreplgr2vr.h $xr3, $r7; xvreplgr2vr.h $xr4, $r8; xvreplgr2vr.h $xr5, $r9; xvreplgr2vr.h $xr6, $r10; xvreplgr2vr.h $xr7, $r11",
       "init": "li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
       "result": {
-        "instructions_retired": 16,
-        "core_cycles": 8.08
+        "instructions_retired": 16.0,
+        "core_cycles": 8.01
       },
       "measurement": {
         "unroll": 1000,
-        "iters": 1000
+        "iters": 1000,
+        "reps": 5
       },
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'xvreplgr2vr.h $xr0, $r4; xvreplgr2vr.h $xr1, $r5; xvreplgr2vr.h $xr2, $r6; xvreplgr2vr.h $xr3, $r7; xvreplgr2vr.h $xr4, $r8; xvreplgr2vr.h $xr5, $r9; xvreplgr2vr.h $xr6, $r10; xvreplgr2vr.h $xr7, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1,
-        "ipc": 1
+        "cpi": 1.0012,
+        "ipc": 0.9988
       },
-      "notes": "8 independent instructions take 8.08 cycles."
+      "notes": "Slope method, 8 independent lanes."
     }
-  ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  ]
 }

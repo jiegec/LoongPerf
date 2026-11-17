@@ -62,7 +62,16 @@
             "unroll": 2000,
             "iters": 500
           },
-          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 2147483647; li.d $r13, 1; li.d $r5, 2147483647' --asm 'mod.w $r12, $r12, $r13; add.d $r12, $r12, $r5'"
+          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 2147483647; li.d $r13, 1; li.d $r5, 2147483647' --asm 'mod.w $r12, $r12, $r13; add.d $r12, $r12, $r5'",
+          "machine_code": [
+            "14ffffec  lu12i.w     \t$t0, 524287",
+            "03bffd8c  ori         \t$t0, $t0, 4095",
+            "0380040d  ori         \t$t1, $zero, 1",
+            "14ffffe5  lu12i.w     \t$a1, 524287",
+            "03bffca5  ori         \t$a1, $a1, 4095",
+            "0020b58c  mod.w       \t$t0, $t0, $t1",
+            "0010958c  add.d       \t$t0, $t0, $a1"
+          ]
         }
       ],
       "notes": "Data-dependent (rj-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
@@ -90,7 +99,15 @@
             "unroll": 2000,
             "iters": 500
           },
-          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 1; li.d $r13, 2147483647; li.d $r5, 1' --asm 'mod.w $r12, $r13, $r12; add.d $r12, $r12, $r5'"
+          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 1; li.d $r13, 2147483647; li.d $r5, 1' --asm 'mod.w $r12, $r13, $r12; add.d $r12, $r12, $r5'",
+          "machine_code": [
+            "0380040c  ori         \t$t0, $zero, 1",
+            "14ffffed  lu12i.w     \t$t1, 524287",
+            "03bffdad  ori         \t$t1, $t1, 4095",
+            "03800405  ori         \t$a1, $zero, 1",
+            "0020b1ac  mod.w       \t$t0, $t1, $t0",
+            "0010958c  add.d       \t$t0, $t0, $a1"
+          ]
         }
       ],
       "notes": "Data-dependent (rk-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",

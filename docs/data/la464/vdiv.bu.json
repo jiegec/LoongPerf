@@ -64,7 +64,20 @@
           },
           "command": "./bench --unroll 4000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 255; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vdiv.bu $vr0, $vr0, $vr2; vpickve2gr.bu $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.b $vr0, $r4'",
           "notes": "Element-0 reset chain; the closure latency is cancelled by the calibration experiment.",
-          "chain_latency": 8.99
+          "chain_latency": 8.99,
+          "machine_code": [
+            "0383fc04  ori         \t$a0, $zero, 255",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  ori         \t$a0, $zero, 1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "02bffc05  addi.w      \t$a1, $zero, -1",
+            "00150006  move        \t$a2, $zero",
+            "70e40800  vdiv.bu     \t$vr0, $vr0, $vr2",
+            "72f38004  vpickve2gr.bu\t$a0, $vr0, 0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0"
+          ]
         },
         {
           "name": "vadd.b reset-helper baseline",
@@ -81,7 +94,20 @@
             "reps": 7
           },
           "command": "./bench --unroll 4000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 255; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vadd.b $vr0, $vr0, $vr2; vpickve2gr.bu $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.b $vr0, $r4'",
-          "notes": "Same helper chain with vadd.b replacing the variable-latency operation."
+          "notes": "Same helper chain with vadd.b replacing the variable-latency operation.",
+          "machine_code": [
+            "0383fc04  ori         \t$a0, $zero, 255",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  ori         \t$a0, $zero, 1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "02bffc05  addi.w      \t$a1, $zero, -1",
+            "00150006  move        \t$a2, $zero",
+            "700a0800  vadd.b      \t$vr0, $vr0, $vr2",
+            "72f38004  vpickve2gr.bu\t$a0, $vr0, 0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0"
+          ]
         }
       ],
       "notes": "Data-dependent. Measured over 8 operand pairs; min 28 cycles at 0/1, max 68 cycles at 255/1. The sample experiment uses the max-latency pair. Latency is derived by subtracting the same closure around vadd.b (calibration experiment)."

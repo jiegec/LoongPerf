@@ -54,16 +54,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armsub.w $r12, $r13, 14",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "chain_latency": 0,
+          "chain_latency": 0.0,
           "result": {
-            "instructions_retired": 1,
+            "instructions_retired": 1.0,
             "core_cycles": 1.93
           },
           "measurement": {
@@ -71,7 +71,14 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r12, $r13, 14'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r12, $r13, 14'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005ce460  armmtflag   \t$zero, 57",
+            "0037b59e  armsub.w    \t$t0, $t1, 14"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 1.92-1.94 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -81,16 +88,16 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armsub.w $r13, $r12, 14; armsub.w $r12, $r13, 14",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "chain_latency": 0,
+          "chain_latency": 0.0,
           "result": {
-            "instructions_retired": 2,
+            "instructions_retired": 2.0,
             "core_cycles": 4.08
           },
           "measurement": {
@@ -98,26 +105,35 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r13, $r12, 14; armsub.w $r12, $r13, 14'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r13, $r12, 14; armsub.w $r12, $r13, 14'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005ce460  armmtflag   \t$zero, 57",
+            "0037b1be  armsub.w    \t$t1, $t0, 14",
+            "0037b59e  armsub.w    \t$t0, $t1, 14"
+          ]
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.05-4.09 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "2 dependent copies alternate through rd, so the chain measures 2 instructions; the per-instruction latency is raw/2. Re-measured on 2026-11-17 on LA464, core 0.",
+      "cycles_divisor": 2
     },
     {
       "from_operands": [
         1
       ],
       "to_operand": 4,
-      "cycles": 3,
+      "cycles": 3.0,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armsub.w $r12, $r13, 14; armmfflag $r12, 0x39",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "chain_latency": 1,
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 2,
+            "instructions_retired": 2.0,
             "core_cycles": 4.1
           },
           "measurement": {
@@ -125,7 +141,15 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r12, $r13, 14; armmfflag $r12, 0x39'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r12, $r13, 14; armmfflag $r12, 0x39'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005ce460  armmtflag   \t$zero, 57",
+            "0037b59e  armsub.w    \t$t0, $t1, 14",
+            "005ce44c  armmfflag   \t$t0, 57"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.08-4.11 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -137,7 +161,7 @@
       "asm": "armsub.w $r12, $r4, 14; armsub.w $r13, $r5, 14; armsub.w $r14, $r6, 14; armsub.w $r15, $r7, 14; armsub.w $r16, $r8, 14; armsub.w $r17, $r9, 14; armsub.w $r18, $r10, 14; armsub.w $r19, $r11, 14",
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39",
       "result": {
-        "instructions_retired": 8,
+        "instructions_retired": 8.0,
         "core_cycles": 16.71
       },
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39' --asm 'armsub.w $r12, $r4, 14; armsub.w $r13, $r5, 14; armsub.w $r14, $r6, 14; armsub.w $r15, $r7, 14; armsub.w $r16, $r8, 14; armsub.w $r17, $r9, 14; armsub.w $r18, $r10, 14; armsub.w $r19, $r11, 14'",
