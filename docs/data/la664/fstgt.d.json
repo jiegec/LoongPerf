@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "fstgt.d",
+    "extension": "Base",
+    "form": "fstgt.d fd, rj, rk",
+    "description": "Floating-point bound-checked store, condition rj > rk."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "stored value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "bound"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "fstgt.d $f0, $r21, $r30; fstgt.d $f1, $r23, $r30; fstgt.d $f2, $r24, $r30; fstgt.d $f3, $r25, $r30; fstgt.d $f4, $r26, $r30; fstgt.d $f5, $r27, $r30; fstgt.d $f6, $r28, $r30; fstgt.d $f7, $r29, $r30",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, -8; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4",
+      "machine_code": [
+        "3876faa0  fstgt.d     \t$fa0, $r21, $s7",
+        "3876fae1  fstgt.d     \t$fa1, $s0, $s7",
+        "3876fb02  fstgt.d     \t$fa2, $s1, $s7",
+        "3876fb23  fstgt.d     \t$fa3, $s2, $s7",
+        "3876fb44  fstgt.d     \t$fa4, $s3, $s7",
+        "3876fb65  fstgt.d     \t$fa5, $s4, $s7",
+        "3876fb86  fstgt.d     \t$fa6, $s5, $s7",
+        "3876fba7  fstgt.d     \t$fa7, $s6, $s7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, -8; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4' --asm 'fstgt.d $f0, $r21, $r30; fstgt.d $f1, $r23, $r30; fstgt.d $f2, $r24, $r30; fstgt.d $f3, $r25, $r30; fstgt.d $f4, $r26, $r30; fstgt.d $f5, $r27, $r30; fstgt.d $f6, $r28, $r30; fstgt.d $f7, $r29, $r30'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 bound-checked floating-point memory operations take 8.00 cycles."
+    }
+  ],
+  "notes": "Bound-checked floating-point memory operation. Latency depends on cache state; throughput only."
+}
