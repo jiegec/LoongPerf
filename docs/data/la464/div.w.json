@@ -49,23 +49,25 @@
       "cycles": 22.0,
       "experiments": [
         {
-          "name": "high-unroll fixed-operand chain",
+          "name": "fixed-operand chain with add.d reset",
           "role": "measurement",
-          "asm": "div.w $r12, $r12, $r13; and $r12, $r12, $r5; or $r12, $r12, $r6",
-          "init": "li.w $r12, 2147483647; li.w $r13, 2; li.w $r5, 1; li.w $r6, 2147483646",
-          "chain_latency": 2.0,
+          "asm": "div.w $r12, $r12, $r13; add.d $r12, $r12, $r5",
+          "init": "li.d $r12, 2147483647; li.d $r13, 1; li.d $r5, 0",
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 23.97
+            "instructions_retired": 2.0,
+            "core_cycles": 23.0
           },
           "measurement": {
-            "unroll": 6666,
-            "iters": 1501
+            "unroll": 2000,
+            "iters": 500
           },
-          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 5 --core 0 --init 'li.w $r12, 2147483647; li.w $r13, 2; li.w $r5, 1; li.w $r6, 2147483646' --asm 'div.w $r12, $r12, $r13; and $r12, $r12, $r5; or $r12, $r12, $r6'"
+          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 2147483647; li.d $r13, 1; li.d $r5, 0' --asm 'div.w $r12, $r12, $r13; add.d $r12, $r12, $r5'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown; 2 cycles of helper latency are subtracted. Unroll 6666, iters 1501."
+      "notes": "Data-dependent (rj-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
+      "cycles_min": 5.0,
+      "cycles_max": 22.0
     },
     {
       "from_operands": [
@@ -75,23 +77,25 @@
       "cycles": 22.0,
       "experiments": [
         {
-          "name": "high-unroll fixed-operand chain",
+          "name": "fixed-operand chain with add.d reset",
           "role": "measurement",
-          "asm": "div.w $r12, $r13, $r12; and $r12, $r12, $r5; or $r12, $r12, $r6",
-          "init": "li.w $r12, 2; li.w $r13, 2147483647; li.w $r5, 1; li.w $r6, 2",
-          "chain_latency": 2.0,
+          "asm": "div.w $r12, $r13, $r12; add.d $r12, $r12, $r5",
+          "init": "li.d $r12, 1; li.d $r13, 2147483647; li.d $r5, 18446744071562067970",
+          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 23.97
+            "instructions_retired": 2.0,
+            "core_cycles": 23.0
           },
           "measurement": {
-            "unroll": 6666,
-            "iters": 1501
+            "unroll": 2000,
+            "iters": 500
           },
-          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 5 --core 0 --init 'li.w $r12, 2; li.w $r13, 2147483647; li.w $r5, 1; li.w $r6, 2' --asm 'div.w $r12, $r13, $r12; and $r12, $r12, $r5; or $r12, $r12, $r6'"
+          "command": "./bench --unroll 2000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r12, 1; li.d $r13, 2147483647; li.d $r5, 18446744071562067970' --asm 'div.w $r12, $r13, $r12; add.d $r12, $r12, $r5'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown; 2 cycles of helper latency are subtracted. Unroll 6666, iters 1501."
+      "notes": "Data-dependent (rk-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
+      "cycles_min": 5.0,
+      "cycles_max": 22.0
     }
   ],
   "throughput": [
@@ -125,5 +129,6 @@
       },
       "notes": "Data-dependent throughput; one representative operand sample is shown."
     }
-  ]
+  ],
+  "notes": "Latency is data-dependent: rj 5-22 cycles, rk 5-22 cycles. Throughput is data-dependent; the throughput experiment uses one representative operand sample."
 }
