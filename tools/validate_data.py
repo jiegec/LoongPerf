@@ -176,6 +176,8 @@ def instruction_multiplier(mnemonic: str, line: str, uarch: str) -> int:
         return 1 if ", $r0" in line else 2
     if mnemonic.startswith("am"):
         return 2
+    if mnemonic.startswith(("vssra", "vssrl", "xvssra", "xvssrl")) and not mnemonic.endswith((".d.q", ".du.q")):
+        return 2
     return RETIRED_MULTIPLIER.get(mnemonic, 1)
 
 

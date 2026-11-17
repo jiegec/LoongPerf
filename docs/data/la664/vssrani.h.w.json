@@ -1,0 +1,90 @@
+{
+  "instruction": {
+    "name": "vssrani.h.w",
+    "extension": "LSX",
+    "form": "vssrani.h.w vd, vj, imm",
+    "description": "Arithmetic right shift the signed 32-bit elements in `a` and `b` by `imm`, saturate the result to signed 16-bit, write the 16-bit result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vssrani.h.w $vr0, $vr0, 1",
+          "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vssrani.h.w $vr0, $vr0, 1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Consecutive unrolled copies form a vector-register dependency chain. Measured with unroll=100000 to amortise call overhead."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vssrani.h.w $vr0, $vr8, 1; vssrani.h.w $vr1, $vr9, 1; vssrani.h.w $vr2, $vr10, 1; vssrani.h.w $vr3, $vr11, 1; vssrani.h.w $vr4, $vr12, 1; vssrani.h.w $vr5, $vr13, 1; vssrani.h.w $vr6, $vr14, 1; vssrani.h.w $vr7, $vr15, 1",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vssrani.h.w $vr0, $vr8, 1; vssrani.h.w $vr1, $vr9, 1; vssrani.h.w $vr2, $vr10, 1; vssrani.h.w $vr3, $vr11, 1; vssrani.h.w $vr4, $vr12, 1; vssrani.h.w $vr5, $vr13, 1; vssrani.h.w $vr6, $vr14, 1; vssrani.h.w $vr7, $vr15, 1'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ],
+  "notes": "LSX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}
