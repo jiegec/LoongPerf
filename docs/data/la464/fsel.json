@@ -68,7 +68,15 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fsel $f0, $f0, $f1, $fcc0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fsel $f0, $f0, $f1, $fcc0'",
+          "machine_code": [
+            "03800404  ori         \t$a0, $zero, 1",
+            "0114d880  movgr2cf    \t$fcc0, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "0d000400  fsel        \t$fa0, $fa0, $fa1, $fcc0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -93,7 +101,15 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fsel $f0, $f1, $f0, $fcc0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fsel $f0, $f1, $f0, $fcc0'",
+          "machine_code": [
+            "00150004  move        \t$a0, $zero",
+            "0114d880  movgr2cf    \t$fcc0, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "0d000020  fsel        \t$fa0, $fa1, $fa0, $fcc0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

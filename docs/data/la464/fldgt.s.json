@@ -64,7 +64,17 @@
             "iters": 1501,
             "reps": 7
           },
-          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'fldgt.s $f0, $r20, $r0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'"
+          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'fldgt.s $f0, $r20, $r0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  ori         \t$a0, $zero, 8",
+            "29800284  st.w        \t$a0, $t8, 0",
+            "02bfe004  addi.w      \t$a0, $zero, -8",
+            "29802284  st.w        \t$a0, $t8, 8",
+            "38740280  fldgt.s     \t$fa0, $t8, $zero",
+            "0114b404  movfr2gr.s  \t$a0, $fa0",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "4 cycles of helper latency are subtracted. Unroll 6666, iters 1501. Raw measurement was 4.98; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

@@ -61,7 +61,12 @@
             "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4' --asm 'xvsllwil.h.b $xr0, $xr0, 1'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4' --asm 'xvsllwil.h.b $xr0, $xr0, 1'",
+          "machine_code": [
+            "03800404  ori         \t$a0, $zero, 1",
+            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+            "77082400  xvsllwil.h.b\t$xr0, $xr0, 1"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

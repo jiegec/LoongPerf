@@ -55,7 +55,13 @@
             "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'movcf2fr $f0, $fcc0; movfr2cf $fcc0, $f0'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'movcf2fr $f0, $fcc0; movfr2cf $fcc0, $f0'",
+          "machine_code": [
+            "00150004  move        \t$a0, $zero",
+            "0114d880  movgr2cf    \t$fcc0, $a0",
+            "0114d400  movcf2fr    \t$fa0, $fcc0",
+            "0114d000  movfr2cf    \t$fcc0, $fa0"
+          ]
         }
       ],
       "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

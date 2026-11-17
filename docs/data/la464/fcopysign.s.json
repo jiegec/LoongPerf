@@ -61,7 +61,14 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fcopysign.s $f0, $f0, $f1'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fcopysign.s $f0, $f0, $f1'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a480  movgr2fr.w  \t$fa0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a481  movgr2fr.w  \t$fa1, $a0",
+            "01128400  fcopysign.s \t$fa0, $fa0, $fa1"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -86,7 +93,14 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fcopysign.s $f0, $f1, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fcopysign.s $f0, $f1, $f0'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a480  movgr2fr.w  \t$fa0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a481  movgr2fr.w  \t$fa1, $a0",
+            "01128020  fcopysign.s \t$fa0, $fa1, $fa0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

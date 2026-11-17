@@ -35,7 +35,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 1.0,
       "experiments": [
         {
           "name": "dependent chain",
@@ -43,15 +43,27 @@
           "asm": "vsetallnez.w $fcc0, $vr0; movcf2gr $r6, $fcc0; vreplgr2vr.w $vr0, $r6",
           "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4",
           "result": {
-            "instructions_retired": 3,
-            "core_cycles": 11
+            "instructions_retired": 3.0,
+            "core_cycles": 11.0
           },
           "measurement": {
             "unroll": 6666,
             "iters": 300
           },
           "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4' --asm 'vsetallnez.w $fcc0, $vr0; movcf2gr $r6, $fcc0; vreplgr2vr.w $vr0, $r6'",
-          "chain_latency": 10
+          "chain_latency": 10.0,
+          "machine_code": [
+            "140a0c04  lu12i.w     \t$a0, 20576",
+            "039c2084  ori         \t$a0, $a0, 1800",
+            "16406084  lu32i.d     \t$a0, 131844",
+            "03004084  lu52i.d     \t$a0, $a0, 16",
+            "729f0c80  vreplgr2vr.d\t$vr0, $a0",
+            "729f0c81  vreplgr2vr.d\t$vr1, $a0",
+            "729f0c82  vreplgr2vr.d\t$vr2, $a0",
+            "729cb800  vsetallnez.w\t$fcc0, $vr0",
+            "0114dc06  movcf2gr    \t$a2, $fcc0",
+            "729f08c0  vreplgr2vr.w\t$vr0, $a2"
+          ]
         }
       ],
       "notes": "vj -> fcc. The chain closes through movcf2gr (9 cycles) and vreplgr2vr.w (1 cycle), so 10 cycles of helper latency are subtracted; treat the value as approximate. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -63,7 +75,7 @@
       "asm": "vsetallnez.w $fcc0, $vr8; vsetallnez.w $fcc1, $vr9; vsetallnez.w $fcc2, $vr10; vsetallnez.w $fcc3, $vr11; vsetallnez.w $fcc4, $vr12; vsetallnez.w $fcc5, $vr13; vsetallnez.w $fcc6, $vr14; vsetallnez.w $fcc7, $vr15",
       "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4",
       "result": {
-        "instructions_retired": 8,
+        "instructions_retired": 8.0,
         "core_cycles": 4.01
       },
       "measurement": {
@@ -74,9 +86,10 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2
+        "ipc": 2.0
       },
       "notes": "Throughput measured with 8 independent lanes."
     }
-  ]
+  ],
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
 }

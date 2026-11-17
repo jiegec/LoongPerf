@@ -69,7 +69,16 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f0, $f1, $f2'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f0, $f1, $f2'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a882  movgr2fr.d  \t$fa2, $a0",
+            "08210400  fmadd.d     \t$fa0, $fa0, $fa1, $fa2"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -94,7 +103,16 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f0, $f2'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f0, $f2'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a882  movgr2fr.d  \t$fa2, $a0",
+            "08210020  fmadd.d     \t$fa0, $fa1, $fa0, $fa2"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -119,7 +137,16 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f2, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f2, $f0'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a882  movgr2fr.d  \t$fa2, $a0",
+            "08200820  fmadd.d     \t$fa0, $fa1, $fa2, $fa0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

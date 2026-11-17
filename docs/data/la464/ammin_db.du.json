@@ -62,7 +62,15 @@
             "unroll": 1000,
             "iters": 1000
           },
-          "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0' --asm 'ammin_db.du $r12, $r13, $r20; ammin_db.du $r13, $r12, $r20'"
+          "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0' --asm 'ammin_db.du $r12, $r13, $r20; ammin_db.du $r13, $r12, $r20'",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "29c00280  st.d        \t$zero, $t8, 0",
+            "02c0000c  addi.d      \t$t0, $zero, 0",
+            "02c0000d  addi.d      \t$t1, $zero, 0",
+            "3871b68c  ammin_db.du \t$t0, $t1, $t8",
+            "3871b28d  ammin_db.du \t$t1, $t0, $t8"
+          ]
         }
       ],
       "notes": "the chain contains two alternating atomics, so the reported value is raw cycles / 2. Unroll 1000, iters 1000. Raw measurement was 15.01; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

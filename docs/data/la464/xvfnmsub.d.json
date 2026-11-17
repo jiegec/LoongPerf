@@ -70,7 +70,18 @@
             "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr2, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr3, $r4' --asm 'xvfnmsub.d $xr0, $xr0, $xr2, $xr3'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr2, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr3, $r4' --asm 'xvfnmsub.d $xr0, $xr0, $xr2, $xr3'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
+            "03100004  lu52i.d     \t$a0, $zero, 1024",
+            "769f0c82  xvreplgr2vr.d\t$xr2, $a0",
+            "00150004  move        \t$a0, $zero",
+            "17000004  lu32i.d     \t$a0, -524288",
+            "03100084  lu52i.d     \t$a0, $a0, 1024",
+            "769f0c83  xvreplgr2vr.d\t$xr3, $a0",
+            "0ae18800  xvfnmsub.d  \t$xr0, $xr0, $xr2, $xr3"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

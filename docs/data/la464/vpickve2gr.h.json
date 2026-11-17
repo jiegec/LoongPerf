@@ -62,7 +62,12 @@
             "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1' --asm 'vreplgr2vr.h $vr0, $r4; vpickve2gr.h $r4, $vr0, 0'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1' --asm 'vreplgr2vr.h $vr0, $r4; vpickve2gr.h $r4, $vr0, 0'",
+          "machine_code": [
+            "03800404  ori         \t$a0, $zero, 1",
+            "729f0480  vreplgr2vr.h\t$vr0, $a0",
+            "72efc004  vpickve2gr.h\t$a0, $vr0, 0"
+          ]
         }
       ],
       "notes": "2 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 4.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

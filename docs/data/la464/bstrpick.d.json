@@ -67,7 +67,11 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'bstrpick.d $r12, $r12, 63, 0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'bstrpick.d $r12, $r12, 63, 0'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "00ff018c  bstrpick.d  \t$t0, $t0, 63, 0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

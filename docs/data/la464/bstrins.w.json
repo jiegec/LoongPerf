@@ -67,7 +67,11 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'bstrins.w $r12, $r13, 7, 0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'bstrins.w $r12, $r13, 7, 0'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "006701ac  bstrins.w   \t$t0, $t1, 7, 0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -92,7 +96,11 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'bstrins.w $r12, $r12, 7, 0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'bstrins.w $r12, $r12, 7, 0'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "0067018c  bstrins.w   \t$t0, $t0, 7, 0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

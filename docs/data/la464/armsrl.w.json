@@ -71,7 +71,14 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsrl.w $r12, $r13, 14'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsrl.w $r12, $r13, 14'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005ce460  armmtflag   \t$zero, 57",
+            "003b359e  armsrl.w    \t$t0, $t1, 14"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 1.94-1.96 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -98,7 +105,15 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsrl.w $r13, $r12, 14; armsrl.w $r12, $r13, 14'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsrl.w $r13, $r12, 14; armsrl.w $r12, $r13, 14'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005ce460  armmtflag   \t$zero, 57",
+            "003b31be  armsrl.w    \t$t1, $t0, 14",
+            "003b359e  armsrl.w    \t$t0, $t1, 14"
+          ]
         }
       ],
       "notes": "2 dependent copies alternate through rd, so the chain measures 2 instructions; the per-instruction latency is raw/2. Re-measured on 2026-11-17 on LA464, core 0.",
@@ -126,7 +141,15 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsrl.w $r12, $r13, 14; armmfflag $r12, 0x39'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsrl.w $r12, $r13, 14; armmfflag $r12, 0x39'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005ce460  armmtflag   \t$zero, 57",
+            "003b359e  armsrl.w    \t$t0, $t1, 14",
+            "005ce44c  armmfflag   \t$t0, 57"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 3.97-4.11 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."

@@ -61,7 +61,11 @@
             "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'rotri.b $r12, $r12, 1'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'rotri.b $r12, $r12, 1'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "004c258c  rotri.b     \t$t0, $t0, 1"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

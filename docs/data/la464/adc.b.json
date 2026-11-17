@@ -70,7 +70,15 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r13'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r13'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "02c0100f  addi.d      \t$t3, $zero, 4",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "0030358c  adc.b       \t$t0, $t0, $t1"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -94,7 +102,15 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r12'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r12'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "02c0100f  addi.d      \t$t3, $zero, 4",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003031ac  adc.b       \t$t0, $t1, $t0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -123,7 +139,15 @@
             "unroll": 10000,
             "iters": 1000
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003039ac  adc.b       \t$t0, $t1, $t2",
+            "005c042c  x86mtflag   \t$t0, 1"
+          ]
         },
         {
           "name": "x86mtflag + x86mfflag calibration",
@@ -139,7 +163,15 @@
             "iters": 1000
           },
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
-          "notes": "Calibration experiment (not used for the reported latency)."
+          "notes": "Calibration experiment (not used for the reported latency).",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "005c042c  x86mtflag   \t$t0, 1",
+            "005c040c  x86mfflag   \t$t0, 1"
+          ]
         },
         {
           "name": "adc.b + x86mtflag + x86mfflag calibration",
@@ -155,7 +187,16 @@
             "iters": 1501
           },
           "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1'",
-          "notes": "Calibration experiment (not used for the reported latency)."
+          "notes": "Calibration experiment (not used for the reported latency).",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003039ac  adc.b       \t$t0, $t1, $t2",
+            "005c042c  x86mtflag   \t$t0, 1",
+            "005c040c  x86mfflag   \t$t0, 1"
+          ]
         },
         {
           "name": "second x86mfflag calibration",
@@ -171,7 +212,17 @@
             "iters": 2000
           },
           "command": "./bench --unroll 5000 --iters 2000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1'",
-          "notes": "Calibration experiment (not used for the reported latency)."
+          "notes": "Calibration experiment (not used for the reported latency).",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003039ac  adc.b       \t$t0, $t1, $t2",
+            "005c042c  x86mtflag   \t$t0, 1",
+            "005c040c  x86mfflag   \t$t0, 1",
+            "005c040c  x86mfflag   \t$t0, 1"
+          ]
         }
       ],
       "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

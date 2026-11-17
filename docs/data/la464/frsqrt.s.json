@@ -53,7 +53,12 @@
             "unroll": 20000,
             "iters": 500
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'frsqrt.s $f0, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'frsqrt.s $f0, $f0'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "0114a480  movgr2fr.w  \t$fa0, $a0",
+            "01146400  frsqrt.s    \t$fa0, $fa0"
+          ]
         }
       ],
       "notes": "Data-dependent latency: 11 cycles for 0/Inf/NaN/negative; 15 for exact squares 1, 4, 0.25 and minnorm; 33 for general inputs; 34 for maxsub and minsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",

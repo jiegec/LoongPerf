@@ -57,7 +57,17 @@
             "unroll": 20000,
             "iters": 100
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4' --asm 'vsrarni.h.w $vr0, $vr0, 1'"
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4' --asm 'vsrarni.h.w $vr0, $vr0, 1'",
+          "machine_code": [
+            "140a0c04  lu12i.w     \t$a0, 20576",
+            "039c2084  ori         \t$a0, $a0, 1800",
+            "16406084  lu32i.d     \t$a0, 131844",
+            "03004084  lu52i.d     \t$a0, $a0, 16",
+            "729f0c80  vreplgr2vr.d\t$vr0, $a0",
+            "729f0c81  vreplgr2vr.d\t$vr1, $a0",
+            "729f0c82  vreplgr2vr.d\t$vr2, $a0",
+            "735c8400  vsrarni.h.w \t$vr0, $vr0, 1"
+          ]
         }
       ],
       "notes": "vj -> vd; consecutive unrolled copies form a chain. Raw measurement was 4.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

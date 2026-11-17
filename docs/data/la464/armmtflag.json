@@ -65,7 +65,13 @@
             "unroll": 10000,
             "iters": 1000
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0xf' --asm 'armmtflag $r12, 0xf; armmfflag $r12, 0xf'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0xf' --asm 'armmtflag $r12, 0xf; armmfflag $r12, 0xf'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "005c3c60  armmtflag   \t$zero, 15",
+            "005c3c6c  armmtflag   \t$t0, 15",
+            "005c3c4c  armmfflag   \t$t0, 15"
+          ]
         },
         {
           "name": "extra armmfflag calibration",
@@ -81,7 +87,14 @@
             "iters": 1501
           },
           "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0xf' --asm 'armmtflag $r12, 0xf; armmfflag $r12, 0xf; armmfflag $r12, 0xf'",
-          "notes": "Calibration experiment (not used for the reported latency)."
+          "notes": "Calibration experiment (not used for the reported latency).",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "005c3c60  armmtflag   \t$zero, 15",
+            "005c3c6c  armmtflag   \t$t0, 15",
+            "005c3c4c  armmfflag   \t$t0, 15",
+            "005c3c4c  armmfflag   \t$t0, 15"
+          ]
         }
       ],
       "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

@@ -54,7 +54,12 @@
             "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4' --asm 'vftintrzl.l.s $vr0, $vr0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4' --asm 'vftintrzl.l.s $vr0, $vr0'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "729f0880  vreplgr2vr.w\t$vr0, $a0",
+            "729e9800  vftintrzl.l.s\t$vr0, $vr0"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 5.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

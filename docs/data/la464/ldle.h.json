@@ -64,7 +64,18 @@
             "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8; li.d $r5, 0x7fffffffffffffff' --asm 'ldle.h $r4, $r20, $r5; add.d $r20, $r20, $r4'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8; li.d $r5, 0x7fffffffffffffff' --asm 'ldle.h $r4, $r20, $r5; add.d $r20, $r20, $r4'",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  ori         \t$a0, $zero, 8",
+            "29400284  st.h        \t$a0, $t8, 0",
+            "02bfe004  addi.w      \t$a0, $zero, -8",
+            "29402284  st.h        \t$a0, $t8, 8",
+            "02bffc05  addi.w      \t$a1, $zero, -1",
+            "031ffca5  lu52i.d     \t$a1, $a1, 2047",
+            "387a9684  ldle.h      \t$a0, $t8, $a1",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."

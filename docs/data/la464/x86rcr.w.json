@@ -64,7 +64,14 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003fb58a  x86rcr.w    \t$t0, $t1"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -91,7 +98,15 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r13, $r12; x86rcr.w $r12, $r13'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r13, $r12; x86rcr.w $r12, $r13'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003fb1aa  x86rcr.w    \t$t1, $t0",
+            "003fb58a  x86rcr.w    \t$t0, $t1"
+          ]
         }
       ],
       "notes": "2 dependent copies alternate through rd, so the chain measures 2 instructions; the per-instruction latency is raw/2. Re-measured on 2026-11-17 on LA464, core 0.",
@@ -119,7 +134,15 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13; x86mtflag $r12, 1'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13; x86mtflag $r12, 1'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003fb58a  x86rcr.w    \t$t0, $t1",
+            "005c042c  x86mtflag   \t$t0, 1"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 3 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -146,7 +169,15 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13; x86mfflag $r12, 1'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13; x86mfflag $r12, 1'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "02c00c0e  addi.d      \t$t2, $zero, 3",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003fb58a  x86rcr.w    \t$t0, $t1",
+            "005c040c  x86mfflag   \t$t0, 1"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
@@ -173,7 +204,14 @@
             "iters": 100,
             "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13; x86mfflag $r13, 1'"
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1' --asm 'x86rcr.w $r12, $r13; x86mfflag $r13, 1'",
+          "machine_code": [
+            "02c0040c  addi.d      \t$t0, $zero, 1",
+            "02c0080d  addi.d      \t$t1, $zero, 2",
+            "005c0420  x86mtflag   \t$zero, 1",
+            "003fb58a  x86rcr.w    \t$t0, $t1",
+            "005c040d  x86mfflag   \t$t1, 1"
+          ]
         }
       ],
       "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."

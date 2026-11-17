@@ -64,7 +64,18 @@
             "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0; li.d $r5, 0' --asm 'ldx.b $r4, $r20, $r4; add.d $r4, $r4, $r5'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0; li.d $r5, 0' --asm 'ldx.b $r4, $r20, $r4; add.d $r4, $r4, $r5'",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  ori         \t$a0, $zero, 8",
+            "29000284  st.b        \t$a0, $t8, 0",
+            "00150004  move        \t$a0, $zero",
+            "29002284  st.b        \t$a0, $t8, 8",
+            "00150004  move        \t$a0, $zero",
+            "00150005  move        \t$a1, $zero",
+            "38001284  ldx.b       \t$a0, $t8, $a0",
+            "00109484  add.d       \t$a0, $a0, $a1"
+          ]
         },
         {
           "name": "load-to-AGU bypass calibration",
@@ -81,7 +92,16 @@
             "reps": 7
           },
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0' --asm 'ldx.b $r4, $r20, $r4'",
-          "notes": "Calibration experiment (not used for the reported latency)."
+          "notes": "Calibration experiment (not used for the reported latency).",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  ori         \t$a0, $zero, 8",
+            "29000284  st.b        \t$a0, $t8, 0",
+            "00150004  move        \t$a0, $zero",
+            "29002284  st.b        \t$a0, $t8, 8",
+            "00150004  move        \t$a0, $zero",
+            "38001284  ldx.b       \t$a0, $t8, $a0"
+          ]
         }
       ],
       "notes": "L1D-hit indexed-load latency: 4 cycles through the load-to-AGU address bypass, 5 cycles through the ALU-consumer path. The measurement experiment adds add.d to force the ALU path; the calibration experiment is the bare index chase.",

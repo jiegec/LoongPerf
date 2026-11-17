@@ -70,7 +70,16 @@
             "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr2, $r4; li.d $r4, 1077936128; vreplgr2vr.w $vr3, $r4' --asm 'vfmsub.s $vr0, $vr0, $vr2, $vr3'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr2, $r4; li.d $r4, 1077936128; vreplgr2vr.w $vr3, $r4' --asm 'vfmsub.s $vr0, $vr0, $vr2, $vr3'",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "729f0880  vreplgr2vr.w\t$vr0, $a0",
+            "14800004  lu12i.w     \t$a0, 262144",
+            "729f0882  vreplgr2vr.w\t$vr2, $a0",
+            "14808004  lu12i.w     \t$a0, 263168",
+            "729f0883  vreplgr2vr.w\t$vr3, $a0",
+            "09518800  vfmsub.s    \t$vr0, $vr0, $vr2, $vr3"
+          ]
         }
       ],
       "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
