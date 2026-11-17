@@ -255,8 +255,13 @@ meaningful from the cycle counter.
 
 Some instructions take a different number of cycles depending on their
 operands: integer divides and remainders, and the floating-point divide, square
-root, reciprocal and reciprocal square root units. The resulting models are on
-the [Analysis](analysis.md) page; this section is about measuring them.
+root, reciprocal and reciprocal square root units. The models that come out of
+these measurements are on the [Analysis](analysis.md) page (currently LA664);
+this section is only about how to measure such an instruction.
+
+The goal is always to isolate a single latency class. A chain whose operand
+stays inside one class measures that class exactly, and a `cases` array in the
+JSON records the classes that were found.
 
 The problem with such an instruction is that a dependency chain is only usable
 if the chain keeps its operand in the same latency class. Three techniques cover
@@ -303,4 +308,8 @@ Two more traps specific to this data:
 * a vector divide only pays for the lanes that need work, so a body whose lanes
   are partly zero measures below the worst case; build the operand pattern with
   `vinsgr2vr.*` if the number of active lanes matters.
+
+Room and time budget: a sweep of nine operands through a calibrated helper takes
+about a minute per instruction at `--unroll 1500 --iters 50 --reps 4`, which is a
+good size for exploring a new class structure before writing the `cases` array.
 
