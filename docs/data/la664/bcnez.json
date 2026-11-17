@@ -55,12 +55,12 @@
         "lanes": 8,
         "cpi": 1.0,
         "ipc": 1.0,
-        "cpi_min": 0.875,
+        "cpi_min": 0.984,
         "cpi_max": 1.0,
         "ipc_min": 1.0,
-        "ipc_max": 1.1429
+        "ipc_max": 1.0163
       },
-      "notes": "Not-taken-branch throughput saturates at 1.0 CPI (1 per cycle): the marginal cost is 0.875 at 8 static branches, 0.938 at 16 and 0.969 at 32 in a loop, converging to 1.0. Smaller footprints overlap with the loop branch and read low."
+      "notes": "Not-taken branches saturate at 1.0 CPI. The marginal cost measured against a loop-only baseline (1.007 cycles/iteration, just addi.d + bnez) keeps improving with more static branches because one branch rides the loop branch slot: 0.875 at 8 static branches, 0.937 at 16, 0.969 at 32 and 0.984 at 64, converging to 1.0. The range records the N=64 marginal and the asymptote."
     },
     {
       "name": "8 taken branches",
