@@ -1,0 +1,83 @@
+{
+  "instruction": {
+    "name": "vftintrneh.l.s",
+    "extension": "LSX",
+    "form": "vftintrneh.l.s, vd, vj",
+    "description": "Convert single-precision floating point elements in higher part of every 128-bit vector of `a` to signed 64-bit integer, rounding towards nearest even."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vftintrneh.l.s $vr0, $vr0",
+          "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4' --asm 'vftintrneh.l.s $vr0, $vr0'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Register-to-register dependency chain. Source values are normal floats or small integers as appropriate."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vftintrneh.l.s $vr0, $vr8; vftintrneh.l.s $vr1, $vr9; vftintrneh.l.s $vr2, $vr10; vftintrneh.l.s $vr3, $vr11; vftintrneh.l.s $vr4, $vr12; vftintrneh.l.s $vr5, $vr13; vftintrneh.l.s $vr6, $vr14; vftintrneh.l.s $vr7, $vr15",
+      "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4' --asm 'vftintrneh.l.s $vr0, $vr8; vftintrneh.l.s $vr1, $vr9; vftintrneh.l.s $vr2, $vr10; vftintrneh.l.s $vr3, $vr11; vftintrneh.l.s $vr4, $vr12; vftintrneh.l.s $vr5, $vr13; vftintrneh.l.s $vr6, $vr14; vftintrneh.l.s $vr7, $vr15'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 3.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ],
+  "notes": "LSX vector conversion. Measured on LA664 with normal float or small integer source values; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}

@@ -1,0 +1,83 @@
+{
+  "instruction": {
+    "name": "vffint.s.w",
+    "extension": "LSX",
+    "form": "vffint.s.w, vd, vj",
+    "description": "Convert signed 32-bit integer elements in `a` to single-precision floating point numbers."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vffint.s.w $vr0, $vr0",
+          "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vffint.s.w $vr0, $vr0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Register-to-register dependency chain. Source values are normal floats or small integers as appropriate."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vffint.s.w $vr0, $vr8; vffint.s.w $vr1, $vr9; vffint.s.w $vr2, $vr10; vffint.s.w $vr3, $vr11; vffint.s.w $vr4, $vr12; vffint.s.w $vr5, $vr13; vffint.s.w $vr6, $vr14; vffint.s.w $vr7, $vr15",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vffint.s.w $vr0, $vr8; vffint.s.w $vr1, $vr9; vffint.s.w $vr2, $vr10; vffint.s.w $vr3, $vr11; vffint.s.w $vr4, $vr12; vffint.s.w $vr5, $vr13; vffint.s.w $vr6, $vr14; vffint.s.w $vr7, $vr15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 1.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.2487,
+        "ipc": 4.0201
+      },
+      "notes": "8 independent instructions take 1.99 cycles."
+    }
+  ],
+  "notes": "LSX vector conversion. Measured on LA664 with normal float or small integer source values; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}

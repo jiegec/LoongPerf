@@ -21,6 +21,9 @@ DOCS_DIR = ROOT / "docs"
 SCHEMA_PATH = ROOT / "schema" / "instruction.schema.json"
 
 EPS = 0.02
+
+TWO_UOP_INSTRUCTIONS = set("""vfcvt.h.s vfcvt.s.d vfcvth.d.s vfcvth.s.h vfcvtl.d.s vfcvtl.s.h vffint.s.l vffinth.d.w vffintl.d.w vftint.w.d vftinth.l.s vftintl.l.s vftintrm.w.d vftintrmh.l.s vftintrml.l.s vftintrne.w.d vftintrneh.l.s vftintrnel.l.s vftintrp.w.d vftintrph.l.s vftintrpl.l.s vftintrz.w.d vftintrzh.l.s vftintrzl.l.s xvfcvt.h.s xvfcvt.s.d xvfcvth.d.s xvfcvth.s.h xvfcvtl.d.s xvfcvtl.s.h xvffint.s.l xvffinth.d.w xvffintl.d.w xvftint.w.d xvftinth.l.s xvftintl.l.s xvftintrm.w.d xvftintrmh.l.s xvftintrml.l.s xvftintrne.w.d xvftintrneh.l.s xvftintrnel.l.s xvftintrp.w.d xvftintrph.l.s xvftintrpl.l.s xvftintrz.w.d xvftintrzh.l.s xvftintrzl.l.s""".split())
+
 RETIRED_MULTIPLIER = {
     "cpucfg": 0,
     "rdtimel.w": 2,
@@ -95,6 +98,8 @@ def instruction_multiplier(mnemonic: str, line: str) -> int:
     if mnemonic in {"rdtimel.w", "rdtimeh.w", "rdtime.d"}:
         return 1 if ", $r0" in line else 2
     if mnemonic.startswith("am"):
+        return 2
+    if mnemonic in TWO_UOP_INSTRUCTIONS:
         return 2
     return RETIRED_MULTIPLIER.get(mnemonic, 1)
 
