@@ -74,9 +74,39 @@
           ]
         }
       ],
-      "notes": "Data-dependent. The vector float divider runs single precision at half the rate of the scalar one, so the long path is 15 + 2*ceil(23/4) = 27 instead of 16. Measured classes: 11 for 0, Inf or NaN inputs; 13 when the quotient overflows or underflows; 15 when the quotient is exact; 17 for an exact quotient with a subnormal operand; 25 when the inexact quotient is tiny (1.0/max); 27 when the quotient needs the full 23-bit mantissa; 29 for that case with a subnormal operand (1/maxsub). LSX and LASX divide with exactly the same timing as the scalar unit, independent of the lane count.",
+      "notes": "Latency depends on the operands. The cases were measured with drift-free chains; see the analysis page for the digit-time model.",
       "cycles_min": 11,
-      "cycles_max": 29
+      "cycles_max": 29,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 13
+        },
+        {
+          "name": "exact result",
+          "cycles": 15
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 17
+        },
+        {
+          "name": "tiny inexact result",
+          "cycles": 25
+        },
+        {
+          "name": "inexact result",
+          "cycles": 27
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 29
+        }
+      ]
     },
     {
       "from_operands": [
@@ -110,9 +140,39 @@
           ]
         }
       ],
-      "notes": "Data-dependent. The vector float divider runs single precision at half the rate of the scalar one, so the long path is 15 + 2*ceil(23/4) = 27 instead of 16. Measured classes: 11 for 0, Inf or NaN inputs; 13 when the quotient overflows or underflows; 15 when the quotient is exact; 17 for an exact quotient with a subnormal operand; 25 when the inexact quotient is tiny (1.0/max); 27 when the quotient needs the full 23-bit mantissa; 29 for that case with a subnormal operand (1/maxsub). LSX and LASX divide with exactly the same timing as the scalar unit, independent of the lane count.",
+      "notes": "Latency depends on the operands. The cases were measured with drift-free chains; see the analysis page for the digit-time model.",
       "cycles_min": 11,
-      "cycles_max": 29
+      "cycles_max": 29,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 13
+        },
+        {
+          "name": "exact result",
+          "cycles": 15
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 17
+        },
+        {
+          "name": "tiny inexact result",
+          "cycles": 25
+        },
+        {
+          "name": "inexact result",
+          "cycles": 27
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 29
+        }
+      ]
     }
   ],
   "throughput": [

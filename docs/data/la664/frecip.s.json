@@ -60,9 +60,35 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent, the same as fdiv.s apart from having a single operand: 8 for 0, Inf or NaN; 10 when the reciprocal is exact (a power of two); 11 for an exact reciprocal of a subnormal; 15 when the inexact reciprocal is tiny (1.0/max); 16 when the reciprocal needs the full 23-bit mantissa (1.0/3.0); 17 for that case with a subnormal input. Long path: 10 + ceil(23/4) = 16.",
+      "notes": "Latency depends on the operand. The cases were measured with drift-free chains; see the analysis page for the model.",
       "cycles_min": 8,
-      "cycles_max": 17
+      "cycles_max": 17,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8
+        },
+        {
+          "name": "exact result",
+          "cycles": 10
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11
+        },
+        {
+          "name": "tiny inexact result",
+          "cycles": 15
+        },
+        {
+          "name": "inexact result",
+          "cycles": 16
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 17
+        }
+      ]
     }
   ],
   "throughput": [

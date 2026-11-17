@@ -251,288 +251,56 @@ retired instructions happen in the kernel. `bench` excludes kernel events, so
 retired multiplier of zero for `cpucfg`; its latency and throughput are still
 meaningful from the cycle counter.
 
-## Integer divide latency that depends on the operands
+## Measuring variable-latency instructions
 
-Every integer divide and remainder instruction on LA664 has a data-dependent
-latency, and the data in `docs/data` records the measured minimum and maximum
-instead of a single number. Both extremes follow from a model that only needs
-the width of the element and the number of significant quotient bits, so the
-ranges below were derived rather than found by brute-force search.
+Some instructions take a different number of cycles depending on their
+operands: integer divides and remainders, and the floating-point divide, square
+root, reciprocal and reciprocal square root units. The resulting models are on
+the [Analysis](analysis.md) page; this section is about measuring them.
 
-A chain that holds its operand constant is enough to verify the model: with a
-divisor of 1 the quotient equals the dividend, so `div.d $r4, $r4, $r5` feeds
-exactly the same value back into the next iteration and stays in the same
-latency class. No helper instruction and no operand sweep are needed; setting
-`--init` to a different dividend walks the ladder one rung at a time.
+The problem with such an instruction is that a dependency chain is only usable
+if the chain keeps its operand in the same latency class. Three techniques cover
+practically everything:
 
-The divider works on the magnitudes of its operands, so the sign of the dividend
-and divisor never changes the timing; only the width of the quotient magnitude
-matters, and the divider skips trailing zero digits. Both effects are visible in
-the data: `div.d` peaks at 38 cycles for `0x7fffffffffffffff / 1` (a 63-bit
-quotient) rather than 39, because a signed quotient magnitude of 64 bits always
-has its low 63 bits clear and is therefore cheap, and `-2^63 / 1` measures 8
-cycles because 62 of its trailing zeros are skipped.
+*Pick a fixed point.* If an operation maps a value to itself, a plain chain
+measures that class forever. Division by `1` is exact and returns the dividend,
+so `div.d $r4, $r4, $r5` with `$r5 = 1` walks the whole quotient ladder by
+changing `--init` alone, and `fdiv.d $f0, $f0, $f1` with `$f1 = 1.0` does the
+same for floating point. `sqrt(1)`, `rsqrt(1)` and `1.0/1.0` are fixed points as
+well, which is why a chain seeded with `1.0` measures the exact class.
 
-### Scalar divider
+*Aim for an oscillation.* A chain that never converges keeps the slow class.
+`fdiv.d $f0, $f1, $f0` with `$f1 = 1.0` and a seed of `3.0` bounces between
+`0.333...` and `3.0000000000000004`, so every iteration is an inexact quotient.
 
-The scalar divider retires two quotient bits per cycle:
+*Reset through a helper.* When neither works (subnormal or overflowing operands
+have no fixed point and no cycle), break the dependency in the integer domain:
+`movfr2gr.d $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.d $f0, $r6`
+restores a constant bit pattern for two cycles of real work. Vector forms use
+`xvpickve2gr.*` plus `xvreplgr2vr.*`.
 
-```text
-latency = 7 + floor(quotient_bits / 2)
-```
-
-so `div.w` tops out at 22 cycles (23 for `div.wu` with a full 32-bit quotient)
-and `div.d` at 38 (39 for `div.du`). The minimum is 5 with a zero dividend and
-a divisor of 2 or more; a divisor of 1 costs one extra cycle because the
-quotient equals the dividend and is therefore never zero. LA464 and LA664 are
-identical here: both measure 5-22, 5-23, 5-38 and 5-39, so the two cores share
-the same scalar divider.
+The helper *must* be calibrated, never assumed. Measure the same helper with the
+instruction replaced by a cheap known operation (`fadd.d`, `vadd.b`) and subtract
+the difference from the known control latency:
 
 ```text
-div.d, dividend = 2^n - 1, divisor = 1
-  n=1   7    n=9  11    n=17 15    n=33 23    n=49 31
-  n=4   9    n=13 13    n=25 19    n=41 27    n=57 35
-  n=8  11    n=15 14    n=31 22    n=48 31    n=63 38
+latency(op) = cycles(op + helper) - cycles(control + helper) + latency(control)
 ```
 
-Powers of two are much faster than their bit count suggests, because the
-quotient is narrow: `0x10 / 1` takes 7 cycles while `0xf / 1` takes 9, and a
-dividend with an even number of trailing zeros collapses further (the divider
-normalises two bits per step).
+Skipping this has produced wrong values twice in this database: a GPR reset chain
+around the vector divider under-reports by two to three cycles because of the
+bypass from the divider to the integer pipeline, and an uncalibrated chain
+reported `vfdiv.d` of `1.0/1.0` as 8 instead of 10. Sanity-check the calibration
+on a case whose latency is already known from a drift-free chain before trusting
+the rest of the sweep.
 
-### Vector divider
+Two more traps specific to this data:
 
-The vector divider is much wider per quotient bit but has a larger fixed cost,
-which is why the LASX range is *narrower* than the scalar one even though the
-vector instruction divides four times as many bits:
+* `li.d $r4, 1; movgr2fr.d $f0, $r4` loads the smallest subnormal, not `1.0`;
+  use `0x3ff0000000000000` for double and `0x3f800000` for single precision.
+  Vector floats need the same care, and `vreplgr2vr.b` of an integer is not a
+  float constant either.
+* a vector divide only pays for the lanes that need work, so a body whose lanes
+  are partly zero measures below the worst case; build the operand pattern with
+  `vinsgr2vr.*` if the number of active lanes matters.
 
-```text
-latency = 5 + 6 * (64 / width) + 16 * quotient_bits / width
-```
-
-`width` is the element width in bits. This reduces to
-
-| elements | multiplier of `floor(bits/4)` | minimum | maximum (signed / unsigned) |
-| --- | --- | --- | --- |
-| `.d` (64-bit) | 11 + 1 × | 8 | 26 / 27 |
-| `.w` (32-bit) | 17 + 2 × | 11 | 31 / 33 |
-| `.h` (16-bit) | 29 + 4 × | 17 | 41 / 45 |
-| `.b` (8-bit) | 53 + 8 × | 29 | 61 / 69 |
-
-The minimum is always the zero-dividend case and does not depend on the divisor.
-A full-width quotient always costs 16 cycles of refinement on top of the base,
-whatever the element width, so an 8-bit vector divide is almost three times
-slower than a 64-bit one: `xvdiv.bu` takes 69 cycles against 39 for `div.du`.
-
-Two properties of the unit are visible in the measurements:
-
-* The lanes are processed in parallel, not one after another. On LA664 the LSX
-  and LASX forms are identical for every element width although LASX carries
-  twice as many lanes, and the low and high 128-bit halves are not serialised
-  either.
-
-  ```text
-  quotient        LSX vdiv      LASX xvdiv
-  0x7fffffffffffffff  25.93        25.99     (.d)
-  0x7fffffff          30.99        30.98     (.w)
-  0x7fff              40.99        40.93     (.h)
-  0x7f                60.97        60.97     (.b)
-  ```
-
-* Only the element width sets the per-bit rate: the divider behaves like one
-  256-bit datapath that retires 16 quotient bits per cycle in aggregate
-  (4 bits per lane for `.d`, 2 for `.w`, 1 for `.h` and one bit every other
-  cycle for `.b`).
-
-Like the scalar divider, the vector unit divides magnitudes only, and it skips
-trailing zero digits: `2^40 / 1` (a 41-bit quotient) still measures 11 cycles
-because the 40 trailing zeros cost nothing.
-
-It also skips idle lanes, so a vector that needs only a few divisions is much
-faster than the all-lanes-active worst case that the recorded ranges describe.
-With divisor 1 (a fixed point, so the chain needs no helper) and a number of
-active lanes:
-
-```text
-             1 lane   2 lanes  4 lanes  8 lanes  16 lanes
-vdiv.bu        34       39       49       69        69
-vdiv.hu        24       31       45       45        —
-vdiv.wu        22       33       33       —         —
-vdiv.du        27       26       —        —         —
-```
-
-the saving saturates once 64 bits of dividend are active, and the extra lanes
-beyond that are free. This is also why a vector whose bytes are only partly
-non-zero can measure well below the recorded maximum.
-
-One difference between the two cores: on LA464 the 128-bit form needs one extra
-cycle for 64-bit elements, so `vdiv.d` spans 9-27 cycles while `xvdiv.d` spans
-8-26, whereas LA664 measures 8-26 for both widths. The 32-bit and narrower
-forms are identical on both microarchitectures.
-
-## Floating-point division, square root and reciprocal latency
-
-All five floating-point units of interest here share one mechanism. A result is
-produced one four-bit "digit" of the mantissa at a time and the unit stops as
-soon as the remainder is zero, so latency is a small set of classes rather than a
-ladder:
-
-```text
-D = ceil(mantissa / 4)          D = 13 for double (52 bits), 6 for single (23 bits)
-
-fdiv, frecip    base + 1*D      exact -> no digit at all
-fsqrt           base + 2*D
-frsqrt          base + 3*D
-```
-
-"Exact" means the result terminates in binary (`1.0/2.0`, `1.5/1.0`, `3.0/4.0`
-for division and reciprocals; an even power of two for `sqrt` and `rsqrt`).
-Three further effects shift the numbers:
-
-* an input of `0`, `Inf` or `NaN` short-circuits the unit;
-* a quotient or root that overflows to `Inf` or underflows to zero is detected
-  early and is *cheaper* than a normal inexact result;
-* a subnormal operand costs one extra digit time, and a tiny inexact result
-  rather than a tiny operand saves one cycle instead.
-
-### Division
-
-#### Scalar
-
-```text
-                0/Inf/NaN  ovf/unf  exact  exact+subnormal  inexact  inexact+subnormal
-fdiv.s              8        9       10          11           16          17
-fdiv.d              8        9       10          11           23          24
-```
-
-The long path is `10 + ceil(52/4) = 23` for double and `10 + ceil(23/4) = 16`
-for single, which means four quotient bits per cycle. `1.0/max` (a tiny inexact
-result) measures 15 rather than 16 in single precision, and `minnorm/3` behaves
-the same way.
-
-#### Vector
-
-`vfdiv.d` and `xvfdiv.d` reproduce the scalar numbers exactly, lane count
-included, because the vector unit matches the scalar divider for 64-bit
-elements. Single precision runs at half rate:
-
-```text
-                        0/Inf/NaN  ovf/unf  exact  exact+subnormal  inexact  inexact+subnormal
-vfdiv.s, xvfdiv.s           11      13      15          17           27          29
-```
-
-so the vector single-precision divide is *slower* than the scalar one (27
-against 16) while both doubles are identical. Every class obeys
-`latency(32-bit vector) = 2*latency(32-bit scalar) - 5`, and the five saved
-cycles are the setup and rounding steps the two datapath passes share.
-
-### Square root
-
-`fsqrt` costs two digit times, so the long path is `10 + 2*13 = 36` for double
-and `10 + 2*6 = 22` for single. There is no overflow class because a square root
-cannot overflow, and an exact result requires an even power of two as input.
-
-#### Scalar
-
-```text
-                0/Inf/NaN  exact  exact+subnormal  inexact  inexact+subnormal
-fsqrt.s             8       10          11           22          23
-fsqrt.d             8       10          11           36          37
-```
-
-`sqrt(minnorm)` is exact and measures 10, while `sqrt(maxsub)` measures 37
-because the input is subnormal.
-
-#### Vector
-
-```text
-                        0/Inf/NaN  exact  exact+subnormal  inexact  inexact+subnormal
-vfsqrt.d, xvfsqrt.d         8       10          11           36          37
-vfsqrt.s, xvfsqrt.s        11       15          17           39          41
-```
-
-The 64-bit lanes reproduce the scalar numbers; single precision makes the two
-datapath passes the divider also makes for division, giving `2*22 - 5 = 39`.
-
-### Reciprocal square root
-
-`frsqrt` costs three digit times, so the long path is `15 + 3*13 = 54` and
-`15 + 3*6 = 33`. Its exact cases are again the even powers of two, and it has an
-extra intermediate class for inputs just above an exact power of two
-(`1 + 2^-52`), where the result needs one more digit than the exact case.
-
-#### Scalar
-
-```text
-                0/Inf/NaN  exact  exact+subnormal  just above exact  inexact  inexact+subnormal
-frsqrt.s            11      15          16               27            33          34
-frsqrt.d            11      15          16               41            54          55
-```
-
-#### Vector
-
-```text
-                        0/Inf/NaN  exact  exact+subnormal  inexact  inexact+subnormal
-vfrsqrt.d, xvfrsqrt.d       11      15          16           54          55
-vfrsqrt.s, xvfrsqrt.s       17      25          27           61          63
-```
-
-The single-precision vector form measures `2*33 - 5 = 61` for the general case,
-the same `2*x - 5` rule as the other units.
-
-### Reciprocal
-
-`frecip` has a single operand and the same digit time as division, so it repeats
-the division numbers apart from the paths that involve the second operand.
-
-#### Scalar
-
-```text
-                0/Inf/NaN  exact  exact+subnormal  tiny inexact  inexact  inexact+subnormal
-frecip.s            8       10          11             15          16          17
-frecip.d            8       10          11             —           23          24
-```
-
-An exact reciprocal requires a power of two; the subnormal case is `1/maxsub`,
-which measures 24 in double precision.
-
-#### Vector
-
-```text
-                        0/Inf/NaN  exact  exact+subnormal  tiny inexact  inexact  inexact+subnormal
-vfrecip.d, xvfrecip.d       8       10          11             —           23          24
-vfrecip.s, xvfrecip.s      11       15          17             25          27          29
-```
-
-### Building the chains
-
-Division and reciprocals can be measured without any helper instruction, which
-is why their numbers are the most reliable in this database:
-
-* divisor `1.0` makes the quotient identical to the dividend, so
-  `fdiv.d $f0, $f0, $f1` is a stable chain; a dividend with a low-order mantissa
-  bit set selects the long path;
-* a chain started at `3.0` on the divisor side (`fdiv.d $f0, $f1, $f0` with
-  `$f1 = 1.0`) oscillates between `0.333...` and `3.0000000000000004` and never
-  terminates, which selects the long path directly;
-* `fsqrt` and `frsqrt` converge to their own fixed points instead (`sqrt(1) = 1`,
-  `rsqrt(1) = 1`), so a chain seeded with `1.0` measures the exact class and the
-  inexact classes need the reset helper;
-* subnormal, overflow and underflow cases cannot chain at all, so they need a
-  reset helper (`movfr2gr.d` + `and` + `or` + `movgr2fr.d`), and its cost must be
-  calibrated against a `fadd.d` carried through the same helper. The vector reset
-  helper costs two to three cycles more than the instruction count suggests
-  because of the bypass from the divider to the integer pipeline, so calibrating
-  it on a known case (`vfdiv.d` of `1.0/1.0` is 10 cycles) is mandatory.
-
-Do not reuse the operand bits of an integer as a floating-point constant:
-`li.d $r4, 1; movgr2fr.d $f0, $r4` loads the smallest subnormal, not `1.0`.
-
-### Cross-core comparison
-
-The separate LA464 campaign reports the same class structure and the same
-numbers for division (`9`, `15`, `17` and `24` cycles appear there too), so the
-floating-point divider did not change between the cores. The only known
-difference is in the 128-bit integer divide of 64-bit elements, where LA464
-needs one extra cycle (`vdiv.d` 9-27 against `xvdiv.d` 8-26) while LA664 measures
-8-26 for both widths.

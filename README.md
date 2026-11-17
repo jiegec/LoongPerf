@@ -11,7 +11,7 @@ different LoongArch cores, and makes the results searchable and comparable.
 ## Building the site
 
 The documentation site is built by `tools/build_site.py`. It uses Zensical for
-the Markdown pages (overview, methodology and table) and generates the
+the Markdown pages (overview, methodology, analysis and table) and generates the
 per-instruction HTML pages directly from the measurement JSON, so adding an
 instruction does not require a corresponding Markdown file:
 

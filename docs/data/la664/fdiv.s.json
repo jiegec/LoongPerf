@@ -74,9 +74,39 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. Measured classes: 8 when an input is 0, Inf or NaN; 9 when the quotient overflows or underflows; 10 when the quotient is exact (1.0/2.0, 1.5/1.0); 11 for an exact quotient with a subnormal operand; 15 when the inexact quotient is tiny (1.0/max, minnorm/3); 16 when the quotient needs the full 23-bit mantissa (1.0/3.0, (1+2^-23)/1.0); 17 for that case with a subnormal operand (maxsub/1, 1/maxsub). The long path retires four quotient bits per cycle: 10 + ceil(23/4) = 16. Measured with drift-free chains: a divisor of 1.0 makes the quotient equal to the dividend, and a divisor chain started at 3.0 oscillates between two inexact quotients; the subnormal, overflow and underflow cases use a GPR reset chain calibrated against fadd.d.",
+      "notes": "Latency depends on the operands. The cases were measured with drift-free chains; see the analysis page for the digit-time model.",
       "cycles_min": 8,
-      "cycles_max": 17
+      "cycles_max": 17,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 9
+        },
+        {
+          "name": "exact result",
+          "cycles": 10
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11
+        },
+        {
+          "name": "tiny inexact result",
+          "cycles": 15
+        },
+        {
+          "name": "inexact result",
+          "cycles": 16
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 17
+        }
+      ]
     },
     {
       "from_operands": [
@@ -110,9 +140,39 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. Measured classes: 8 when an input is 0, Inf or NaN; 9 when the quotient overflows or underflows; 10 when the quotient is exact (1.0/2.0, 1.5/1.0); 11 for an exact quotient with a subnormal operand; 15 when the inexact quotient is tiny (1.0/max, minnorm/3); 16 when the quotient needs the full 23-bit mantissa (1.0/3.0, (1+2^-23)/1.0); 17 for that case with a subnormal operand (maxsub/1, 1/maxsub). The long path retires four quotient bits per cycle: 10 + ceil(23/4) = 16. Measured with drift-free chains: a divisor of 1.0 makes the quotient equal to the dividend, and a divisor chain started at 3.0 oscillates between two inexact quotients; the subnormal, overflow and underflow cases use a GPR reset chain calibrated against fadd.d.",
+      "notes": "Latency depends on the operands. The cases were measured with drift-free chains; see the analysis page for the digit-time model.",
       "cycles_min": 8,
-      "cycles_max": 17
+      "cycles_max": 17,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 9
+        },
+        {
+          "name": "exact result",
+          "cycles": 10
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11
+        },
+        {
+          "name": "tiny inexact result",
+          "cycles": 15
+        },
+        {
+          "name": "inexact result",
+          "cycles": 16
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 17
+        }
+      ]
     }
   ],
   "throughput": [

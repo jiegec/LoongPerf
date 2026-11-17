@@ -365,6 +365,17 @@ def check_latencies(path: Path, data: dict) -> None:
         if not close(latency["cycles"], expected, eps):
             error(path, f"latency cycles {latency['cycles']} != core_cycles - chain_latency ({expected})")
 
+        cases = latency.get("cases")
+        if cases:
+            values = [case["cycles"] for case in cases]
+            low, high = min(values), max(values)
+            if "cycles_min" in latency and not close(latency["cycles_min"], low, EPS):
+                error(path, f"latency cycles_min {latency['cycles_min']} != smallest case ({low})")
+            if "cycles_max" in latency and not close(latency["cycles_max"], high, EPS):
+                error(path, f"latency cycles_max {latency['cycles_max']} != largest case ({high})")
+            if not (low <= latency["cycles"] <= high):
+                error(path, f"latency cycles {latency['cycles']} is outside the case range {low}-{high}")
+
 
 def check_throughput(path: Path, data: dict) -> None:
     for experiment in data.get("throughput", []):

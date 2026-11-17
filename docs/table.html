@@ -430,7 +430,8 @@
         to: operandRef(operands, [item.to_operand]),
         cycles: item.cycles,
         minCycles,
-        maxCycles
+        maxCycles,
+        cases: item.cases || []
       };
     });
     const throughput = entry.throughput || [];
@@ -826,10 +827,14 @@
   }
 
   function detailsHtml(row) {
-    const latencyRows = row.latencies.map((lat) =>
-      "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + '</td><td class="num">' +
-      fmtRange(lat.minCycles, lat.maxCycles) + "</td></tr>"
-    ).join("");
+    const latencyRows = row.latencies.map((lat) => {
+      const cases = lat.cases.length
+        ? '<br><span class="muted">' +
+          lat.cases.map((c) => esc(c.name) + " " + fmt(c.cycles)).join(" · ") + "</span>"
+        : "";
+      return "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + '</td><td class="num">' +
+        fmtRange(lat.minCycles, lat.maxCycles) + cases + "</td></tr>";
+    }).join("");
     const throughputRows = row.throughput.map((item) => {
       const t = item.throughput || {};
       const cpi = fmtRange(t.cpi_min ?? t.cpi, t.cpi_max ?? t.cpi);

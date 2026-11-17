@@ -60,9 +60,31 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. 8 when the input is 0, Inf or NaN; 10 when the result is exact (the input is an even power of two such as 1.0 or 4.0); 11 for an exact result from a subnormal input; 22 when the square root needs the full 23-bit mantissa (sqrt(2.0), sqrt(max)); 23 for that case with a subnormal input. Long path: 10 + 2*ceil(23/4) = 22, two mantissa bits per cycle.",
+      "notes": "Latency depends on the operand. The cases were measured with a reset chain calibrated against fadd; see the analysis page for the model.",
       "cycles_min": 8,
-      "cycles_max": 23
+      "cycles_max": 23,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8
+        },
+        {
+          "name": "exact result",
+          "cycles": 10
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11
+        },
+        {
+          "name": "inexact result",
+          "cycles": 22
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 23
+        }
+      ]
     }
   ],
   "throughput": [

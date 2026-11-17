@@ -100,7 +100,29 @@
           ]
         }
       ],
-      "notes": "Data-dependent. 11 when the input is 0, Inf or NaN; 15 when the result is exact (an even power of two); 17 for an exact result from a subnormal input; 39 when the square root needs the full 23-bit mantissa; 41 for that case with a subnormal input. The vector unit runs single precision at half rate: 15 + 4*ceil(23/4) = 39, one mantissa bit per cycle, versus 22 for fsqrt.s. LSX and LASX divide with exactly the same timing as the scalar unit, independent of the lane count."
+      "notes": "Latency depends on the operand. The cases were measured with a reset chain calibrated against fadd; see the analysis page for the model.",
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11
+        },
+        {
+          "name": "exact result",
+          "cycles": 15
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 17
+        },
+        {
+          "name": "inexact result",
+          "cycles": 39
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 41
+        }
+      ]
     }
   ],
   "throughput": [

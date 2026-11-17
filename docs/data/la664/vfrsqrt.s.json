@@ -100,7 +100,29 @@
           ]
         }
       ],
-      "notes": "Data-dependent. 17 when the input is 0, Inf or NaN; 25 when the result is exact (an even power of two); 27 for an exact result from a subnormal input; 61 when the reciprocal square root needs the full 23-bit mantissa; 63 for that case with a subnormal input. The vector unit runs single precision at half rate: 25 + 6*ceil(23/4) = 61, versus 33 for frsqrt.s. LSX and LASX divide with exactly the same timing as the scalar unit, independent of the lane count."
+      "notes": "Latency depends on the operand. The cases were measured with a reset chain calibrated against fadd; see the analysis page for the model.",
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 17
+        },
+        {
+          "name": "exact result",
+          "cycles": 25
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 27
+        },
+        {
+          "name": "inexact result",
+          "cycles": 61
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 63
+        }
+      ]
     }
   ],
   "throughput": [

@@ -100,7 +100,29 @@
           ]
         }
       ],
-      "notes": "Data-dependent. 8 cycles when the input is zero, Inf or NaN; 10 when the result is exact (the input is an even power of two such as 1.0, 4.0 or 0.25); 11 for an exact result from a subnormal input; 36 when the square root needs the full 52-bit mantissa (sqrt(2.0), sqrt(max)); 37 for that case with a subnormal input (sqrt(maxsub)). The long path retires two mantissa bits per cycle (10 + 2*ceil(52/4) = 36), so a square root costs twice the digit time of a divide."
+      "notes": "Latency depends on the operand. The cases were measured with a reset chain calibrated against fadd; see the analysis page for the model.",
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8
+        },
+        {
+          "name": "exact result",
+          "cycles": 10
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11
+        },
+        {
+          "name": "inexact result",
+          "cycles": 36
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 37
+        }
+      ]
     }
   ],
   "throughput": [

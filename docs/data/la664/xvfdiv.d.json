@@ -74,9 +74,35 @@
           ]
         }
       ],
-      "notes": "Data-dependent, identical to fdiv.d and to the LSX form: the vector float divider matches the scalar unit for doubles and does not depend on the lane count. Measured classes: 8 for 0, Inf or NaN inputs; 9 when the quotient overflows or underflows; 10 when the quotient is exact; 11 for an exact quotient with a subnormal operand; 23 when the quotient needs the full 52-bit mantissa; 24 for that case with a subnormal operand. Long path: 10 + ceil(52/4) = 23.",
+      "notes": "Latency depends on the operands. The cases were measured with drift-free chains; see the analysis page for the digit-time model.",
       "cycles_min": 8,
-      "cycles_max": 24
+      "cycles_max": 24,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 9
+        },
+        {
+          "name": "exact result",
+          "cycles": 10
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11
+        },
+        {
+          "name": "inexact result",
+          "cycles": 23
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 24
+        }
+      ]
     },
     {
       "from_operands": [
@@ -112,9 +138,35 @@
           ]
         }
       ],
-      "notes": "Data-dependent, identical to fdiv.d and to the LSX form: the vector float divider matches the scalar unit for doubles and does not depend on the lane count. Measured classes: 8 for 0, Inf or NaN inputs; 9 when the quotient overflows or underflows; 10 when the quotient is exact; 11 for an exact quotient with a subnormal operand; 23 when the quotient needs the full 52-bit mantissa; 24 for that case with a subnormal operand. Long path: 10 + ceil(52/4) = 23.",
+      "notes": "Latency depends on the operands. The cases were measured with drift-free chains; see the analysis page for the digit-time model.",
       "cycles_min": 8,
-      "cycles_max": 24
+      "cycles_max": 24,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 9
+        },
+        {
+          "name": "exact result",
+          "cycles": 10
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11
+        },
+        {
+          "name": "inexact result",
+          "cycles": 23
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 24
+        }
+      ]
     }
   ],
   "throughput": [

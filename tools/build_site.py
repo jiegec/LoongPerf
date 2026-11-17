@@ -61,6 +61,10 @@ def table_entry(uarch: str, source: str, data: dict) -> dict:
             latency["cycles_min"] = item["cycles_min"]
         if "cycles_max" in item:
             latency["cycles_max"] = item["cycles_max"]
+        if item.get("cases"):
+            latency["cases"] = [
+                {"name": case["name"], "cycles": case["cycles"]} for case in item["cases"]
+            ]
         latencies.append(latency)
     throughput = []
     for item in data.get("throughput", []):
@@ -203,6 +207,13 @@ def operand_note(op: dict) -> str:
     return "; ".join(parts)
 
 
+def cases_summary(item: dict) -> str:
+    cases = item.get("cases") or []
+    if not cases:
+        return ""
+    return " / ".join(f"{case['cycles']:g}" for case in cases)
+
+
 def table_html(headers, rows) -> str:
     out = ["<table>", "<thead><tr>"]
     out += [f"<th>{esc(header)}</th>" for header in headers]
@@ -283,10 +294,11 @@ def render_instruction(uarch: str, data: dict) -> str:
 
     out += ["<h2>Latency</h2>"]
     out += [table_html(
-        ["From", "To", "Latency (cycles)"],
+        ["From", "To", "Latency (cycles)", "Depends on the operands"],
         [[esc(operand_ref(data, item["from_operands"])),
           esc(operand_ref(data, [item["to_operand"]])),
-          esc(fmt_range(item, "cycles"))]
+          esc(fmt_range(item, "cycles")),
+          esc(cases_summary(item))]
          for item in data.get("latencies", [])],
     )]
 
@@ -317,6 +329,11 @@ def render_instruction(uarch: str, data: dict) -> str:
         out += [f'<h3>{esc(operand_ref(data, item["from_operands"]))} -> '
                 f'{esc(operand_ref(data, [item["to_operand"]]))}: '
                 f'{esc(fmt(item["cycles"]))} cycles</h3>']
+        if item.get("cases"):
+            out += [table_html(
+                ["Case", "Cycles"],
+                [[esc(case["name"]), esc(fmt(case["cycles"]))] for case in item["cases"]],
+            )]
         if item.get("notes"):
             out += [para(item["notes"])]
         for exp in item.get("experiments", []):

@@ -100,7 +100,33 @@
           ]
         }
       ],
-      "notes": "Data-dependent, identical to frsqrt.d: 11 for 0, Inf or NaN inputs; 15 when the result is exact (an even power of two); 16 for an exact result from a subnormal input; 54 when the reciprocal square root needs the full 52-bit mantissa; 55 for that case with a subnormal input. Long path: 15 + 3*ceil(52/4) = 54. LSX and LASX divide with exactly the same timing as the scalar unit, independent of the lane count."
+      "notes": "Latency depends on the operand. The cases were measured with a reset chain calibrated against fadd; see the analysis page for the model.",
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11
+        },
+        {
+          "name": "exact result",
+          "cycles": 15
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 16
+        },
+        {
+          "name": "input just above an exact power of two",
+          "cycles": 41
+        },
+        {
+          "name": "inexact result",
+          "cycles": 54
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 55
+        }
+      ]
     }
   ],
   "throughput": [

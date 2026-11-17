@@ -9,9 +9,11 @@ have already cost us time. Read it before touching `docs/data/`.
 bench.cpp, Makefile        the measurement harness (`make` builds ./bench)
 schema/instruction.schema.json   JSON schema for one instruction on one uarch
 docs/data/<uarch>/<insn>.json    one file per instruction per microarchitecture
-docs/<uarch>/<insn>.md           thin page that renders the JSON
+docs/methodology.md              how to measure, and the traps
+docs/analysis.md                 the resulting latency models
 tools/validate_data.py           schema + semantic validator (must pass)
-main.py, tools/build_site.py     site generation (Zensical/mkdocs)
+tools/build_site.py              generates the per-instruction pages from the JSON
+mkdocs.yml, main.py              Zensical configuration and hooks
 ```
 
 Data lives under `docs/data/la664` (Loongson-3C6000, LA664) and
@@ -279,6 +281,9 @@ counters per core).
   Genuine averages keep their fraction together with a range: `ll.w`/`ll.d` are
   9.5 cycles with `cycles_min` 9 and `cycles_max` 10 because consecutive LLs
   alternate, and LA464 `x86mul.wu`/`hu` hold 1.23 from the vendor campaign.
+- Instructions whose latency depends on the operands carry a `cases` array of
+  named classes (`{"name": ..., "cycles": ...}`); `cycles_min`/`cycles_max` must
+  equal the smallest and largest case, and the validator enforces it.
 - Keep the arithmetic consistent: `cpi == 1/ipc` within rounding,
   `cycles == (core_cycles - chain_latency) / cycles_divisor` and
   `cpi == (core_cycles - baseline_cycles) / lanes`.
@@ -318,7 +323,10 @@ without a timeout.
 1. Check the vendor list / the intrinsics guide for the exact form and operands.
 2. Preserve the existing JSON structure; only touch `latencies`, `throughput`,
    `notes`, and the experiment fields.
-3. Latency: one chain per source operand, `--method slope --unroll 1000
+3. Latency: for a variable-latency instruction pick a fixed-point, oscillation
+   or calibrated reset chain (see `docs/methodology.md`) and split the result
+   into `cases` (see `docs/analysis.md` for the models). Otherwise one chain per
+   source operand, `--method slope --unroll 1000
    --unroll2 4000`, three runs, and a second closure to confirm.
 4. Throughput: 8 disjoint lanes, `--method slope --unroll 250 --unroll2 1000`,
    five runs; check the 0x01 counter if the instruction may be multi-uop.

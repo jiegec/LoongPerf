@@ -60,9 +60,35 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. 11 when the input is 0, Inf or NaN; 15 when the result is exact (an even power of two); 16 for an exact result from a subnormal input; 27 for an input just above an exact power of two (1+2^-23); 33 when the reciprocal square root needs the full 23-bit mantissa; 34 for that case with a subnormal input. Long path: 15 + 3*ceil(23/4) = 33.",
+      "notes": "Latency depends on the operand. The cases were measured with a reset chain calibrated against fadd; see the analysis page for the model.",
       "cycles_min": 11,
-      "cycles_max": 34
+      "cycles_max": 34,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11
+        },
+        {
+          "name": "exact result",
+          "cycles": 15
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 16
+        },
+        {
+          "name": "input just above an exact power of two",
+          "cycles": 27
+        },
+        {
+          "name": "inexact result",
+          "cycles": 33
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 34
+        }
+      ]
     }
   ],
   "throughput": [
