@@ -10,5 +10,3 @@ LoongArch instruction-level performance data, measured on real hardware.
 
 The table lets you choose microarchitectures and instruction-set extensions,
 then shows latency and throughput side by side.
-
-{{ generate_aggregate() }}

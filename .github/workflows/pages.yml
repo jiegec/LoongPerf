@@ -36,7 +36,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Build site
-        run: uv run zensical build --clean --strict
+        run: uv run python tools/build_site.py
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

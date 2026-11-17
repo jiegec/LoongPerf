@@ -2,3 +2,4 @@ bench
 .venv/
 __pycache__/
 site/
+docs/data/measurements.json

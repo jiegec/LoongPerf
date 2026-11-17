@@ -19,8 +19,6 @@ nav:
 
 plugins:
   - search
-  - macros:
-      module_name: main
 
 markdown_extensions:
   - admonition
