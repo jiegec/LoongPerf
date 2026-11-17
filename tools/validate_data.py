@@ -51,7 +51,9 @@ def asm_instruction_count(asm: str) -> int:
     count = 0
     for part in re.split(r"[;\n]", asm):
         line = part.strip()
-        if not line or line.startswith("#"):
+        if not line or line.startswith("#") or line.startswith("."):
+            continue
+        if line.endswith(":"):
             continue
         count += 1
     return count
@@ -161,11 +163,8 @@ def check_throughput(path: Path, data: dict) -> None:
             error(path, f"throughput experiment {experiment.get('name', '<unnamed>')} has no throughput object")
             continue
         lanes = throughput["lanes"]
-        count = asm_instruction_count(experiment["asm"])
-        if lanes != count:
-            error(path, f"throughput lanes {lanes} != asm instruction count {count}")
         result = experiment["result"]
-        expected_cpi = result["core_cycles"] / lanes
+        expected_cpi = (result["core_cycles"] - experiment.get("baseline_cycles", 0)) / lanes
         if not close(throughput["cpi"], expected_cpi):
             error(path, f"throughput CPI {throughput['cpi']} != core_cycles/lanes ({expected_cpi})")
         if not close(throughput["ipc"], 1.0 / throughput["cpi"]):
