@@ -43,51 +43,61 @@
   "latencies": [
     {
       "from_operands": [
-        2,
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 11.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "xvfdiv.s $xr0, $xr0, $xr1",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvfdiv.s $xr0, $xr0, $xr1'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 11.01
+          },
+          "notes": "xj -> result chain."
+        }
+      ],
+      "notes": "xj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
+      "cycles_min": 10.97,
+      "cycles_max": 29.0
+    },
+    {
+      "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 15.0,
-      "cycles_min": 10.97,
-      "cycles_max": 29.0,
+      "cycles": 20.98,
       "experiments": [
         {
-          "name": "dependent vector chain with reset helper",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "xvfdiv.s $xr0, $xr0, $xr2; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4",
-          "init": "li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216; li.w $r4, 1065353216; xvreplgr2vr.w $xr2, $r4",
+          "asm": "xvfdiv.s $xr0, $xr1, $xr0",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4",
           "measurement": {
-            "unroll": 100000,
+            "unroll": 20000,
             "iters": 100,
-            "reps": 7
+            "reps": 10
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216; li.w $r4, 1065353216; xvreplgr2vr.w $xr2, $r4' --asm 'xvfdiv.s $xr0, $xr0, $xr2; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4'",
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvfdiv.s $xr0, $xr1, $xr0'",
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 24.07
+            "instructions_retired": 1.0,
+            "core_cycles": 20.98
           },
-          "chain_latency": 9.07,
-          "notes": "vpickve2gr extracts element 0, and/or forces it back to the test value, vreplgr2vr replicates it; the vadd.b baseline is subtracted."
-        },
-        {
-          "name": "vadd.b reset-helper baseline",
-          "role": "calibration",
-          "asm": "xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4",
-          "init": "li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216; li.w $r4, 1065353216; xvreplgr2vr.w $xr2, $r4",
-          "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 7
-          },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216; li.w $r4, 1065353216; xvreplgr2vr.w $xr2, $r4' --asm 'xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4'",
-          "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 10.07
-          },
-          "notes": "Same helper chain with vadd.b replacing the variable-latency operation."
+          "notes": "xk -> result chain."
         }
       ],
-      "notes": "Data-dependent. Latency range measured over 22 operand values with the element-0 reset helper. Min 10.97 at qnan/1, max 29.00 at 1/maxsub. Sample uses 1/1."
+      "notes": "xk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
+      "cycles_min": 10.97,
+      "cycles_max": 29.0
     }
   ],
   "throughput": [
@@ -112,5 +122,5 @@
       "notes": "Throughput range over 22 operand values: min CPI 4.50 at 1/0, max CPI 13.50 at 1/maxsub. Sample uses 1/1."
     }
   ],
-  "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."
+  "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
 }

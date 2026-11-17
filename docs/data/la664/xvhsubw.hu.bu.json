@@ -43,31 +43,57 @@
   "latencies": [
     {
       "from_operands": [
-        2,
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.02,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "xvhsubw.hu.bu $xr0, $xr0, $xr1",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvhsubw.hu.bu $xr0, $xr0, $xr1'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.02
+          },
+          "notes": "xj -> result chain."
+        }
+      ],
+      "notes": "xj -> result chain."
+    },
+    {
+      "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2.01,
       "experiments": [
         {
-          "name": "dependent vector chain",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "xvhsubw.hu.bu $xr0, $xr0, $xr2",
-          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4",
+          "asm": "xvhsubw.hu.bu $xr0, $xr1, $xr0",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4",
           "measurement": {
-            "unroll": 100000,
+            "unroll": 20000,
             "iters": 100,
-            "reps": 7
+            "reps": 10
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvhsubw.hu.bu $xr0, $xr0, $xr2'",
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvhsubw.hu.bu $xr0, $xr1, $xr0'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "core_cycles": 2.01
           },
-          "notes": "Dependent vector-register chain with small positive integer element values."
+          "notes": "xk -> result chain."
         }
       ],
-      "notes": "Register-to-register latency."
+      "notes": "xk -> result chain."
     }
   ],
   "throughput": [
@@ -88,5 +114,5 @@
       "notes": "8 independent instructions take 3.99 cycles."
     }
   ],
-  "notes": "LASX widening/narrowing integer instruction. Measured on LA664 with positive integer operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+  "notes": "LASX widening/narrowing integer instruction. Measured on LA664 with positive integer operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000). Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
 }
