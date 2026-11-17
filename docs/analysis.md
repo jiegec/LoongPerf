@@ -321,8 +321,8 @@ no bypass path into the address generator:
 | --- | --- | --- |
 | `ld.d`, `ldptr.d` | 4 / 3 | 5 / 4 |
 | `ld.b`, `ld.h`, `ld.w`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / not measured | 5 / not measured |
-| `fld.s`, `fld.d` | 5 / not reachable | 5 / not measured |
-| `vld`, `xvld` | 4 / not reachable | 5 / not measured |
+| `fld.s`, `fld.d` | 5 / not reachable | 5 / not reachable |
+| `vld`, `xvld` | 4 / not reachable | 6 / not reachable |
 
 Width does not matter on LA664: a byte load costs exactly what a double load
 costs, and an integer, floating-point or vector load all take the same time. The
@@ -376,9 +376,18 @@ and bound paths. `fld.s` cannot even be chased directly, because a 32-bit result
 has to be recombined with the base, so its stored chain always contains an
 `add.d`; it measures 5 as well.
 
-The same accounting applies to LA464, where the recorded `fld.d` of 4 was
-computed with a 3-cycle move and would become 5 with the 2-cycle calibration,
-making its float loads equal to its integer loads.
+LA464 was re-derived the same way and lands on the same numbers: the pointer
+chase `fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` measures 6.95-6.98 cycles, so the
+load is 5 with a 2-cycle move, and inserting an `add.d` in the address path gives
+8.93-8.98, so 6. That differs from the integer loads, which are 5 and 4 on
+LA464, by exactly the one cycle the move adds. The earlier LA464 record of 4
+was computed with a 3-cycle `movfr2gr`, and the difference was being attributed
+to an address bypass that does not exist for an FPR destination.
+
+The same recalibration moves the LA464 vector loads: `vld` and `xvld` were
+recorded as 5 through a `vpickve2gr` chain, and with the pick at 3 cycles
+(`xvpickve2gr` at 5, `vreplgr2vr` at 2) both read 6. The LA464 vector loads are
+therefore one cycle above LA664's, like every other load on that core.
 
 ### Indexed and bound-checked loads
 
@@ -403,11 +412,27 @@ the next address directly, which gives 3 cycles instead of 4; a value used as an
 *index* does not get that early forwarding, which is why `ldx.*` measures 4 on the
 index path as well.
 
-LA464 records the indexed and bound forms with one combined `from_operands:
-[2, 3]` entry, split into the 5-cycle ALU path and the 4-cycle address path in
-the newer measurements, so the two cores cannot be compared operand by operand
-yet. Since LA464 pays one extra cycle on the base path, its index and bound paths
-are probably 5, but that is a prediction and not a measurement.
+LA464 was measured per source operand and reads one cycle above LA664 on every
+path: **5** cycles when the loaded value feeds the address or the range check
+directly, and **6** when an ALU operation sits between the load and the next
+use, with the floating-point forms one cycle higher again because of the
+`movfr2gr` move in the chain. The base operand of `ldx.*`/`ldgt.*`/`ldle.*`/`fldx.*`/`fldgt.*`/
+`fldle.*` reads 5 (4 for the `*`-chased `.d` forms), the index operand of
+`ldx.*`/`fldx.*` reads 4 (5 with `andi` in the path), the bound of `ldgt.*` and
+`fldgt.*` reads 4, and the bound of `ldle.*`/`fldle.*` reads 5 only because the
+`rj <= rk` check forces an `add.d` into every chain -- the direct form is not
+constructible there. So the LA464 numbers are the same shape as the plain-load
+ladder (4 on the bypass, 5 through the ALU), while LA664 charges one extra cycle
+on the index and bound operands.
+
+One LA464 trap is worth recording: `ldgt.*`/`ldle.*` raise a bounds-check
+exception instead of writing zero when the range check fails, and this kernel
+does not emulate it, so a failing check kills the process with `SIGSEGV` at the
+load address (`si_addr` = `rj`, which can be a mapped address). Every chain has
+to keep the check passing, which is why the `ldle.*` bound recipes add the
+loaded value back to the base. `ldgt` loads when `rj > rk` and `ldle` when
+`rj <= rk`; otherwise the two instructions behave identically, including the
+per-operand latencies.
 
 ### What does not change the latency
 

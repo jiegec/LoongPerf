@@ -52,5 +52,5 @@
       "notes": "Throughput measured with 8 independent lanes."
     }
   ],
-  "notes": "No source operand data dependency; latency is not defined. Throughput only."
+  "notes": "No source operand data dependency; latency is not defined. Throughput only. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }

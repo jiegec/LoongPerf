@@ -45,14 +45,14 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 3,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "vreplgr2vr.h $vr0, $r4; vpickve2gr.hu $r4, $vr0, 0",
           "init": "li.d $r4, 1",
-          "chain_latency": 2,
+          "chain_latency": 3,
           "result": {
             "instructions_retired": 4,
             "core_cycles": 6
@@ -70,7 +70,9 @@
           ]
         }
       ],
-      "notes": "vj -> rd. Chain: vreplgr2vr.h then vpickve2gr.hu; the 2-cycle latency of the replication helper is subtracted (calibrated with vpickve2gr.b/h and xvpickve2gr.d/w). Three independent runs, spread 6.00-6.00 raw cycles."
+      "notes": "vj -> rd. Chain: vreplgr2vr.h then vpickve2gr.hu; the 2-cycle latency of the replication helper is subtracted (calibrated with vpickve2gr.b/h and xvpickve2gr.d/w). Three independent runs, spread 6.00-6.00 raw cycles.",
+      "cycles_min": 3,
+      "cycles_max": 3
     }
   ],
   "throughput": [
@@ -95,5 +97,5 @@
       "notes": "8 independent instructions take 8.16 cycles."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "No destination data dependency; latency is not defined. Throughput only. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }

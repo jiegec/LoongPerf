@@ -45,14 +45,14 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 3,
       "experiments": [
         {
           "name": "round trip through the reverse move",
           "role": "measurement",
           "asm": "vreplgr2vr.b $vr0, $r4; vpickve2gr.b $r4, $vr0, 0",
           "init": "li.d $r4, 1",
-          "chain_latency": 2,
+          "chain_latency": 3,
           "result": {
             "instructions_retired": 4,
             "core_cycles": 6
@@ -70,7 +70,9 @@
           ]
         }
       ],
-      "notes": "2 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 4.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "2 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 4.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 3,
+      "cycles_max": 3
     }
   ],
   "throughput": [

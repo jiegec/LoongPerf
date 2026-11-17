@@ -45,14 +45,14 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "round trip through the reverse move",
           "role": "measurement",
           "asm": "vreplgr2vr.d $vr0, $r4; vpickve2gr.du $r4, $vr0, 0",
           "init": "li.d $r4, 1",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "result": {
             "instructions_retired": 3.0,
             "core_cycles": 5.0
@@ -65,7 +65,9 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 1' --asm 'vreplgr2vr.d $vr0, $r4; vpickve2gr.du $r4, $vr0, 0'"
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_min": 3,
+      "cycles_max": 3
     }
   ],
   "throughput": [

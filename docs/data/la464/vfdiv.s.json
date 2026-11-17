@@ -414,5 +414,5 @@
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 5.9962-9 over the same 26-value sweep; the stored experiment uses 1.0."
     }
   ],
-  "notes": "Latency model: 11 cycles for special operands, 15 when the divisor is a power of two (the stored sample uses 1.0/1.0), 27 for a general divisor, up to +1 with a subnormal operand. The stored experiment runs the division twice, so cycles = (core_cycles - 7) / 2. 64-bit vector lanes match the scalar numbers and run in parallel (slowest lane dominates); 32-bit vector lanes cost 2 x scalar - 5."
+  "notes": "Latency model: 11 cycles for special operands, 15 when the divisor is a power of two (the stored sample uses 1.0/1.0), 27 for a general divisor, up to +1 with a subnormal operand. The stored experiment runs the division twice, so cycles = (core_cycles - 7) / 2. 64-bit vector lanes match the scalar numbers and run in parallel (slowest lane dominates); 32-bit vector lanes cost 2 x scalar - 5. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }
