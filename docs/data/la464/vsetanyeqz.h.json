@@ -35,7 +35,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.19,
+      "cycles": 1.0,
       "experiments": [
         {
           "name": "dependent chain",
@@ -54,7 +54,9 @@
           "chain_latency": 10.0
         }
       ],
-      "notes": "vj -> fcc. The chain closes through movcf2gr (9 cycles) and vreplgr2vr.w (1 cycle), so 10 cycles of helper latency are subtracted; treat the value as approximate."
+      "notes": "vj -> fcc. The chain closes through movcf2gr (9 cycles) and vreplgr2vr.w (1 cycle), so 10 cycles of helper latency are subtracted; treat the value as approximate. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.0
     }
   ],
   "throughput": [

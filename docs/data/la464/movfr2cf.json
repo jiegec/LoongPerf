@@ -58,7 +58,9 @@
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0; movgr2fr.d $f0, $r4' --asm 'movfr2cf $fcc0, $f0; movcf2fr $f0, $fcc0'"
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.0
     }
   ],
   "throughput": [

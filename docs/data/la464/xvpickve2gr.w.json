@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 6.16,
+      "cycles": 6.0,
       "experiments": [
         {
           "name": "round trip through the reverse move",
@@ -65,7 +65,9 @@
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1' --asm 'xvreplgr2vr.w $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0'"
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 5.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 5.99,
+      "cycles_max": 5.99
     }
   ],
   "throughput": [

@@ -73,7 +73,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r13'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2.0,
+      "cycles_max": 2.0
     },
     {
       "from_operands": [
@@ -97,7 +99,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r13, $r12'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2.0,
+      "cycles_max": 2.0
     },
     {
       "from_operands": [
@@ -122,7 +126,9 @@
           "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1' --asm 'adc.b $r12, $r12, $r12'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 2.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2.0,
+      "cycles_max": 2.0
     },
     {
       "from_operands": [
@@ -199,7 +205,9 @@
           "notes": "Calibration experiment (not used for the reported latency)."
         }
       ],
-      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.0
     }
   ],
   "throughput": [

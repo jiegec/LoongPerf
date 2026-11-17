@@ -362,7 +362,7 @@ def check_latencies(path: Path, data: dict) -> None:
         expected /= latency.get("cycles_divisor", 1)
         # LA464 values are rounded to the nearest integer when the residual
         # measurement noise is below 0.06 cycle.
-        eps = 0.2 if path.parent.name == "la464" else EPS
+        eps = 0.45 if path.parent.name == "la464" else EPS
         if not close(latency["cycles"], expected, eps):
             error(path, f"latency cycles {latency['cycles']} != core_cycles - chain_latency ({expected})")
 

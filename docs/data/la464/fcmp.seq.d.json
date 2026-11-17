@@ -42,31 +42,63 @@
   "latencies": [
     {
       "from_operands": [
-        2,
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "fcmp.seq.d $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f0, $r4",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4",
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 11.0
+          },
+          "measurement": {
+            "unroll": 6666,
+            "iters": 300,
+            "reps": 20
+          },
+          "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.seq.d $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f0, $r4'",
+          "notes": "fj -> fcc chain; the loop is closed through movcf2gr and movgr2fr, and that closure costs the same for both entries.",
+          "chain_latency": 10.0
+        }
+      ],
+      "notes": "Latency to FCC is 1 cycle(s). The chain closure through movcf2gr (9 cycles) and movgr2fr (1 cycle) is subtracted.",
+      "cycles_min": 0.99,
+      "cycles_max": 1.0
+    },
+    {
+      "from_operands": [
         3
       ],
       "to_operand": 1,
       "cycles": 1.0,
       "experiments": [
         {
-          "name": "condition-code dependency chain",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "fcmp.seq.d $fcc0, $f0, $f1; movcf2fr $f0, $fcc0",
+          "asm": "fcmp.seq.d $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f1, $r4",
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4",
-          "chain_latency": 1.0,
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 2.01
+            "instructions_retired": 3.0,
+            "core_cycles": 11.0
           },
           "measurement": {
-            "unroll": 10000,
-            "iters": 1000,
-            "reps": 7
+            "unroll": 6666,
+            "iters": 300,
+            "reps": 20
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.seq.d $fcc0, $f0, $f1; movcf2fr $f0, $fcc0'"
+          "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 20 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.seq.d $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f1, $r4'",
+          "notes": "fj -> fcc chain; the loop is closed through movcf2gr and movgr2fr, and that closure costs the same for both entries.",
+          "chain_latency": 10.0
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+      "notes": "Latency to FCC is 1 cycle(s). The chain closure through movcf2gr (9 cycles) and movgr2fr (1 cycle) is subtracted.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.0
     }
   ],
   "throughput": [

@@ -61,7 +61,9 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvreplve.b $xr0, $xr0, $r5'"
         }
       ],
-      "notes": "xj -> xd; consecutive unrolled copies form a chain."
+      "notes": "xj -> xd; consecutive unrolled copies form a chain. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.0
     }
   ],
   "throughput": [

@@ -84,7 +84,9 @@
           "notes": "Calibration experiment (not used for the reported latency)."
         }
       ],
-      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 1.0,
+      "cycles_max": 1.0
     }
   ],
   "throughput": [
