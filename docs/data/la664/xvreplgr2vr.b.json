@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2,
+      "cycles": 3,
       "experiments": [
         {
           "name": "round trip through the reverse move",
@@ -55,7 +55,7 @@
             "instructions_retired": 4,
             "core_cycles": 8
           },
-          "chain_latency": 6,
+          "chain_latency": 5,
           "notes": "xvreplgr2vr.b latency from a round trip through xvpickve2gr.w; the pick contributes 6 cycles.",
           "machine_code": [
             "03800404  li.w        \t$a0, 0x1",
@@ -64,7 +64,7 @@
           ]
         }
       ],
-      "notes": "xvreplgr2vr.b latency from a round trip through xvpickve2gr.w; the pick contributes 6 cycles."
+      "notes": "GPR to vector broadcast of a narrow element: the round trip with xvpickve2gr.w measures 8 cycles and the pick is 5, so the broadcast is 3."
     }
   ],
   "throughput": [

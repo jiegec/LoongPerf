@@ -343,6 +343,13 @@ produces one. `ld.b` of a stack address would truncate to a few bits, and
 rebuilding the address would need an `add.d`, which is exactly the ALU path
 being separated out. Their `cycles` value is the ALU path only.
 
+Vector inserts, broadcasts and element gathers have their own small numbers:
+`vinsgr2vr.*` and `xvinsgr2vr.*` cost 3 cycles from the GPR, `vreplgr2vr.w/d` and
+`xvreplgr2vr.w/d` cost 2 while the narrow `vreplgr2vr.b/h` and
+`xvreplgr2vr.b/h` cost 3, and `vreplve.*`/`xvreplve.*` cost 1 from the vector
+operand and 3 from the index register. All of them are measured as round trips
+against the matching pick, whose own latency is fixed by the load chains above.
+
 A vector load has no bypass path either: its result lands in a vector register
 and cannot be an address, so `vld`/`xvld` only have a value-to-consumer latency,
 and the 4 cycles recorded for them are measured through a store-then-reload chain (`vld` → `vst` → `ld.d` → `add.d`, where the

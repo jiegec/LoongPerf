@@ -49,30 +49,50 @@
       "cycles": 1,
       "experiments": [
         {
-          "name": "dependent vector chain",
+          "name": "self-referential element gather",
           "role": "measurement",
           "asm": "xvreplve.b $xr0, $xr0, $r4",
-          "init": "li.d $r4, 0; li.d $r5, 1; xvreplgr2vr.b $xr0, $r5",
+          "init": "li.d $r5, 1; xvreplgr2vr.b $xr0, $r5; li.d $r4, 0",
+          "command": "./bench --method slope --unroll 4000 --unroll2 8000 --iters 50 --warmup 10 --reps 5 --init 'li.d $r5, 1; xvreplgr2vr.b $xr0, $r5; li.d $r4, 0' --asm 'xvreplve.b $xr0, $xr0, $r4'",
           "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 20
+            "unroll": 4000,
+            "iters": 50,
+            "reps": 5
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0; li.d $r5, 1; xvreplgr2vr.b $xr0, $r5' --asm 'xvreplve.b $xr0, $xr0, $r4'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 1
-          },
-          "notes": "Dependent vector chain.",
-          "machine_code": [
-            "00150004  move        \t$a0, $zero",
-            "03800405  li.w        \t$a1, 0x1",
-            "769f00a0  xvreplgr2vr.b\t$xr0, $a1",
-            "75221000  xvreplve.b  \t$xr0, $xr0, $a0"
-          ]
+            "core_cycles": 1.0
+          }
         }
       ],
-      "notes": "Register dependency latency. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "Vector element gather from vj: the destination register feeds itself, so a plain chain measures the 1-cycle latency of the lane select."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 3,
+      "experiments": [
+        {
+          "name": "gather index to result",
+          "role": "measurement",
+          "asm": "xvreplve.b $xr0, $xr1, $r4; xvpickve2gr.b $r4, $xr0, 0",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r21, 0; li.d $r5, 1; xvreplgr2vr.b $xr1, $r5",
+          "command": "./bench --method slope --unroll 4000 --unroll2 8000 --iters 50 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r21, 0; li.d $r5, 1; xvreplgr2vr.b $xr1, $r5' --asm 'xvreplve.b $xr0, $xr1, $r4; xvpickve2gr.b $r4, $xr0, 0'",
+          "measurement": {
+            "unroll": 4000,
+            "iters": 50,
+            "reps": 5
+          },
+          "result": {
+            "instructions_retired": 3,
+            "core_cycles": 8.0
+          },
+          "chain_latency": 5
+        }
+      ],
+      "notes": "Index operand path: the index is carried through the gathered element and the pick (5 cycles), so the measured 8 cycles leave 3 for the gather itself."
     }
   ],
   "throughput": [

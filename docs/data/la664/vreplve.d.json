@@ -49,30 +49,50 @@
       "cycles": 1,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "self-referential element gather",
           "role": "measurement",
           "asm": "vreplve.d $vr0, $vr0, $r4",
-          "init": "li.d $r4, 0; li.d $r6, 1; vreplgr2vr.b $vr0, $r6",
+          "init": "li.d $r5, 1; vreplgr2vr.d $vr0, $r5; li.d $r4, 0",
+          "command": "./bench --method slope --unroll 4000 --unroll2 8000 --iters 50 --warmup 10 --reps 5 --init 'li.d $r5, 1; vreplgr2vr.d $vr0, $r5; li.d $r4, 0' --asm 'vreplve.d $vr0, $vr0, $r4'",
           "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 7
+            "unroll": 4000,
+            "iters": 50,
+            "reps": 5
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0; li.d $r6, 1; vreplgr2vr.b $vr0, $r6' --asm 'vreplve.d $vr0, $vr0, $r4'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 1
-          },
-          "notes": "Dependent chain.",
-          "machine_code": [
-            "00150004  move        \t$a0, $zero",
-            "03800406  li.w        \t$a2, 0x1",
-            "729f00c0  vreplgr2vr.b\t$vr0, $a2",
-            "71239000  vreplve.d   \t$vr0, $vr0, $a0"
-          ]
+            "core_cycles": 1.0
+          }
         }
       ],
-      "notes": "Register dependency latency."
+      "notes": "Vector element gather from vj: the destination register feeds itself, so a plain chain measures the 1-cycle latency of the lane select."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 3,
+      "experiments": [
+        {
+          "name": "gather index to result",
+          "role": "measurement",
+          "asm": "vreplve.d $vr0, $vr1, $r4; vpickve2gr.d $r4, $vr0, 0",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r21, 0; li.d $r5, 1; vreplgr2vr.d $vr1, $r5",
+          "command": "./bench --method slope --unroll 4000 --unroll2 8000 --iters 50 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r21, 0; li.d $r5, 1; vreplgr2vr.d $vr1, $r5' --asm 'vreplve.d $vr0, $vr1, $r4; vpickve2gr.d $r4, $vr0, 0'",
+          "measurement": {
+            "unroll": 4000,
+            "iters": 50,
+            "reps": 5
+          },
+          "result": {
+            "instructions_retired": 4,
+            "core_cycles": 6.0
+          },
+          "chain_latency": 3
+        }
+      ],
+      "notes": "Index operand path: the index is carried through the gathered element and the pick (3 cycles), so the measured 6 cycles leave 3 for the gather itself."
     }
   ],
   "throughput": [

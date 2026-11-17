@@ -42,36 +42,30 @@
   "latencies": [
     {
       "from_operands": [
-        1
+        2
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 3,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "insert then pick round trip",
           "role": "measurement",
-          "asm": "xvinsgr2vr.d $xr0, $r5, 0",
-          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r5, 1",
+          "asm": "xvinsgr2vr.d $xr0, $r5, 0; xvpickve2gr.d $r5, $xr0, 0",
+          "init": "li.d $r5, 1; li.d $r4, 0",
+          "command": "./bench --method slope --unroll 4000 --unroll2 8000 --iters 50 --warmup 10 --reps 5 --init 'li.d $r5, 1; li.d $r4, 0' --asm 'xvinsgr2vr.d $xr0, $r5, 0; xvpickve2gr.d $r5, $xr0, 0'",
           "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 7
+            "unroll": 4000,
+            "iters": 50,
+            "reps": 5
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r5, 1' --asm 'xvinsgr2vr.d $xr0, $r5, 0'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 1
+            "instructions_retired": 4,
+            "core_cycles": 8.0
           },
-          "notes": "Dependent chain.",
-          "machine_code": [
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
-            "03800405  li.w        \t$a1, 0x1",
-            "76ebe0a0  xvinsgr2vr.d\t$xr0, $a1, 0x0"
-          ]
+          "chain_latency": 5
         }
       ],
-      "notes": "Register dependency latency."
+      "notes": "GPR to lane insert. The round trip with the matching pick measures 8 cycles, and the pick is 3 less, so the insert is 3 cycles. Insert and replace-element latencies are measured with round trips: the insert direction is known from `movgr2fr` (2 cycles) and the picks are 3 for LSX and 5 for LASX, fixed by the vector load chains, so an insert round trip of 6 gives 3 and of 8 gives 3."
     }
   ],
   "throughput": [

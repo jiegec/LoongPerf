@@ -46,28 +46,27 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 5,
       "experiments": [
         {
-          "name": "operand dependency chain",
+          "name": "pick-based address chase",
           "role": "measurement",
-          "asm": "xvldx $xr0, $r20, 0; vst $xr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4",
-          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; addi.d $r23, $r20, 128; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, 0; st.d $r4, $r20, 8",
+          "asm": "xvldx $xr0, $r4, $r21; xvpickve2gr.d $r4, $xr0, 0",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r21, 0; li.d $r5, 1",
+          "command": "./bench --method slope --unroll 8000 --unroll2 16000 --iters 50 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r21, 0; li.d $r5, 1' --asm 'xvldx $xr0, $r4, $r21; xvpickve2gr.d $r4, $xr0, 0'",
           "measurement": {
-            "unroll": 250,
-            "iters": 1000,
-            "reps": 20
+            "unroll": 8000,
+            "iters": 50,
+            "reps": 7
           },
-          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; addi.d $r23, $r20, 128; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, 0; st.d $r4, $r20, 8' --asm 'xvldx $xr0, $r20, 0; vst $xr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4'",
           "result": {
-            "instructions_retired": 4,
-            "core_cycles": 15.04
+            "instructions_retired": 3,
+            "core_cycles": 10.0
           },
-          "chain_latency": 11.04,
-          "notes": "rj -> result chain through a vector store and a GPR load: the store-to-load forwarding (10.04 cycles) and the add.d (1 cycle) are subtracted, leaving the 4-cycle vector load."
+          "chain_latency": 5
         }
       ],
-      "notes": "rj -> result chain through a vector store and a GPR load: the store-to-load forwarding (10.04 cycles) and the add.d (1 cycle) are subtracted, leaving the 4-cycle vector load."
+      "notes": "L1D hit. The base register is carried through the loaded element and the pick, so the measured 10 cycles less the 5-cycle pick give 5, the same as a plain vector load. The index path measures the same 5 cycles."
     }
   ],
   "throughput": [
