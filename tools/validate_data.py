@@ -23,6 +23,10 @@ SCHEMA_PATH = ROOT / "schema" / "instruction.schema.json"
 EPS = 0.02
 
 RETIRED_MULTIPLIER = {
+    "xvreplve.d": 2,
+    "xvreplve.w": 2,
+    "xvreplve.h": 2,
+    "xvreplve.b": 2,
     "xvsllwil.du.wu": 2,
     "xvsllwil.d.w": 2,
     "xvsllwil.wu.hu": 2,

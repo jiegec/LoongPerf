@@ -1,0 +1,57 @@
+{
+  "instruction": {
+    "name": "vsetallnez.w",
+    "extension": "LSX",
+    "form": "vsetallnez.w fcc, vj",
+    "description": "Set FCC based on vector elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fcc",
+      "kind": "other",
+      "access": "write",
+      "description": "condition code"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vsetallnez.w $fcc0, $vr8; vsetallnez.w $fcc1, $vr9; vsetallnez.w $fcc2, $vr10; vsetallnez.w $fcc3, $vr11; vsetallnez.w $fcc4, $vr12; vsetallnez.w $fcc5, $vr13; vsetallnez.w $fcc6, $vr14; vsetallnez.w $fcc7, $vr15",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --counter 0xfb --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vsetallnez.w $fcc0, $vr8; vsetallnez.w $fcc1, $vr9; vsetallnez.w $fcc2, $vr10; vsetallnez.w $fcc3, $vr11; vsetallnez.w $fcc4, $vr12; vsetallnez.w $fcc5, $vr13; vsetallnez.w $fcc6, $vr14; vsetallnez.w $fcc7, $vr15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0,
+        "counters": {
+          "0xfb": 1.0
+        }
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ],
+  "notes": "LSX vector instruction measured on LA664."
+}

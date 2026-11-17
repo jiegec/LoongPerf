@@ -1,0 +1,57 @@
+{
+  "instruction": {
+    "name": "xvsetallnez.b",
+    "extension": "LASX",
+    "form": "xvsetallnez.b fcc, xj",
+    "description": "Set FCC based on vector elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fcc",
+      "kind": "other",
+      "access": "write",
+      "description": "condition code"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvsetallnez.b $fcc0, $xr8; xvsetallnez.b $fcc1, $xr9; xvsetallnez.b $fcc2, $xr10; xvsetallnez.b $fcc3, $xr11; xvsetallnez.b $fcc4, $xr12; xvsetallnez.b $fcc5, $xr13; xvsetallnez.b $fcc6, $xr14; xvsetallnez.b $fcc7, $xr15",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --counter 0xfa --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4' --asm 'xvsetallnez.b $fcc0, $xr8; xvsetallnez.b $fcc1, $xr9; xvsetallnez.b $fcc2, $xr10; xvsetallnez.b $fcc3, $xr11; xvsetallnez.b $fcc4, $xr12; xvsetallnez.b $fcc5, $xr13; xvsetallnez.b $fcc6, $xr14; xvsetallnez.b $fcc7, $xr15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.02,
+        "counters": {
+          "0xfa": 1.0
+        }
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5025,
+        "ipc": 1.99
+      },
+      "notes": "8 independent instructions take 4.02 cycles."
+    }
+  ],
+  "notes": "LASX vector instruction measured on LA664."
+}

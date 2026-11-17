@@ -42,41 +42,33 @@
   "latencies": [],
   "throughput": [
     {
-      "name": "8 taken JIRLs to the next instruction",
-      "asm": "la.local $r4, 1f; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; 1:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4",
-      "init": "",
-      "machine_code": [
-        "1a000004  pcalau12i   \t$a0, 0",
-        "02c00084  addi.d      \t$a0, $a0, 0",
-        "02c01085  addi.d      \t$a1, $a0, 4",
-        "02c02086  addi.d      \t$a2, $a0, 8",
-        "02c03087  addi.d      \t$a3, $a0, 12",
-        "02c04088  addi.d      \t$a4, $a0, 16",
-        "02c05089  addi.d      \t$a5, $a0, 20",
-        "02c0608a  addi.d      \t$a6, $a0, 24",
-        "02c0708b  addi.d      \t$a7, $a0, 28",
-        "4c000480  jirl        \t$zero, $a0, 4",
-        "4c0004a0  jirl        \t$zero, $a1, 4",
-        "4c0004c0  jirl        \t$zero, $a2, 4",
-        "4c0004e0  jirl        \t$zero, $a3, 4",
-        "4c000500  jirl        \t$zero, $a4, 4",
-        "4c000520  jirl        \t$zero, $a5, 4",
-        "4c000540  jirl        \t$zero, $a6, 4",
-        "4c000560  jirl        \t$zero, $a7, 4"
-      ],
-      "command": "./bench --unroll 1 --iters 1000 --warmup 10 --reps 20 --asm 'la.local $r4, 1f; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; 1:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4'",
+      "name": "8 JIRLs x 10000 loop iterations",
+      "asm": "la.local $r4, .Lloop; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; .Lloop:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4; addi.d $r12, $r12, -1; bnez $r12, .Lloop",
+      "init": "li.d $r12, 10000",
+      "measurement": {
+        "unroll": 1,
+        "iters": 1000,
+        "reps": 20
+      },
+      "command": "./bench --unroll 1 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'li.d $r12, 10000' --asm 'la.local $r4, .Lloop; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; .Lloop:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4; addi.d $r12, $r12, -1; bnez $r12, .Lloop'",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 8.79
+        "instructions_retired": 100007.99,
+        "core_cycles": 119165.58
       },
-      "baseline_cycles": 1.31,
+      "baseline_cycles": 16823.79,
+      "loops": 10000,
+      "loop_instructions": 10,
       "throughput": {
-        "lanes": 8,
-        "cpi": 0.9349999999999998,
-        "ipc": 1.0695187165775404
+        "lanes": 80000,
+        "cpi": 1.2793,
+        "ipc": 0.7817,
+        "cpi_min": 1.28,
+        "cpi_max": 1.66,
+        "ipc_min": 0.6024,
+        "ipc_max": 0.7813
       },
-      "notes": "8 JIRLs plus 8 pcaddi/addi target-setup instructions take 8.79 cycles. The same setup without JIRLs takes 1.31 cycles, so marginal JIRL throughput is (8.79-1.31)/8 = 0.935 CPI. Eight static JIRLs fit in the BTB; increasing the number of static JIRLs raises the measured CPI (16 JIRLs gave about 1.115 CPI)."
+      "notes": "Eight static JIRLs are reused in a 10000-iteration loop, avoiding BTB capacity pressure. The loop without JIRLs takes 16823.79 cycles; the JIRL loop takes 119165.58 cycles, so marginal throughput is (119165.58-16823.79)/80000 = 1.28 CPI. Repeated runs on other cores give 1.28-1.66 CPI; the old 0.935 CPI was an artifact of subtracting a setup-only baseline whose instructions overlap with JIRLs."
     }
   ],
-  "notes": "Taken indirect branch throughput. Latency is not defined. Measured with 8 static JIRLs to stay within BTB capacity."
+  "notes": "No destination data dependency; latency is not defined. JIRL is a taken indirect branch and does not sustain below 1 CPI on LA664. Throughput is measured with looped JIRLs to avoid BTB pressure; observed 1.28-1.66 CPI depending on core/frequency state."
 }

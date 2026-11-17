@@ -1,0 +1,57 @@
+{
+  "instruction": {
+    "name": "vldi",
+    "extension": "LSX",
+    "form": "vldi vd, imm",
+    "description": "Load an immediate into all vector elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vldi $vr0, 1; vldi $vr1, 1; vldi $vr2, 1; vldi $vr3, 1; vldi $vr4, 1; vldi $vr5, 1; vldi $vr6, 1; vldi $vr7, 1",
+      "init": "nop",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --counter 0xfb --init 'nop' --asm 'vldi $vr0, 1; vldi $vr1, 1; vldi $vr2, 1; vldi $vr3, 1; vldi $vr4, 1; vldi $vr5, 1; vldi $vr6, 1; vldi $vr7, 1'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.35,
+        "counters": {
+          "0xfb": 1.0
+        }
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.2938,
+        "ipc": 3.4043
+      },
+      "notes": "8 independent instructions take 2.35 cycles."
+    }
+  ],
+  "notes": "LSX vector instruction measured on LA664."
+}

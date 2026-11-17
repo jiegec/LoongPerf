@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "xvreplve.w",
+    "extension": "LASX",
+    "form": "xvreplve.w xd, xj, rk",
+    "description": "Repeat an indexed element in each 128-bit lane."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.07,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "xvreplve.w $xr0, $xr0, $r4",
+          "init": "li.d $r4, 0; li.d $r5, 1; xvreplgr2vr.b $xr0, $r5",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0; li.d $r5, 1; xvreplgr2vr.b $xr0, $r5' --asm 'xvreplve.w $xr0, $xr0, $r4'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 1.07
+          },
+          "notes": "Dependent vector chain."
+        }
+      ],
+      "notes": "Register dependency latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvreplve.w $xr0, $xr8, $r4; xvreplve.w $xr1, $xr9, $r5; xvreplve.w $xr2, $xr10, $r6; xvreplve.w $xr3, $xr11, $r7; xvreplve.w $xr4, $xr12, $r8; xvreplve.w $xr5, $xr13, $r9; xvreplve.w $xr6, $xr14, $r10; xvreplve.w $xr7, $xr15, $r11",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 0; li.d $r5, 0; li.d $r6, 0; li.d $r7, 0; li.d $r8, 0; li.d $r9, 0; li.d $r10, 0; li.d $r11, 0",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --counter 0xfa --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 0; li.d $r5, 0; li.d $r6, 0; li.d $r7, 0; li.d $r8, 0; li.d $r9, 0; li.d $r10, 0; li.d $r11, 0' --asm 'xvreplve.w $xr0, $xr8, $r4; xvreplve.w $xr1, $xr9, $r5; xvreplve.w $xr2, $xr10, $r6; xvreplve.w $xr3, $xr11, $r7; xvreplve.w $xr4, $xr12, $r8; xvreplve.w $xr5, $xr13, $r9; xvreplve.w $xr6, $xr14, $r10; xvreplve.w $xr7, $xr15, $r11'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 8.62,
+        "counters": {
+          "0xfa": 1.0
+        }
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0775,
+        "ipc": 0.9281
+      },
+      "notes": "8 independent instructions take 8.62 cycles."
+    }
+  ],
+  "notes": "LASX vector instruction measured on LA664."
+}
