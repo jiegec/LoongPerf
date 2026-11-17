@@ -22,9 +22,61 @@ SCHEMA_PATH = ROOT / "schema" / "instruction.schema.json"
 
 EPS = 0.02
 
-TWO_UOP_INSTRUCTIONS = set("""vpickve2gr.b vpickve2gr.h vreplgr2vr.b vreplgr2vr.h xvreplgr2vr.b xvreplgr2vr.h vfcvt.h.s vfcvt.s.d vfcvth.d.s vfcvth.s.h vfcvtl.d.s vfcvtl.s.h vffint.s.l vffinth.d.w vffintl.d.w vftint.w.d vftinth.l.s vftintl.l.s vftintrm.w.d vftintrmh.l.s vftintrml.l.s vftintrne.w.d vftintrneh.l.s vftintrnel.l.s vftintrp.w.d vftintrph.l.s vftintrpl.l.s vftintrz.w.d vftintrzh.l.s vftintrzl.l.s xvfcvt.h.s xvfcvt.s.d xvfcvth.d.s xvfcvth.s.h xvfcvtl.d.s xvfcvtl.s.h xvffint.s.l xvffinth.d.w xvffintl.d.w xvftint.w.d xvftinth.l.s xvftintl.l.s xvftintrm.w.d xvftintrmh.l.s xvftintrml.l.s xvftintrne.w.d xvftintrneh.l.s xvftintrnel.l.s xvftintrp.w.d xvftintrph.l.s xvftintrpl.l.s xvftintrz.w.d xvftintrzh.l.s xvftintrzl.l.s""".split())
-
 RETIRED_MULTIPLIER = {
+    "xvftintrzl.l.s": 2,
+    "xvftintrzh.l.s": 2,
+    "xvftintrz.w.d": 2,
+    "xvftintrpl.l.s": 2,
+    "xvftintrph.l.s": 2,
+    "xvftintrp.w.d": 2,
+    "xvftintrnel.l.s": 2,
+    "xvftintrneh.l.s": 2,
+    "xvftintrne.w.d": 2,
+    "xvftintrml.l.s": 2,
+    "xvftintrmh.l.s": 2,
+    "xvftintrm.w.d": 2,
+    "xvftintl.l.s": 2,
+    "xvftinth.l.s": 2,
+    "xvftint.w.d": 2,
+    "xvffintl.d.w": 2,
+    "xvffinth.d.w": 2,
+    "xvffint.s.l": 2,
+    "xvfcvtl.s.h": 2,
+    "xvfcvtl.d.s": 2,
+    "xvfcvth.s.h": 2,
+    "xvfcvth.d.s": 2,
+    "xvfcvt.s.d": 2,
+    "xvfcvt.h.s": 2,
+    "vftintrzl.l.s": 2,
+    "vftintrzh.l.s": 2,
+    "vftintrz.w.d": 2,
+    "vftintrpl.l.s": 2,
+    "vftintrph.l.s": 2,
+    "vftintrp.w.d": 2,
+    "vftintrnel.l.s": 2,
+    "vftintrneh.l.s": 2,
+    "vftintrne.w.d": 2,
+    "vftintrml.l.s": 2,
+    "vftintrmh.l.s": 2,
+    "vftintrm.w.d": 2,
+    "vftintl.l.s": 2,
+    "vftinth.l.s": 2,
+    "vftint.w.d": 2,
+    "vffintl.d.w": 2,
+    "vffinth.d.w": 2,
+    "vffint.s.l": 2,
+    "vfcvtl.s.h": 2,
+    "vfcvtl.d.s": 2,
+    "vfcvth.s.h": 2,
+    "vfcvth.d.s": 2,
+    "vfcvt.s.d": 2,
+    "vfcvt.h.s": 2,
+    "xvreplgr2vr.h": 2,
+    "xvreplgr2vr.b": 2,
+    "vreplgr2vr.h": 2,
+    "vreplgr2vr.b": 2,
+    "vpickve2gr.h": 2,
+    "vpickve2gr.b": 2,
     "cpucfg": 0,
     "rdtimel.w": 2,
     "rdtimeh.w": 2,
@@ -107,8 +159,6 @@ def instruction_multiplier(mnemonic: str, line: str, uarch: str) -> int:
     if mnemonic in {"rdtimel.w", "rdtimeh.w", "rdtime.d"}:
         return 1 if ", $r0" in line else 2
     if mnemonic.startswith("am"):
-        return 2
-    if mnemonic in TWO_UOP_INSTRUCTIONS:
         return 2
     return RETIRED_MULTIPLIER.get(mnemonic, 1)
 

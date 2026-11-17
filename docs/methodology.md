@@ -83,14 +83,16 @@ store, even though each is a two-uop instruction.
 ## Multi-uop instructions
 
 `0x01` counts retired uops, so a multi-uop instruction has a counter value
-larger than its static instruction count. In the current LA664 data set 104 of
-1260 measured instructions are two-uop instructions:
+larger than its static instruction count. In the current LA664 data set 112 of
+1270 measured instructions are two-uop instructions:
 
 | Category | Count |
 | --- | ---: |
 | Atomic `am*` | 52 |
 | `vfcvt` / `vffint` / `vftint` conversions, LSX and LASX | 48 |
+| `vpickve2gr.b/h/w/d`, `xvpickve2gr.w/d` | 6 |
 | `llacq.d`, `llacq.w`, `sc.q` | 3 |
+| `vreplgr2vr.b/h` | 2 |
 | `movgr2frh.w` | 1 |
 
 For these instructions the throughput experiment also records the relevant
@@ -108,6 +110,18 @@ The extra counter values are normalised per instruction (the measured
 per-sequence values divided by the eight lanes). They are shown in the
 per-instruction throughput table and in the interactive table details.
 
-The following instructions are known to be two-uop from the reset helper, but
-do not yet have their own pages: `vpickve2gr.b/h/w/d`, `vreplgr2vr.b/h`, and
-`xvpickve2gr.w/d`.
+The `vpickve2gr` and `vreplgr2vr` pages are now included. Their latencies are
+measured by a round trip through the reverse move, with the reverse-move
+latency separated by a memory-assisted decomposition; the resulting nominal
+latencies are 4 cycles for `vpickve2gr.*`, 6 cycles for `xvpickve2gr.w/d`,
+2 cycles for `vreplgr2vr.b/h`, and 1 cycle for `vreplgr2vr.w/d`.
+
+## CPUCFG and trapped instructions
+
+`cpucfg` is a special case for the instruction-retired counter. It is trapped
+and emulated: in a 10M-instruction `cpucfg` loop, `instructions:u` is only about
+0.13M while the all-mode `instructions` count is about 31M, so roughly 30M
+retired instructions happen in the kernel. `bench` excludes kernel events, so
+`cpucfg` reports `instructions retired: 0.00`. The validator therefore uses a
+retired multiplier of zero for `cpucfg`; its latency and throughput are still
+meaningful from the cycle counter.

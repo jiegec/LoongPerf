@@ -1,0 +1,87 @@
+{
+  "instruction": {
+    "name": "vreplgr2vr.b",
+    "extension": "LSX",
+    "form": "vreplgr2vr.b vd, rj",
+    "description": "Broadcast the low 8 bits of `val` to all lanes of `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "round trip through the reverse move",
+          "role": "measurement",
+          "asm": "vreplgr2vr.b $vr0, $r4; vpickve2gr.b $r4, $vr0, 0",
+          "init": "li.d $r4, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1' --asm 'vreplgr2vr.b $vr0, $r4; vpickve2gr.b $r4, $vr0, 0'",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 6.0
+          },
+          "chain_latency": 4.0,
+          "notes": "Round trip 6.05 cycles. vpickve2gr.b is 4 cycles, so vreplgr2vr.b is 2.05 cycles."
+        }
+      ],
+      "notes": "Round trip 6.05 cycles. vpickve2gr.b is 4 cycles, so vreplgr2vr.b is 2.05 cycles. Nominal values: round-trip core cycles rounded to the nearest integer."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vreplgr2vr.b $vr0, $r4; vreplgr2vr.b $vr1, $r5; vreplgr2vr.b $vr2, $r6; vreplgr2vr.b $vr3, $r7; vreplgr2vr.b $vr4, $r8; vreplgr2vr.b $vr5, $r9; vreplgr2vr.b $vr6, $r10; vreplgr2vr.b $vr7, $r11",
+      "init": "li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'vreplgr2vr.b $vr0, $r4; vreplgr2vr.b $vr1, $r5; vreplgr2vr.b $vr2, $r6; vreplgr2vr.b $vr3, $r7; vreplgr2vr.b $vr4, $r8; vreplgr2vr.b $vr5, $r9; vreplgr2vr.b $vr6, $r10; vreplgr2vr.b $vr7, $r11'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 8.0,
+        "counters": {
+          "0xfb": 1.0
+        }
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfb is normalised per instruction."
+    }
+  ],
+  "notes": "LSX two-uop instruction. Individual latency is not separable without a round trip through the reverse move; throughput is measured with 8 independent lanes. Extra counter 0xfb records the classified uop count."
+}

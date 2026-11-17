@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "vpickve2gr.d",
+    "extension": "LSX",
+    "form": "vpickve2gr.d rd, vj, imm",
+    "description": "Pick the 64-bit element at lane `idx` from `a`, sign-extend it to the GPR width, and store it in `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "extracted value"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "lane index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "round trip through the reverse move",
+          "role": "measurement",
+          "asm": "vreplgr2vr.d $vr0, $r4; vpickve2gr.d $r4, $vr0, 0",
+          "init": "li.d $r4, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1' --asm 'vreplgr2vr.d $vr0, $r4; vpickve2gr.d $r4, $vr0, 0'",
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 5.0
+          },
+          "chain_latency": 1.0,
+          "notes": "Round trip 5.06 cycles. The vreplgr2vr.d half is 1 cycles (from the memory-assisted decomposition: vrepl-only chain minus vector-store->GPR-load forwarding), so vpickve2gr.d is 4.06 cycles."
+        }
+      ],
+      "notes": "Round trip 5.06 cycles. The vreplgr2vr.d half is 1 cycles (from the memory-assisted decomposition: vrepl-only chain minus vector-store->GPR-load forwarding), so vpickve2gr.d is 4.06 cycles. Nominal values: round-trip core cycles rounded to the nearest integer."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vpickve2gr.d $r12, $vr8, 0; vpickve2gr.d $r13, $vr9, 0; vpickve2gr.d $r14, $vr10, 0; vpickve2gr.d $r15, $vr11, 0; vpickve2gr.d $r16, $vr12, 0; vpickve2gr.d $r17, $vr13, 0; vpickve2gr.d $r18, $vr14, 0; vpickve2gr.d $r19, $vr15, 0",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 2; vreplgr2vr.b $vr9, $r4; li.d $r4, 3; vreplgr2vr.b $vr10, $r4; li.d $r4, 4; vreplgr2vr.b $vr11, $r4; li.d $r4, 5; vreplgr2vr.b $vr12, $r4; li.d $r4, 6; vreplgr2vr.b $vr13, $r4; li.d $r4, 7; vreplgr2vr.b $vr14, $r4; li.d $r4, 8; vreplgr2vr.b $vr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 2; vreplgr2vr.b $vr9, $r4; li.d $r4, 3; vreplgr2vr.b $vr10, $r4; li.d $r4, 4; vreplgr2vr.b $vr11, $r4; li.d $r4, 5; vreplgr2vr.b $vr12, $r4; li.d $r4, 6; vreplgr2vr.b $vr13, $r4; li.d $r4, 7; vreplgr2vr.b $vr14, $r4; li.d $r4, 8; vreplgr2vr.b $vr15, $r4' --asm 'vpickve2gr.d $r12, $vr8, 0; vpickve2gr.d $r13, $vr9, 0; vpickve2gr.d $r14, $vr10, 0; vpickve2gr.d $r15, $vr11, 0; vpickve2gr.d $r16, $vr12, 0; vpickve2gr.d $r17, $vr13, 0; vpickve2gr.d $r18, $vr14, 0; vpickve2gr.d $r19, $vr15, 0'",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 7.99,
+        "counters": {
+          "0xfb": 2.0
+        }
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.9988,
+        "ipc": 1.0013
+      },
+      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfb is normalised per instruction."
+    }
+  ],
+  "notes": "LSX two-uop instruction. Individual latency is not separable without a round trip through the reverse move; throughput is measured with 8 independent lanes. Extra counter 0xfb records the classified uop count."
+}
