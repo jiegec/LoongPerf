@@ -1,0 +1,102 @@
+{
+  "instruction": {
+    "name": "amxor_db.d",
+    "extension": "Base",
+    "form": "amxor_db.d rd, rk, rj",
+    "description": "Atomic memory operation amxor_db.d."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "old value (and compare value for AMCAS)"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source/update value"
+    },
+    {
+      "index": 3,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles_divisor": 2,
+      "cycles": 15.79,
+      "experiments": [
+        {
+          "name": "two-atomic dependency cycle",
+          "role": "measurement",
+          "asm": "amxor_db.d $r12, $r13, $r20; amxor_db.d $r13, $r12, $r20",
+          "init": "addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 31.59
+          },
+          "measurement": {
+            "unroll": 32768,
+            "iters": 100
+          },
+          "command": "./bench --unroll 32768 --iters 100 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0' --asm 'amxor_db.d $r12, $r13, $r20; amxor_db.d $r13, $r12, $r20'"
+        }
+      ],
+      "notes": "the chain contains two alternating atomics, so the reported value is raw cycles / 2. Unroll 32768, iters 100."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "amxor_db.d $r12, $r4, $r21; amxor_db.d $r13, $r5, $r23; amxor_db.d $r14, $r6, $r24; amxor_db.d $r15, $r7, $r25; amxor_db.d $r16, $r8, $r26; amxor_db.d $r17, $r9, $r27; amxor_db.d $r18, $r10, $r28; amxor_db.d $r19, $r11, $r29",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0",
+      "machine_code": [
+        "386d92ac  amxor_db.d  \t$t0, $a0, $r21",
+        "386d96ed  amxor_db.d  \t$t1, $a1, $s0",
+        "386d9b0e  amxor_db.d  \t$t2, $a2, $s1",
+        "386d9f2f  amxor_db.d  \t$t3, $a3, $s2",
+        "386da350  amxor_db.d  \t$t4, $a4, $s3",
+        "386da771  amxor_db.d  \t$t5, $a5, $s4",
+        "386dab92  amxor_db.d  \t$t6, $a6, $s5",
+        "386dafb3  amxor_db.d  \t$t7, $a7, $s6"
+      ],
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 120.1
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0' --asm 'amxor_db.d $r12, $r4, $r21; amxor_db.d $r13, $r5, $r23; amxor_db.d $r14, $r6, $r24; amxor_db.d $r15, $r7, $r25; amxor_db.d $r16, $r8, $r26; amxor_db.d $r17, $r9, $r27; amxor_db.d $r18, $r10, $r28; amxor_db.d $r19, $r11, $r29'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 15.0125,
+        "ipc": 0.0666
+      }
+    }
+  ]
+}

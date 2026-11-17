@@ -1,0 +1,28 @@
+{
+  "instruction": {
+    "name": "syscall",
+    "extension": "Base",
+    "form": "syscall code",
+    "description": "System call exception."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "code",
+      "kind": "immediate",
+      "access": "read",
+      "description": "exception code"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "notes": "Traps to privileged mode; not measurable with the user-space bench."
+}

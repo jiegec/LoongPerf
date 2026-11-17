@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "clo.w",
+    "form": "clo.w rd, rj",
+    "description": "Count leading ones in the low 32 bits of rj and write the count to rd.",
+    "extension": "Base"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "count result, 0..32"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 32,
+      "description": "32-bit source value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "clo.w $r12, $r12",
+          "init": "addi.d $r12, $r0, -1",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1' --asm 'clo.w $r12, $r12'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "clo.w $r12, $r4; clo.w $r13, $r5; clo.w $r14, $r6; clo.w $r15, $r7; clo.w $r16, $r8; clo.w $r17, $r9; clo.w $r18, $r10; clo.w $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "0000108c  clo.w       \t$t0, $a0",
+        "000010ad  clo.w       \t$t1, $a1",
+        "000010ce  clo.w       \t$t2, $a2",
+        "000010ef  clo.w       \t$t3, $a3",
+        "00001110  clo.w       \t$t4, $a4",
+        "00001131  clo.w       \t$t5, $a5",
+        "00001152  clo.w       \t$t6, $a6",
+        "00001173  clo.w       \t$t7, $a7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'clo.w $r12, $r4; clo.w $r13, $r5; clo.w $r14, $r6; clo.w $r15, $r7; clo.w $r16, $r8; clo.w $r17, $r9; clo.w $r18, $r10; clo.w $r19, $r11'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

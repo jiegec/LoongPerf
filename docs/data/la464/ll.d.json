@@ -1,0 +1,75 @@
+{
+  "instruction": {
+    "name": "ll.d",
+    "extension": "Base",
+    "form": "ll.d rd, rj, si14",
+    "description": "ll.d load-linked."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "ll.d $r12, $r20, 0; ll.d $r13, $r20, 8; ll.d $r14, $r20, 16; ll.d $r15, $r20, 24; ll.d $r16, $r20, 32; ll.d $r17, $r20, 40; ll.d $r18, $r20, 48; ll.d $r19, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56",
+      "machine_code": [
+        "2200028c  ll.d        \t$t0, $t8, 0",
+        "22000a8d  ll.d        \t$t1, $t8, 8",
+        "2200128e  ll.d        \t$t2, $t8, 16",
+        "22001a8f  ll.d        \t$t3, $t8, 24",
+        "22002290  ll.d        \t$t4, $t8, 32",
+        "22002a91  ll.d        \t$t5, $t8, 40",
+        "22003292  ll.d        \t$t6, $t8, 48",
+        "22003a93  ll.d        \t$t7, $t8, 56"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 72.03
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56' --asm 'll.d $r12, $r20, 0; ll.d $r13, $r20, 8; ll.d $r14, $r20, 16; ll.d $r15, $r20, 24; ll.d $r16, $r20, 32; ll.d $r17, $r20, 40; ll.d $r18, $r20, 48; ll.d $r19, $r20, 56'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 9.0038,
+        "ipc": 0.1111
+      }
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

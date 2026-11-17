@@ -1,0 +1,76 @@
+{
+  "instruction": {
+    "name": "st.h",
+    "extension": "Base",
+    "form": "st.h rd, rj, si12",
+    "description": "st.h store to rj + offset."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "stored value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "st.h $r4, $r20, 0; st.h $r5, $r20, 8; st.h $r6, $r20, 16; st.h $r7, $r20, 24; st.h $r8, $r20, 32; st.h $r9, $r20, 40; st.h $r10, $r20, 48; st.h $r11, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "29400284  st.h        \t$a0, $t8, 0",
+        "29402285  st.h        \t$a1, $t8, 8",
+        "29404286  st.h        \t$a2, $t8, 16",
+        "29406287  st.h        \t$a3, $t8, 24",
+        "29408288  st.h        \t$a4, $t8, 32",
+        "2940a289  st.h        \t$a5, $t8, 40",
+        "2940c28a  st.h        \t$a6, $t8, 48",
+        "2940e28b  st.h        \t$a7, $t8, 56"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.98
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'st.h $r4, $r20, 0; st.h $r5, $r20, 8; st.h $r6, $r20, 16; st.h $r7, $r20, 24; st.h $r8, $r20, 32; st.h $r9, $r20, 40; st.h $r10, $r20, 48; st.h $r11, $r20, 56'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.9975,
+        "ipc": 1.0025
+      },
+      "notes": "8 independent instructions take 7.98 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

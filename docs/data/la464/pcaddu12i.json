@@ -1,0 +1,68 @@
+{
+  "instruction": {
+    "name": "pcaddu12i",
+    "extension": "Base",
+    "form": "pcaddu12i rd, imm",
+    "description": "Compute PC plus a sign-extended 20-bit immediate shifted left by 12."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "pcaddu12i $r12, 1; pcaddu12i $r13, 1; pcaddu12i $r14, 1; pcaddu12i $r15, 1; pcaddu12i $r16, 1; pcaddu12i $r17, 1; pcaddu12i $r18, 1; pcaddu12i $r19, 1",
+      "init": "",
+      "machine_code": [
+        "1c00002c  pcaddu12i   \t$t0, 1",
+        "1c00002d  pcaddu12i   \t$t1, 1",
+        "1c00002e  pcaddu12i   \t$t2, 1",
+        "1c00002f  pcaddu12i   \t$t3, 1",
+        "1c000030  pcaddu12i   \t$t4, 1",
+        "1c000031  pcaddu12i   \t$t5, 1",
+        "1c000032  pcaddu12i   \t$t6, 1",
+        "1c000033  pcaddu12i   \t$t7, 1"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'pcaddu12i $r12, 1; pcaddu12i $r13, 1; pcaddu12i $r14, 1; pcaddu12i $r15, 1; pcaddu12i $r16, 1; pcaddu12i $r17, 1; pcaddu12i $r18, 1; pcaddu12i $r19, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

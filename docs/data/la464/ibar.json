@@ -1,0 +1,60 @@
+{
+  "instruction": {
+    "name": "ibar",
+    "extension": "Base",
+    "form": "ibar hint",
+    "description": "Instruction barrier."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "hint",
+      "kind": "immediate",
+      "access": "read",
+      "description": "barrier hint"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ibar 0; ibar 0; ibar 0; ibar 0; ibar 0; ibar 0; ibar 0; ibar 0",
+      "init": "",
+      "machine_code": [
+        "38728000  ibar        \t0x0",
+        "38728000  ibar        \t0x0",
+        "38728000  ibar        \t0x0",
+        "38728000  ibar        \t0x0",
+        "38728000  ibar        \t0x0",
+        "38728000  ibar        \t0x0",
+        "38728000  ibar        \t0x0",
+        "38728000  ibar        \t0x0"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 144.08
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'ibar 0; ibar 0; ibar 0; ibar 0; ibar 0; ibar 0; ibar 0; ibar 0'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 18.01,
+        "ipc": 0.0555
+      },
+      "notes": "8 independent instructions take 144.08 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

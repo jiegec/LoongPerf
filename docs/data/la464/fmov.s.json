@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "fmov.s",
+    "extension": "Base",
+    "form": "fmov.s fd, fj",
+    "description": "Floating-point register move."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fmov.s $f0, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'fmov.s $f0, $f0'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fmov.s $f0, $f8; fmov.s $f1, $f9; fmov.s $f2, $f10; fmov.s $f3, $f11; fmov.s $f4, $f12; fmov.s $f5, $f13; fmov.s $f6, $f14; fmov.s $f7, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "01149500  fmov.s      \t$fa0, $ft0",
+        "01149521  fmov.s      \t$fa1, $ft1",
+        "01149542  fmov.s      \t$fa2, $ft2",
+        "01149563  fmov.s      \t$fa3, $ft3",
+        "01149584  fmov.s      \t$fa4, $ft4",
+        "011495a5  fmov.s      \t$fa5, $ft5",
+        "011495c6  fmov.s      \t$fa6, $ft6",
+        "011495e7  fmov.s      \t$fa7, $ft7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4' --asm 'fmov.s $f0, $f8; fmov.s $f1, $f9; fmov.s $f2, $f10; fmov.s $f3, $f11; fmov.s $f4, $f12; fmov.s $f5, $f13; fmov.s $f6, $f14; fmov.s $f7, $f15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

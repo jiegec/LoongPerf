@@ -1,0 +1,37 @@
+{
+  "instruction": {
+    "name": "iocsrwr.h",
+    "extension": "Base",
+    "form": "iocsrwr.h rd, rj",
+    "description": "IOCSR write (H)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "notes": "Privileged IOCSR access; traps in user mode."
+}

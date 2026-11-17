@@ -92,7 +92,16 @@ def check_command(path: Path, data: dict, experiment: dict) -> None:
         error(path, f"command has --init but experiment has no init: {command!r}")
 
 
-def instruction_multiplier(mnemonic: str, line: str) -> int:
+def instruction_multiplier(mnemonic: str, line: str, uarch: str) -> int:
+    if uarch == "la464":
+        # LA464 counts CPUCFG normally, retires both halves of RDTIME even
+        # when the timer-ID destination is $r0, and splits FSEL into 2 uops.
+        if mnemonic == "cpucfg":
+            return 1
+        if mnemonic in {"rdtimel.w", "rdtimeh.w", "rdtime.d"}:
+            return 2
+        if mnemonic == "fsel":
+            return 2
     if mnemonic == "cpucfg":
         return 0
     if mnemonic in {"rdtimel.w", "rdtimeh.w", "rdtime.d"}:
@@ -104,7 +113,7 @@ def instruction_multiplier(mnemonic: str, line: str) -> int:
     return RETIRED_MULTIPLIER.get(mnemonic, 1)
 
 
-def expected_instruction_count(asm: str) -> int:
+def expected_instruction_count(asm: str, uarch: str) -> int:
     total = 0
     for part in re.split(r"[;\n]", asm):
         line = part.strip()
@@ -112,12 +121,12 @@ def expected_instruction_count(asm: str) -> int:
             continue
         if line.endswith(":"):
             continue
-        total += instruction_multiplier(line.split()[0], line)
+        total += instruction_multiplier(line.split()[0], line, uarch)
     return total
 
 
 def check_result_count(path: Path, data: dict, experiment: dict) -> None:
-    expected = expected_instruction_count(experiment["asm"])
+    expected = expected_instruction_count(experiment["asm"], path.parent.name)
     actual = experiment["result"]["instructions_retired"]
     if not close(actual, expected):
         error(path, f"instructions_retired {actual} != expected {expected} for {experiment.get('name', '<unnamed>')}")

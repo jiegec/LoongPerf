@@ -1,0 +1,120 @@
+{
+  "instruction": {
+    "name": "ld.d",
+    "extension": "Base",
+    "form": "ld.d rd, rj, si12",
+    "description": "ld.d load from rj + offset."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "high-unroll ALU-consumer chain",
+          "role": "measurement",
+          "asm": "ld.d $r4, $r4, 0; add.d $r4, $r4, $r5",
+          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 6.0
+          },
+          "measurement": {
+            "unroll": 32768,
+            "iters": 306,
+            "reps": 7
+          },
+          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r5'"
+        },
+        {
+          "name": "load-to-AGU bypass calibration",
+          "role": "calibration",
+          "asm": "ld.d $r4, $r4, 0",
+          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153,
+            "reps": 7
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
+          "notes": "Calibration experiment (not used for the reported latency)."
+        }
+      ],
+      "notes": "1 cycles of helper latency are subtracted. Unroll 32768, iters 306."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ld.d $r12, $r20, 0; ld.d $r13, $r20, 8; ld.d $r14, $r20, 16; ld.d $r15, $r20, 24; ld.d $r16, $r20, 32; ld.d $r17, $r20, 40; ld.d $r18, $r20, 48; ld.d $r19, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024",
+      "machine_code": [
+        "28c0028c  ld.d        \t$t0, $t8, 0",
+        "28c0228d  ld.d        \t$t1, $t8, 8",
+        "28c0428e  ld.d        \t$t2, $t8, 16",
+        "28c0628f  ld.d        \t$t3, $t8, 24",
+        "28c08290  ld.d        \t$t4, $t8, 32",
+        "28c0a291  ld.d        \t$t5, $t8, 40",
+        "28c0c292  ld.d        \t$t6, $t8, 48",
+        "28c0e293  ld.d        \t$t7, $t8, 56"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024' --asm 'ld.d $r12, $r20, 0; ld.d $r13, $r20, 8; ld.d $r14, $r20, 16; ld.d $r15, $r20, 24; ld.d $r16, $r20, 32; ld.d $r17, $r20, 40; ld.d $r18, $r20, 48; ld.d $r19, $r20, 56'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

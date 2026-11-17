@@ -1,0 +1,96 @@
+{
+  "instruction": {
+    "name": "movfr2gr.d",
+    "extension": "Base",
+    "form": "movfr2gr.d rd, fj",
+    "description": "Move the 64 bits of fj into rd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "rd"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "fj"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 3.03,
+      "experiments": [
+        {
+          "name": "high-unroll memory-assisted chain",
+          "role": "measurement",
+          "asm": "movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0",
+          "chain_latency": 9.92,
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 12.95
+          },
+          "measurement": {
+            "unroll": 16384,
+            "iters": 611,
+            "reps": 7
+          },
+          "command": "./bench --unroll 16384 --iters 611 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0'"
+        }
+      ],
+      "notes": "FPR->GPR move latency is about 3 cycles; 9.92 cycles of helper latency (add.d plus the st.d/fld.d round trip) are subtracted. Unroll 16384, iters 611."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "movfr2gr.d $r12, $f0; movfr2gr.d $r13, $f1; movfr2gr.d $r14, $f2; movfr2gr.d $r15, $f3; movfr2gr.d $r16, $f4; movfr2gr.d $r17, $f5; movfr2gr.d $r18, $f6; movfr2gr.d $r19, $f7",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "0114b80c  movfr2gr.d  \t$t0, $fa0",
+        "0114b82d  movfr2gr.d  \t$t1, $fa1",
+        "0114b84e  movfr2gr.d  \t$t2, $fa2",
+        "0114b86f  movfr2gr.d  \t$t3, $fa3",
+        "0114b890  movfr2gr.d  \t$t4, $fa4",
+        "0114b8b1  movfr2gr.d  \t$t5, $fa5",
+        "0114b8d2  movfr2gr.d  \t$t6, $fa6",
+        "0114b8f3  movfr2gr.d  \t$t7, $fa7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.97
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4' --asm 'movfr2gr.d $r12, $f0; movfr2gr.d $r13, $f1; movfr2gr.d $r14, $f2; movfr2gr.d $r15, $f3; movfr2gr.d $r16, $f4; movfr2gr.d $r17, $f5; movfr2gr.d $r18, $f6; movfr2gr.d $r19, $f7'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.9962,
+        "ipc": 1.0038
+      },
+      "notes": "8 independent instructions take 7.97 cycles."
+    }
+  ]
+}

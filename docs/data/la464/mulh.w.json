@@ -1,0 +1,127 @@
+{
+  "instruction": {
+    "name": "mulh.w",
+    "extension": "Base",
+    "form": "mulh.w rd, rj, rk",
+    "description": "Multiply the low 32-bit words of rj and rk and write the high 32 bits of the signed product."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "mulh.w $r12, $r12, $r13",
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'mulh.w $r12, $r12, $r13'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "mulh.w $r12, $r13, $r12",
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'mulh.w $r12, $r13, $r12'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "mulh.w $r12, $r4, $r20; mulh.w $r13, $r5, $r21; mulh.w $r14, $r6, $r23; mulh.w $r15, $r7, $r24; mulh.w $r16, $r8, $r25; mulh.w $r17, $r9, $r26; mulh.w $r18, $r10, $r27; mulh.w $r19, $r11, $r28",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
+      "machine_code": [
+        "001cd08c  mulh.w      \t$t0, $a0, $t8",
+        "001cd4ad  mulh.w      \t$t1, $a1, $r21",
+        "001cdcce  mulh.w      \t$t2, $a2, $s0",
+        "001ce0ef  mulh.w      \t$t3, $a3, $s1",
+        "001ce510  mulh.w      \t$t4, $a4, $s2",
+        "001ce931  mulh.w      \t$t5, $a5, $s3",
+        "001ced52  mulh.w      \t$t6, $a6, $s4",
+        "001cf173  mulh.w      \t$t7, $a7, $s5"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'mulh.w $r12, $r4, $r20; mulh.w $r13, $r5, $r21; mulh.w $r14, $r6, $r23; mulh.w $r15, $r7, $r24; mulh.w $r16, $r8, $r25; mulh.w $r17, $r9, $r26; mulh.w $r18, $r10, $r27; mulh.w $r19, $r11, $r28'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

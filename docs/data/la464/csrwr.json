@@ -1,0 +1,36 @@
+{
+  "instruction": {
+    "name": "csrwr",
+    "extension": "Base",
+    "form": "csrwr rd, csr",
+    "description": "Write rd into a CSR and return the old value in rd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 2,
+      "name": "csr",
+      "kind": "immediate",
+      "access": "read",
+      "description": "CSR number"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "notes": "Privileged CSR access; traps in user mode."
+}

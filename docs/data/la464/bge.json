@@ -1,0 +1,106 @@
+{
+  "instruction": {
+    "name": "bge",
+    "extension": "Base",
+    "form": "bge rj, rd, offs",
+    "description": "Branch if signed rj >= rd (measured not taken)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first value"
+    },
+    {
+      "index": 2,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second value"
+    },
+    {
+      "index": 3,
+      "name": "offs",
+      "kind": "immediate",
+      "access": "read",
+      "description": "branch offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 not-taken branches",
+      "asm": "bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2",
+      "machine_code": [
+        "64000085  bge         \t$a0, $a1, 0\t# 0x0",
+        "64000085  bge         \t$a0, $a1, 0\t# 0x4",
+        "64000085  bge         \t$a0, $a1, 0\t# 0x8",
+        "64000085  bge         \t$a0, $a1, 0\t# 0xc",
+        "64000085  bge         \t$a0, $a1, 0\t# 0x10",
+        "64000085  bge         \t$a0, $a1, 0\t# 0x14",
+        "64000085  bge         \t$a0, $a1, 0\t# 0x18",
+        "64000085  bge         \t$a0, $a1, 0\t# 0x1c"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2' --asm 'bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0; bge $r4, $r5, 0'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 branches measured at unroll=1000 to stay within BTB capacity."
+    },
+    {
+      "name": "8 taken branches",
+      "asm": "bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4",
+      "init": "addi.d $r4, $r0, 2; addi.d $r5, $r0, 1",
+      "machine_code": [
+        "64000485  bge         \t$a0, $a1, 4\t# 0x4",
+        "64000485  bge         \t$a0, $a1, 4\t# 0x8",
+        "64000485  bge         \t$a0, $a1, 4\t# 0xc",
+        "64000485  bge         \t$a0, $a1, 4\t# 0x10",
+        "64000485  bge         \t$a0, $a1, 4\t# 0x14",
+        "64000485  bge         \t$a0, $a1, 4\t# 0x18",
+        "64000485  bge         \t$a0, $a1, 4\t# 0x1c",
+        "64000485  bge         \t$a0, $a1, 4\t# 0x20"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.42
+      },
+      "measurement": {
+        "unroll": 8,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 8 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 2; addi.d $r5, $r0, 1' --asm 'bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4; bge $r4, $r5, 4'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.9275,
+        "ipc": 1.0782
+      },
+      "notes": "8 branches measured at unroll=8 to stay within BTB capacity."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

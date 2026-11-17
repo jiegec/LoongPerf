@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "revh.2w",
+    "extension": "Base",
+    "form": "revh.2w rd, rj",
+    "description": "Reverse the two 16-bit halfwords within each of the two 32-bit words."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "revh.2w $r12, $r12",
+          "init": "addi.d $r12, $r0, -1",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1' --asm 'revh.2w $r12, $r12'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "revh.2w $r12, $r4; revh.2w $r13, $r5; revh.2w $r14, $r6; revh.2w $r15, $r7; revh.2w $r16, $r8; revh.2w $r17, $r9; revh.2w $r18, $r10; revh.2w $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "0000408c  revh.2w     \t$t0, $a0",
+        "000040ad  revh.2w     \t$t1, $a1",
+        "000040ce  revh.2w     \t$t2, $a2",
+        "000040ef  revh.2w     \t$t3, $a3",
+        "00004110  revh.2w     \t$t4, $a4",
+        "00004131  revh.2w     \t$t5, $a5",
+        "00004152  revh.2w     \t$t6, $a6",
+        "00004173  revh.2w     \t$t7, $a7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'revh.2w $r12, $r4; revh.2w $r13, $r5; revh.2w $r14, $r6; revh.2w $r15, $r7; revh.2w $r16, $r8; revh.2w $r17, $r9; revh.2w $r18, $r10; revh.2w $r19, $r11'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

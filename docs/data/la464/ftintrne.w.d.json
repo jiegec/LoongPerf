@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "ftintrne.w.d",
+    "extension": "Base",
+    "form": "ftintrne.w.d fd, fj",
+    "description": "Floating-point to integer conversion."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.04,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "ftintrne.w.d $f0, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.04
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'ftintrne.w.d $f0, $f0'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ftintrne.w.d $f0, $f8; ftintrne.w.d $f1, $f9; ftintrne.w.d $f2, $f10; ftintrne.w.d $f3, $f11; ftintrne.w.d $f4, $f12; ftintrne.w.d $f5, $f13; ftintrne.w.d $f6, $f14; ftintrne.w.d $f7, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "011ac900  ftintrne.w.d\t$fa0, $ft0",
+        "011ac921  ftintrne.w.d\t$fa1, $ft1",
+        "011ac942  ftintrne.w.d\t$fa2, $ft2",
+        "011ac963  ftintrne.w.d\t$fa3, $ft3",
+        "011ac984  ftintrne.w.d\t$fa4, $ft4",
+        "011ac9a5  ftintrne.w.d\t$fa5, $ft5",
+        "011ac9c6  ftintrne.w.d\t$fa6, $ft6",
+        "011ac9e7  ftintrne.w.d\t$fa7, $ft7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'ftintrne.w.d $f0, $f8; ftintrne.w.d $f1, $f9; ftintrne.w.d $f2, $f10; ftintrne.w.d $f3, $f11; ftintrne.w.d $f4, $f12; ftintrne.w.d $f5, $f13; ftintrne.w.d $f6, $f14; ftintrne.w.d $f7, $f15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "bitrev.d",
+    "extension": "Base",
+    "form": "bitrev.d rd, rj",
+    "description": "Reverse all 64 bits of the doubleword."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "bitrev.d $r12, $r12",
+          "init": "addi.d $r12, $r0, -1",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1' --asm 'bitrev.d $r12, $r12'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "bitrev.d $r12, $r4; bitrev.d $r13, $r5; bitrev.d $r14, $r6; bitrev.d $r15, $r7; bitrev.d $r16, $r8; bitrev.d $r17, $r9; bitrev.d $r18, $r10; bitrev.d $r19, $r11",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "0000548c  bitrev.d    \t$t0, $a0",
+        "000054ad  bitrev.d    \t$t1, $a1",
+        "000054ce  bitrev.d    \t$t2, $a2",
+        "000054ef  bitrev.d    \t$t3, $a3",
+        "00005510  bitrev.d    \t$t4, $a4",
+        "00005531  bitrev.d    \t$t5, $a5",
+        "00005552  bitrev.d    \t$t6, $a6",
+        "00005573  bitrev.d    \t$t7, $a7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'bitrev.d $r12, $r4; bitrev.d $r13, $r5; bitrev.d $r14, $r6; bitrev.d $r15, $r7; bitrev.d $r16, $r8; bitrev.d $r17, $r9; bitrev.d $r18, $r10; bitrev.d $r19, $r11'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

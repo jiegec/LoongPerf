@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "ffint.d.w",
+    "extension": "Base",
+    "form": "ffint.d.w fd, fj",
+    "description": "Integer to floating-point conversion."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "ffint.d.w $f0, $f0",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'ffint.d.w $f0, $f0'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ffint.d.w $f0, $f8; ffint.d.w $f1, $f9; ffint.d.w $f2, $f10; ffint.d.w $f3, $f11; ffint.d.w $f4, $f12; ffint.d.w $f5, $f13; ffint.d.w $f6, $f14; ffint.d.w $f7, $f15",
+      "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
+      "machine_code": [
+        "011d2100  ffint.d.w   \t$fa0, $ft0",
+        "011d2121  ffint.d.w   \t$fa1, $ft1",
+        "011d2142  ffint.d.w   \t$fa2, $ft2",
+        "011d2163  ffint.d.w   \t$fa3, $ft3",
+        "011d2184  ffint.d.w   \t$fa4, $ft4",
+        "011d21a5  ffint.d.w   \t$fa5, $ft5",
+        "011d21c6  ffint.d.w   \t$fa6, $ft6",
+        "011d21e7  ffint.d.w   \t$fa7, $ft7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'ffint.d.w $f0, $f8; ffint.d.w $f1, $f9; ffint.d.w $f2, $f10; ffint.d.w $f3, $f11; ffint.d.w $f4, $f12; ffint.d.w $f5, $f13; ffint.d.w $f6, $f14; ffint.d.w $f7, $f15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ]
+}

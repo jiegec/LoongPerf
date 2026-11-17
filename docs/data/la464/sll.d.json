@@ -1,0 +1,127 @@
+{
+  "instruction": {
+    "name": "sll.d",
+    "extension": "Base",
+    "form": "sll.d rd, rj, rk",
+    "description": "Shift rj left by the amount in rk."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "sll.d $r12, $r12, $r13",
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'sll.d $r12, $r12, $r13'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "sll.d $r12, $r13, $r12",
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'sll.d $r12, $r13, $r12'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "sll.d $r12, $r4, $r20; sll.d $r13, $r5, $r21; sll.d $r14, $r6, $r23; sll.d $r15, $r7, $r24; sll.d $r16, $r8, $r25; sll.d $r17, $r9, $r26; sll.d $r18, $r10, $r27; sll.d $r19, $r11, $r28",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
+      "machine_code": [
+        "0018d08c  sll.d       \t$t0, $a0, $t8",
+        "0018d4ad  sll.d       \t$t1, $a1, $r21",
+        "0018dcce  sll.d       \t$t2, $a2, $s0",
+        "0018e0ef  sll.d       \t$t3, $a3, $s1",
+        "0018e510  sll.d       \t$t4, $a4, $s2",
+        "0018e931  sll.d       \t$t5, $a5, $s3",
+        "0018ed52  sll.d       \t$t6, $a6, $s4",
+        "0018f173  sll.d       \t$t7, $a7, $s5"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'sll.d $r12, $r4, $r20; sll.d $r13, $r5, $r21; sll.d $r14, $r6, $r23; sll.d $r15, $r7, $r24; sll.d $r16, $r8, $r25; sll.d $r17, $r9, $r26; sll.d $r18, $r10, $r27; sll.d $r19, $r11, $r28'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "instruction": {
+    "name": "ldle.w",
+    "extension": "Base",
+    "form": "ldle.w rd, rj, rk",
+    "description": "Bound-checked load, condition rj <= rk."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "bound"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "high-unroll load-to-ALU chain",
+          "role": "measurement",
+          "asm": "ldle.w $r4, $r20, $r5; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; li.d $r5, 0x7fffffffffffffff",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 6.0
+          },
+          "measurement": {
+            "unroll": 32768,
+            "iters": 306,
+            "reps": 7
+          },
+          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; li.d $r5, 0x7fffffffffffffff' --asm 'ldle.w $r4, $r20, $r5; add.d $r20, $r20, $r4'"
+        }
+      ],
+      "notes": "1 cycles of helper latency are subtracted. Unroll 32768, iters 306."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent addresses",
+      "asm": "ldle.w $r12, $r21, $r30; ldle.w $r13, $r23, $r30; ldle.w $r14, $r24, $r30; ldle.w $r15, $r25, $r30; ldle.w $r16, $r26, $r30; ldle.w $r17, $r27, $r30; ldle.w $r18, $r28, $r30; ldle.w $r19, $r29, $r30",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, 1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "387b7aac  ldle.w      \t$t0, $r21, $s7",
+        "387b7aed  ldle.w      \t$t1, $s0, $s7",
+        "387b7b0e  ldle.w      \t$t2, $s1, $s7",
+        "387b7b2f  ldle.w      \t$t3, $s2, $s7",
+        "387b7b50  ldle.w      \t$t4, $s3, $s7",
+        "387b7b71  ldle.w      \t$t5, $s4, $s7",
+        "387b7b92  ldle.w      \t$t6, $s5, $s7",
+        "387b7bb3  ldle.w      \t$t7, $s6, $s7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.98
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, 1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'ldle.w $r12, $r21, $r30; ldle.w $r13, $r23, $r30; ldle.w $r14, $r24, $r30; ldle.w $r15, $r25, $r30; ldle.w $r16, $r26, $r30; ldle.w $r17, $r27, $r30; ldle.w $r18, $r28, $r30; ldle.w $r19, $r29, $r30'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.9975,
+        "ipc": 1.0025
+      }
+    }
+  ]
+}

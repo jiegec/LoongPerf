@@ -1,0 +1,103 @@
+{
+  "instruction": {
+    "name": "ldptr.w",
+    "extension": "Base",
+    "form": "ldptr.w rd, rj, si14",
+    "description": "ldptr.w pointer load."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "scaled offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "high-unroll dependency chain",
+          "role": "measurement",
+          "asm": "ldptr.w $r4, $r20, 0; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8",
+          "chain_latency": 1,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 6.0
+          },
+          "measurement": {
+            "unroll": 32768,
+            "iters": 306,
+            "reps": 7
+          },
+          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'ldptr.w $r4, $r20, 0; add.d $r20, $r20, $r4'"
+        }
+      ],
+      "notes": "1 cycles of helper latency are subtracted. Unroll 32768, iters 306."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ldptr.w $r12, $r20, 0; ldptr.w $r13, $r20, 8; ldptr.w $r14, $r20, 16; ldptr.w $r15, $r20, 24; ldptr.w $r16, $r20, 32; ldptr.w $r17, $r20, 40; ldptr.w $r18, $r20, 48; ldptr.w $r19, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024",
+      "machine_code": [
+        "2400028c  ldptr.w     \t$t0, $t8, 0",
+        "24000a8d  ldptr.w     \t$t1, $t8, 8",
+        "2400128e  ldptr.w     \t$t2, $t8, 16",
+        "24001a8f  ldptr.w     \t$t3, $t8, 24",
+        "24002290  ldptr.w     \t$t4, $t8, 32",
+        "24002a91  ldptr.w     \t$t5, $t8, 40",
+        "24003292  ldptr.w     \t$t6, $t8, 48",
+        "24003a93  ldptr.w     \t$t7, $t8, 56"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024' --asm 'ldptr.w $r12, $r20, 0; ldptr.w $r13, $r20, 8; ldptr.w $r14, $r20, 16; ldptr.w $r15, $r20, 24; ldptr.w $r16, $r20, 32; ldptr.w $r17, $r20, 40; ldptr.w $r18, $r20, 48; ldptr.w $r19, $r20, 56'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

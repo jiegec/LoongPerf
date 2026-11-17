@@ -1,0 +1,69 @@
+{
+  "instruction": {
+    "name": "movfcsr2gr",
+    "extension": "Base",
+    "form": "movfcsr2gr rd, fcsr",
+    "description": "Move the selected FCSR into rd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "rd"
+    },
+    {
+      "index": 2,
+      "name": "fcsr",
+      "kind": "other",
+      "access": "read",
+      "bits": 64,
+      "description": "fcsr"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "movfcsr2gr $r12, $fcsr0; movfcsr2gr $r13, $fcsr1; movfcsr2gr $r14, $fcsr2; movfcsr2gr $r15, $fcsr3; movfcsr2gr $r16, $fcsr0; movfcsr2gr $r17, $fcsr1; movfcsr2gr $r18, $fcsr2; movfcsr2gr $r19, $fcsr3",
+      "init": "li.d $r4, 0; movgr2fcsr $fcsr0, $r4; movgr2fcsr $fcsr1, $r4; movgr2fcsr $fcsr2, $r4; movgr2fcsr $fcsr3, $r4",
+      "machine_code": [
+        "0114c80c  movfcsr2gr  \t$t0, $fcsr0",
+        "0114c82d  movfcsr2gr  \t$t1, $fcsr1",
+        "0114c84e  movfcsr2gr  \t$t2, $fcsr2",
+        "0114c86f  movfcsr2gr  \t$t3, $fcsr3",
+        "0114c810  movfcsr2gr  \t$t4, $fcsr0",
+        "0114c831  movfcsr2gr  \t$t5, $fcsr1",
+        "0114c852  movfcsr2gr  \t$t6, $fcsr2",
+        "0114c873  movfcsr2gr  \t$t7, $fcsr3"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 55.96
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0; movgr2fcsr $fcsr0, $r4; movgr2fcsr $fcsr1, $r4; movgr2fcsr $fcsr2, $r4; movgr2fcsr $fcsr3, $r4' --asm 'movfcsr2gr $r12, $fcsr0; movfcsr2gr $r13, $fcsr1; movfcsr2gr $r14, $fcsr2; movfcsr2gr $r15, $fcsr3; movfcsr2gr $r16, $fcsr0; movfcsr2gr $r17, $fcsr1; movfcsr2gr $r18, $fcsr2; movfcsr2gr $r19, $fcsr3'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 6.995,
+        "ipc": 0.143
+      },
+      "notes": "8 independent instructions take 55.96 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

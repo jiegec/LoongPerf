@@ -1,0 +1,28 @@
+{
+  "instruction": {
+    "name": "idle",
+    "extension": "Base",
+    "form": "idle level",
+    "description": "Enter idle state."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "level",
+      "kind": "immediate",
+      "access": "read",
+      "description": "idle level"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "notes": "Privileged idle instruction; traps in user mode."
+}

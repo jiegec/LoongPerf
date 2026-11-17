@@ -1,0 +1,37 @@
+{
+  "instruction": {
+    "name": "llacq.d",
+    "extension": "Base",
+    "form": "llacq.d rd, rj",
+    "description": "llacq.d acquire load-linked."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "address"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "notes": "Not supported on LA464 (SIGILL in the user-space benchmark)."
+}

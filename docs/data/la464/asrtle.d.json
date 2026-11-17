@@ -1,0 +1,69 @@
+{
+  "instruction": {
+    "name": "asrtle.d",
+    "extension": "Base",
+    "form": "asrtle.d rj, rk",
+    "description": "Check that signed rj <= signed rk; raise BCE otherwise."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first compared value"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second compared value"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "asrtle.d $r4, $r12; asrtle.d $r5, $r13; asrtle.d $r6, $r14; asrtle.d $r7, $r15; asrtle.d $r8, $r16; asrtle.d $r9, $r17; asrtle.d $r10, $r18; asrtle.d $r11, $r19",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 9; addi.d $r13, $r0, 10; addi.d $r14, $r0, 11; addi.d $r15, $r0, 12; addi.d $r16, $r0, 13; addi.d $r17, $r0, 14; addi.d $r18, $r0, 15; addi.d $r19, $r0, 16",
+      "machine_code": [
+        "00013080  asrtle.d    \t$a0, $t0",
+        "000134a0  asrtle.d    \t$a1, $t1",
+        "000138c0  asrtle.d    \t$a2, $t2",
+        "00013ce0  asrtle.d    \t$a3, $t3",
+        "00014100  asrtle.d    \t$a4, $t4",
+        "00014520  asrtle.d    \t$a5, $t5",
+        "00014940  asrtle.d    \t$a6, $t6",
+        "00014d60  asrtle.d    \t$a7, $t7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 9; addi.d $r13, $r0, 10; addi.d $r14, $r0, 11; addi.d $r15, $r0, 12; addi.d $r16, $r0, 13; addi.d $r17, $r0, 14; addi.d $r18, $r0, 15; addi.d $r19, $r0, 16' --asm 'asrtle.d $r4, $r12; asrtle.d $r5, $r13; asrtle.d $r6, $r14; asrtle.d $r7, $r15; asrtle.d $r8, $r16; asrtle.d $r9, $r17; asrtle.d $r10, $r18; asrtle.d $r11, $r19'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

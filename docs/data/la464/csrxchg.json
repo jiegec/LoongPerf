@@ -1,0 +1,44 @@
+{
+  "instruction": {
+    "name": "csrxchg",
+    "extension": "Base",
+    "form": "csrxchg rd, rj, csr",
+    "description": "Exchange masked CSR bits with rd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 3,
+      "name": "csr",
+      "kind": "immediate",
+      "access": "read",
+      "description": "CSR number"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "notes": "Privileged CSR access; traps in user mode."
+}

@@ -1,0 +1,103 @@
+{
+  "instruction": {
+    "name": "ld.h",
+    "extension": "Base",
+    "form": "ld.h rd, rj, si12",
+    "description": "ld.h load from rj + offset."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.01,
+      "experiments": [
+        {
+          "name": "high-unroll load-to-ALU chain",
+          "role": "measurement",
+          "asm": "ld.h $r4, $r20, 0; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 6.01
+          },
+          "measurement": {
+            "unroll": 32768,
+            "iters": 306,
+            "reps": 7
+          },
+          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8' --asm 'ld.h $r4, $r20, 0; add.d $r20, $r20, $r4'"
+        }
+      ],
+      "notes": "1 cycles of helper latency are subtracted. Unroll 32768, iters 306."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ld.h $r12, $r20, 0; ld.h $r13, $r20, 8; ld.h $r14, $r20, 16; ld.h $r15, $r20, 24; ld.h $r16, $r20, 32; ld.h $r17, $r20, 40; ld.h $r18, $r20, 48; ld.h $r19, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024",
+      "machine_code": [
+        "2840028c  ld.h        \t$t0, $t8, 0",
+        "2840228d  ld.h        \t$t1, $t8, 8",
+        "2840428e  ld.h        \t$t2, $t8, 16",
+        "2840628f  ld.h        \t$t3, $t8, 24",
+        "28408290  ld.h        \t$t4, $t8, 32",
+        "2840a291  ld.h        \t$t5, $t8, 40",
+        "2840c292  ld.h        \t$t6, $t8, 48",
+        "2840e293  ld.h        \t$t7, $t8, 56"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024' --asm 'ld.h $r12, $r20, 0; ld.h $r13, $r20, 8; ld.h $r14, $r20, 16; ld.h $r15, $r20, 24; ld.h $r16, $r20, 32; ld.h $r17, $r20, 40; ld.h $r18, $r20, 48; ld.h $r19, $r20, 56'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

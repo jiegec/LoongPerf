@@ -1,0 +1,98 @@
+{
+  "instruction": {
+    "name": "bnez",
+    "extension": "Base",
+    "form": "bnez rj, offs",
+    "description": "Branch if rj is non-zero (measured not taken)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "condition"
+    },
+    {
+      "index": 2,
+      "name": "offs",
+      "kind": "immediate",
+      "access": "read",
+      "description": "branch offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 not-taken branches",
+      "asm": "bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0",
+      "init": "addi.d $r4, $r0, 0",
+      "machine_code": [
+        "44000080  bnez        \t$a0, 0\t# 0x0",
+        "44000080  bnez        \t$a0, 0\t# 0x4",
+        "44000080  bnez        \t$a0, 0\t# 0x8",
+        "44000080  bnez        \t$a0, 0\t# 0xc",
+        "44000080  bnez        \t$a0, 0\t# 0x10",
+        "44000080  bnez        \t$a0, 0\t# 0x14",
+        "44000080  bnez        \t$a0, 0\t# 0x18",
+        "44000080  bnez        \t$a0, 0\t# 0x1c"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 0' --asm 'bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 branches measured at unroll=1000 to stay within BTB capacity."
+    },
+    {
+      "name": "8 taken branches",
+      "asm": "bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4",
+      "init": "addi.d $r4, $r0, 1",
+      "machine_code": [
+        "44000480  bnez        \t$a0, 4\t# 0x4",
+        "44000480  bnez        \t$a0, 4\t# 0x8",
+        "44000480  bnez        \t$a0, 4\t# 0xc",
+        "44000480  bnez        \t$a0, 4\t# 0x10",
+        "44000480  bnez        \t$a0, 4\t# 0x14",
+        "44000480  bnez        \t$a0, 4\t# 0x18",
+        "44000480  bnez        \t$a0, 4\t# 0x1c",
+        "44000480  bnez        \t$a0, 4\t# 0x20"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.39
+      },
+      "measurement": {
+        "unroll": 8,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 8 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1' --asm 'bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.9237,
+        "ipc": 1.0825
+      },
+      "notes": "8 branches measured at unroll=8 to stay within BTB capacity."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

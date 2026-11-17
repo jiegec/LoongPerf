@@ -1,0 +1,127 @@
+{
+  "instruction": {
+    "name": "fsub.s",
+    "extension": "Base",
+    "form": "fsub.s fd, fj, fk",
+    "description": "Single-precision floating-point subtract."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "fk",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.04,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fsub.s $f0, $f0, $f1",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.04
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fsub.s $f0, $f0, $f1'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 5.04,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fsub.s $f0, $f1, $f0",
+          "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.04
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4' --asm 'fsub.s $f0, $f1, $f0'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fsub.s $f0, $f8, $f8; fsub.s $f1, $f9, $f9; fsub.s $f2, $f10, $f10; fsub.s $f3, $f11, $f11; fsub.s $f4, $f12, $f12; fsub.s $f5, $f13, $f13; fsub.s $f6, $f14, $f14; fsub.s $f7, $f15, $f15",
+      "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
+      "machine_code": [
+        "0102a100  fsub.s      \t$fa0, $ft0, $ft0",
+        "0102a521  fsub.s      \t$fa1, $ft1, $ft1",
+        "0102a942  fsub.s      \t$fa2, $ft2, $ft2",
+        "0102ad63  fsub.s      \t$fa3, $ft3, $ft3",
+        "0102b184  fsub.s      \t$fa4, $ft4, $ft4",
+        "0102b5a5  fsub.s      \t$fa5, $ft5, $ft5",
+        "0102b9c6  fsub.s      \t$fa6, $ft6, $ft6",
+        "0102bde7  fsub.s      \t$fa7, $ft7, $ft7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'fsub.s $f0, $f8, $f8; fsub.s $f1, $f9, $f9; fsub.s $f2, $f10, $f10; fsub.s $f3, $f11, $f11; fsub.s $f4, $f12, $f12; fsub.s $f5, $f13, $f13; fsub.s $f6, $f14, $f14; fsub.s $f7, $f15, $f15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ]
+}

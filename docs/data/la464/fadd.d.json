@@ -1,0 +1,127 @@
+{
+  "instruction": {
+    "name": "fadd.d",
+    "extension": "Base",
+    "form": "fadd.d fd, fj, fk",
+    "description": "Double-precision floating-point add."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "result"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "fk",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fadd.d $f0, $f0, $f1",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fadd.d $f0, $f0, $f1'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fadd.d $f0, $f1, $f0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "measurement": {
+            "unroll": 65536,
+            "iters": 153
+          },
+          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fadd.d $f0, $f1, $f0'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fadd.d $f0, $f8, $f8; fadd.d $f1, $f9, $f9; fadd.d $f2, $f10, $f10; fadd.d $f3, $f11, $f11; fadd.d $f4, $f12, $f12; fadd.d $f5, $f13, $f13; fadd.d $f6, $f14, $f14; fadd.d $f7, $f15, $f15",
+      "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
+      "machine_code": [
+        "01012100  fadd.d      \t$fa0, $ft0, $ft0",
+        "01012521  fadd.d      \t$fa1, $ft1, $ft1",
+        "01012942  fadd.d      \t$fa2, $ft2, $ft2",
+        "01012d63  fadd.d      \t$fa3, $ft3, $ft3",
+        "01013184  fadd.d      \t$fa4, $ft4, $ft4",
+        "010135a5  fadd.d      \t$fa5, $ft5, $ft5",
+        "010139c6  fadd.d      \t$fa6, $ft6, $ft6",
+        "01013de7  fadd.d      \t$fa7, $ft7, $ft7"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fadd.d $f0, $f8, $f8; fadd.d $f1, $f9, $f9; fadd.d $f2, $f10, $f10; fadd.d $f3, $f11, $f11; fadd.d $f4, $f12, $f12; fadd.d $f5, $f13, $f13; fadd.d $f6, $f14, $f14; fadd.d $f7, $f15, $f15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ]
+}
