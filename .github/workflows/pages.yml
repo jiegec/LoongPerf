@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          # table.html shows the latest commit that touched docs/data.
+          fetch-depth: 0
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v6

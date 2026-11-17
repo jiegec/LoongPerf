@@ -1,0 +1,157 @@
+{
+  "instruction": {
+    "name": "armmove",
+    "extension": "LBT",
+    "form": "armmove rd, rk, cond",
+    "description": "ARM-style conditional move."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "accumulator and destination"
+    },
+    {
+      "index": 2,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second source"
+    },
+    {
+      "index": 3,
+      "name": "cond",
+      "kind": "immediate",
+      "access": "read",
+      "description": "ARM condition field"
+    },
+    {
+      "index": 4,
+      "name": "ARMFLAGS",
+      "kind": "flags",
+      "access": "write",
+      "bits": 4,
+      "description": "ARM flags",
+      "implicit": true
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 100000,
+    "iters": 100,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armmove $r12, $r13, 14",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
+          "chain_latency": 0.0,
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.99
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armmove $r12, $r13, 14'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 1.99-2.00 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armmove $r13, $r12, 14; armmove $r12, $r13, 14",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
+          "chain_latency": 0.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.06
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armmove $r13, $r12, 14; armmove $r12, $r13, 14'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.05-4.06 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 4,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armmove $r12, $r13, 14; armmfflag $r12, 0x39",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 2.04
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armmove $r12, $r13, 14; armmfflag $r12, 0x39'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 2.04-2.07 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "armmove $r12, $r4, 14; armmove $r13, $r5, 14; armmove $r14, $r6, 14; armmove $r15, $r7, 14; armmove $r16, $r8, 14; armmove $r17, $r9, 14; armmove $r18, $r10, 14; armmove $r19, $r11, 14",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39' --asm 'armmove $r12, $r4, 14; armmove $r13, $r5, 14; armmove $r14, $r6, 14; armmove $r15, $r7, 14; armmove $r16, $r8, 14; armmove $r17, $r9, 14; armmove $r18, $r10, 14; armmove $r19, $r11, 14'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "Slope method, 8 independent lanes; 8.00 cycles per 8 instructions.",
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000,
+        "reps": 5
+      }
+    }
+  ]
+}

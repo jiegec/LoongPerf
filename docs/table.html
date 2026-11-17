@@ -30,6 +30,13 @@
     header { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 6px; }
     h1 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
     .sub { color: var(--muted); }
+    .data-meta {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+      margin: 9px 0 0; color: var(--muted); font-size: 13px;
+    }
+    .data-meta .sep { color: var(--line); }
+    .data-meta a { font-weight: 500; }
+    .data-meta code { font-size: 12px; }
     .controls {
       display: flex; gap: 14px; flex-wrap: wrap; align-items: end;
       padding: 16px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 16px;
@@ -60,11 +67,16 @@
       .progress-bar { transition: none; }
       .progress.indeterminate .progress-bar { animation: none; width: 100%; opacity: 0.55; }
     }
-    .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+    .table-scroll { border: 1px solid var(--line); border-radius: 8px; }
     table { border-collapse: collapse; width: 100%; min-width: 980px; }
     th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
-    th { background: var(--head); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); white-space: nowrap; position: sticky; top: 0; z-index: 2; }
-    thead tr:nth-child(2) th { top: 34px; }
+    th {
+      background: var(--head); font-size: 12px; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--muted); white-space: nowrap;
+      position: sticky; top: 0; z-index: 2;
+    }
+    thead tr:nth-child(1) th { z-index: 3; }
+    thead tr:nth-child(2) th { top: var(--head-row-height, 34px); }
     th[data-sort] { cursor: pointer; user-select: none; }
     th[data-sort]:hover { color: var(--accent); }
     .uarch-head { text-align: center; border-left: 1px solid var(--line); }
@@ -104,6 +116,7 @@
     <span class="sub">LoongPerf measurements</span>
   </header>
   <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name or a row for details. SIGILL marks an instruction that is not supported on the selected microarchitecture.</p>
+  <p class="data-meta" id="data-meta" hidden></p>
 
   <div class="controls">
     <div class="control">
@@ -152,7 +165,8 @@
 
 <script>
   const AGGREGATE = "data/measurements.json";
-  const PAGE_SIZE = 50;
+  const REPO_URL = "https://github.com/jiegec/LoongPerf";
+  const PAGE_SIZE = 100;
   const SEARCH_DELAY = 120;
 
   let rows = [];
@@ -182,6 +196,34 @@
     if (bytes < 1024) return bytes + " B";
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + " KB";
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  function formatUpdated(value) {
+    const match = String(value).match(
+      /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::\d{2})?(Z|[+-]\d{2}:\d{2})?$/
+    );
+    if (!match) return String(value);
+    const zone = match[3] === "Z" ? "UTC" : (match[3] || "");
+    return match[1] + " " + match[2] + (zone ? " " + zone : "");
+  }
+
+  function renderDataMeta(metadata) {
+    const info = metadata || {};
+    const parts = [];
+    if (info.updated) {
+      parts.push('<span>Data updated <time datetime="' + esc(info.updated) + '">' +
+        esc(formatUpdated(info.updated)) + "</time></span>");
+    }
+    if (info.commit && info.commit.short) {
+      const commitUrl = info.commit.url || (REPO_URL + "/commit/" + info.commit.sha);
+      parts.push('<span>commit <a href="' + esc(commitUrl) + '" title="' +
+        esc(info.commit.sha || info.commit.short) + '"><code>' +
+        esc(info.commit.short) + "</code></a></span>");
+    }
+    parts.push('<a href="' + esc(info.repo || REPO_URL) + '">LoongPerf on GitHub</a>');
+    const box = $("data-meta");
+    box.innerHTML = parts.join(' <span class="sep" aria-hidden="true">·</span> ');
+    box.hidden = false;
   }
 
   function nextFrame() {
@@ -421,6 +463,7 @@
       await nextFrame();
       const payload = JSON.parse(text);
       const entries = payload.instructions || [];
+      renderDataMeta(payload.metadata);
 
       const settings = loadUrlSettings();
       allUarches = [...new Set(entries.map((entry) => entry.uarch))].sort();
@@ -498,6 +541,15 @@
     return label + (sortDir > 0 ? " ↑" : " ↓");
   }
 
+  function updateStickyHeaderHeight() {
+    const groupHead = document.querySelector("#thead .uarch-head");
+    if (!groupHead) return;
+    const height = groupHead.getBoundingClientRect().height;
+    if (height > 0) {
+      document.documentElement.style.setProperty("--head-row-height", height.toFixed(1) + "px");
+    }
+  }
+
   function renderHeader(selected) {
     const signature = [selected.join("\u0001"), sortKey, sortDir].join("\u0000");
     if (signature === headerSignature) return;
@@ -517,6 +569,7 @@
     top += "</tr>";
     bottom += "</tr>";
     thead.innerHTML = top + bottom;
+    updateStickyHeaderHeight();
     thead.querySelectorAll("th[data-sort]").forEach((th) => {
       th.addEventListener("click", () => {
         const key = th.dataset.sort;
@@ -731,6 +784,12 @@
     page += 1; render();
   });
 
+  window.addEventListener("resize", updateStickyHeaderHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(updateStickyHeaderHeight).observe($("thead"));
+  }
+
+  renderDataMeta(null);
   load();
 </script>
 </body>
