@@ -111,14 +111,16 @@ while `0x31` counts the corresponding vector uops. For example, `vadd.b`,
 `vffint.s.l`, or their LASX forms gives `0x25 = 1` and `0x31 = 2`.
 Vector loads/stores and some vector moves are not included: `vld`, `vst`,
 `xvld`, `xvst`, and `vreplgr2vr.w` all read zero from `0x25` and `0x31`.
-A scan of configs `0x00`-`0xff` did not find separate LSX and LASX uop
-counters on LA464, so `0x31` is the combined vector-uop counter.
+One scalar exception was observed: `movfr2cf` also increments `0x25` and
+`0x31` by one. A scan of configs `0x00`-`0xff` did not find separate LSX and
+LASX uop counters on LA464, so `0x31` is the combined vector-uop counter.
 
 Scalar floating-point examples for `0x30`: `fadd.d = 1`, `fdiv.d = 1`,
-`fsel = 2`, and `fcmp.slt.d = 1`. FP moves, FP CSR transfers, and FP
+`fsel = 2`, and `fcmp.slt.d = 1`. Most FP moves, FP CSR transfers, and FP
 loads/stores do not count: `movgr2fr.d`, `movfr2gr.d`, `movfrh2gr.s`,
-`movfcsr2gr`, `movgr2fcsr`, `fld.d`, and `fst.d` all read zero. Integer
-instructions count as zero.
+`movcf2gr`, `movgr2cf`, `movfcsr2gr`, `movgr2fcsr`, `fld.d`, and `fst.d`
+all read zero. The exceptions are `movgr2frh.w = 1` and `movcf2fr = 1`,
+while `movfr2cf = 0`. Integer instructions count as zero.
 
 The load/store counters keep their LA664 meaning for scalar, FP, and LSX
 instructions, but a 256-bit LASX access can retire as two load/store
