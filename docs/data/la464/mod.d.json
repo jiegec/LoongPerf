@@ -125,10 +125,14 @@
       "throughput": {
         "lanes": 8,
         "cpi": 3.5,
-        "ipc": 0.2857
+        "ipc": 0.2857,
+        "cpi_min": 3.5,
+        "cpi_max": 20.0,
+        "ipc_min": 0.05,
+        "ipc_max": 0.2857
       },
-      "notes": "Data-dependent throughput; one representative operand sample is shown."
+      "notes": "Data-dependent throughput. CPI 3.5 at dividend=0, divisor=2; CPI 20 at dividend=9223372036854775807, divisor=1. Measured with 8 independent lanes."
     }
   ],
-  "notes": "Latency is data-dependent: rj 5-38 cycles, rk 4-38 cycles. Throughput is data-dependent; the throughput experiment uses one representative operand sample."
+  "notes": "Latency and throughput are data-dependent: latency 5.0-38.0 cycles, throughput CPI 3.5-20. The stored experiments use representative operand samples."
 }
