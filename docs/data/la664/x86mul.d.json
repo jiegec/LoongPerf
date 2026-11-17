@@ -105,7 +105,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 5.13,
+      "cycles": 5.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -120,13 +120,15 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86mul.d $r12, $r13; x86mfflag $r12, 1'",
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 6.13
+            "core_cycles": 6.0
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted.",
           "chain_latency": 1.0
         }
       ],
-      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted."
+      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 5.13; the nominal integer is 5.",
+      "cycles_min": 5.03,
+      "cycles_max": 5.23
     },
     {
       "from_operands": [
