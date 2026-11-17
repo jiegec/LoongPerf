@@ -22,7 +22,7 @@ SCHEMA_PATH = ROOT / "schema" / "instruction.schema.json"
 
 EPS = 0.02
 
-TWO_UOP_INSTRUCTIONS = set("""vfcvt.h.s vfcvt.s.d vfcvth.d.s vfcvth.s.h vfcvtl.d.s vfcvtl.s.h vffint.s.l vffinth.d.w vffintl.d.w vftint.w.d vftinth.l.s vftintl.l.s vftintrm.w.d vftintrmh.l.s vftintrml.l.s vftintrne.w.d vftintrneh.l.s vftintrnel.l.s vftintrp.w.d vftintrph.l.s vftintrpl.l.s vftintrz.w.d vftintrzh.l.s vftintrzl.l.s xvfcvt.h.s xvfcvt.s.d xvfcvth.d.s xvfcvth.s.h xvfcvtl.d.s xvfcvtl.s.h xvffint.s.l xvffinth.d.w xvffintl.d.w xvftint.w.d xvftinth.l.s xvftintl.l.s xvftintrm.w.d xvftintrmh.l.s xvftintrml.l.s xvftintrne.w.d xvftintrneh.l.s xvftintrnel.l.s xvftintrp.w.d xvftintrph.l.s xvftintrpl.l.s xvftintrz.w.d xvftintrzh.l.s xvftintrzl.l.s""".split())
+TWO_UOP_INSTRUCTIONS = set("""vpickve2gr.b vpickve2gr.h vreplgr2vr.b vreplgr2vr.h xvreplgr2vr.b xvreplgr2vr.h vfcvt.h.s vfcvt.s.d vfcvth.d.s vfcvth.s.h vfcvtl.d.s vfcvtl.s.h vffint.s.l vffinth.d.w vffintl.d.w vftint.w.d vftinth.l.s vftintl.l.s vftintrm.w.d vftintrmh.l.s vftintrml.l.s vftintrne.w.d vftintrneh.l.s vftintrnel.l.s vftintrp.w.d vftintrph.l.s vftintrpl.l.s vftintrz.w.d vftintrzh.l.s vftintrzl.l.s xvfcvt.h.s xvfcvt.s.d xvfcvth.d.s xvfcvth.s.h xvfcvtl.d.s xvfcvtl.s.h xvffint.s.l xvffinth.d.w xvffintl.d.w xvftint.w.d xvftinth.l.s xvftintl.l.s xvftintrm.w.d xvftintrmh.l.s xvftintrml.l.s xvftintrne.w.d xvftintrneh.l.s xvftintrnel.l.s xvftintrp.w.d xvftintrph.l.s xvftintrpl.l.s xvftintrz.w.d xvftintrzh.l.s xvftintrzl.l.s""".split())
 
 RETIRED_MULTIPLIER = {
     "cpucfg": 0,

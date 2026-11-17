@@ -1,0 +1,116 @@
+{
+  "instruction": {
+    "name": "vdiv.h",
+    "extension": "LSX",
+    "form": "vdiv.h vd, vj, vk",
+    "description": "Divide each signed 16-bit element in `a` by the corresponding element in `b`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "dividend"
+    },
+    {
+      "index": 3,
+      "name": "vk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "divisor"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 29.03,
+      "cycles_min": 16.89,
+      "cycles_max": 41.02,
+      "experiments": [
+        {
+          "name": "dependent chain with element-0 reset helper",
+          "role": "measurement",
+          "asm": "vdiv.h $vr0, $vr0, $vr2; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4",
+          "init": "li.w $r4, 1; vreplgr2vr.h $vr0, $r4; li.w $r4, 1; vreplgr2vr.h $vr2, $r4; li.w $r5, 1; li.w $r6, 0",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1; vreplgr2vr.h $vr0, $r4; li.w $r4, 1; vreplgr2vr.h $vr2, $r4; li.w $r5, 1; li.w $r6, 0' --asm 'vdiv.h $vr0, $vr0, $vr2; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4'",
+          "result": {
+            "instructions_retired": 7.0,
+            "core_cycles": 37.12
+          },
+          "chain_latency": 8.09,
+          "notes": "Element 0 is extracted, forced back to the test dividend, and replicated; vadd.b baseline subtracted."
+        },
+        {
+          "name": "vadd.b reset-helper baseline",
+          "role": "calibration",
+          "asm": "vadd.b $vr0, $vr0, $vr0; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4",
+          "init": "li.w $r4, 1; vreplgr2vr.h $vr0, $r4; li.w $r4, 1; vreplgr2vr.h $vr2, $r4; li.w $r5, 1; li.w $r6, 0",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1; vreplgr2vr.h $vr0, $r4; li.w $r4, 1; vreplgr2vr.h $vr2, $r4; li.w $r5, 1; li.w $r6, 0' --asm 'vadd.b $vr0, $vr0, $vr0; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4'",
+          "result": {
+            "instructions_retired": 7.0,
+            "core_cycles": 9.09
+          },
+          "notes": "Same helper with vadd.b replacing the variable operation."
+        }
+      ],
+      "notes": "Data-dependent. Range over 16 dividend/divisor pairs; min 16.89 at 0/1, max 41.02 at 32767/1. Sample uses 1/1."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vdiv.h $vr0, $vr8, $vr16; vdiv.h $vr1, $vr9, $vr17; vdiv.h $vr2, $vr10, $vr18; vdiv.h $vr3, $vr11, $vr19; vdiv.h $vr4, $vr12, $vr20; vdiv.h $vr5, $vr13, $vr21; vdiv.h $vr6, $vr14, $vr22; vdiv.h $vr7, $vr15, $vr23",
+      "init": "li.w $r4, 1; vreplgr2vr.h $vr8, $r4; li.w $r4, 1; vreplgr2vr.h $vr16, $r4; li.w $r4, 1; vreplgr2vr.h $vr9, $r4; li.w $r4, 1; vreplgr2vr.h $vr17, $r4; li.w $r4, 1; vreplgr2vr.h $vr10, $r4; li.w $r4, 1; vreplgr2vr.h $vr18, $r4; li.w $r4, 1; vreplgr2vr.h $vr11, $r4; li.w $r4, 1; vreplgr2vr.h $vr19, $r4; li.w $r4, 1; vreplgr2vr.h $vr12, $r4; li.w $r4, 1; vreplgr2vr.h $vr20, $r4; li.w $r4, 1; vreplgr2vr.h $vr13, $r4; li.w $r4, 1; vreplgr2vr.h $vr21, $r4; li.w $r4, 1; vreplgr2vr.h $vr14, $r4; li.w $r4, 1; vreplgr2vr.h $vr22, $r4; li.w $r4, 1; vreplgr2vr.h $vr15, $r4; li.w $r4, 1; vreplgr2vr.h $vr23, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1; vreplgr2vr.h $vr8, $r4; li.w $r4, 1; vreplgr2vr.h $vr16, $r4; li.w $r4, 1; vreplgr2vr.h $vr9, $r4; li.w $r4, 1; vreplgr2vr.h $vr17, $r4; li.w $r4, 1; vreplgr2vr.h $vr10, $r4; li.w $r4, 1; vreplgr2vr.h $vr18, $r4; li.w $r4, 1; vreplgr2vr.h $vr11, $r4; li.w $r4, 1; vreplgr2vr.h $vr19, $r4; li.w $r4, 1; vreplgr2vr.h $vr12, $r4; li.w $r4, 1; vreplgr2vr.h $vr20, $r4; li.w $r4, 1; vreplgr2vr.h $vr13, $r4; li.w $r4, 1; vreplgr2vr.h $vr21, $r4; li.w $r4, 1; vreplgr2vr.h $vr14, $r4; li.w $r4, 1; vreplgr2vr.h $vr22, $r4; li.w $r4, 1; vreplgr2vr.h $vr15, $r4; li.w $r4, 1; vreplgr2vr.h $vr23, $r4' --asm 'vdiv.h $vr0, $vr8, $vr16; vdiv.h $vr1, $vr9, $vr17; vdiv.h $vr2, $vr10, $vr18; vdiv.h $vr3, $vr11, $vr19; vdiv.h $vr4, $vr12, $vr20; vdiv.h $vr5, $vr13, $vr21; vdiv.h $vr6, $vr14, $vr22; vdiv.h $vr7, $vr15, $vr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 108.03
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 13.5038,
+        "ipc": 0.0741,
+        "cpi_min": 7.505,
+        "cpi_max": 19.519,
+        "ipc_min": 0.0512,
+        "ipc_max": 0.1332
+      },
+      "notes": "Range over the same pairs: min CPI 7.50 at 0/32767, max CPI 19.52 at 32767/2. Sample uses 1/1."
+    }
+  ],
+  "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values."
+}
