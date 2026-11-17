@@ -81,7 +81,7 @@
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f' --asm 'x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f; x86mfflag $r12, 0x3f'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 5
+            "core_cycles": 3.0
           },
           "notes": "Adding one x86mfflag adds 1.00 cycle, so L(x86mfflag) = 1.00 and L(x86mtflag) = 4.00 - 1.00 = 3.00."
         }

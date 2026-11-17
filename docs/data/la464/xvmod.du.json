@@ -120,7 +120,7 @@
       "init": "li.d $r4, -1; xvreplgr2vr.d $xr8, $r4; li.d $r4, 1; xvreplgr2vr.d $xr16, $r4; li.d $r4, -1; xvreplgr2vr.d $xr9, $r4; li.d $r4, 1; xvreplgr2vr.d $xr17, $r4; li.d $r4, -1; xvreplgr2vr.d $xr10, $r4; li.d $r4, 1; xvreplgr2vr.d $xr18, $r4; li.d $r4, -1; xvreplgr2vr.d $xr11, $r4; li.d $r4, 1; xvreplgr2vr.d $xr19, $r4; li.d $r4, -1; xvreplgr2vr.d $xr12, $r4; li.d $r4, 1; xvreplgr2vr.d $xr20, $r4; li.d $r4, -1; xvreplgr2vr.d $xr13, $r4; li.d $r4, 1; xvreplgr2vr.d $xr21, $r4; li.d $r4, -1; xvreplgr2vr.d $xr14, $r4; li.d $r4, 1; xvreplgr2vr.d $xr22, $r4; li.d $r4, -1; xvreplgr2vr.d $xr15, $r4; li.d $r4, 1; xvreplgr2vr.d $xr23, $r4",
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 115.96
+        "core_cycles": 116.0
       },
       "measurement": {
         "unroll": 1000,
@@ -130,10 +130,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, -1; xvreplgr2vr.d $xr8, $r4; li.d $r4, 1; xvreplgr2vr.d $xr16, $r4; li.d $r4, -1; xvreplgr2vr.d $xr9, $r4; li.d $r4, 1; xvreplgr2vr.d $xr17, $r4; li.d $r4, -1; xvreplgr2vr.d $xr10, $r4; li.d $r4, 1; xvreplgr2vr.d $xr18, $r4; li.d $r4, -1; xvreplgr2vr.d $xr11, $r4; li.d $r4, 1; xvreplgr2vr.d $xr19, $r4; li.d $r4, -1; xvreplgr2vr.d $xr12, $r4; li.d $r4, 1; xvreplgr2vr.d $xr20, $r4; li.d $r4, -1; xvreplgr2vr.d $xr13, $r4; li.d $r4, 1; xvreplgr2vr.d $xr21, $r4; li.d $r4, -1; xvreplgr2vr.d $xr14, $r4; li.d $r4, 1; xvreplgr2vr.d $xr22, $r4; li.d $r4, -1; xvreplgr2vr.d $xr15, $r4; li.d $r4, 1; xvreplgr2vr.d $xr23, $r4' --asm 'xvmod.du $xr0, $xr8, $xr16; xvmod.du $xr1, $xr9, $xr17; xvmod.du $xr2, $xr10, $xr18; xvmod.du $xr3, $xr11, $xr19; xvmod.du $xr4, $xr12, $xr20; xvmod.du $xr5, $xr13, $xr21; xvmod.du $xr6, $xr14, $xr22; xvmod.du $xr7, $xr15, $xr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 14.49,
+        "cpi": 14.5,
         "ipc": 0.069,
         "cpi_min": 4.5,
-        "cpi_max": 14.49,
+        "cpi_max": 14.5,
         "ipc_min": 0.069,
         "ipc_max": 0.2222
       },

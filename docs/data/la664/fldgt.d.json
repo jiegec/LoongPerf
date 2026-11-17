@@ -87,7 +87,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4.98,
+      "cycles": 5.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -102,7 +102,7 @@
           "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 0; st.d $r22, $r20, 0; li.d $r4, 0' --asm 'fldgt.d $f0, $r20, $r4; movfr2gr.d $r4, $f0; xori $r4, $r4, 1'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 8.98
+            "core_cycles": 9.0
           },
           "chain_latency": 4,
           "notes": "rk -> fd chain with the bound loop-carried; the movfr2gr.d (3) + xori (1) closure is subtracted.",

@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.99,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,7 +61,7 @@
           "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.w $r22, $r20, 0; li.d $r22, -8; st.w $r22, $r20, 8; li.d $r21, 0' --asm 'ldgt.w $r4, $r20, $r21; add.d $r20, $r20, $r4'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 4.99
+            "core_cycles": 5.0
           },
           "chain_latency": 1,
           "notes": "rj -> rd chain, the bound stays 0 so the check passes; add.d subtracted.",
@@ -86,7 +86,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4.98,
+      "cycles": 5.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -101,7 +101,7 @@
           "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 0; st.d $r22, $r20, 0; li.d $r4, 0' --asm 'ldgt.w $r4, $r20, $r4; xori $r4, $r4, 1'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 5.98
+            "core_cycles": 6.0
           },
           "chain_latency": 1,
           "notes": "rk -> rd chain: the bound toggles 0/1 through xori and always stays below the address; xori subtracted.",

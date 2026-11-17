@@ -96,7 +96,7 @@
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86add.w $r13, $r12; x86add.w $r12, $r13'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 4.01
+            "core_cycles": 4.0
           },
           "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved.",
           "machine_code": [

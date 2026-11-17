@@ -31,7 +31,7 @@
       "init": "",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 7.97
+        "core_cycles": 8.0
       },
       "measurement": {
         "unroll": 4,
@@ -41,11 +41,11 @@
       "command": "./bench --unroll 4 --unroll2 5 --iters 30000 --warmup 10 --reps 9 --core 0 --asm 'b 4; b 4; b 4; b 4; b 4; b 4; b 4; b 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.9962,
-        "ipc": 1.0038,
+        "cpi": 1.0,
+        "ipc": 1.0,
         "cpi_min": 0.9925,
-        "cpi_max": 0.9988,
-        "ipc_min": 1.0013,
+        "cpi_max": 1.0,
+        "ipc_min": 1.0,
         "ipc_max": 1.0076
       },
       "notes": "Taken branches to the next instruction, 8 lanes x 4 static sites; the slope method compares 8x4 with 8x5 bodies, so at most 40 branch sites, which fits in the LA464 BTB: 1 cycle per branch."

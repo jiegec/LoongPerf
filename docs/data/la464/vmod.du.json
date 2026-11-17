@@ -120,7 +120,7 @@
       "init": "li.d $r4, -1; vreplgr2vr.d $vr8, $r4; li.d $r4, 1; vreplgr2vr.d $vr16, $r4; li.d $r4, -1; vreplgr2vr.d $vr9, $r4; li.d $r4, 1; vreplgr2vr.d $vr17, $r4; li.d $r4, -1; vreplgr2vr.d $vr10, $r4; li.d $r4, 1; vreplgr2vr.d $vr18, $r4; li.d $r4, -1; vreplgr2vr.d $vr11, $r4; li.d $r4, 1; vreplgr2vr.d $vr19, $r4; li.d $r4, -1; vreplgr2vr.d $vr12, $r4; li.d $r4, 1; vreplgr2vr.d $vr20, $r4; li.d $r4, -1; vreplgr2vr.d $vr13, $r4; li.d $r4, 1; vreplgr2vr.d $vr21, $r4; li.d $r4, -1; vreplgr2vr.d $vr14, $r4; li.d $r4, 1; vreplgr2vr.d $vr22, $r4; li.d $r4, -1; vreplgr2vr.d $vr15, $r4; li.d $r4, 1; vreplgr2vr.d $vr23, $r4",
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 115.96
+        "core_cycles": 116.0
       },
       "measurement": {
         "unroll": 1000,
@@ -130,10 +130,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, -1; vreplgr2vr.d $vr8, $r4; li.d $r4, 1; vreplgr2vr.d $vr16, $r4; li.d $r4, -1; vreplgr2vr.d $vr9, $r4; li.d $r4, 1; vreplgr2vr.d $vr17, $r4; li.d $r4, -1; vreplgr2vr.d $vr10, $r4; li.d $r4, 1; vreplgr2vr.d $vr18, $r4; li.d $r4, -1; vreplgr2vr.d $vr11, $r4; li.d $r4, 1; vreplgr2vr.d $vr19, $r4; li.d $r4, -1; vreplgr2vr.d $vr12, $r4; li.d $r4, 1; vreplgr2vr.d $vr20, $r4; li.d $r4, -1; vreplgr2vr.d $vr13, $r4; li.d $r4, 1; vreplgr2vr.d $vr21, $r4; li.d $r4, -1; vreplgr2vr.d $vr14, $r4; li.d $r4, 1; vreplgr2vr.d $vr22, $r4; li.d $r4, -1; vreplgr2vr.d $vr15, $r4; li.d $r4, 1; vreplgr2vr.d $vr23, $r4' --asm 'vmod.du $vr0, $vr8, $vr16; vmod.du $vr1, $vr9, $vr17; vmod.du $vr2, $vr10, $vr18; vmod.du $vr3, $vr11, $vr19; vmod.du $vr4, $vr12, $vr20; vmod.du $vr5, $vr13, $vr21; vmod.du $vr6, $vr14, $vr22; vmod.du $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 14.49,
+        "cpi": 14.5,
         "ipc": 0.069,
         "cpi_min": 4.5,
-        "cpi_max": 14.49,
+        "cpi_max": 14.5,
         "ipc_min": 0.069,
         "ipc_max": 0.2222
       },

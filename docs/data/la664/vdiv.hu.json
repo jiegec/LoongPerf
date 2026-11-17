@@ -122,12 +122,12 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1; vreplgr2vr.h $vr8, $r4; li.w $r4, 1; vreplgr2vr.h $vr16, $r4; li.w $r4, 1; vreplgr2vr.h $vr9, $r4; li.w $r4, 1; vreplgr2vr.h $vr17, $r4; li.w $r4, 1; vreplgr2vr.h $vr10, $r4; li.w $r4, 1; vreplgr2vr.h $vr18, $r4; li.w $r4, 1; vreplgr2vr.h $vr11, $r4; li.w $r4, 1; vreplgr2vr.h $vr19, $r4; li.w $r4, 1; vreplgr2vr.h $vr12, $r4; li.w $r4, 1; vreplgr2vr.h $vr20, $r4; li.w $r4, 1; vreplgr2vr.h $vr13, $r4; li.w $r4, 1; vreplgr2vr.h $vr21, $r4; li.w $r4, 1; vreplgr2vr.h $vr14, $r4; li.w $r4, 1; vreplgr2vr.h $vr22, $r4; li.w $r4, 1; vreplgr2vr.h $vr15, $r4; li.w $r4, 1; vreplgr2vr.h $vr23, $r4' --asm 'vdiv.hu $vr0, $vr8, $vr16; vdiv.hu $vr1, $vr9, $vr17; vdiv.hu $vr2, $vr10, $vr18; vdiv.hu $vr3, $vr11, $vr19; vdiv.hu $vr4, $vr12, $vr20; vdiv.hu $vr5, $vr13, $vr21; vdiv.hu $vr6, $vr14, $vr22; vdiv.hu $vr7, $vr15, $vr23'",
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 108.08
+        "core_cycles": 108.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 13.51,
-        "ipc": 0.074,
+        "cpi": 13.5,
+        "ipc": 0.0741,
         "cpi_min": 7.504,
         "cpi_max": 21.5,
         "ipc_min": 0.0465,

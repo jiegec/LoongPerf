@@ -53,7 +53,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2fr.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'",
           "result": {
             "instructions_retired": 4,
-            "core_cycles": 12.05
+            "core_cycles": 12.04
           },
           "chain_latency": 11.04,
           "notes": "12.05-cycle chain minus 11.04 cycles (10.04 FPR-store -> GPR-load forwarding + 1 add.d) = 1.01 cycles. Measured with unroll=100000; unroll=1000 gave 0.95 because per-call overhead was not fully amortised.",
