@@ -108,7 +108,13 @@
     td.details-cell { overflow-wrap: anywhere; }
     @media (max-width: 1100px) {
       .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      td.details-cell > .uarch-detail { max-width: calc(100vw - 72px); }
+      td.details-cell > .uarch-detail {
+        position: sticky;
+        left: 12px;
+        z-index: 1;
+        max-width: calc(100vw - 72px);
+        background: var(--head);
+      }
       .details-grid { grid-template-columns: 1fr; gap: 14px; }
       td.details-cell { padding: 12px; }
       .details-grid th, .details-grid td { padding: 4px 6px; font-size: 12px; }
