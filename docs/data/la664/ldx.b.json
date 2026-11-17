@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "ldx.b",
+    "extension": "Base",
+    "form": "ldx.b rd, rj, rk",
+    "description": "ldx.b indexed load from rj + rk."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ldx.b $r12, $r20, $r4; ldx.b $r13, $r20, $r5; ldx.b $r14, $r20, $r6; ldx.b $r15, $r20, $r7; ldx.b $r16, $r20, $r8; ldx.b $r17, $r20, $r9; ldx.b $r18, $r20, $r10; ldx.b $r19, $r20, $r11",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56",
+      "machine_code": [
+        "3800128c  ldx.b       \t$t0, $t8, $a0",
+        "3800168d  ldx.b       \t$t1, $t8, $a1",
+        "38001a8e  ldx.b       \t$t2, $t8, $a2",
+        "38001e8f  ldx.b       \t$t3, $t8, $a3",
+        "38002290  ldx.b       \t$t4, $t8, $a4",
+        "38002691  ldx.b       \t$t5, $t8, $a5",
+        "38002a92  ldx.b       \t$t6, $t8, $a6",
+        "38002e93  ldx.b       \t$t7, $t8, $a7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56' --asm 'ldx.b $r12, $r20, $r4; ldx.b $r13, $r20, $r5; ldx.b $r14, $r20, $r6; ldx.b $r15, $r20, $r7; ldx.b $r16, $r20, $r8; ldx.b $r17, $r20, $r9; ldx.b $r18, $r20, $r10; ldx.b $r19, $r20, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
+    }
+  ],
+  "notes": "Throughput measured with a 1KB stack buffer. Latency not measured; memory latency depends on cache state."
+}

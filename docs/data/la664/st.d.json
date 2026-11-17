@@ -1,0 +1,72 @@
+{
+  "instruction": {
+    "name": "st.d",
+    "extension": "Base",
+    "form": "st.d rd, rj, si12",
+    "description": "st.d store to rj + offset."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "stored value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "st.d $r4, $r20, 0; st.d $r5, $r20, 8; st.d $r6, $r20, 16; st.d $r7, $r20, 24; st.d $r8, $r20, 32; st.d $r9, $r20, 40; st.d $r10, $r20, 48; st.d $r11, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
+      "machine_code": [
+        "29c00284  st.d        \t$a0, $t8, 0",
+        "29c02285  st.d        \t$a1, $t8, 8",
+        "29c04286  st.d        \t$a2, $t8, 16",
+        "29c06287  st.d        \t$a3, $t8, 24",
+        "29c08288  st.d        \t$a4, $t8, 32",
+        "29c0a289  st.d        \t$a5, $t8, 40",
+        "29c0c28a  st.d        \t$a6, $t8, 48",
+        "29c0e28b  st.d        \t$a7, $t8, 56"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'st.d $r4, $r20, 0; st.d $r5, $r20, 8; st.d $r6, $r20, 16; st.d $r7, $r20, 24; st.d $r8, $r20, 32; st.d $r9, $r20, 40; st.d $r10, $r20, 48; st.d $r11, $r20, 56'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
+    }
+  ],
+  "notes": "Throughput measured with a 1KB stack buffer. Latency not measured; memory latency depends on cache state."
+}

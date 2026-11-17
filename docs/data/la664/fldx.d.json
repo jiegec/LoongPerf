@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "fldx.d",
+    "extension": "Base",
+    "form": "fldx.d fd, rj, rk",
+    "description": "fldx.d indexed floating-point load."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fldx.d $f0, $r20, $r4; fldx.d $f1, $r20, $r5; fldx.d $f2, $r20, $r6; fldx.d $f3, $r20, $r7; fldx.d $f4, $r20, $r8; fldx.d $f5, $r20, $r9; fldx.d $f6, $r20, $r10; fldx.d $f7, $r20, $r11",
+      "init": "addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56",
+      "machine_code": [
+        "38341280  fldx.d      \t$fa0, $t8, $a0",
+        "38341681  fldx.d      \t$fa1, $t8, $a1",
+        "38341a82  fldx.d      \t$fa2, $t8, $a2",
+        "38341e83  fldx.d      \t$fa3, $t8, $a3",
+        "38342284  fldx.d      \t$fa4, $t8, $a4",
+        "38342685  fldx.d      \t$fa5, $t8, $a5",
+        "38342a86  fldx.d      \t$fa6, $t8, $a6",
+        "38342e87  fldx.d      \t$fa7, $t8, $a7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56' --asm 'fldx.d $f0, $r20, $r4; fldx.d $f1, $r20, $r5; fldx.d $f2, $r20, $r6; fldx.d $f3, $r20, $r7; fldx.d $f4, $r20, $r8; fldx.d $f5, $r20, $r9; fldx.d $f6, $r20, $r10; fldx.d $f7, $r20, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
+    }
+  ],
+  "notes": "Throughput measured with a 1KB stack buffer. Latency not measured; memory latency depends on cache state."
+}

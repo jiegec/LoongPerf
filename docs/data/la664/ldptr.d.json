@@ -1,0 +1,72 @@
+{
+  "instruction": {
+    "name": "ldptr.d",
+    "extension": "Base",
+    "form": "ldptr.d rd, rj, si14",
+    "description": "ldptr.d pointer load."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "scaled offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ldptr.d $r12, $r20, 0; ldptr.d $r13, $r20, 8; ldptr.d $r14, $r20, 16; ldptr.d $r15, $r20, 24; ldptr.d $r16, $r20, 32; ldptr.d $r17, $r20, 40; ldptr.d $r18, $r20, 48; ldptr.d $r19, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024",
+      "machine_code": [
+        "2600028c  ldptr.d     \t$t0, $t8, 0",
+        "26000a8d  ldptr.d     \t$t1, $t8, 8",
+        "2600128e  ldptr.d     \t$t2, $t8, 16",
+        "26001a8f  ldptr.d     \t$t3, $t8, 24",
+        "26002290  ldptr.d     \t$t4, $t8, 32",
+        "26002a91  ldptr.d     \t$t5, $t8, 40",
+        "26003292  ldptr.d     \t$t6, $t8, 48",
+        "26003a93  ldptr.d     \t$t7, $t8, 56"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024' --asm 'ldptr.d $r12, $r20, 0; ldptr.d $r13, $r20, 8; ldptr.d $r14, $r20, 16; ldptr.d $r15, $r20, 24; ldptr.d $r16, $r20, 32; ldptr.d $r17, $r20, 40; ldptr.d $r18, $r20, 48; ldptr.d $r19, $r20, 56'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
+    }
+  ],
+  "notes": "Throughput measured with a 1KB stack buffer. Latency not measured; memory latency depends on cache state."
+}

@@ -1,0 +1,72 @@
+{
+  "instruction": {
+    "name": "fld.s",
+    "extension": "Base",
+    "form": "fld.s fd, rj, si12",
+    "description": "fld.s floating-point load."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "loaded value"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fld.s $f0, $r20, 0; fld.s $f1, $r20, 8; fld.s $f2, $r20, 16; fld.s $f3, $r20, 24; fld.s $f4, $r20, 32; fld.s $f5, $r20, 40; fld.s $f6, $r20, 48; fld.s $f7, $r20, 56",
+      "init": "addi.d $r20, $sp, -1024",
+      "machine_code": [
+        "2b000280  fld.s       \t$fa0, $t8, 0",
+        "2b002281  fld.s       \t$fa1, $t8, 8",
+        "2b004282  fld.s       \t$fa2, $t8, 16",
+        "2b006283  fld.s       \t$fa3, $t8, 24",
+        "2b008284  fld.s       \t$fa4, $t8, 32",
+        "2b00a285  fld.s       \t$fa5, $t8, 40",
+        "2b00c286  fld.s       \t$fa6, $t8, 48",
+        "2b00e287  fld.s       \t$fa7, $t8, 56"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024' --asm 'fld.s $f0, $r20, 0; fld.s $f1, $r20, 8; fld.s $f2, $r20, 16; fld.s $f3, $r20, 24; fld.s $f4, $r20, 32; fld.s $f5, $r20, 40; fld.s $f6, $r20, 48; fld.s $f7, $r20, 56'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
+    }
+  ],
+  "notes": "Throughput measured with a 1KB stack buffer. Latency not measured; memory latency depends on cache state."
+}
