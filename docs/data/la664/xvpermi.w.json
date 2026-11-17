@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpermi.w",
     "extension": "LASX",
-    "form": "xvpermi.w xd, xj, imm",
+    "form": "xvpermi.w, xd, xj, imm",
     "description": "For each 128-bit lane, use `imm[1:0]` and `imm[3:2]` to select words 0 and 1 from `b`, and `imm[5:4]` and `imm[7:6]` to select words 2 and 3 from `a`; store the result in `dst`."
   },
   "operands": [
@@ -20,7 +20,7 @@
       "kind": "vector",
       "access": "read",
       "bits": 256,
-      "description": "first source"
+      "description": "source"
     },
     {
       "index": 3,
@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1.01,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -60,9 +60,9 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4' --asm 'xvpermi.w $xr0, $xr0, 1'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "core_cycles": 1.01
           },
-          "notes": "Dependent vector-register chain."
+          "notes": "Consecutive unrolled copies form a vector-register dependency chain. Measured with unroll=100000 to amortise call overhead."
         }
       ],
       "notes": "Register-to-register latency."
@@ -76,15 +76,15 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4' --asm 'xvpermi.w $xr0, $xr8, 1; xvpermi.w $xr1, $xr9, 1; xvpermi.w $xr2, $xr10, 1; xvpermi.w $xr3, $xr11, 1; xvpermi.w $xr4, $xr12, 1; xvpermi.w $xr5, $xr13, 1; xvpermi.w $xr6, $xr14, 1; xvpermi.w $xr7, $xr15, 1'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 1.99
+        "core_cycles": 2.1
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.2487,
-        "ipc": 4.0201
+        "cpi": 0.2625,
+        "ipc": 3.8095
       },
-      "notes": "8 independent instructions take 1.99 cycles."
+      "notes": "8 independent instructions take 2.10 cycles."
     }
   ],
-  "notes": "LASX vector instruction. Measured on LA664 with integer vector operands."
+  "notes": "LASX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
 }
