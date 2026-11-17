@@ -142,5 +142,5 @@
       "notes": "Data-dependent. CPI ranges 6 to 17 over the same operand pairs; the stored experiment uses 4294967295/1."
     }
   ],
-  "notes": "Vector variable-latency divide/modulo. Latency 10-32 cycles and throughput CPI 6-17 are data-dependent."
+  "notes": "Vector variable-latency divide/modulo. Latency 10-32 cycles and throughput CPI 6-17 are data-dependent. 32-bit lanes are not divided fully in parallel: with one slow lane the latency is 22 (vdiv.w) / 21 (xvdiv.w), and as soon as two or more lanes need many quotient bits the divider costs roughly one extra pass, giving ~32 (vdiv.w) / ~31 (xvdiv.w); the number of slow lanes beyond two does not change it further (8 slow lanes measure 31). The recorded cycles_max reflects that multi-slow-lane case. 64-bit lanes, by contrast, are fully parallel and only the slowest lane matters."
 }
