@@ -80,6 +80,7 @@
     .page-links button.current { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
     .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
     .sigill { color: #cf222e; font-weight: 600; }
+    .sigill-cell { text-align: center; }
     .note { margin-top: 12px; color: var(--muted); font-size: 13px; }
   </style>
 </head>
@@ -466,7 +467,7 @@
       for (const uarch of selected) {
         const row = group.variants.get(uarch);
         if (row && row.unsupported) {
-          cells += '<td class="num uarch-cell sigill" colspan="3" title="' +
+          cells += '<td class="num uarch-cell sigill sigill-cell" colspan="3" title="' +
             esc(row.notes) + '">SIGILL</td>';
           continue;
         }
