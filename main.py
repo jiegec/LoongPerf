@@ -196,20 +196,81 @@ def render_experiment(exp: dict, heading: str = "###") -> list[str]:
 
 
 def write_aggregate() -> None:
-    """Write one JSON file containing every measurement for table.html."""
+    """Write a compact JSON index of every measurement for table.html.
+
+    Only the fields the table actually renders (plus what it searches) are
+    included. Full experiment details stay in the per-instruction JSON files
+    that each row links to, which keeps this file several times smaller and
+    much faster for the browser to parse.
+    """
     entries = []
     for path in sorted(DATA_DIR.glob("*/*.json")):
         uarch = path.parent.name
-        entries.append({
-            "uarch": uarch,
-            "source": f"data/{uarch}/{path.name}",
-            "data": json.loads(path.read_text()),
-        })
+        entries.append(table_entry(
+            uarch,
+            f"data/{uarch}/{path.name}",
+            json.loads(path.read_text()),
+        ))
     AGGREGATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     AGGREGATE_PATH.write_text(
-        json.dumps({"instructions": entries}, indent=2, ensure_ascii=False) + "\n",
+        json.dumps({"instructions": entries}, separators=(",", ":"), ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+
+
+def table_entry(uarch: str, source: str, data: dict) -> dict:
+    """Project one measurement document onto the fields table.html needs."""
+    ins = data["instruction"]
+    operands = [
+        {key: op[key] for key in ("index", "name", "kind", "access") if key in op}
+        for op in data.get("operands", [])
+    ]
+    latencies = []
+    for item in data.get("latencies", []):
+        latency = {
+            "from_operands": item["from_operands"],
+            "to_operand": item["to_operand"],
+            "cycles": item.get("cycles"),
+        }
+        if "cycles_min" in item:
+            latency["cycles_min"] = item["cycles_min"]
+        if "cycles_max" in item:
+            latency["cycles_max"] = item["cycles_max"]
+        latencies.append(latency)
+    throughput = []
+    for item in data.get("throughput", []):
+        stats = item.get("throughput", {})
+        result = item.get("result", {})
+        experiment = {
+            "name": item.get("name", ""),
+            "asm": item.get("asm", ""),
+            "throughput": {
+                key: stats[key]
+                for key in ("cpi", "cpi_min", "cpi_max", "ipc", "ipc_min", "ipc_max", "lanes")
+                if key in stats and stats[key] is not None
+            },
+            "result": {
+                "instructions_retired": result.get("instructions_retired"),
+                "core_cycles": result.get("core_cycles"),
+            },
+        }
+        if result.get("counters"):
+            experiment["result"]["counters"] = result["counters"]
+        throughput.append(experiment)
+    entry = {
+        "uarch": uarch,
+        "source": source,
+        "extension": ins.get("extension", ""),
+        "name": ins["name"],
+        "form": ins["form"],
+        "description": ins["description"],
+        "operands": operands,
+        "latencies": latencies,
+        "throughput": throughput,
+    }
+    if data.get("notes"):
+        entry["notes"] = data["notes"]
+    return entry
 
 
 def operand_ref(data: dict, indices: list[int]) -> str:

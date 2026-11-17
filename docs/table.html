@@ -47,6 +47,19 @@
     .checks label { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; color: var(--fg); text-transform: none; letter-spacing: 0; }
     .checks input { margin: 0; }
     .meta { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+    .loading { padding: 16px 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--head); margin-bottom: 16px; }
+    .loading[hidden] { display: none; }
+    .loading-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 14px; }
+    .loading-pct { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .progress { position: relative; height: 8px; margin-top: 9px; border-radius: 999px; background: #e6e9ee; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0; border-radius: inherit; background: var(--accent); transition: width 0.15s linear; }
+    .progress.indeterminate .progress-bar { width: 35%; transition: none; animation: progress-slide 1.1s ease-in-out infinite; }
+    @keyframes progress-slide { from { transform: translateX(-100%); } to { transform: translateX(320%); } }
+    .loading-detail { margin-top: 7px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) {
+      .progress-bar { transition: none; }
+      .progress.indeterminate .progress-bar { animation: none; width: 100%; opacity: 0.55; }
+    }
     .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
     table { border-collapse: collapse; width: 100%; min-width: 980px; }
     th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
@@ -113,6 +126,16 @@
 
   <p class="meta" id="meta">Loading...</p>
   <div id="error"></div>
+  <div id="loading" class="loading" role="status" aria-live="polite">
+    <div class="loading-row">
+      <span id="loading-stage">Loading measurement data…</span>
+      <span id="loading-pct" class="loading-pct"></span>
+    </div>
+    <div id="progress" class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <div id="loading-detail" class="loading-detail">Connecting…</div>
+  </div>
   <div class="table-scroll">
     <table id="table">
       <thead id="thead"></thead>
@@ -129,6 +152,8 @@
 
 <script>
   const AGGREGATE = "data/measurements.json";
+  const PAGE_SIZE = 50;
+  const SEARCH_DELAY = 120;
 
   let rows = [];
   let groups = [];
@@ -136,7 +161,10 @@
   let sortKey = "name";
   let sortDir = 1;
   let page = 1;
-  const PAGE_SIZE = 50;
+  let currentPageRows = [];
+  let currentSelected = [];
+  let viewCache = null;
+  let headerSignature = "";
   const openRows = new Set();
 
   const $ = (id) => document.getElementById(id);
@@ -150,13 +178,90 @@
     return String(value);
   }
 
-  function operandName(doc, index) {
-    const op = (doc.operands || []).find((item) => item.index === index);
+  function fmtBytes(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  function nextFrame() {
+    return new Promise((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      requestAnimationFrame(finish);
+      setTimeout(finish, 50);
+    });
+  }
+
+  function setProgress(percent, stage, detail) {
+    $("loading").hidden = false;
+    if (stage) $("loading-stage").textContent = stage;
+    if (detail !== undefined) $("loading-detail").textContent = detail;
+    const progress = $("progress");
+    if (percent === null || percent === undefined) {
+      progress.classList.add("indeterminate");
+      progress.removeAttribute("aria-valuenow");
+      $("progress-bar").style.width = "";
+      $("loading-pct").textContent = "";
+      return;
+    }
+    const clamped = Math.max(0, Math.min(100, percent));
+    progress.classList.remove("indeterminate");
+    $("progress-bar").style.width = clamped.toFixed(1) + "%";
+    progress.setAttribute("aria-valuenow", clamped.toFixed(1));
+    $("loading-pct").textContent = Math.round(clamped) + "%";
+  }
+
+  function hideProgress() {
+    $("loading").hidden = true;
+  }
+
+  async function fetchWithProgress(url, onProgress) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(url + ": HTTP " + response.status);
+    const total = Number(response.headers.get("content-length")) || 0;
+    if (!response.body) {
+      const text = await response.text();
+      onProgress(text.length, text.length, false);
+      return text;
+    }
+    const reader = response.body.getReader();
+    const chunks = [];
+    let received = 0;
+    let lastUpdate = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      received += value.length;
+      const now = performance.now();
+      if (now - lastUpdate >= 80) {
+        lastUpdate = now;
+        onProgress(received, total, total > 0);
+      }
+    }
+    onProgress(received, total, total > 0);
+    if (chunks.length === 1) return new TextDecoder("utf-8").decode(chunks[0]);
+    const merged = new Uint8Array(received);
+    let offset = 0;
+    for (const chunk of chunks) {
+      merged.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return new TextDecoder("utf-8").decode(merged);
+  }
+
+  function operandName(operands, index) {
+    const op = operands.find((item) => item.index === index);
     return op ? op.name : String(index);
   }
 
-  function operandRef(doc, indices) {
-    const names = indices.map((index) => operandName(doc, index)).join(", ");
+  function operandRef(operands, indices) {
+    const names = indices.map((index) => operandName(operands, index)).join(", ");
     return names + " (" + indices.join(", ") + ")";
   }
 
@@ -165,19 +270,20 @@
     return lo === hi ? fmt(lo) : fmt(lo) + " – " + fmt(hi);
   }
 
-  function flatten(uarch, source, doc) {
-    const latencies = (doc.latencies || []).map((item) => {
+  function flatten(entry) {
+    const operands = entry.operands || [];
+    const latencies = (entry.latencies || []).map((item) => {
       const minCycles = item.cycles_min ?? item.cycles;
       const maxCycles = item.cycles_max ?? item.cycles;
       return {
-        from: operandRef(doc, item.from_operands),
-        to: operandRef(doc, [item.to_operand]),
+        from: operandRef(operands, item.from_operands || []),
+        to: operandRef(operands, [item.to_operand]),
         cycles: item.cycles,
         minCycles,
         maxCycles
       };
     });
-    const throughput = doc.throughput || [];
+    const throughput = entry.throughput || [];
     const cpiValues = throughput.flatMap((item) => {
       const t = item.throughput || {};
       return [t.cpi_min ?? t.cpi, t.cpi_max ?? t.cpi].filter((v) => typeof v === "number");
@@ -187,17 +293,24 @@
       return [t.ipc_min ?? t.ipc, t.ipc_max ?? t.ipc].filter((v) => typeof v === "number");
     });
     const lats = latencies.flatMap((item) => [item.minCycles, item.maxCycles]).filter((v) => typeof v === "number");
+    const notes = entry.notes || "";
+
+    const search = [
+      ...operands.map((op) => [op.name, op.kind, op.access].join(" ")),
+      ...latencies.map((lat) => [lat.from, lat.to, lat.cycles].join(" ")),
+      ...throughput.flatMap((item) => [item.asm || "", JSON.stringify(item.throughput || {})])
+    ].join(" ").toLowerCase();
 
     return {
-      uarch,
-      extension: doc.instruction.extension || "",
-      path: source,
-      name: doc.instruction.name,
-      form: doc.instruction.form,
-      description: doc.instruction.description,
-      notes: doc.notes || "",
-      unsupported: /SIGILL/.test(doc.notes || ""),
-      operands: doc.operands || [],
+      uarch: entry.uarch,
+      extension: entry.extension || "",
+      path: entry.source,
+      name: entry.name,
+      form: entry.form,
+      description: entry.description,
+      notes,
+      unsupported: /SIGILL/.test(notes),
+      operands,
       latencies,
       throughput,
       minLatency: lats.length ? Math.min(...lats) : null,
@@ -206,8 +319,9 @@
       maxCpi: cpiValues.length ? Math.max(...cpiValues) : null,
       minIpc: ipcValues.length ? Math.min(...ipcValues) : null,
       maxIpc: ipcValues.length ? Math.max(...ipcValues) : null,
-      page: uarch + "/" + doc.instruction.name + "/",
-      raw: source
+      search,
+      page: entry.uarch + "/" + entry.name + "/",
+      raw: entry.source
     };
   }
 
@@ -223,11 +337,16 @@
           name: row.name,
           form: row.form,
           description: row.description,
-          variants: new Map()
+          variants: new Map(),
+          search: ""
         };
         map.set(key, group);
       }
       group.variants.set(row.uarch, row);
+    }
+    for (const group of map.values()) {
+      group.search = (group.extension + " " + group.name + " " + group.form + " " +
+        group.description).toLowerCase();
     }
     return [...map.values()];
   }
@@ -285,40 +404,68 @@
   }
 
   async function load() {
+    const started = performance.now();
     try {
-      const response = await fetch(AGGREGATE);
-      if (!response.ok) throw new Error(AGGREGATE + ": HTTP " + response.status);
-      const payload = await response.json();
-      rows = payload.instructions.map(({ uarch, source, data }) =>
-        flatten(uarch, source, data)
-      );
-      allUarches = [...new Set(rows.map((row) => row.uarch))].sort();
+      setProgress(0, "Downloading measurement data…", "Connecting…");
+      const text = await fetchWithProgress(AGGREGATE, (received, total, known) => {
+        if (known && received <= total * 1.02) {
+          setProgress(Math.min(90, (received / total) * 90),
+            "Downloading measurement data…",
+            fmtBytes(received) + " of " + fmtBytes(total));
+        } else {
+          setProgress(null, "Downloading measurement data…", fmtBytes(received) + " received");
+        }
+      });
+
+      setProgress(92, "Parsing measurement data…", fmtBytes(text.length) + " downloaded");
+      await nextFrame();
+      const payload = JSON.parse(text);
+      const entries = payload.instructions || [];
+
       const settings = loadUrlSettings();
+      allUarches = [...new Set(entries.map((entry) => entry.uarch))].sort();
       buildUarchCheckboxes(settings.uarch);
       buildExtensionCheckboxes(settings.extensions);
+
+      rows = [];
+      for (let i = 0; i < entries.length; i += 1) {
+        rows.push(flatten(entries[i]));
+        if ((i & 511) === 511) {
+          setProgress(94 + ((i + 1) / entries.length) * 5,
+            "Building instruction index…",
+            (i + 1) + " / " + entries.length + " instructions");
+          await nextFrame();
+        }
+      }
+      setProgress(99, "Building instruction index…", entries.length + " instructions");
+      await nextFrame();
+
       groups = groupRows(rows);
+      viewCache = null;
+      headerSignature = "";
       render();
+      setProgress(100, "Ready", entries.length + " instructions");
+      await nextFrame();
+      hideProgress();
+      $("meta").title = "Loaded in " + Math.round(performance.now() - started) + " ms";
     } catch (error) {
+      hideProgress();
       $("meta").textContent = "Failed to load measurement data.";
       $("error").innerHTML = '<div class="error">' + esc(error.message) +
         '<br>Serve the site over HTTP (for example, <code>zensical serve</code>) rather than opening this file directly.</div>';
     }
   }
 
-  function rowMatches(group, query, extensions, selected) {
+  function rowMatches(group, needle, extensions, selected) {
     if (extensions.length && !extensions.includes(group.extension)) return false;
-    const variants = selected.map((uarch) => group.variants.get(uarch)).filter(Boolean);
-    if (!variants.length) return false;
-    if (!query) return true;
-    const haystack = [
-      group.extension, group.name, group.form, group.description,
-      ...variants.flatMap((row) => [
-        ...row.operands.map((op) => op.name + " " + op.kind + " " + op.access),
-        ...row.latencies.map((lat) => lat.from + " " + lat.to + " " + lat.cycles),
-        ...row.throughput.map((t) => (t.asm || "") + " " + JSON.stringify(t.throughput || {}))
-      ])
-    ].join(" ").toLowerCase();
-    return haystack.includes(query.toLowerCase());
+    if (!selected.some((uarch) => group.variants.has(uarch))) return false;
+    if (!needle) return true;
+    if (group.search.includes(needle)) return true;
+    for (const uarch of selected) {
+      const row = group.variants.get(uarch);
+      if (row && row.search.includes(needle)) return true;
+    }
+    return false;
   }
 
   function sortValue(group, key) {
@@ -328,9 +475,12 @@
     return group[key];
   }
 
-  function sortedGroups(selected, query, extensions) {
-    return groups
-      .filter((group) => rowMatches(group, query, extensions, selected))
+  function visibleGroups(selected, extensions, query) {
+    const signature = [selected.join("\u0001"), extensions.join("\u0001"), query, sortKey, sortDir].join("\u0000");
+    if (viewCache && viewCache.signature === signature) return viewCache.groups;
+    const needle = query.toLowerCase();
+    const filtered = groups
+      .filter((group) => rowMatches(group, needle, extensions, selected))
       .sort((a, b) => {
         const av = sortValue(a, sortKey);
         const bv = sortValue(b, sortKey);
@@ -339,6 +489,8 @@
         if (typeof av === "number" && typeof bv === "number") return (av - bv) * sortDir;
         return String(av).localeCompare(String(bv), undefined, { numeric: true }) * sortDir;
       });
+    viewCache = { signature, groups: filtered };
+    return filtered;
   }
 
   function sortLabel(key, label) {
@@ -347,6 +499,9 @@
   }
 
   function renderHeader(selected) {
+    const signature = [selected.join("\u0001"), sortKey, sortDir].join("\u0000");
+    if (signature === headerSignature) return;
+    headerSignature = signature;
     const thead = $("thead");
     let top = '<tr>' +
       '<th rowspan="2" data-sort="extension">Extension</th>' +
@@ -431,69 +586,88 @@
     }).join("");
   }
 
+  function rowHtml(group, selected, index, columns) {
+    const first = selected.map((uarch) => group.variants.get(uarch)).find(Boolean);
+    let cells = "<td>" + esc(group.extension) + "</td>" +
+      '<td><a class="instr-link" href="' + esc(first.page) + '"><code>' + esc(group.name) + "</code></a></td>" +
+      "<td><code>" + esc(group.form) + "</code></td>";
+    for (const uarch of selected) {
+      const row = group.variants.get(uarch);
+      if (row && row.unsupported) {
+        cells += '<td class="num uarch-cell sigill sigill-cell" colspan="3" title="' +
+          esc(row.notes) + '">SIGILL</td>';
+        continue;
+      }
+      cells += '<td class="num uarch-cell">' + latencyCell(row) + "</td>";
+      cells += '<td class="num">' + cpiCell(row) + "</td>";
+      cells += '<td class="num">' + ipcCell(row) + "</td>";
+    }
+    return '<tr class="instr" data-index="' + index + '">' + cells + "</tr>" +
+      '<tr class="details" data-index="' + index + '"><td class="details-cell" colspan="' +
+      columns + '"></td></tr>';
+  }
+
+  function restoreOpenDetails(selected) {
+    const tbody = $("tbody");
+    for (const tr of tbody.querySelectorAll("tr.instr")) {
+      const group = currentPageRows[Number(tr.dataset.index)];
+      if (!group || !openRows.has(group.key)) continue;
+      const details = tr.nextElementSibling;
+      details.firstElementChild.innerHTML = detailsForGroup(group, selected);
+      details.dataset.rendered = "1";
+      details.classList.add("open");
+    }
+  }
+
+  function toggleRow(tr) {
+    const group = currentPageRows[Number(tr.dataset.index)];
+    if (!group) return;
+    const details = tr.nextElementSibling;
+    if (openRows.has(group.key)) {
+      openRows.delete(group.key);
+      details.classList.remove("open");
+      return;
+    }
+    openRows.add(group.key);
+    if (!details.dataset.rendered) {
+      details.firstElementChild.innerHTML = detailsForGroup(group, currentSelected);
+      details.dataset.rendered = "1";
+    }
+    details.classList.add("open");
+  }
+
   function render(resetPage = false) {
     if (resetPage) page = 1;
     const selected = selectedUarches();
     const extensions = selectedExtensions();
     const query = $("q").value.trim();
+    currentSelected = selected;
 
     renderHeader(selected);
     const visible = selected.length && extensions.length
-      ? sortedGroups(selected, query, extensions)
+      ? visibleGroups(selected, extensions, query)
       : [];
     const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
     page = Math.min(Math.max(1, page), totalPages);
-    const pageRows = visible.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    currentPageRows = visible.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
     const tbody = $("tbody");
-    tbody.innerHTML = "";
     const columns = 3 + selected.length * 3;
+    let html = "";
 
     if (!selected.length) {
-      tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">Select at least one microarchitecture.</td></tr>';
+      html = '<tr><td colspan="' + columns + '" class="empty">Select at least one microarchitecture.</td></tr>';
     } else if (!extensions.length) {
-      tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">Select at least one extension.</td></tr>';
+      html = '<tr><td colspan="' + columns + '" class="empty">Select at least one extension.</td></tr>';
     } else if (!visible.length) {
-      tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">No matching instructions.</td></tr>';
-    }
-
-    for (const group of pageRows) {
-      const first = selected.map((uarch) => group.variants.get(uarch)).find(Boolean);
-      const tr = document.createElement("tr");
-      tr.className = "instr";
-      tr.dataset.key = group.key;
-
-      let cells = "<td>" + esc(group.extension) + "</td>" +
-        '<td><a class="instr-link" href="' + esc(first.page) + '"><code>' + esc(group.name) + "</code></a></td>" +
-        "<td><code>" + esc(group.form) + "</code></td>";
-      for (const uarch of selected) {
-        const row = group.variants.get(uarch);
-        if (row && row.unsupported) {
-          cells += '<td class="num uarch-cell sigill sigill-cell" colspan="3" title="' +
-            esc(row.notes) + '">SIGILL</td>';
-          continue;
-        }
-        cells += '<td class="num uarch-cell">' + latencyCell(row) + "</td>";
-        cells += '<td class="num">' + cpiCell(row) + "</td>";
-        cells += '<td class="num">' + ipcCell(row) + "</td>";
+      html = '<tr><td colspan="' + columns + '" class="empty">No matching instructions.</td></tr>';
+    } else {
+      for (let i = 0; i < currentPageRows.length; i += 1) {
+        html += rowHtml(currentPageRows[i], selected, i, columns);
       }
-      tr.innerHTML = cells;
-
-      const details = document.createElement("tr");
-      details.className = "details" + (openRows.has(group.key) ? " open" : "");
-      details.innerHTML = '<td class="details-cell" colspan="' + columns + '">' +
-        detailsForGroup(group, selected) + "</td>";
-
-      tr.querySelector(".instr-link").addEventListener("click", (event) => event.stopPropagation());
-      tr.addEventListener("click", () => {
-        if (openRows.has(group.key)) openRows.delete(group.key);
-        else openRows.add(group.key);
-        render();
-      });
-
-      tbody.appendChild(tr);
-      tbody.appendChild(details);
     }
+    tbody.innerHTML = html;
+    if (currentPageRows.length) restoreOpenDetails(selected);
 
     $("meta").textContent = visible.length + " of " + groups.length +
       " instructions, page " + page + " / " + totalPages + ", " +
@@ -527,12 +701,27 @@
     history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
   }
 
-  $("q").addEventListener("input", () => render(true));
+  let searchTimer = 0;
+  $("q").addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => render(true), SEARCH_DELAY);
+  });
+  $("q").addEventListener("search", () => {
+    clearTimeout(searchTimer);
+    render(true);
+  });
   $("reset").addEventListener("click", () => {
+    clearTimeout(searchTimer);
     $("q").value = "";
     document.querySelectorAll("#uarchs input, #exts input").forEach((input) => { input.checked = true; });
     openRows.clear();
     render(true);
+  });
+
+  $("tbody").addEventListener("click", (event) => {
+    if (event.target.closest("a")) return;
+    const tr = event.target.closest("tr.instr");
+    if (tr) toggleRow(tr);
   });
 
   $("prev-page").addEventListener("click", () => {
