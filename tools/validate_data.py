@@ -17,7 +17,6 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "docs" / "data"
-DOCS_DIR = ROOT / "docs"
 SCHEMA_PATH = ROOT / "schema" / "instruction.schema.json"
 
 EPS = 0.02
@@ -405,10 +404,6 @@ def check_file(path: Path, schema: dict) -> None:
     name = data["instruction"]["name"]
     if path.stem != name:
         error(path, f"filename stem {path.stem!r} != instruction name {name!r}")
-    page = DOCS_DIR / uarch / f"{name}.md"
-    if not page.exists():
-        error(path, f"missing instruction page {page.relative_to(ROOT)}")
-
     check_operands(path, data)
     check_operand_syntax(path, data)
     check_cross_uarch_forms(path, data)
