@@ -97,12 +97,9 @@ mappings instead:
 
 | Config | Meaning |
 | --- | --- |
-| `0x01` | Retired uops |
 | `0x30` | Scalar FP arithmetic/conversion uops |
 | `0x25` | Vector ALU/conversion instructions (LSX and LASX combined) |
 | `0x31` | Vector ALU/conversion uops (LSX and LASX combined) |
-| `0xa8` | Load operations |
-| `0xb0` | Store operations |
 
 On LA464, `0x25` counts each LSX/LASX ALU or conversion instruction once,
 while `0x31` counts the corresponding vector uops. For example, `vadd.b`,
@@ -121,11 +118,6 @@ loads/stores do not count: `movgr2fr.d`, `movfr2gr.d`, `movfrh2gr.s`,
 `movcf2gr`, `movgr2cf`, `movfcsr2gr`, `movgr2fcsr`, `fld.d`, and `fst.d`
 all read zero. The exceptions are `movgr2frh.w = 1` and `movcf2fr = 1`,
 while `movfr2cf = 0`. Integer instructions count as zero.
-
-The load/store counters keep their LA664 meaning for scalar, FP, and LSX
-instructions, but a 256-bit LASX access can retire as two load/store
-operations depending on alignment and cache-line crossing. Do not assume
-`xvld`/`xvst` always contributes exactly one.
 
 ## Multi-uop instructions
 
