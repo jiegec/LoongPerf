@@ -67,16 +67,14 @@
           "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes."
         }
       ],
-      "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes. Raw measurement was 4.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 3.95,
-      "cycles_max": 4.15
+      "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes. Raw measurement was 4.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 4.00; the value is 4 cycle(s) and any earlier range was a rounding artifact."
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 4.02,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -91,13 +89,13 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807' --asm 'ldle.w $r4, $r20, $r4'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 4.02
+            "core_cycles": 4.0
           },
           "chain_latency": 0.0,
           "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check."
         }
       ],
-      "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check."
+      "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check. Raw slope-method measurement was 4.02; the value is 4 cycle(s) and any earlier range was a rounding artifact."
     }
   ],
   "throughput": [

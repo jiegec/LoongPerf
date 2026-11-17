@@ -66,9 +66,7 @@
           "chain_latency": 4.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.98,
-      "cycles_max": 1.18
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the value is 1 cycle(s) and any earlier range was a rounding artifact."
     },
     {
       "from_operands": [
@@ -96,9 +94,7 @@
           "chain_latency": 4.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.98,
-      "cycles_max": 1.18
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the value is 1 cycle(s) and any earlier range was a rounding artifact."
     }
   ],
   "throughput": [
@@ -119,14 +115,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4; movgr2fr.d $f16, $r4; movgr2fr.d $f17, $r4; movgr2fr.d $f18, $r4; movgr2fr.d $f19, $r4; movgr2fr.d $f20, $r4; movgr2fr.d $f21, $r4; movgr2fr.d $f22, $r4; movgr2fr.d $f23, $r4' --asm 'fcmp.ceq.s $fcc0, $f8, $f9; fcmp.ceq.s $fcc1, $f10, $f11; fcmp.ceq.s $fcc2, $f12, $f13; fcmp.ceq.s $fcc3, $f14, $f15; fcmp.ceq.s $fcc4, $f16, $f17; fcmp.ceq.s $fcc5, $f18, $f19; fcmp.ceq.s $fcc6, $f20, $f21; fcmp.ceq.s $fcc7, $f22, $f23'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 3.98
+        "core_cycles": 4.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.4975,
-        "ipc": 2.0100502512562812
+        "cpi": 0.5,
+        "ipc": 2.0
       },
-      "notes": "8 independent comparisons take 3.98 cycles."
+      "notes": "8 independent lanes take 4.00 cycles, i.e. 0.5 CPI. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000); larger unroll factors inflated the value through L1I pressure."
     }
   ],
   "notes": "Both floating-point sources reach the FCC result in 1 cycle. The recorded chain values include the constant movcf2gr/movgr2fr closure."

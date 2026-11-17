@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.03,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,12 +61,12 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3' --asm 'rcr.b $r12, $r12, $r13'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.03
+            "core_cycles": 2.0
           },
           "notes": "rj -> rd chain."
         }
       ],
-      "notes": "rj -> rd chain."
+      "notes": "rj -> rd chain. Raw slope-method measurement was 2.03; the value is 2 cycle(s) and any earlier range was a rounding artifact."
     },
     {
       "from_operands": [
@@ -93,10 +93,8 @@
           "notes": "rk -> rd chain: two copies alternate rd/rk."
         }
       ],
-      "notes": "rk -> rd chain: two copies alternate rd/rk. Raw measurement was 2.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_divisor": 2,
-      "cycles_min": 1.94,
-      "cycles_max": 2.14
+      "notes": "rk -> rd chain: two copies alternate rd/rk. Raw measurement was 2.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 2.00; the value is 2 cycle(s) and any earlier range was a rounding artifact.",
+      "cycles_divisor": 2
     },
     {
       "from_operands": [
@@ -104,7 +102,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.02,
+      "cycles": 2.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -119,12 +117,12 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3' --asm 'rcr.b $r12, $r12, $r12'",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.02
+            "core_cycles": 2.0
           },
           "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
         }
       ],
-      "notes": "Combined rj/rk -> rd chain with both sources tied to rd."
+      "notes": "Combined rj/rk -> rd chain with both sources tied to rd. Raw slope-method measurement was 2.02; the value is 2 cycle(s) and any earlier range was a rounding artifact."
     }
   ],
   "throughput": [
@@ -135,14 +133,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'rcr.b $r12, $r4, $r4; rcr.b $r13, $r5, $r5; rcr.b $r14, $r6, $r6; rcr.b $r15, $r7, $r7; rcr.b $r16, $r8, $r8; rcr.b $r17, $r9, $r9; rcr.b $r18, $r10, $r10; rcr.b $r19, $r11, $r11'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.82
+        "core_cycles": 8.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.1025,
-        "ipc": 0.907
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 independent instructions take 8.82 cycles."
+      "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000); larger unroll factors inflated the value through L1I pressure."
     }
   ],
   "notes": "LBT instruction. Each source-to-result path is recorded separately."

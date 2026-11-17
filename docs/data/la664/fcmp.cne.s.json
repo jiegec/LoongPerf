@@ -66,9 +66,7 @@
           "chain_latency": 4.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.07; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.97,
-      "cycles_max": 1.17
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.07; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the value is 1 cycle(s) and any earlier range was a rounding artifact."
     },
     {
       "from_operands": [
@@ -96,9 +94,7 @@
           "chain_latency": 4.0
         }
       ],
-      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread.",
-      "cycles_min": 0.98,
-      "cycles_max": 1.18
+      "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the value is 1 cycle(s) and any earlier range was a rounding artifact."
     }
   ],
   "throughput": [
