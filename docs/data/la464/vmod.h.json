@@ -39,14 +39,7 @@
   },
   "latencies": [
     {
-      "from_operands": [
-        2,
-        3
-      ],
       "to_operand": 1,
-      "cycles": 45.0,
-      "cycles_min": 17,
-      "cycles_max": 45,
       "experiments": [
         {
           "name": "reset-chain measurement",
@@ -114,7 +107,169 @@
           ]
         }
       ],
-      "notes": "Data-dependent. Measured over 8 operand pairs; min 16 cycles at 0/1, max 44 cycles at 16383/3. The sample experiment uses the max-latency pair. Latency is derived by subtracting the same closure around vadd.b (calibration experiment)."
+      "notes": "Data-dependent. Measured over 8 operand pairs; min 16 cycles at 0/1, max 44 cycles at 16383/3. The sample experiment uses the max-latency pair. Latency is derived by subtracting the same closure around vadd.b (calibration experiment).",
+      "from_operands": [
+        2
+      ],
+      "cycles": 45.0,
+      "cases": [
+        {
+          "name": "no active lane or zero dividend",
+          "cycles": 17.0,
+          "experiment": {
+            "asm": "vmod.h $vr0, $vr0, $vr1",
+            "init": "li.d $r4, 0; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 0; vreplgr2vr.h $vr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 0; vreplgr2vr.h $vr3, $r4' --asm 'vmod.h $vr0, $vr0, $vr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 16.98
+            }
+          }
+        },
+        {
+          "name": "full-width quotient, all lanes active",
+          "cycles": 45.0,
+          "experiment": {
+            "asm": "vmod.h $vr0, $vr0, $vr1; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr3",
+            "init": "li.d $r4, 32767; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 32767; vreplgr2vr.h $vr3, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 32767; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr1, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4; li.d $r4, 32767; vreplgr2vr.h $vr3, $r4' --asm 'vmod.h $vr0, $vr0, $vr1; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr3'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 46.98
+            },
+            "chain_latency": 1.99
+          }
+        }
+      ],
+      "cycles_min": 17.0,
+      "cycles_max": 45.0
+    },
+    {
+      "to_operand": 1,
+      "experiments": [
+        {
+          "name": "reset-chain measurement",
+          "role": "measurement",
+          "asm": "vmod.h $vr0, $vr0, $vr2; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4",
+          "init": "li.d $r4, 9223231297218904063; vreplgr2vr.h $vr0, $r4; li.d $r4, 844437815230467; vreplgr2vr.h $vr2, $r4; li.d $r5, -9222949817947160575; li.d $r6, 9222949817947160574",
+          "result": {
+            "instructions_retired": 7.0,
+            "core_cycles": 53.0
+          },
+          "measurement": {
+            "unroll": 1000,
+            "iters": 300,
+            "reps": 7
+          },
+          "command": "./bench --unroll 1000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 9223231297218904063; vreplgr2vr.h $vr0, $r4; li.d $r4, 844437815230467; vreplgr2vr.h $vr2, $r4; li.d $r5, -9222949817947160575; li.d $r6, 9222949817947160574' --asm 'vmod.h $vr0, $vr0, $vr2; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4'",
+          "notes": "Element-0 reset chain; the closure latency is cancelled by the calibration experiment.",
+          "chain_latency": 8.0,
+          "machine_code": [
+            "14000064  lu12i.w     \t$a0, 3",
+            "03bffc84  ori         \t$a0, $a0, 4095",
+            "729f0480  vreplgr2vr.h\t$vr0, $a0",
+            "03800c04  ori         \t$a0, $zero, 3",
+            "729f0482  vreplgr2vr.h\t$vr2, $a0",
+            "15ffff85  lu12i.w     \t$a1, -4",
+            "14000066  lu12i.w     \t$a2, 3",
+            "03bffcc6  ori         \t$a2, $a2, 4095",
+            "70e28800  vmod.h      \t$vr0, $vr0, $vr2",
+            "72efc004  vpickve2gr.h\t$a0, $vr0, 0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "729f0480  vreplgr2vr.h\t$vr0, $a0"
+          ]
+        },
+        {
+          "name": "vadd.b reset-helper baseline",
+          "role": "calibration",
+          "asm": "vadd.b $vr0, $vr0, $vr2; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4",
+          "init": "li.d $r4, 16383; vreplgr2vr.h $vr0, $r4; li.d $r4, 3; vreplgr2vr.h $vr2, $r4; li.d $r5, -16384; li.d $r6, 16383",
+          "result": {
+            "instructions_retired": 7,
+            "core_cycles": 44
+          },
+          "measurement": {
+            "unroll": 4000,
+            "iters": 300,
+            "reps": 7
+          },
+          "command": "./bench --unroll 4000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 16383; vreplgr2vr.h $vr0, $r4; li.d $r4, 3; vreplgr2vr.h $vr2, $r4; li.d $r5, -16384; li.d $r6, 16383' --asm 'vadd.b $vr0, $vr0, $vr2; vpickve2gr.h $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.h $vr0, $r4'",
+          "notes": "Same helper chain with vadd.b replacing the variable-latency operation.",
+          "machine_code": [
+            "14000064  lu12i.w     \t$a0, 3",
+            "03bffc84  ori         \t$a0, $a0, 4095",
+            "729f0480  vreplgr2vr.h\t$vr0, $a0",
+            "03800c04  ori         \t$a0, $zero, 3",
+            "729f0482  vreplgr2vr.h\t$vr2, $a0",
+            "15ffff85  lu12i.w     \t$a1, -4",
+            "14000066  lu12i.w     \t$a2, 3",
+            "03bffcc6  ori         \t$a2, $a2, 4095",
+            "700a0800  vadd.b      \t$vr0, $vr0, $vr2",
+            "72efc004  vpickve2gr.h\t$a0, $vr0, 0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "729f0480  vreplgr2vr.h\t$vr0, $a0"
+          ]
+        }
+      ],
+      "notes": "Data-dependent. Measured over 8 operand pairs; min 16 cycles at 0/1, max 44 cycles at 16383/3. The sample experiment uses the max-latency pair. Latency is derived by subtracting the same closure around vadd.b (calibration experiment).",
+      "from_operands": [
+        3
+      ],
+      "cycles": 45.0,
+      "cases": [
+        {
+          "name": "no active lane or zero dividend",
+          "cycles": 17.0,
+          "experiment": {
+            "asm": "vmod.h $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6",
+            "init": "li.d $r4, 0; vreplgr2vr.h $vr1, $r4; li.d $r4, 1; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; vreplgr2vr.h $vr1, $r4; li.d $r4, 1; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4' --asm 'vmod.h $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 18.96
+            },
+            "chain_latency": 1.99
+          }
+        },
+        {
+          "name": "full-width quotient, all lanes active",
+          "cycles": 45.0,
+          "experiment": {
+            "asm": "vmod.h $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6",
+            "init": "li.d $r4, 32767; vreplgr2vr.h $vr1, $r4; li.d $r4, 1; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 32767; vreplgr2vr.h $vr1, $r4; li.d $r4, 1; vreplgr2vr.h $vr0, $r4; li.d $r4, 1; vreplgr2vr.h $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4' --asm 'vmod.h $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3.0,
+              "core_cycles": 46.98
+            },
+            "chain_latency": 1.97
+          }
+        }
+      ],
+      "cycles_min": 17.0,
+      "cycles_max": 45.0
     }
   ],
   "throughput": [

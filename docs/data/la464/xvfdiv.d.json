@@ -39,14 +39,7 @@
   },
   "latencies": [
     {
-      "from_operands": [
-        2,
-        3
-      ],
       "to_operand": 1,
-      "cycles": 9.995,
-      "cycles_min": 8.0,
-      "cycles_max": 23.0,
       "experiments": [
         {
           "name": "dependent chain",
@@ -78,7 +71,280 @@
         }
       ],
       "notes": "Data-dependent latency. Chain: tested op, then xvpickve2gr.d+and+or+xvreplgr2vr.d to restore the input pattern; the 9-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 8-11 cycles, CPI 4.5-6. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
-      "cycles_divisor": 2
+      "cycles_divisor": 2,
+      "from_operands": [
+        2
+      ],
+      "cycles": 9.995,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 0' --asm 'xvfdiv.d $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 7.98
+            }
+          }
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 9.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 9218868437227405311; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370496; xvreplgr2vr.d $xr1, $r4; li.d $r8, 9218868437227405311",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9218868437227405311; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370496; xvreplgr2vr.d $xr1, $r4; li.d $r8, 9218868437227405311' --asm 'xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6.0,
+              "core_cycles": 17.97
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "exact result",
+          "cycles": 10.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408' --asm 'xvfdiv.d $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 9.98
+            }
+          }
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 4503599627370495; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4503599627370495",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4503599627370495; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4503599627370495' --asm 'xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6.0,
+              "core_cycles": 19.93
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "inexact result",
+          "cycles": 23.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr1, $xr0",
+            "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4613937818241073152",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4613937818241073152' --asm 'xvfdiv.d $xr0, $xr1, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 22.97
+            }
+          }
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 24.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408' --asm 'xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6.0,
+              "core_cycles": 32.98
+            },
+            "chain_latency": 8.99
+          }
+        }
+      ],
+      "cycles_min": 8.0,
+      "cycles_max": 24.0
+    },
+    {
+      "to_operand": 1,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "xvfdiv.d $xr0, $xr0, $xr2; xvfdiv.d $xr0, $xr0, $xr2; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4",
+          "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr2, $r4; li.d $r5, -1; li.d $r6, 0",
+          "chain_latency": 9.0,
+          "result": {
+            "instructions_retired": 7.0,
+            "core_cycles": 28.99
+          },
+          "measurement": {
+            "unroll": 2000,
+            "iters": 300,
+            "reps": 7
+          },
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr2, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'xvfdiv.d $xr0, $xr0, $xr2; xvfdiv.d $xr0, $xr0, $xr2; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4'",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
+            "02bffc05  addi.w      \t$a1, $zero, -1",
+            "00150006  move        \t$a2, $zero",
+            "753b0000  xvfdiv.d    \t$xr0, $xr0, $xr0",
+            "76efe007  xvpickve2gr.d\t$a3, $xr0, 0",
+            "001494e7  and         \t$a3, $a3, $a1",
+            "001518e7  or          \t$a3, $a3, $a2",
+            "769f0ce0  xvreplgr2vr.d\t$xr0, $a3"
+          ]
+        }
+      ],
+      "notes": "Data-dependent latency. Chain: tested op, then xvpickve2gr.d+and+or+xvreplgr2vr.d to restore the input pattern; the 9-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 8-11 cycles, CPI 4.5-6. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_divisor": 2,
+      "from_operands": [
+        3
+      ],
+      "cycles": 9.995,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 8.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 0' --asm 'xvfdiv.d $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 7.98
+            }
+          }
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 9.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 9218868437227405311; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370496; xvreplgr2vr.d $xr1, $r4; li.d $r8, 9218868437227405311",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9218868437227405311; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370496; xvreplgr2vr.d $xr1, $r4; li.d $r8, 9218868437227405311' --asm 'xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6.0,
+              "core_cycles": 17.97
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "exact result",
+          "cycles": 10.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408' --asm 'xvfdiv.d $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 9.98
+            }
+          }
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 11.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 4503599627370495; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4503599627370495",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4503599627370495; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4503599627370495' --asm 'xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6.0,
+              "core_cycles": 19.93
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "inexact result",
+          "cycles": 23.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr1, $xr0",
+            "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4613937818241073152",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr1, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4613937818241073152' --asm 'xvfdiv.d $xr0, $xr1, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 22.97
+            }
+          }
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 24.0,
+          "experiment": {
+            "asm": "xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr1, $r4; li.d $r8, 4607182418800017408' --asm 'xvfdiv.d $xr0, $xr0, $xr1; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6.0,
+              "core_cycles": 32.98
+            },
+            "chain_latency": 8.99
+          }
+        }
+      ],
+      "cycles_min": 8.0,
+      "cycles_max": 24.0
     }
   ],
   "throughput": [
