@@ -32,7 +32,34 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 0.95,
+      "experiments": [
+        {
+          "name": "memory-assisted dependency chain",
+          "role": "measurement",
+          "asm": "movgr2fr.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0",
+          "init": "li.d $r4, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0",
+          "measurement": {
+            "reps": 7
+          },
+          "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2fr.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0'",
+          "result": {
+            "instructions_retired": 3,
+            "core_cycles": 10.85
+          },
+          "chain_latency": 9.9,
+          "notes": "Derived by subtracting the FPR-store -> GPR-load forwarding latency (9.90 cycles) from the 10.85-cycle chain."
+        }
+      ],
+      "notes": "GPR -> FPR latency is about 1 cycle, same as movgr2fr.d. Round trip with movfr2gr.s is 3.83 cycles (~4)."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -61,5 +88,5 @@
       "notes": "8 independent instructions take 8.00 cycles."
     }
   ],
-  "notes": "Round trip with movfr2gr.d is 4.00 cycles; individual latency is not separable."
+  "notes": "Individual GPR->FPR latency is about 1 cycle, same as movgr2fr.d. Round trip with movfr2gr.s is 3.83 cycles (~4). Throughput is 1 CPI for 1-20 independent lanes."
 }

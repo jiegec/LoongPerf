@@ -61,5 +61,5 @@
       "notes": "8 independent instructions take 8.00 cycles."
     }
   ],
-  "notes": "Round trip with movfrh2gr.s is 5.00 cycles; individual latency is not separable. Each instruction retires as 2 instructions."
+  "notes": "High-half GPR->FPR latency is about 2 cycles, roughly 1 cycle more than movgr2fr.d. Round trip with movfrh2gr.s is 4.99 cycles (~5). Each instruction retires as 2 uops. Throughput is 1 CPI."
 }
