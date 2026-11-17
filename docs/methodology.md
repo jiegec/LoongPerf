@@ -354,6 +354,23 @@ A few more traps specific to this data:
 * a vector divide only pays for the lanes that need work, so a body whose lanes
   are partly zero measures below the worst case; build the operand pattern with
   `vinsgr2vr.*` if the number of active lanes matters;
+
+For **throughput** there is a related trap that is easy to miss: an instruction
+whose destination is also an accumulation input (`vmadd*`, `vmsub*`, the atomics)
+can only issue one lane per latency, so a body of eight lanes caps the rate at
+`8 / latency` instructions per cycle. `vmaddwev.q.d` has a 7-cycle accumulator
+latency, so an eight-lane body measures 0.8725 CPI no matter how the registers are
+chosen; thirty independent accumulators with two shared sources measure exactly
+0.5 CPI. Whenever a recorded latency exceeds half the lane count, widen the body
+or explain why the unit cannot reach the ceiling:
+
+```asm
+# 30 accumulators, two shared read-only sources
+vmaddwev.q.d $vr0, $vr30, $vr31 ; ... ; vmaddwev.q.d $vr29, $vr30, $vr31
+```
+
+Only `vd` has to be distinct per lane; the sources may be shared, which is what
+makes 30 lanes possible with 32 vector registers.
 * `ldgt.*`/`ldle.*` raise a bounds-check exception on LA464 when the range check
   fails instead of writing zero, and this kernel does not emulate it: the process
   dies with `SIGSEGV` whose `si_addr` is the load address `rj`, even when that
