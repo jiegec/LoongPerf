@@ -112,7 +112,7 @@ def define_env(env):
             out += ["## Throughput", ""]
             out += [table(
                 ["Experiment", "Lanes", "Instructions retired",
-                 "Core cycles", "CPI", "IPC"],
+                 "Core cycles", "CPI", "IPC", "Extra counters"],
                 [
                     [
                         item.get("name", ""),
@@ -121,6 +121,7 @@ def define_env(env):
                         fmt(item["result"]["core_cycles"]),
                         fmt_range(item.get("throughput", {}), "cpi"),
                         fmt_range(item.get("throughput", {}), "ipc"),
+                        fmt_counters(item.get("result", {}).get("counters")),
                     ]
                     for item in data["throughput"]
                 ],
@@ -240,6 +241,12 @@ def fmt(value) -> str:
     if isinstance(value, float):
         return f"{value:.2f}"
     return str(value)
+
+
+def fmt_counters(counters) -> str:
+    if not counters:
+        return ""
+    return ", ".join(f"{k}={fmt(v)}" for k, v in counters.items())
 
 
 def fmt_range(obj: dict, key: str) -> str:

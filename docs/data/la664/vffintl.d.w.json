@@ -66,17 +66,20 @@
       "name": "8 independent lanes",
       "asm": "vffintl.d.w $vr0, $vr8; vffintl.d.w $vr1, $vr9; vffintl.d.w $vr2, $vr10; vffintl.d.w $vr3, $vr11; vffintl.d.w $vr4, $vr12; vffintl.d.w $vr5, $vr13; vffintl.d.w $vr6, $vr14; vffintl.d.w $vr7, $vr15",
       "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vffintl.d.w $vr0, $vr8; vffintl.d.w $vr1, $vr9; vffintl.d.w $vr2, $vr10; vffintl.d.w $vr3, $vr11; vffintl.d.w $vr4, $vr12; vffintl.d.w $vr5, $vr13; vffintl.d.w $vr6, $vr14; vffintl.d.w $vr7, $vr15'",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vffintl.d.w $vr0, $vr8; vffintl.d.w $vr1, $vr9; vffintl.d.w $vr2, $vr10; vffintl.d.w $vr3, $vr11; vffintl.d.w $vr4, $vr12; vffintl.d.w $vr5, $vr13; vffintl.d.w $vr6, $vr14; vffintl.d.w $vr7, $vr15'",
       "result": {
         "instructions_retired": 16.0,
-        "core_cycles": 3.99
+        "core_cycles": 3.99,
+        "counters": {
+          "0xfb": 2.0
+        }
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.4988,
         "ipc": 2.005
       },
-      "notes": "8 independent instructions take 3.99 cycles."
+      "notes": "8 independent instructions take 3.99 cycles. Extra counters per instruction (normalized by 8 lanes): 0xfb=2.00."
     }
   ],
   "notes": "LSX vector conversion. Measured on LA664 with normal float or small integer source values; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

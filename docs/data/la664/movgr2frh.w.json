@@ -48,17 +48,20 @@
         "0114ad46  movgr2frh.w \t$fa6, $a6",
         "0114ad67  movgr2frh.w \t$fa7, $a7"
       ],
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2frh.w $f0, $r4; movgr2frh.w $f1, $r5; movgr2frh.w $f2, $r6; movgr2frh.w $f3, $r7; movgr2frh.w $f4, $r8; movgr2frh.w $f5, $r9; movgr2frh.w $f6, $r10; movgr2frh.w $f7, $r11'",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfc --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2frh.w $f0, $r4; movgr2frh.w $f1, $r5; movgr2frh.w $f2, $r6; movgr2frh.w $f3, $r7; movgr2frh.w $f4, $r8; movgr2frh.w $f5, $r9; movgr2frh.w $f6, $r10; movgr2frh.w $f7, $r11'",
       "result": {
         "instructions_retired": 16.0,
-        "core_cycles": 8.0
+        "core_cycles": 8.0,
+        "counters": {
+          "0xfc": 1.0
+        }
       },
       "throughput": {
         "lanes": 8,
         "cpi": 1.0,
         "ipc": 1.0
       },
-      "notes": "8 independent instructions take 8.00 cycles."
+      "notes": "8 independent instructions take 8.00 cycles. Extra counters per instruction (normalized by 8 lanes): 0xfc=1.00."
     }
   ],
   "notes": "High-half GPR->FPR latency is about 2 cycles, roughly 1 cycle more than movgr2fr.d. Round trip with movfrh2gr.s is 4.99 cycles (~5). Each instruction retires as 2 uops. Throughput is 1 CPI."

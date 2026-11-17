@@ -79,3 +79,35 @@ instructions statically and compare them with `0x01`.
 the distinction clear: `amadd.w` retires as two uops, but contributes one load
 and one store. `llacq.w` contributes one load, and `sc.q` contributes one
 store, even though each is a two-uop instruction.
+
+## Multi-uop instructions
+
+`0x01` counts retired uops, so a multi-uop instruction has a counter value
+larger than its static instruction count. In the current LA664 data set 104 of
+1260 measured instructions are two-uop instructions:
+
+| Category | Count |
+| --- | ---: |
+| Atomic `am*` | 52 |
+| `vfcvt` / `vffint` / `vftint` conversions, LSX and LASX | 48 |
+| `llacq.d`, `llacq.w`, `sc.q` | 3 |
+| `movgr2frh.w` | 1 |
+
+For these instructions the throughput experiment also records the relevant
+extra counters in `result.counters`:
+
+- atomics: `0xa8` (one load) and `0xb0` (one store), even though the atomic
+  retires as two uops;
+- `llacq.*`: `0xa8` (one load);
+- `sc.q`: `0xb0` (one store);
+- `vfcvt` / `vffint` / `vftint` LSX: `0xfb` (two LSX uops);
+- the same LASX conversions: `0xfa` (two LASX uops);
+- `movgr2frh.w`: `0xfc` (one scalar floating-point uop).
+
+The extra counter values are normalised per instruction (the measured
+per-sequence values divided by the eight lanes). They are shown in the
+per-instruction throughput table and in the interactive table details.
+
+The following instructions are known to be two-uop from the reset helper, but
+do not yet have their own pages: `vpickve2gr.b/h/w/d`, `vreplgr2vr.b/h`, and
+`xvpickve2gr.w/d`.

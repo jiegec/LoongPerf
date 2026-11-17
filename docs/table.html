@@ -398,10 +398,12 @@
       const t = item.throughput || {};
       const cpi = fmtRange(t.cpi_min ?? t.cpi, t.cpi_max ?? t.cpi);
       const ipc = fmtRange(t.ipc_min ?? t.ipc, t.ipc_max ?? t.ipc);
+      const extra = Object.entries(item.result.counters || {}).map(([k, v]) => k + "=" + fmt(v)).join(", ");
       return "<tr><td>" + esc(item.name || "") + '</td><td class="num">' + fmt(t.lanes) +
         '</td><td class="num">' + fmt(item.result.instructions_retired) +
         '</td><td class="num">' + fmt(item.result.core_cycles) +
-        '</td><td class="num">' + cpi + '</td><td class="num">' + ipc + "</td></tr>";
+        '</td><td class="num">' + cpi + '</td><td class="num">' + ipc +
+        '</td><td>' + esc(extra) + "</td></tr>";
     }).join("");
     const operandRows = row.operands.map((op) =>
       '<tr><td class="num">' + esc(op.index) + '</td><td><code>' + esc(op.name) + "</code></td><td>" +
@@ -413,8 +415,8 @@
       operandRows + "</tbody></table></div>" +
       '<div><h3>Latency</h3><table><thead><tr><th>From</th><th>To</th><th>Cycles</th></tr></thead><tbody>' +
       (latencyRows || '<tr><td colspan="3" class="muted">No data</td></tr>') + "</tbody></table></div>" +
-      '<div><h3>Throughput</h3><table><thead><tr><th>Experiment</th><th>Lanes</th><th>Insns</th><th>Cycles</th><th>CPI</th><th>IPC</th></tr></thead><tbody>' +
-      (throughputRows || '<tr><td colspan="6" class="muted">No data</td></tr>') + "</tbody></table></div>" +
+      '<div><h3>Throughput</h3><table><thead><tr><th>Experiment</th><th>Lanes</th><th>Insns</th><th>Cycles</th><th>CPI</th><th>IPC</th><th>Extra counters</th></tr></thead><tbody>' +
+      (throughputRows || '<tr><td colspan="7" class="muted">No data</td></tr>') + "</tbody></table></div>" +
       '</div><div class="links"><a href="' + esc(row.page) + '">Full measurement page</a>' +
       '<a href="' + esc(row.raw) + '">Raw JSON</a></div>' +
       (row.notes ? '<div class="note">' + esc(row.notes) + "</div>" : "");
