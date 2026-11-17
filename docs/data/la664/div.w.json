@@ -68,10 +68,9 @@
           "notes": "Consecutive unrolled copies form a dependency chain."
         }
       ],
-      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
+      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.\n\nMin 5 cycles at divisor=0x80000000; max 22 cycles at divisor=0x3; dividend=0x7fffffff.",
       "cycles_min": 5,
-      "cycles_max": 22,
-      "comment": "Min 5 cycles at divisor=0x80000000; max 22 cycles at divisor=0x3; dividend=0x7fffffff."
+      "cycles_max": 22
     },
     {
       "from_operands": [
@@ -100,10 +99,9 @@
           "notes": "Consecutive unrolled copies form a dependency chain."
         }
       ],
-      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
+      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.\n\nMin 5 cycles at divisor=0x80000000; max 22 cycles at divisor=0x1; dividend=0x7fffffff.",
       "cycles_min": 5,
-      "cycles_max": 22,
-      "comment": "Min 5 cycles at divisor=0x80000000; max 22 cycles at divisor=0x1; dividend=0x7fffffff."
+      "cycles_max": 22
     }
   ],
   "throughput": [
@@ -135,9 +133,8 @@
         "ipc_min": 0.0833,
         "ipc_max": 0.2857
       },
-      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.",
-      "comment": "Min CPI 3.499 at divisor=0x80000000; max CPI 12.005 at divisor=0x2; dividend=0x7fffffff."
+      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 3.499 at divisor=0x80000000; max CPI 12.005 at divisor=0x2; dividend=0x7fffffff."
     }
   ],
-  "comment": "Latency: 100 outer iterations x 100 divisions; each block is <op>; and; add.d, and the measured cycles/division include the 2-cycle and+add chain, so 2 is subtracted. Throughput: 8 independent lanes with the same dividend/divisor pair."
+  "notes": "Latency: 100 outer iterations x 100 divisions; each block is <op>; and; add.d, and the measured cycles/division include the 2-cycle and+add chain, so 2 is subtracted. Throughput: 8 independent lanes with the same dividend/divisor pair."
 }

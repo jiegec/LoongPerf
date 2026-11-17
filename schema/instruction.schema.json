@@ -38,9 +38,6 @@
     },
     "notes": {
       "type": "string"
-    },
-    "comment": {
-      "type": "string"
     }
   },
   "additionalProperties": false,
@@ -231,9 +228,6 @@
         "cycles_max": {
           "type": "number",
           "minimum": 0
-        },
-        "comment": {
-          "type": "string"
         }
       },
       "additionalProperties": false
@@ -301,9 +295,6 @@
         },
         "measurement": {
           "$ref": "#/$defs/measurement_override"
-        },
-        "comment": {
-          "type": "string"
         }
       },
       "additionalProperties": false
@@ -371,9 +362,6 @@
         "ipc_max": {
           "type": "number",
           "exclusiveMinimum": 0
-        },
-        "comment": {
-          "type": "string"
         }
       },
       "additionalProperties": false
