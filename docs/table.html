@@ -116,6 +116,7 @@
     .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
     .sigill { color: #cf222e; font-weight: 600; }
     .sigill-cell { text-align: center; }
+    .untested-cell { text-align: center; color: var(--muted); font-style: italic; }
     .note { margin-top: 12px; color: var(--muted); font-size: 13px; }
   </style>
 </head>
@@ -126,7 +127,7 @@
     <span class="sub">LoongPerf measurements</span>
     <a class="home-link" href="./" title="LoongPerf home">← LoongPerf home</a>
   </header>
-  <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name or a row for details. SIGILL marks an instruction that is not supported on the selected microarchitecture.</p>
+  <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name or a row for details. SIGILL marks an instruction that is not supported on the selected microarchitecture; “not measured yet” marks an instruction that has no measurement for it.</p>
   <p class="data-meta" id="data-meta" hidden></p>
 
   <div class="controls">
@@ -602,7 +603,6 @@
 
   function rowMatches(group, needle, extensions, selected, hideEmpty) {
     if (extensions.length && !extensions.includes(group.extension)) return false;
-    if (!selected.some((uarch) => group.variants.has(uarch))) return false;
     if (hideEmpty && !selected.some((uarch) => rowHasData(group.variants.get(uarch)))) return false;
     if (!needle) return true;
     if (group.search.includes(needle)) return true;
@@ -762,20 +762,30 @@
     return selected.map((uarch) => {
       const row = group.variants.get(uarch);
       return '<div class="uarch-detail"><h3>' + esc(uarch.toUpperCase()) + "</h3>" +
-        (row ? detailsHtml(row) : '<span class="muted">No data for this microarchitecture.</span>') +
+        (row ? detailsHtml(row) : '<span class="muted">Not measured yet on this microarchitecture.</span>') +
         "</div>";
     }).join("");
   }
 
   function rowHtml(group, selected, index, columns) {
-    const first = selected.map((uarch) => group.variants.get(uarch)).find(Boolean);
+    const first = selected.map((uarch) => group.variants.get(uarch)).find(Boolean) ||
+      [...group.variants.values()][0];
+    const firstSelected = first && selected.includes(first.uarch);
+    const linkTitle = firstSelected ? "" :
+      ' title="Full measurement page for ' + esc(first.uarch.toUpperCase()) + '"';
     const detailsId = "details-" + index;
     let cells = "<td>" + esc(group.extension) + "</td>" +
-      '<td><a class="instr-link" href="' + esc(first.page) + '"><code>' + esc(group.name) + "</code></a></td>" +
+      '<td><a class="instr-link" href="' + esc(first.page) + '"' + linkTitle +
+      '><code>' + esc(group.name) + "</code></a></td>" +
       "<td><code>" + esc(group.form) + "</code></td>";
     for (const uarch of selected) {
       const row = group.variants.get(uarch);
-      if (row && row.unsupported) {
+      if (!row) {
+        cells += '<td class="num uarch-cell untested-cell" colspan="3" ' +
+          'title="Not measured on this microarchitecture yet.">not measured yet</td>';
+        continue;
+      }
+      if (row.unsupported) {
         cells += '<td class="num uarch-cell sigill sigill-cell" colspan="3" title="' +
           esc(row.notes) + '">SIGILL</td>';
         continue;
@@ -865,10 +875,13 @@
     } else if (!extensions.length) {
       $("meta").textContent = "Select at least one extension.";
     } else {
+      const missing = visible.filter((group) =>
+        selected.some((uarch) => !group.variants.has(uarch))).length;
       $("meta").textContent = visible.length + " of " + groups.length +
         " instructions, " +
         (pageSize === Infinity ? "all " + visible.length + " rows" : "page " + page + " / " + totalPages) +
         ", " + selected.length + " microarchitecture" + (selected.length === 1 ? "" : "s") +
+        (missing ? ", " + missing + " not measured on a selected core" : "") +
         (hideEmpty ? ", rows without data hidden" : "");
     }
     $("page-info").textContent = pageSize === Infinity
