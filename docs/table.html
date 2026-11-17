@@ -465,6 +465,11 @@
         "<td><code>" + esc(group.form) + "</code></td>";
       for (const uarch of selected) {
         const row = group.variants.get(uarch);
+        if (row && row.unsupported) {
+          cells += '<td class="num uarch-cell sigill" colspan="3" title="' +
+            esc(row.notes) + '">SIGILL</td>';
+          continue;
+        }
         cells += '<td class="num uarch-cell">' + latencyCell(row) + "</td>";
         cells += '<td class="num">' + cpiCell(row) + "</td>";
         cells += '<td class="num">' + ipcCell(row) + "</td>";
