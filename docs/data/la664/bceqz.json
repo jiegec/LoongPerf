@@ -33,7 +33,7 @@
   "latencies": [],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 not-taken branches",
       "asm": "bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0",
       "init": "li.d $r4, 1; movgr2cf $fcc0, $r4",
       "machine_code": [
@@ -57,7 +57,33 @@
         "ipc": 2.0
       },
       "notes": "8 not-taken conditional branches take 4.00 cycles."
+    },
+    {
+      "name": "8 taken branches",
+      "asm": "bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4",
+      "init": "li.d $r4, 0; movgr2cf $fcc0, $r4",
+      "machine_code": [
+        "48000400  bceqz       \t$fcc0, 4\t# 0x4",
+        "48000400  bceqz       \t$fcc0, 4\t# 0x8",
+        "48000400  bceqz       \t$fcc0, 4\t# 0xc",
+        "48000400  bceqz       \t$fcc0, 4\t# 0x10",
+        "48000400  bceqz       \t$fcc0, 4\t# 0x14",
+        "48000400  bceqz       \t$fcc0, 4\t# 0x18",
+        "48000400  bceqz       \t$fcc0, 4\t# 0x1c",
+        "48000400  bceqz       \t$fcc0, 4\t# 0x20"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4; bceqz $fcc0, 4'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 24.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 3.0,
+        "ipc": 0.3333
+      },
+      "notes": "8 taken conditional branches to the next instruction take 24.0 cycles."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches."
 }
