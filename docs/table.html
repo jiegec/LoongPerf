@@ -54,7 +54,38 @@
     .checks { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 7px 0; }
     .checks label { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; color: var(--fg); text-transform: none; letter-spacing: 0; }
     .checks input { margin: 0; }
-    .button-row { display: flex; gap: 8px; }
+    .button-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .compare-bar {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px;
+      padding: 10px 12px; margin: 0 0 12px;
+      border: 1px solid var(--accent); border-radius: 8px;
+      background: var(--accent-soft); font-size: 13px;
+    }
+    .compare-bar[hidden] { display: none; }
+    .compare-bar .compare-hint { color: var(--muted); }
+    .compare-bar button { padding: 4px 9px; font-size: 12px; }
+    .compare-dialog {
+      width: min(460px, calc(100vw - 32px));
+      padding: 0; border: 0; border-radius: 12px;
+      color: var(--fg); background: var(--bg);
+      max-height: calc(100vh - 32px); overflow: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+    .compare-dialog::backdrop { background: rgba(27, 31, 36, 0.45); }
+    .compare-modal { display: grid; gap: 14px; padding: 20px; }
+    .compare-modal h2 { margin: 0; font-size: 20px; }
+    .compare-modal p { margin: 0; color: var(--muted); font-size: 13px; }
+    .compare-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .compare-field { display: grid; gap: 4px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .compare-field select { width: 100%; text-transform: none; letter-spacing: 0; }
+    .compare-actions { display: flex; justify-content: flex-end; gap: 8px; }
+    .compare-actions .primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .compare-actions .primary:disabled { opacity: 0.5; cursor: default; }
+    .compare-error { color: #cf222e !important; }
+    #uarchs label:has(input:disabled) { opacity: 0.65; }
+    @media (max-width: 520px) {
+      .compare-fields { grid-template-columns: 1fr; }
+    }
     th[data-sort]:focus-visible {
       outline: 2px solid var(--accent); outline-offset: -2px;
     }
@@ -201,10 +232,17 @@
     <div class="control">
       <label>&nbsp;</label>
       <div class="button-row">
+        <button id="compare" type="button" title="Compare two microarchitectures" disabled>Compare</button>
         <button id="export" type="button" title="Download all filtered rows as CSV" disabled>Export CSV</button>
         <button id="reset" type="button">Reset</button>
       </div>
     </div>
+  </div>
+
+  <div id="compare-bar" class="compare-bar" hidden role="status" aria-live="polite">
+    <span id="compare-bar-text"></span>
+    <span class="compare-hint">Only instructions measured on both with different latency or throughput are shown.</span>
+    <button id="compare-exit" type="button">Exit compare</button>
   </div>
 
   <p class="meta" id="meta" aria-live="polite">Loading...</p>
@@ -237,6 +275,26 @@
   <div id="page-links" class="page-links" role="navigation" aria-label="Page navigation"></div>
 </div>
 
+<dialog id="compare-dialog" class="compare-dialog" aria-labelledby="compare-title">
+  <div class="compare-modal">
+    <h2 id="compare-title">Compare microarchitectures</h2>
+    <p>Choose two microarchitectures. Only instructions measured on both with different latency or throughput are shown.</p>
+    <div class="compare-fields">
+      <label class="compare-field" for="compare-a">Microarchitecture A
+        <select id="compare-a"></select>
+      </label>
+      <label class="compare-field" for="compare-b">Microarchitecture B
+        <select id="compare-b"></select>
+      </label>
+    </div>
+    <p id="compare-error" class="compare-error" role="alert" hidden></p>
+    <div class="compare-actions">
+      <button id="compare-cancel" type="button">Cancel</button>
+      <button id="compare-apply" type="button" class="primary">Compare</button>
+    </div>
+  </div>
+</dialog>
+
 <script>
   const AGGREGATE = "data/measurements.json";
   const REPO_URL = "https://github.com/jiegec/LoongPerf";
@@ -253,6 +311,7 @@
   let page = 1;
   let pageSize = DEFAULT_PAGE_SIZE;
   let hideEmpty = false;
+  let comparePair = null;
   let currentPageRows = [];
   let currentSelected = [];
   let viewCache = null;
@@ -518,7 +577,10 @@
       const input = document.createElement("input");
       input.type = "checkbox";
       input.value = uarch;
-      input.checked = wanted === null || wanted.includes(uarch);
+      input.checked = comparePair
+        ? comparePair.includes(uarch)
+        : (wanted === null || wanted.includes(uarch));
+      input.disabled = Boolean(comparePair);
       input.addEventListener("change", () => render(true));
       label.appendChild(input);
       label.appendChild(document.createTextNode(uarch.toUpperCase()));
@@ -544,11 +606,100 @@
   }
 
   function selectedUarches() {
+    if (comparePair) return [...comparePair];
     return [...document.querySelectorAll("#uarchs input:checked")].map((input) => input.value);
   }
 
   function selectedExtensions() {
     return [...document.querySelectorAll("#exts input:checked")].map((input) => input.value);
+  }
+
+  function setCompareUi() {
+    const bar = $("compare-bar");
+    const button = $("compare");
+    const inputs = [...document.querySelectorAll("#uarchs input")];
+    if (comparePair) {
+      bar.hidden = false;
+      $("compare-bar-text").innerHTML = "Comparing <strong>" +
+        esc(comparePair[0].toUpperCase()) + "</strong> vs <strong>" +
+        esc(comparePair[1].toUpperCase()) + "</strong>";
+      button.textContent = "Change comparison";
+      inputs.forEach((input) => {
+        input.disabled = true;
+        input.checked = comparePair.includes(input.value);
+      });
+    } else {
+      bar.hidden = true;
+      button.textContent = "Compare";
+      inputs.forEach((input) => { input.disabled = false; });
+    }
+  }
+
+  function buildCompareOptions() {
+    const first = $("compare-a");
+    const second = $("compare-b");
+    first.innerHTML = "";
+    second.innerHTML = "";
+    for (const uarch of allUarches) {
+      for (const select of [first, second]) {
+        const option = document.createElement("option");
+        option.value = uarch;
+        option.textContent = uarch.toUpperCase();
+        select.appendChild(option);
+      }
+    }
+    const current = comparePair || selectedUarches().slice(0, 2);
+    const a = current[0] || allUarches[0] || "";
+    const b = current[1] || allUarches.find((uarch) => uarch !== a) || "";
+    first.value = a;
+    second.value = b;
+    validateCompareSelection();
+  }
+
+  function validateCompareSelection() {
+    const a = $("compare-a").value;
+    const b = $("compare-b").value;
+    const error = $("compare-error");
+    const apply = $("compare-apply");
+    const invalid = !a || !b || a === b;
+    error.hidden = !invalid;
+    error.textContent = invalid ? "Choose two different microarchitectures." : "";
+    apply.disabled = invalid;
+  }
+
+  function openCompareDialog() {
+    const dialog = $("compare-dialog");
+    if (allUarches.length < 2 || dialog.open) return;
+    buildCompareOptions();
+    dialog.showModal();
+    $("compare-a").focus();
+  }
+
+  function applyCompare() {
+    const a = $("compare-a").value;
+    const b = $("compare-b").value;
+    if (!a || !b || a === b) {
+      validateCompareSelection();
+      return;
+    }
+    comparePair = [a, b];
+    page = 1;
+    openRows.clear();
+    viewCache = null;
+    setCompareUi();
+    $("compare-dialog").close();
+    render();
+  }
+
+  function exitCompare() {
+    if (!comparePair) return;
+    comparePair = null;
+    page = 1;
+    openRows.clear();
+    viewCache = null;
+    setCompareUi();
+    render();
+    $("compare").focus();
   }
 
   function loadUrlSettings() {
@@ -567,6 +718,8 @@
     const hideParam = params.has("hide_empty") ? params.get("hide_empty") : stored.hideEmpty;
     const sortParam = params.has("sort") ? params.get("sort") : stored.sortKey;
     const dirParam = params.has("dir") ? params.get("dir") : stored.sortDir;
+    const compareParam = params.get("compare");
+    const compare = compareParam ? compareParam.split(",").filter(Boolean) : null;
     const validSort = typeof sortParam === "string" &&
       /^(extension|name|form|lat:|cpi:|ipc:)/.test(sortParam);
 
@@ -577,7 +730,8 @@
       pageSize: normalizePageSize(sizeParam),
       hideEmpty: hideParam === true || hideParam === "1",
       sortKey: validSort ? sortParam : "name",
-      sortDir: dirParam === -1 || dirParam === "-1" || dirParam === "desc" ? -1 : 1
+      sortDir: dirParam === -1 || dirParam === "-1" || dirParam === "desc" ? -1 : 1,
+      compare: compare && compare.length === 2 && compare[0] !== compare[1] ? compare : null
     };
   }
 
@@ -608,8 +762,13 @@
       sortKey = settings.sortKey;
       sortDir = settings.sortDir;
       allUarches = [...new Set(entries.map((entry) => entry.uarch))].sort();
+      comparePair = settings.compare &&
+        settings.compare.every((uarch) => allUarches.includes(uarch))
+        ? settings.compare : null;
       buildUarchCheckboxes(settings.uarch);
       buildExtensionCheckboxes(settings.extensions);
+      $("compare").disabled = allUarches.length < 2;
+      setCompareUi();
       $("page-size").value = pageSizeValue();
       $("hide-empty").checked = hideEmpty;
 
@@ -660,6 +819,28 @@
     return false;
   }
 
+  function latencyCompareKey(row) {
+    if (!row || row.unsupported || row.minLatency === null) return null;
+    return fmtRange(row.minLatency, row.maxLatency);
+  }
+
+  function cpiCompareKey(row) {
+    if (!row || row.unsupported || row.minCpi === null) return null;
+    return fmtRange(row.minCpi, row.maxCpi);
+  }
+
+  function compareDiffers(group, pair) {
+    const a = group.variants.get(pair[0]);
+    const b = group.variants.get(pair[1]);
+    if (!a || !b || a.unsupported || b.unsupported) return false;
+    const latencyA = latencyCompareKey(a);
+    const latencyB = latencyCompareKey(b);
+    if (latencyA !== null && latencyB !== null && latencyA !== latencyB) return true;
+    const cpiA = cpiCompareKey(a);
+    const cpiB = cpiCompareKey(b);
+    return cpiA !== null && cpiB !== null && cpiA !== cpiB;
+  }
+
   function sortValue(group, key) {
     if (key.startsWith("lat:")) return group.variants.get(key.slice(4))?.minLatency;
     if (key.startsWith("cpi:")) return group.variants.get(key.slice(4))?.minCpi;
@@ -670,12 +851,14 @@
   function visibleGroups(selected, extensions, query, hideEmpty) {
     const signature = [
       selected.join("\u0001"), extensions.join("\u0001"), query,
-      sortKey, sortDir, hideEmpty ? "1" : "0"
+      sortKey, sortDir, hideEmpty ? "1" : "0",
+      comparePair ? comparePair.join(",") : ""
     ].join("\u0000");
     if (viewCache && viewCache.signature === signature) return viewCache.groups;
     const needle = query.toLowerCase();
     const filtered = groups
-      .filter((group) => rowMatches(group, needle, extensions, selected, hideEmpty))
+      .filter((group) => rowMatches(group, needle, extensions, selected, hideEmpty) &&
+        (!comparePair || compareDiffers(group, comparePair)))
       .sort((a, b) => {
         const av = sortValue(a, sortKey);
         const bv = sortValue(b, sortKey);
@@ -1036,7 +1219,9 @@
       html = '<tr><td colspan="' + columns + '" class="empty">Select at least one extension.</td></tr>';
     } else if (!visible.length) {
       html = '<tr><td colspan="' + columns + '" class="empty">' +
-        (hideEmpty ? "No matching instructions with data." : "No matching instructions.") +
+        (comparePair
+          ? "No instructions differ on latency or throughput."
+          : (hideEmpty ? "No matching instructions with data." : "No matching instructions.")) +
         "</td></tr>";
     } else {
       for (let i = 0; i < currentPageRows.length; i += 1) {
@@ -1053,8 +1238,12 @@
     } else {
       const missing = visible.filter((group) =>
         selected.some((uarch) => !group.variants.has(uarch))).length;
+      const compareText = comparePair
+        ? ", comparing " + comparePair.map((uarch) => uarch.toUpperCase()).join(" vs ") +
+          " (different rows only)"
+        : "";
       $("meta").textContent = visible.length + " of " + groups.length +
-        " instructions, " +
+        " instructions" + compareText + ", " +
         (pageSize === Infinity ? "all " + visible.length + " rows" : "page " + page + " / " + totalPages) +
         ", " + selected.length + " microarchitecture" + (selected.length === 1 ? "" : "s") +
         (missing ? ", " + missing + " not measured on a selected core" : "") +
@@ -1100,6 +1289,7 @@
     const params = new URLSearchParams();
     if ($("q").value.trim()) params.set("q", $("q").value.trim());
     if (selected.length) params.set("uarch", selected.join(","));
+    if (comparePair) params.set("compare", comparePair.join(","));
     if (extensions.length) params.set("extension", extensions.join(","));
     if (pageSize !== DEFAULT_PAGE_SIZE) params.set("size", pageSizeValue());
     if (hideEmpty) params.set("hide_empty", "1");
@@ -1181,10 +1371,24 @@
     render(true);
   });
   $("export").addEventListener("click", exportCsv);
+  $("compare").addEventListener("click", openCompareDialog);
+  $("compare-cancel").addEventListener("click", () => $("compare-dialog").close());
+  $("compare-apply").addEventListener("click", applyCompare);
+  $("compare-exit").addEventListener("click", exitCompare);
+  $("compare-a").addEventListener("change", validateCompareSelection);
+  $("compare-b").addEventListener("change", validateCompareSelection);
+  $("compare-dialog").addEventListener("click", (event) => {
+    if (event.target === $("compare-dialog")) $("compare-dialog").close();
+  });
   $("reset").addEventListener("click", () => {
     clearTimeout(searchTimer);
     $("q").value = "";
-    document.querySelectorAll("#uarchs input, #exts input").forEach((input) => { input.checked = true; });
+    comparePair = null;
+    setCompareUi();
+    document.querySelectorAll("#uarchs input, #exts input").forEach((input) => {
+      input.checked = true;
+      input.disabled = false;
+    });
     pageSize = DEFAULT_PAGE_SIZE;
     hideEmpty = false;
     sortKey = "name";
