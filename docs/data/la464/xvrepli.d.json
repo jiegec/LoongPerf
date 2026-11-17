@@ -1,0 +1,56 @@
+{
+  "instruction": {
+    "name": "xvrepli.d",
+    "extension": "LASX",
+    "form": "xvrepli.d vd, imm",
+    "description": "Replicate a signed immediate into every d element."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvrepli.d $xr0, 1; xvrepli.d $xr1, 1; xvrepli.d $xr2, 1; xvrepli.d $xr3, 1; xvrepli.d $xr4, 1; xvrepli.d $xr5, 1; xvrepli.d $xr6, 1; xvrepli.d $xr7, 1",
+      "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvrepli.d $xr0, 1; xvrepli.d $xr1, 1; xvrepli.d $xr2, 1; xvrepli.d $xr3, 1; xvrepli.d $xr4, 1; xvrepli.d $xr5, 1; xvrepli.d $xr6, 1; xvrepli.d $xr7, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "Throughput measured with 8 independent lanes."
+    }
+  ],
+  "notes": "No source operand data dependency; latency is not defined. Throughput only."
+}
