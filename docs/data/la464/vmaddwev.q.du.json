@@ -92,10 +92,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4' --asm 'vmaddwev.q.du $vr0, $vr8, $vr16; vmaddwev.q.du $vr1, $vr9, $vr17; vmaddwev.q.du $vr2, $vr10, $vr18; vmaddwev.q.du $vr3, $vr11, $vr19; vmaddwev.q.du $vr4, $vr12, $vr20; vmaddwev.q.du $vr5, $vr13, $vr21; vmaddwev.q.du $vr6, $vr14, $vr22; vmaddwev.q.du $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.8775,
-        "ipc": 1.1396
+        "cpi": 0.875,
+        "ipc": 1.1429,
+        "cpi_min": 0.8775,
+        "cpi_max": 0.8775,
+        "ipc_min": 1.1396,
+        "ipc_max": 1.1396
       },
-      "notes": "8 independent instructions take 7.02 cycles."
+      "notes": "8 independent lanes retire in about 7 cycles (7.02 measured), so the sustained rate is 8/7 = 1.14 IPC (CPI 7/8 = 0.875). Recorded as the exact fraction rather than an integer, since 8 lanes cannot complete in 7 cycles at an integer CPI. Measured with the slope method."
     }
   ]
 }

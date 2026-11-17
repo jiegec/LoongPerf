@@ -26,12 +26,12 @@
   "latencies": [],
   "throughput": [
     {
-      "name": "8 taken branches, 40 static sites (fits in the BTB)",
+      "name": "8 taken b branches, 40 static sites (fits in the BTB)",
       "asm": "b 4; b 4; b 4; b 4; b 4; b 4; b 4; b 4",
       "init": "",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "core_cycles": 7.96
       },
       "measurement": {
         "unroll": 4,
@@ -43,15 +43,15 @@
         "lanes": 8,
         "cpi": 1.0,
         "ipc": 1.0,
-        "cpi_min": 0.9925,
+        "cpi_min": 1.0,
         "cpi_max": 1.0,
         "ipc_min": 1.0,
-        "ipc_max": 1.0076
+        "ipc_max": 1.0
       },
-      "notes": "Taken branches to the next instruction, 8 lanes x 4 static sites; the slope method compares 8x4 with 8x5 bodies, so at most 40 branch sites, which fits in the LA464 BTB: 1 cycle per branch."
+      "notes": "Taken b branches to the next instruction, 8 lanes x 4 static sites (the slope method compares 8x4 with 8x5 bodies, so at most 40 branch sites), which fits in the LA464 BTB: 1 cycle per branch."
     },
     {
-      "name": "8 taken branches, 512 static sites (exceeds the BTB)",
+      "name": "8 taken b branches, 1024 static sites (exceeds the BTB)",
       "asm": "b 4; b 4; b 4; b 4; b 4; b 4; b 4; b 4",
       "init": "",
       "result": {
@@ -66,14 +66,14 @@
       "command": "./bench --unroll 120 --unroll2 128 --iters 1000 --warmup 10 --reps 9 --core 0 --asm 'b 4; b 4; b 4; b 4; b 4; b 4; b 4; b 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 2.9775,
-        "ipc": 0.3359,
-        "cpi_min": 2.9712,
-        "cpi_max": 2.98,
-        "ipc_min": 0.3356,
-        "ipc_max": 0.3366
+        "cpi": 3.0,
+        "ipc": 0.3333,
+        "cpi_min": 2.83,
+        "cpi_max": 3.0,
+        "ipc_min": 0.3333,
+        "ipc_max": 0.3534
       },
-      "notes": "Same sequence with 8 lanes x 120 static sites (compared against 8x128, 960-1024 sites), far beyond the LA464 BTB: about 3 cycles per branch. Together with the fits-in-BTB case this brackets the BTB capacity: 40 sites still sustain 1 CPI, 56 sites already degrade to ~3 CPI."
+      "notes": "Same sequence with 8 lanes x 120 static sites (compared against 8x128, 960-1024 sites), far beyond the LA464 BTB: about 3 cycles per branch. The two cases bracket the BTB capacity: 40 sites still sustain 1 CPI, 48-56 sites already degrade to ~3 CPI."
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput depends on whether the static branch footprint fits in the BTB: 1 CPI when it fits, ~3 CPI once it overflows. Both cases are recorded."

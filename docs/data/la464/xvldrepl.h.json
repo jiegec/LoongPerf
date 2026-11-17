@@ -39,7 +39,35 @@
     "core": 0,
     "date": "2026-11-17"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "xvldrepl.h $xr0, $r20, 0; xvpickve2gr.d $r4, $xr0, 0; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r0, $r20, 0; st.d $r0, $r20, 8",
+          "chain_latency": 7.0,
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 12.0
+          },
+          "measurement": {
+            "unroll": 6666,
+            "iters": 300,
+            "reps": 9
+          },
+          "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 9 --core 0 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r0, $r20, 0; st.d $r0, $r20, 8' --asm 'xvldrepl.h $xr0, $r20, 0; xvpickve2gr.d $r4, $xr0, 0; add.d $r20, $r20, $r4'"
+        }
+      ],
+      "notes": "rj -> vd. Chain: xvldrepl.h reading at the carried base, then xvpickve2gr.d (6 cycles) and add.d (1 cycle) to advance the base; the 7-cycle closure is subtracted. L1D hit. Three independent runs, raw cycle spread 12.00-12.00. Measured on 2026-11-17 on LA464, core 0."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
