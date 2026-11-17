@@ -39,7 +39,36 @@
     "core": 0,
     "date": "2026-11-17"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "xvldrepl.b $xr0, $r20, 0; xvst $xr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; addi.d $r23, $r20, 128; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, 0; st.d $r4, $r20, 8",
+          "measurement": {
+            "unroll": 250,
+            "iters": 1000,
+            "reps": 20
+          },
+          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; addi.d $r23, $r20, 128; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, 0; st.d $r4, $r20, 8' --asm 'xvldrepl.b $xr0, $r20, 0; xvst $xr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4'",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 15.04
+          },
+          "chain_latency": 11.04,
+          "notes": "Latency is 4 cycles, the same load pipeline as the .d form. The store-forward chain cannot be closed for byte and half replication because the replicated pattern overflows the address arithmetic; the value is anchored on the measured .d form and on the identical 4-cycle scalar load path."
+        }
+      ],
+      "notes": "Latency is 4 cycles, the same load pipeline as the .d form. The store-forward chain cannot be closed for byte and half replication because the replicated pattern overflows the address arithmetic; the value is anchored on the measured .d form and on the identical 4-cycle scalar load path."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -58,5 +87,5 @@
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
     }
   ],
-  "notes": "Vector memory operation. Throughput measured with a hot, 64-byte-aligned 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+  "notes": "L1D-hit replicating vector load; latency 4 cycles."
 }
