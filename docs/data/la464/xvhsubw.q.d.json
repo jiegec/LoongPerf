@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvhsubw.q.d",
     "extension": "LASX",
-    "form": "xvhsubw.q.d, xd, xj, xk",
+    "form": "xvhsubw.q.d xd, xj, xk",
     "description": "Subtract even-positioned signed 64-bit elements in `b` from odd-positioned signed 64-bit elements in `a`, sign-extending both to 128-bit, to get the 128-bit result."
   },
   "operands": [

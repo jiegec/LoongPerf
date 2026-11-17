@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftintrz.wu.s",
     "extension": "LASX",
-    "form": "xvftintrz.wu.s, xd, xj",
+    "form": "xvftintrz.wu.s xd, xj",
     "description": "Convert single-precision floating point elements in `a` to unsigned 32-bit integer, rounding towards zero."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmulwod.w.hu",
     "extension": "LSX",
-    "form": "vmulwod.w.hu, vd, vj, vk",
+    "form": "vmulwod.w.hu vd, vj, vk",
     "description": "Multiply the odd-positioned unsigned 16-bit elements in `a` and the corresponding unsigned 16-bit elements in `b`, extending both to 32-bit, and save the 32-bit result in `dst`."
   },
   "operands": [

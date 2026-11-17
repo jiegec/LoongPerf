@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitseti.h",
     "extension": "LASX",
-    "form": "xvbitseti.h, xd, xj, imm",
+    "form": "xvbitseti.h xd, xj, imm",
     "description": "For each 16-bit element, set the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

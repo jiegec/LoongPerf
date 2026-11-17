@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpcnt.d",
     "extension": "LSX",
-    "form": "vpcnt.d, vd, vj",
+    "form": "vpcnt.d vd, vj",
     "description": "Count the number of ones (population, popcount) in 64-bit elements in `a`."
   },
   "operands": [

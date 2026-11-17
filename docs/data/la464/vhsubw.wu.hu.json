@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhsubw.wu.hu",
     "extension": "LSX",
-    "form": "vhsubw.wu.hu, vd, vj, vk",
+    "form": "vhsubw.wu.hu vd, vj, vk",
     "description": "Subtract even-positioned unsigned 16-bit elements in `b` from odd-positioned unsigned 16-bit elements in `a`, zero-extending both to 32-bit, to get the 32-bit result."
   },
   "operands": [

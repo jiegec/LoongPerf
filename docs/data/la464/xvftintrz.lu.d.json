@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftintrz.lu.d",
     "extension": "LASX",
-    "form": "xvftintrz.lu.d, xd, xj",
+    "form": "xvftintrz.lu.d xd, xj",
     "description": "Convert double-precision floating point elements in `a` to unsigned 64-bit integer, rounding towards zero."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vslt.wu",
     "extension": "LSX",
-    "form": "vslt.wu, vd, vj, vk",
+    "form": "vslt.wu vd, vj, vk",
     "description": "Compare the unsigned 32-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than `b`, zero otherwise."
   },
   "operands": [

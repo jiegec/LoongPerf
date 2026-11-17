@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmulwev.h.bu.b",
     "extension": "LSX",
-    "form": "vmulwev.h.bu.b, vd, vj, vk",
+    "form": "vmulwev.h.bu.b vd, vj, vk",
     "description": "Multiply the even-positioned unsigned 8-bit elements in `a` and the corresponding signed 8-bit elements in `b`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

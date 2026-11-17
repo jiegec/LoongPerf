@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vffint.s.l",
     "extension": "LSX",
-    "form": "vffint.s.l, vd, vj, vk",
+    "form": "vffint.s.l vd, vj, vk",
     "description": "For each 128-bit lane, convert signed 64-bit integer elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as single-precision floating point numbers."
   },
   "operands": [

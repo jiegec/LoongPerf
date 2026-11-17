@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vreplvei.w",
     "extension": "LSX",
-    "form": "vreplvei.w, vd, vj, vk, imm",
+    "form": "vreplvei.w vd, vj, vk, imm",
     "description": "Repeat the element in lane `idx` of `a` to fill whole vector."
   },
   "operands": [

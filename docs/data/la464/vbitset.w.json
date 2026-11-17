@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitset.w",
     "extension": "LSX",
-    "form": "vbitset.w, vd, vj, vk",
+    "form": "vbitset.w vd, vj, vk",
     "description": "For each 32-bit element, set the bit indexed by the corresponding element of `b` modulo 32, save the result in `dst`."
   },
   "operands": [

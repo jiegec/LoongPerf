@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsat.wu",
     "extension": "LASX",
-    "form": "xvsat.wu, xd, xj, imm",
+    "form": "xvsat.wu xd, xj, imm",
     "description": "Saturate each unsigned 32-bit element in `a` to the number of significant bits specified by `imm`."
   },
   "operands": [

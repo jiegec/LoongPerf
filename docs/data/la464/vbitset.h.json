@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitset.h",
     "extension": "LSX",
-    "form": "vbitset.h, vd, vj, vk",
+    "form": "vbitset.h vd, vj, vk",
     "description": "For each 16-bit element, set the bit indexed by the corresponding element of `b` modulo 16, save the result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsrl.b",
     "extension": "LASX",
-    "form": "xvsrl.b, xd, xj, xk",
+    "form": "xvsrl.b xd, xj, xk",
     "description": "Logical right shift each unsigned 8-bit element in `a` by the corresponding element of `b` modulo 8, store the result in `dst`."
   },
   "operands": [

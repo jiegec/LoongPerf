@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsat.w",
     "extension": "LASX",
-    "form": "xvsat.w, xd, xj, imm",
+    "form": "xvsat.w xd, xj, imm",
     "description": "Saturate each signed 32-bit element in `a` to the number of significant bits specified by `imm`."
   },
   "operands": [

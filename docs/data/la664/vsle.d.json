@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsle.d",
     "extension": "LSX",
-    "form": "vsle.d, vd, vj, vk",
+    "form": "vsle.d vd, vj, vk",
     "description": "Compare the signed 64-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than or equal to `b`, zero otherwise."
   },
   "operands": [

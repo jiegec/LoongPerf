@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsat.bu",
     "extension": "LSX",
-    "form": "vsat.bu, vd, vj, imm",
+    "form": "vsat.bu vd, vj, imm",
     "description": "Saturate each unsigned 8-bit element in `a` to the number of significant bits specified by `imm`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvffint.d.l",
     "extension": "LASX",
-    "form": "xvffint.d.l, xd, xj",
+    "form": "xvffint.d.l xd, xj",
     "description": "Convert signed 64-bit integer elements in `a` to double-precision floating point numbers."
   },
   "operands": [

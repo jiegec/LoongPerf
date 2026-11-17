@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpermi.q",
     "extension": "LASX",
-    "form": "xvpermi.q xd, xj, imm",
+    "form": "xvpermi.q xd, xj, uimm",
     "description": "Permute 128-bit lanes using an immediate."
   },
   "operands": [
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "imm",
+      "name": "uimm",
       "kind": "immediate",
       "access": "read",
       "description": "immediate"

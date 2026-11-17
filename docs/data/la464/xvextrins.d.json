@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvextrins.d",
     "extension": "LASX",
-    "form": "xvextrins.d, xd, xj, imm",
+    "form": "xvextrins.d xd, xj, imm",
     "description": "For each 128-bit lane, copy the 64-bit element of `b` selected by `imm[0]` into the element of `a` selected by `imm[4]`; other elements remain unchanged."
   },
   "operands": [

@@ -3,7 +3,7 @@
     "name": "rcri.h",
     "extension": "LBT",
     "form": "rcri.h rd, rj, imm",
-    "description": "x86-style rotate right through carry by immediate on h-bit values."
+    "description": "x86-style rotate right through carry by immediate on 16-bit values."
   },
   "operands": [
     {

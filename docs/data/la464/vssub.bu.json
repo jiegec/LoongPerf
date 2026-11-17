@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vssub.bu",
     "extension": "LSX",
-    "form": "vssub.bu, vd, vj, vk",
+    "form": "vssub.bu vd, vj, vk",
     "description": "Saturating subtract corresponding unsigned 8-bit elements in `b` from elements in `a`, store the result to `dst`."
   },
   "operands": [

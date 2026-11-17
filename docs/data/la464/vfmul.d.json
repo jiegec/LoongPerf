@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmul.d",
     "extension": "LSX",
-    "form": "vfmul.d, vd, vj, vk",
+    "form": "vfmul.d vd, vj, vk",
     "description": "Multiply corresponding double precision floating point elements in `a` and `b`."
   },
   "operands": [

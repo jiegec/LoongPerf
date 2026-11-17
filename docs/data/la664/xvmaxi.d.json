@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmaxi.d",
     "extension": "LASX",
-    "form": "xvmaxi.d, xd, xj, imm",
+    "form": "xvmaxi.d xd, xj, imm",
     "description": "Compute elementwise maximum for signed 64-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

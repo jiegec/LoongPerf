@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftintrne.w.s",
     "extension": "LASX",
-    "form": "xvftintrne.w.s, xd, xj",
+    "form": "xvftintrne.w.s xd, xj",
     "description": "Convert single-precision floating point elements in `a` to signed 32-bit integer, rounding towards nearest even."
   },
   "operands": [

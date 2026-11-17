@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvnori.b",
     "extension": "LASX",
-    "form": "xvnori.b, xd, xj, imm",
+    "form": "xvnori.b xd, xj, imm",
     "description": "Compute bitwise NOR (~(a | imm)) of elements in `a` and `imm`."
   },
   "operands": [

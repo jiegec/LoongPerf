@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vilvl.h",
     "extension": "LSX",
-    "form": "vilvl.h, vd, vj, vk",
+    "form": "vilvl.h vd, vj, vk",
     "description": "For each 128-bit lane, interleave the 16-bit elements in the lower half of that lane from `a` and `b`: the element from `b` is placed at the even output position and the element from `a` at the following odd position."
   },
   "operands": [

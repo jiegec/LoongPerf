@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpickev.b",
     "extension": "LASX",
-    "form": "xvpickev.b, xd, xj, xk",
+    "form": "xvpickev.b xd, xj, xk",
     "description": "For each 128-bit lane, place even-positioned 8-bit elements of `b` into its lower half and even-positioned 8-bit elements of `a` into its upper half."
   },
   "operands": [

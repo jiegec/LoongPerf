@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vldi",
     "extension": "LSX",
-    "form": "vldi vd, imm",
+    "form": "vldi vd, si13",
     "description": "Load an immediate into all vector elements."
   },
   "operands": [
@@ -16,7 +16,7 @@
     },
     {
       "index": 2,
-      "name": "imm",
+      "name": "si13",
       "kind": "immediate",
       "access": "read",
       "description": "immediate"

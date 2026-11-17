@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmaxi.h",
     "extension": "LASX",
-    "form": "xvmaxi.h, xd, xj, imm",
+    "form": "xvmaxi.h xd, xj, imm",
     "description": "Compute elementwise maximum for signed 16-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

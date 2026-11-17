@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfrint.d",
     "extension": "LASX",
-    "form": "xvfrint.d, xd, xj",
+    "form": "xvfrint.d xd, xj",
     "description": "Round double-precision floating point elements in `a` to integers, using current rounding mode specified in `fscr`, and store as floating point numbers."
   },
   "operands": [

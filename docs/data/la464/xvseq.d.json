@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvseq.d",
     "extension": "LASX",
-    "form": "xvseq.d, xd, xj, xk",
+    "form": "xvseq.d xd, xj, xk",
     "description": "Compare the 64-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

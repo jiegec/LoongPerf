@@ -2,13 +2,13 @@
   "instruction": {
     "name": "xvsrlr.b",
     "extension": "LASX",
-    "form": "xvsrlr.b, xd, xj, xk",
+    "form": "xvsrlr.b vd, vj, vk",
     "description": "Logical right shift with rounding each unsigned 8-bit element in `a` by the corresponding element of `b` modulo 8, store the result in `dst`."
   },
   "operands": [
     {
       "index": 1,
-      "name": "xd",
+      "name": "vd",
       "kind": "vector",
       "access": "write",
       "bits": 256,
@@ -16,7 +16,7 @@
     },
     {
       "index": 2,
-      "name": "xj",
+      "name": "vj",
       "kind": "vector",
       "access": "read",
       "bits": 256,
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "xk",
+      "name": "vk",
       "kind": "vector",
       "access": "read",
       "bits": 256,

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftintrph.l.s",
     "extension": "LASX",
-    "form": "xvftintrph.l.s, xd, xj",
+    "form": "xvftintrph.l.s xd, xj",
     "description": "Convert single-precision floating point elements in higher part of every 128-bit vector of `a` to signed 64-bit integer, rounding towards positive infinity."
   },
   "operands": [

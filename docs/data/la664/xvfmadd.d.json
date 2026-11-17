@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfmadd.d",
     "extension": "LASX",
-    "form": "xvfmadd.d, xd, xj, xk, xa",
+    "form": "xvfmadd.d xd, xj, xk, xa",
     "description": "Compute packed double precision floating point FMA(Fused Multiply-Add): multiply elements in `a` and `b`, accumulate to elements in `c` and store the result in `dst`."
   },
   "operands": [

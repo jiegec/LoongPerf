@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vclz.d",
     "extension": "LSX",
-    "form": "vclz.d, vd, vj",
+    "form": "vclz.d vd, vj",
     "description": "Count leading zeros of 64-bit elements in `a`."
   },
   "operands": [

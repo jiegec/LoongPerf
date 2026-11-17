@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhsubw.d.w",
     "extension": "LSX",
-    "form": "vhsubw.d.w, vd, vj, vk",
+    "form": "vhsubw.d.w vd, vj, vk",
     "description": "Subtract even-positioned signed 32-bit elements in `b` from odd-positioned signed 32-bit elements in `a`, sign-extending both to 64-bit, to get the 64-bit result."
   },
   "operands": [

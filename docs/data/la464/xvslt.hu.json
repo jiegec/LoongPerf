@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvslt.hu",
     "extension": "LASX",
-    "form": "xvslt.hu, xd, xj, xk",
+    "form": "xvslt.hu xd, xj, xk",
     "description": "Compare the unsigned 16-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than `b`, zero otherwise."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vext2xv.hu.bu",
     "extension": "LASX",
-    "form": "vext2xv.hu.bu, xd, xj",
+    "form": "vext2xv.hu.bu xd, xj",
     "description": "Zero-extend the lowest 16 8-bit elements of `a` to 16-bit elements."
   },
   "operands": [

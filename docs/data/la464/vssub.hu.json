@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vssub.hu",
     "extension": "LSX",
-    "form": "vssub.hu, vd, vj, vk",
+    "form": "vssub.hu vd, vj, vk",
     "description": "Saturating subtract corresponding unsigned 16-bit elements in `b` from elements in `a`, store the result to `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitrev.d",
     "extension": "LSX",
-    "form": "vbitrev.d, vd, vj, vk",
+    "form": "vbitrev.d vd, vj, vk",
     "description": "For each 64-bit element, toggle the bit indexed by the corresponding element of `b` modulo 64, save the result in `dst`."
   },
   "operands": [

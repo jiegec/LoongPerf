@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsra.b",
     "extension": "LASX",
-    "form": "xvsra.b, xd, xj, xk",
+    "form": "xvsra.b xd, xj, xk",
     "description": "Arithmetic right shift each signed 8-bit element in `a` by the corresponding element of `b` modulo 8, store the result in `dst`."
   },
   "operands": [

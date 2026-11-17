@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfrintrne.d",
     "extension": "LSX",
-    "form": "vfrintrne.d, vd, vj",
+    "form": "vfrintrne.d vd, vj",
     "description": "Round double-precision floating point elements in `a` to integers, rounding towards nearest even, and store as floating point numbers."
   },
   "operands": [

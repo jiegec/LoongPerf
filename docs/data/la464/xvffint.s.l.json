@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvffint.s.l",
     "extension": "LASX",
-    "form": "xvffint.s.l, xd, xj, xk",
+    "form": "xvffint.s.l xd, xj, xk",
     "description": "For each 128-bit lane, convert signed 64-bit integer elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as single-precision floating point numbers."
   },
   "operands": [

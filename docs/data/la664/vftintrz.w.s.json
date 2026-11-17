@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftintrz.w.s",
     "extension": "LSX",
-    "form": "vftintrz.w.s, vd, vj",
+    "form": "vftintrz.w.s vd, vj",
     "description": "Convert single-precision floating point elements in `a` to signed 32-bit integer, rounding towards zero."
   },
   "operands": [

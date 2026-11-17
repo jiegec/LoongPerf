@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpcnt.b",
     "extension": "LSX",
-    "form": "vpcnt.b, vd, vj",
+    "form": "vpcnt.b vd, vj",
     "description": "Count the number of ones (population, popcount) in 8-bit elements in `a`."
   },
   "operands": [

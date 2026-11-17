@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmuh.hu",
     "extension": "LASX",
-    "form": "xvmuh.hu, xd, xj, xk",
+    "form": "xvmuh.hu xd, xj, xk",
     "description": "Multiply corresponding unsigned 16-bit elements in `a` and `b`, save the upper half of the double-width product in `dst`."
   },
   "operands": [

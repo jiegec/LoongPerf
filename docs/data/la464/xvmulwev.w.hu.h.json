@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmulwev.w.hu.h",
     "extension": "LASX",
-    "form": "xvmulwev.w.hu.h, xd, xj, xk",
+    "form": "xvmulwev.w.hu.h xd, xj, xk",
     "description": "Multiply the even-positioned unsigned 16-bit elements in `a` and the corresponding signed 16-bit elements in `b`, extending both to 32-bit, and save the 32-bit result in `dst`."
   },
   "operands": [

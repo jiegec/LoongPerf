@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfrecipe.s",
     "extension": "LSX",
-    "form": "vfrecipe.s, vd, vj",
+    "form": "vfrecipe.s vd, vj",
     "description": "Compute estimated reciprocal of single precision floating point elements in `a`."
   },
   "operands": [

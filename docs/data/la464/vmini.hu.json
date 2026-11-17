@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmini.hu",
     "extension": "LSX",
-    "form": "vmini.hu, vd, vj, imm",
+    "form": "vmini.hu vd, vj, imm",
     "description": "Compute elementwise minimum for unsigned 16-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

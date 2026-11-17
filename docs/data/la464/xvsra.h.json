@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsra.h",
     "extension": "LASX",
-    "form": "xvsra.h, xd, xj, xk",
+    "form": "xvsra.h xd, xj, xk",
     "description": "Arithmetic right shift each signed 16-bit element in `a` by the corresponding element of `b` modulo 16, store the result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfmaxa.d",
     "extension": "LASX",
-    "form": "xvfmaxa.d, xd, xj, xk",
+    "form": "xvfmaxa.d xd, xj, xk",
     "description": "Compute the maximum (maxNumMag) of double precision floating point elements in `a` and `b`, selecting the element with the larger absolute value."
   },
   "operands": [

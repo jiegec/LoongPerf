@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmini.d",
     "extension": "LSX",
-    "form": "vmini.d, vd, vj, imm",
+    "form": "vmini.d vd, vj, imm",
     "description": "Compute elementwise minimum for signed 64-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

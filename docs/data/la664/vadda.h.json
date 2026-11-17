@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vadda.h",
     "extension": "LSX",
-    "form": "vadda.h, vd, vj, vk",
+    "form": "vadda.h vd, vj, vk",
     "description": "Add the absolute values of the 16-bit elements in `a` and `b`, save the result in `dst`."
   },
   "operands": [

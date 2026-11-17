@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmulwev.q.du",
     "extension": "LASX",
-    "form": "xvmulwev.q.du, xd, xj, xk",
+    "form": "xvmulwev.q.du xd, xj, xk",
     "description": "Multiply the even-positioned unsigned 64-bit elements in `a` and the corresponding unsigned 64-bit elements in `b`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

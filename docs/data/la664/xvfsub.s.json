@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfsub.s",
     "extension": "LASX",
-    "form": "xvfsub.s, xd, xj, xk",
+    "form": "xvfsub.s xd, xj, xk",
     "description": "Subtract corresponding single precision floating point elements in `b` from elements in `a`."
   },
   "operands": [

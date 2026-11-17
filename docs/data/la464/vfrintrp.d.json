@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfrintrp.d",
     "extension": "LSX",
-    "form": "vfrintrp.d, vd, vj",
+    "form": "vfrintrp.d vd, vj",
     "description": "Round double-precision floating point elements in `a` to integers, rounding towards positive infinity, and store as floating point numbers."
   },
   "operands": [

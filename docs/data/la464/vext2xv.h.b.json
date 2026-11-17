@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vext2xv.h.b",
     "extension": "LASX",
-    "form": "vext2xv.h.b, xd, xj",
+    "form": "vext2xv.h.b xd, xj",
     "description": "Sign-extend the lowest 16 8-bit elements of `a` to 16-bit elements."
   },
   "operands": [

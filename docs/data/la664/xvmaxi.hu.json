@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmaxi.hu",
     "extension": "LASX",
-    "form": "xvmaxi.hu, xd, xj, imm",
+    "form": "xvmaxi.hu xd, xj, imm",
     "description": "Compute elementwise maximum for unsigned 16-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

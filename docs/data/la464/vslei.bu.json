@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vslei.bu",
     "extension": "LSX",
-    "form": "vslei.bu, vd, vj, imm",
+    "form": "vslei.bu vd, vj, imm",
     "description": "Compare the unsigned 8-bit elements in `a` and the zero-extended `imm`, store all-ones to `dst` if corresponding element in `a` is less than or equal to `imm`, zero otherwise."
   },
   "operands": [

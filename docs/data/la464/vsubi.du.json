@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsubi.du",
     "extension": "LSX",
-    "form": "vsubi.du, vd, vj, imm",
+    "form": "vsubi.du vd, vj, imm",
     "description": "Subtract the zero-extended `imm` from each 64-bit element in `a`, save the result in `dst`."
   },
   "operands": [

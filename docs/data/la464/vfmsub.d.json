@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmsub.d",
     "extension": "LSX",
-    "form": "vfmsub.d, vd, vj, vk, va",
+    "form": "vfmsub.d vd, vj, vk, va",
     "description": "Compute packed double precision floating point FMA(Fused Multiply-Add): multiply elements in `a` and `b`, subtract elements in `c` and store the result in `dst`."
   },
   "operands": [

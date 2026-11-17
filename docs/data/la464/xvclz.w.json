@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvclz.w",
     "extension": "LASX",
-    "form": "xvclz.w, xd, xj",
+    "form": "xvclz.w xd, xj",
     "description": "Count leading zeros of 32-bit elements in `a`."
   },
   "operands": [

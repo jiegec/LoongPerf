@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfcmp.sult.d",
     "extension": "LSX",
-    "form": "vfcmp.sult.d, vd, vj, vk",
+    "form": "vfcmp.sult.d vd, vj, vk",
     "description": "Compare corresponding double precision elements in `a` and `b`, save the comparison result (all ones if ULT(Unordered or Less than), all zeros otherwise) into `dst`. An exception is raised for QNaN."
   },
   "operands": [

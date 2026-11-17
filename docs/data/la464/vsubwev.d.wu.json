@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsubwev.d.wu",
     "extension": "LSX",
-    "form": "vsubwev.d.wu, vd, vj, vk",
+    "form": "vsubwev.d.wu vd, vj, vk",
     "description": "Subtract the even-positioned unsigned 32-bit elements in `b` from the corresponding elements in `a`, extending both to 64-bit, and save the 64-bit result in `dst`."
   },
   "operands": [

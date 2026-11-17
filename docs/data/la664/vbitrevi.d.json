@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitrevi.d",
     "extension": "LSX",
-    "form": "vbitrevi.d, vd, vj, imm",
+    "form": "vbitrevi.d vd, vj, imm",
     "description": "For each 64-bit element, toggle the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

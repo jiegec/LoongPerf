@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvhaddw.wu.hu",
     "extension": "LASX",
-    "form": "xvhaddw.wu.hu, xd, xj, xk",
+    "form": "xvhaddw.wu.hu xd, xj, xk",
     "description": "Add odd-positioned unsigned 16-bit elements in `a` to even-positioned unsigned 16-bit elements in `b`, zero-extending both to 32-bit, to get the 32-bit result."
   },
   "operands": [

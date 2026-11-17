@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vextrins.b",
     "extension": "LSX",
-    "form": "vextrins.b, vd, vj, imm",
+    "form": "vextrins.b vd, vj, imm",
     "description": "Copy the 8-bit element of `b` selected by `imm[3:0]` into the element of `a` selected by `imm[7:4]`; other elements remain unchanged."
   },
   "operands": [

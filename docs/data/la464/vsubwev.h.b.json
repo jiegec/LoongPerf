@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsubwev.h.b",
     "extension": "LSX",
-    "form": "vsubwev.h.b, vd, vj, vk",
+    "form": "vsubwev.h.b vd, vj, vk",
     "description": "Subtract the even-positioned signed 8-bit elements in `b` from the corresponding elements in `a`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

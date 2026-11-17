@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfrintrp.d",
     "extension": "LASX",
-    "form": "xvfrintrp.d, xd, xj",
+    "form": "xvfrintrp.d xd, xj",
     "description": "Round double-precision floating point elements in `a` to integers, rounding towards positive infinity, and store as floating point numbers."
   },
   "operands": [

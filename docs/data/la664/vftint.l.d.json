@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftint.l.d",
     "extension": "LSX",
-    "form": "vftint.l.d, vd, vj",
+    "form": "vftint.l.d vd, vj",
     "description": "Convert double-precision floating point elements in `a` to signed 64-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

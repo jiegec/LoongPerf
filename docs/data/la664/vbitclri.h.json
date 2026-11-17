@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitclri.h",
     "extension": "LSX",
-    "form": "vbitclri.h, vd, vj, imm",
+    "form": "vbitclri.h vd, vj, imm",
     "description": "For each 16-bit element, clear the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

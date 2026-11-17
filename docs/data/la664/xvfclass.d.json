@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfclass.d",
     "extension": "LASX",
-    "form": "xvfclass.d, xd, xj",
+    "form": "xvfclass.d xd, xj",
     "description": "Classify each double precision floating point element in `a` according to IEEE 754 `class(x)`, writing the 10-bit classification result into the corresponding element of `dst`."
   },
   "operands": [

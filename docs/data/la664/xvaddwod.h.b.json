@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvaddwod.h.b",
     "extension": "LASX",
-    "form": "xvaddwod.h.b, xd, xj, xk",
+    "form": "xvaddwod.h.b xd, xj, xk",
     "description": "Add the odd-positioned signed 8-bit elements in `a` and the corresponding signed 8-bit elements in `b`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

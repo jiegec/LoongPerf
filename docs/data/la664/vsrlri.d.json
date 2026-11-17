@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrlri.d",
     "extension": "LSX",
-    "form": "vsrlri.d, vd, vj, imm",
+    "form": "vsrlri.d vd, vj, uimm",
     "description": "Logical right shift (with rounding) the unsigned 64-bit elements in `a` by `imm`, store the result to `dst`."
   },
   "operands": [
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "imm",
+      "name": "uimm",
       "kind": "immediate",
       "access": "read",
       "description": "immediate"

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vxori.b",
     "extension": "LSX",
-    "form": "vxori.b, vd, vj, imm",
+    "form": "vxori.b vd, vj, imm",
     "description": "Compute bitwise XOR of elements in `a` and `imm`."
   },
   "operands": [

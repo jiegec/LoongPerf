@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftintrz.lu.d",
     "extension": "LSX",
-    "form": "vftintrz.lu.d, vd, vj",
+    "form": "vftintrz.lu.d vd, vj",
     "description": "Convert double-precision floating point elements in `a` to unsigned 64-bit integer, rounding towards zero."
   },
   "operands": [

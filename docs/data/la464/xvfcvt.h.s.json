@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfcvt.h.s",
     "extension": "LASX",
-    "form": "xvfcvt.h.s, xd, xj, xk",
+    "form": "xvfcvt.h.s xd, xj, xk",
     "description": "For each 128-bit lane, convert single-precision floating point elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as half-precision floating point numbers."
   },
   "operands": [

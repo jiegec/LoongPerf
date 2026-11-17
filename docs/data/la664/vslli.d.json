@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vslli.d",
     "extension": "LSX",
-    "form": "vslli.d, vd, vj, imm",
+    "form": "vslli.d vd, vj, imm",
     "description": "Logical left shift the unsigned 64-bit elements in `a` by `imm`, store the result to `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftint.w.s",
     "extension": "LSX",
-    "form": "vftint.w.s, vd, vj",
+    "form": "vftint.w.s vd, vj",
     "description": "Convert single-precision floating point elements in `a` to signed 32-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

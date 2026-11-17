@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpickod.h",
     "extension": "LASX",
-    "form": "xvpickod.h, xd, xj, xk",
+    "form": "xvpickod.h xd, xj, xk",
     "description": "For each 128-bit lane, place odd-positioned 16-bit elements of `b` into its lower half and odd-positioned 16-bit elements of `a` into its upper half."
   },
   "operands": [

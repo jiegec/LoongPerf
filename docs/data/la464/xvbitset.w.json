@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitset.w",
     "extension": "LASX",
-    "form": "xvbitset.w, xd, xj, xk",
+    "form": "xvbitset.w xd, xj, xk",
     "description": "For each 32-bit element, set the bit indexed by the corresponding element of `b` modulo 32, save the result in `dst`."
   },
   "operands": [

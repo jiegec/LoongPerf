@@ -3,7 +3,7 @@
     "name": "rcr.b",
     "extension": "LBT",
     "form": "rcr.b rd, rj, rk",
-    "description": "x86-style rotate right through carry on b-bit values."
+    "description": "x86-style rotate right through carry on 8-bit values."
   },
   "operands": [
     {

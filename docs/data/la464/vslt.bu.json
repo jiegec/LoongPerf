@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vslt.bu",
     "extension": "LSX",
-    "form": "vslt.bu, vd, vj, vk",
+    "form": "vslt.bu vd, vj, vk",
     "description": "Compare the unsigned 8-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than `b`, zero otherwise."
   },
   "operands": [

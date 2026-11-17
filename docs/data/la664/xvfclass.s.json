@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfclass.s",
     "extension": "LASX",
-    "form": "xvfclass.s, xd, xj",
+    "form": "xvfclass.s xd, xj",
     "description": "Classify each single precision floating point element in `a` according to IEEE 754 `class(x)`, writing the 10-bit classification result into the corresponding element of `dst`."
   },
   "operands": [

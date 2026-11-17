@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvexth.d.w",
     "extension": "LASX",
-    "form": "xvexth.d.w, xd, xj",
+    "form": "xvexth.d.w xd, xj",
     "description": "Sign-extend 32-bit elements in the higher half of every 128-bit vector of `a` to 64-bit."
   },
   "operands": [

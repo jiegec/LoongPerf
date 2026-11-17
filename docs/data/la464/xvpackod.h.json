@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpackod.h",
     "extension": "LASX",
-    "form": "xvpackod.h, xd, xj, xk",
+    "form": "xvpackod.h xd, xj, xk",
     "description": "Interleave odd-positioned 16-bit elements of `a` and `b`: the element from `b` is placed at the even output position and the element from `a` at the following odd position."
   },
   "operands": [

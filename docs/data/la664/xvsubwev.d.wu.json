@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsubwev.d.wu",
     "extension": "LASX",
-    "form": "xvsubwev.d.wu, xd, xj, xk",
+    "form": "xvsubwev.d.wu xd, xj, xk",
     "description": "Subtract the even-positioned unsigned 32-bit elements in `b` from the corresponding elements in `a`, extending both to 64-bit, and save the 64-bit result in `dst`."
   },
   "operands": [

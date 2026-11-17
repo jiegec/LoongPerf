@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsigncov.w",
     "extension": "LASX",
-    "form": "xvsigncov.w, xd, xj, xk",
+    "form": "xvsigncov.w xd, xj, xk",
     "description": "If the 32-bit element in `a` equals to zero, set the result to zero. If the signed 32-bit element in `a` is positive, copy element in `b` to result. Otherwise, copy negated element in `b` to result. If `a` and `b` are the same vectors, it is equivalent to computing absolute value."
   },
   "operands": [

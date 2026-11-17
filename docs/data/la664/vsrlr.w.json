@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrlr.w",
     "extension": "LSX",
-    "form": "vsrlr.w, vd, vj, vk",
+    "form": "vsrlr.w vd, vj, vk",
     "description": "Logical right shift with rounding each unsigned 32-bit element in `a` by the corresponding element of `b` modulo 32, store the result in `dst`."
   },
   "operands": [

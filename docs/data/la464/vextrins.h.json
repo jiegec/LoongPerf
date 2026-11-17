@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vextrins.h",
     "extension": "LSX",
-    "form": "vextrins.h, vd, vj, imm",
+    "form": "vextrins.h vd, vj, imm",
     "description": "Copy the 16-bit element of `b` selected by `imm[2:0]` into the element of `a` selected by `imm[6:4]`; other elements remain unchanged."
   },
   "operands": [

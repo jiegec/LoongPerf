@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsadd.bu",
     "extension": "LASX",
-    "form": "xvsadd.bu, xd, xj, xk",
+    "form": "xvsadd.bu xd, xj, xk",
     "description": "Saturating add corresponding unsigned 8-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

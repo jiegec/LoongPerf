@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvssub.bu",
     "extension": "LASX",
-    "form": "xvssub.bu, xd, xj, xk",
+    "form": "xvssub.bu xd, xj, xk",
     "description": "Saturating subtract corresponding unsigned 8-bit elements in `b` from elements in `a`, store the result to `dst`."
   },
   "operands": [

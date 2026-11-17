@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvhaddw.d.w",
     "extension": "LASX",
-    "form": "xvhaddw.d.w, xd, xj, xk",
+    "form": "xvhaddw.d.w xd, xj, xk",
     "description": "Add odd-positioned signed 32-bit elements in `a` to even-positioned signed 32-bit elements in `b`, sign-extending both to 64-bit, to get the 64-bit result."
   },
   "operands": [

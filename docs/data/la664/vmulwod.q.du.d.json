@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmulwod.q.du.d",
     "extension": "LSX",
-    "form": "vmulwod.q.du.d, vd, vj, vk",
+    "form": "vmulwod.q.du.d vd, vj, vk",
     "description": "Multiply the odd-positioned unsigned 64-bit elements in `a` and the corresponding signed 64-bit elements in `b`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

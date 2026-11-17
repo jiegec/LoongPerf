@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpcnt.h",
     "extension": "LSX",
-    "form": "vpcnt.h, vd, vj",
+    "form": "vpcnt.h vd, vj",
     "description": "Count the number of ones (population, popcount) in 16-bit elements in `a`."
   },
   "operands": [

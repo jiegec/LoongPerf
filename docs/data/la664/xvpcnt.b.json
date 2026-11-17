@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpcnt.b",
     "extension": "LASX",
-    "form": "xvpcnt.b, xd, xj",
+    "form": "xvpcnt.b xd, xj",
     "description": "Count the number of ones (population, popcount) in 8-bit elements in `a`."
   },
   "operands": [

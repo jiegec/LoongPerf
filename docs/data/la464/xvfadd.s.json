@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfadd.s",
     "extension": "LASX",
-    "form": "xvfadd.s, xd, xj, xk",
+    "form": "xvfadd.s xd, xj, xk",
     "description": "Add corresponding single precision floating point elements in `a` and `b`."
   },
   "operands": [

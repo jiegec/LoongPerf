@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpickod.b",
     "extension": "LSX",
-    "form": "vpickod.b, vd, vj, vk",
+    "form": "vpickod.b vd, vj, vk",
     "description": "For each 128-bit lane, place odd-positioned 8-bit elements of `b` into its lower half and odd-positioned 8-bit elements of `a` into its upper half."
   },
   "operands": [

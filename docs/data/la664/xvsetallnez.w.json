@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsetallnez.w",
     "extension": "LASX",
-    "form": "xvsetallnez.w fcc, xj",
+    "form": "xvsetallnez.w fcc, vj",
     "description": "Set FCC based on vector elements."
   },
   "operands": [
@@ -15,7 +15,7 @@
     },
     {
       "index": 2,
-      "name": "xj",
+      "name": "vj",
       "kind": "vector",
       "access": "read",
       "bits": 256,

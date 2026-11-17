@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftintl.l.s",
     "extension": "LSX",
-    "form": "vftintl.l.s, vd, vj",
+    "form": "vftintl.l.s vd, vj",
     "description": "Convert single-precision floating point elements in lower part of every 128-bit vector of `a` to signed 64-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

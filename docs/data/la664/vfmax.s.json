@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmax.s",
     "extension": "LSX",
-    "form": "vfmax.s, vd, vj, vk",
+    "form": "vfmax.s vd, vj, vk",
     "description": "Compute the maximum (maxNum) of single precision floating point elements in `a` and `b`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmin.d",
     "extension": "LSX",
-    "form": "vfmin.d, vd, vj, vk",
+    "form": "vfmin.d vd, vj, vk",
     "description": "Compute the minimum (minNum) of double precision floating point elements in `a` and `b`."
   },
   "operands": [

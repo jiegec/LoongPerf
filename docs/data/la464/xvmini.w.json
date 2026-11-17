@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmini.w",
     "extension": "LASX",
-    "form": "xvmini.w, xd, xj, imm",
+    "form": "xvmini.w xd, xj, imm",
     "description": "Compute elementwise minimum for signed 32-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

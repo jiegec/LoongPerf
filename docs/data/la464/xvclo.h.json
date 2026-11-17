@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvclo.h",
     "extension": "LASX",
-    "form": "xvclo.h, xd, xj",
+    "form": "xvclo.h xd, xj",
     "description": "Count leading ones of 16-bit elements in `a`."
   },
   "operands": [

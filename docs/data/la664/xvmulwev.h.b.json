@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmulwev.h.b",
     "extension": "LASX",
-    "form": "xvmulwev.h.b, xd, xj, xk",
+    "form": "xvmulwev.h.b xd, xj, xk",
     "description": "Multiply the even-positioned signed 8-bit elements in `a` and the corresponding signed 8-bit elements in `b`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpackev.b",
     "extension": "LSX",
-    "form": "vpackev.b, vd, vj, vk",
+    "form": "vpackev.b vd, vj, vk",
     "description": "Interleave even-positioned 8-bit elements of `a` and `b`: the element from `b` is placed at the even output position and the element from `a` at the following odd position."
   },
   "operands": [

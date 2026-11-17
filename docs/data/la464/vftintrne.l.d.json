@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftintrne.l.d",
     "extension": "LSX",
-    "form": "vftintrne.l.d, vd, vj",
+    "form": "vftintrne.l.d vd, vj",
     "description": "Convert double-precision floating point elements in `a` to signed 64-bit integer, rounding towards nearest even."
   },
   "operands": [

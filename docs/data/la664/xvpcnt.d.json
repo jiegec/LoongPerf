@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpcnt.d",
     "extension": "LASX",
-    "form": "xvpcnt.d, xd, xj",
+    "form": "xvpcnt.d xd, xj",
     "description": "Count the number of ones (population, popcount) in 64-bit elements in `a`."
   },
   "operands": [

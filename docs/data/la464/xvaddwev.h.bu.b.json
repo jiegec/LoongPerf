@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvaddwev.h.bu.b",
     "extension": "LASX",
-    "form": "xvaddwev.h.bu.b, xd, xj, xk",
+    "form": "xvaddwev.h.bu.b xd, xj, xk",
     "description": "Add the even-positioned unsigned 8-bit elements in `a` and the corresponding signed 8-bit elements in `b`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

@@ -2,13 +2,13 @@
   "instruction": {
     "name": "xvrepli.w",
     "extension": "LASX",
-    "form": "xvrepli.w xd, imm",
+    "form": "xvrepli.w vd, imm",
     "description": "Load an immediate into all w elements."
   },
   "operands": [
     {
       "index": 1,
-      "name": "xd",
+      "name": "vd",
       "kind": "vector",
       "access": "write",
       "bits": 256,

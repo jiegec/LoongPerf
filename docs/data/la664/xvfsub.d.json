@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfsub.d",
     "extension": "LASX",
-    "form": "xvfsub.d, xd, xj, xk",
+    "form": "xvfsub.d xd, xj, xk",
     "description": "Subtract corresponding double precision floating point elements in `b` from elements in `a`."
   },
   "operands": [

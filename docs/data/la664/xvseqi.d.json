@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvseqi.d",
     "extension": "LASX",
-    "form": "xvseqi.d, xd, xj, imm",
+    "form": "xvseqi.d xd, xj, imm",
     "description": "Compare the 64-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

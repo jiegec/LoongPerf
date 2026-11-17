@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsllwil.hu.bu",
     "extension": "LASX",
-    "form": "xvsllwil.hu.bu, xd, xj, imm",
+    "form": "xvsllwil.hu.bu xd, xj, imm",
     "description": "For each 128-bit lane, zero-extend and shift the 8-bit elements in the lower part of that lane by `imm` to 16-bit result."
   },
   "operands": [

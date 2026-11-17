@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvseqi.h",
     "extension": "LASX",
-    "form": "xvseqi.h, xd, xj, imm",
+    "form": "xvseqi.h xd, xj, imm",
     "description": "Compare the 16-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

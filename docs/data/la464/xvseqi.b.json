@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvseqi.b",
     "extension": "LASX",
-    "form": "xvseqi.b, xd, xj, imm",
+    "form": "xvseqi.b xd, xj, imm",
     "description": "Compare the 8-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

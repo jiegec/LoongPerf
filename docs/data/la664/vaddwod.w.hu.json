@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vaddwod.w.hu",
     "extension": "LSX",
-    "form": "vaddwod.w.hu, vd, vj, vk",
+    "form": "vaddwod.w.hu vd, vj, vk",
     "description": "Add the odd-positioned unsigned 16-bit elements in `a` and the corresponding unsigned 16-bit elements in `b`, extending both to 32-bit, and save the 32-bit result in `dst`."
   },
   "operands": [

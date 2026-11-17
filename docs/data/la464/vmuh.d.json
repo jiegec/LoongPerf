@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmuh.d",
     "extension": "LSX",
-    "form": "vmuh.d, vd, vj, vk",
+    "form": "vmuh.d vd, vj, vk",
     "description": "Multiply corresponding signed 64-bit elements in `a` and `b`, save the upper half of the double-width product in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitrevi.d",
     "extension": "LASX",
-    "form": "xvbitrevi.d, xd, xj, imm",
+    "form": "xvbitrevi.d xd, xj, imm",
     "description": "For each 64-bit element, toggle the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfmul.d",
     "extension": "LASX",
-    "form": "xvfmul.d, xd, xj, xk",
+    "form": "xvfmul.d xd, xj, xk",
     "description": "Multiply corresponding double precision floating point elements in `a` and `b`."
   },
   "operands": [

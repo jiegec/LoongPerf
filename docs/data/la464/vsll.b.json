@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsll.b",
     "extension": "LSX",
-    "form": "vsll.b, vd, vj, vk",
+    "form": "vsll.b vd, vj, vk",
     "description": "Logical left shift each unsigned 8-bit element in `a` by the corresponding element of `b` modulo 8, store the result in `dst`."
   },
   "operands": [

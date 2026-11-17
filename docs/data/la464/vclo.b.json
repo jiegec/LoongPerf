@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vclo.b",
     "extension": "LSX",
-    "form": "vclo.b, vd, vj",
+    "form": "vclo.b vd, vj",
     "description": "Count leading ones of 8-bit elements in `a`."
   },
   "operands": [

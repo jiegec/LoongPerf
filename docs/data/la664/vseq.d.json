@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vseq.d",
     "extension": "LSX",
-    "form": "vseq.d, vd, vj, vk",
+    "form": "vseq.d vd, vj, vk",
     "description": "Compare the 64-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

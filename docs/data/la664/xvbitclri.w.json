@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitclri.w",
     "extension": "LASX",
-    "form": "xvbitclri.w, xd, xj, imm",
+    "form": "xvbitclri.w xd, xj, imm",
     "description": "For each 32-bit element, clear the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

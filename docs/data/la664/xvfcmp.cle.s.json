@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfcmp.cle.s",
     "extension": "LASX",
-    "form": "xvfcmp.cle.s, xd, xj, xk",
+    "form": "xvfcmp.cle.s xd, xj, xk",
     "description": "Compare corresponding single precision elements in `a` and `b`, save the comparison result (all ones if LE(Less than or Equal), all zeros otherwise) into `dst`. No exception is raised for QNaN."
   },
   "operands": [

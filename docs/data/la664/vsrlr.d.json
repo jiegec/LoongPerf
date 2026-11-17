@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrlr.d",
     "extension": "LSX",
-    "form": "vsrlr.d, vd, vj, vk",
+    "form": "vsrlr.d vd, vj, vk",
     "description": "Logical right shift with rounding each unsigned 64-bit element in `a` by the corresponding element of `b` modulo 64, store the result in `dst`."
   },
   "operands": [

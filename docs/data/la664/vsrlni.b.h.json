@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrlni.b.h",
     "extension": "LSX",
-    "form": "vsrlni.b.h, vd, vj, imm",
+    "form": "vsrlni.b.h vd, vj, uimm",
     "description": "Logical right shift the unsigned 16-bit elements in `a` and `b` by `imm`, write the lower 8 bits of the shifted result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
   },
   "operands": [
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "imm",
+      "name": "uimm",
       "kind": "immediate",
       "access": "read",
       "description": "immediate"

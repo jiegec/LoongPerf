@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vext2xv.du.bu",
     "extension": "LASX",
-    "form": "vext2xv.du.bu, xd, xj",
+    "form": "vext2xv.du.bu xd, xj",
     "description": "Zero-extend the lowest 4 8-bit elements of `a` to 64-bit elements."
   },
   "operands": [

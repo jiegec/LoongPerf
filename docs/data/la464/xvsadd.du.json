@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsadd.du",
     "extension": "LASX",
-    "form": "xvsadd.du, xd, xj, xk",
+    "form": "xvsadd.du xd, xj, xk",
     "description": "Saturating add corresponding unsigned 64-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

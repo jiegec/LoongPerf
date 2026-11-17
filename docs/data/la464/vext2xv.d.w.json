@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vext2xv.d.w",
     "extension": "LASX",
-    "form": "vext2xv.d.w, xd, xj",
+    "form": "vext2xv.d.w xd, xj",
     "description": "Sign-extend the lowest 4 32-bit elements of `a` to 64-bit elements."
   },
   "operands": [

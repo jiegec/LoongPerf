@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvslli.b",
     "extension": "LASX",
-    "form": "xvslli.b, xd, xj, imm",
+    "form": "xvslli.b xd, xj, imm",
     "description": "Logical left shift the unsigned 8-bit elements in `a` by `imm`, store the result to `dst`."
   },
   "operands": [

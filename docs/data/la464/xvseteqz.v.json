@@ -14,7 +14,7 @@
     },
     {
       "index": 2,
-      "name": "vj",
+      "name": "xj",
       "kind": "vector",
       "access": "read",
       "bits": 128

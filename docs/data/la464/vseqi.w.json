@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vseqi.w",
     "extension": "LSX",
-    "form": "vseqi.w, vd, vj, imm",
+    "form": "vseqi.w vd, vj, imm",
     "description": "Compare the 32-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

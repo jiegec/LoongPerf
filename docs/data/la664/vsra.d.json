@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsra.d",
     "extension": "LSX",
-    "form": "vsra.d, vd, vj, vk",
+    "form": "vsra.d vd, vj, vk",
     "description": "Arithmetic right shift each signed 64-bit element in `a` by the corresponding element of `b` modulo 64, store the result in `dst`."
   },
   "operands": [

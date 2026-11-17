@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsat.h",
     "extension": "LASX",
-    "form": "xvsat.h, xd, xj, imm",
+    "form": "xvsat.h xd, xj, imm",
     "description": "Saturate each signed 16-bit element in `a` to the number of significant bits specified by `imm`."
   },
   "operands": [

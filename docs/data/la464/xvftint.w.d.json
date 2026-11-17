@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftint.w.d",
     "extension": "LASX",
-    "form": "xvftint.w.d, xd, xj, xk",
+    "form": "xvftint.w.d xd, xj, xk",
     "description": "For each 128-bit lane, convert double-precision floating point elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as signed 32-bit integers, using current rounding mode specified in `fscr`."
   },
   "operands": [

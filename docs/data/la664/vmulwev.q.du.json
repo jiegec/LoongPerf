@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmulwev.q.du",
     "extension": "LSX",
-    "form": "vmulwev.q.du, vd, vj, vk",
+    "form": "vmulwev.q.du vd, vj, vk",
     "description": "Multiply the even-positioned unsigned 64-bit elements in `a` and the corresponding unsigned 64-bit elements in `b`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

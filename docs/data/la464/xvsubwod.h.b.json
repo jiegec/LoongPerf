@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsubwod.h.b",
     "extension": "LASX",
-    "form": "xvsubwod.h.b, xd, xj, xk",
+    "form": "xvsubwod.h.b xd, xj, xk",
     "description": "Subtract the odd-positioned signed 8-bit elements in `b` from the corresponding elements in `a`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

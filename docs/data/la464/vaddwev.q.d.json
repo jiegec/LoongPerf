@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vaddwev.q.d",
     "extension": "LSX",
-    "form": "vaddwev.q.d, vd, vj, vk",
+    "form": "vaddwev.q.d vd, vj, vk",
     "description": "Add the even-positioned signed 64-bit elements in `a` and the corresponding signed 64-bit elements in `b`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvreplve0.h",
     "extension": "LASX",
-    "form": "xvreplve0.h, xd, xj",
+    "form": "xvreplve0.h xd, xj",
     "description": "Repeat the first 16-bit lane from `a` to all lanes of `dst`."
   },
   "operands": [

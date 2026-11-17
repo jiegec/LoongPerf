@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vextrins.d",
     "extension": "LSX",
-    "form": "vextrins.d, vd, vj, imm",
+    "form": "vextrins.d vd, vj, imm",
     "description": "Copy the 64-bit element of `b` selected by `imm[0]` into the element of `a` selected by `imm[4]`; other elements remain unchanged."
   },
   "operands": [

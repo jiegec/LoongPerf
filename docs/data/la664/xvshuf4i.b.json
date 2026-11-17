@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvshuf4i.b",
     "extension": "LASX",
-    "form": "xvshuf4i.b, xd, xj, imm",
+    "form": "xvshuf4i.b xd, xj, imm",
     "description": "For each group of four consecutive 8-bit elements in `a`, permute the group according to the four 2-bit fields of `imm`, save the result to `dst`."
   },
   "operands": [

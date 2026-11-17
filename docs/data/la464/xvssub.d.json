@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvssub.d",
     "extension": "LASX",
-    "form": "xvssub.d, xd, xj, xk",
+    "form": "xvssub.d xd, xj, xk",
     "description": "Saturating subtract corresponding signed 64-bit elements in `b` from elements in `a`, store the result to `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vffint.s.w",
     "extension": "LSX",
-    "form": "vffint.s.w, vd, vj",
+    "form": "vffint.s.w vd, vj",
     "description": "Convert signed 32-bit integer elements in `a` to single-precision floating point numbers."
   },
   "operands": [

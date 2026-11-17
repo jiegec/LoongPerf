@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitrev.w",
     "extension": "LSX",
-    "form": "vbitrev.w, vd, vj, vk",
+    "form": "vbitrev.w vd, vj, vk",
     "description": "For each 32-bit element, toggle the bit indexed by the corresponding element of `b` modulo 32, save the result in `dst`."
   },
   "operands": [

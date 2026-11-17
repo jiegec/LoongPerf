@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitseti.d",
     "extension": "LASX",
-    "form": "xvbitseti.d, xd, xj, imm",
+    "form": "xvbitseti.d xd, xj, imm",
     "description": "For each 64-bit element, set the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

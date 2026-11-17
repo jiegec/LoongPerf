@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsubwev.q.du",
     "extension": "LASX",
-    "form": "xvsubwev.q.du, xd, xj, xk",
+    "form": "xvsubwev.q.du xd, xj, xk",
     "description": "Subtract the even-positioned unsigned 64-bit elements in `b` from the corresponding elements in `a`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

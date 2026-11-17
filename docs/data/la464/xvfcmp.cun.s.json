@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfcmp.cun.s",
     "extension": "LASX",
-    "form": "xvfcmp.cun.s, xd, xj, xk",
+    "form": "xvfcmp.cun.s xd, xj, xk",
     "description": "Compare corresponding single precision elements in `a` and `b`, save the comparison result (all ones if UN(Unordered), all zeros otherwise) into `dst`. No exception is raised for QNaN."
   },
   "operands": [

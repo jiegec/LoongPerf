@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvrepl128vei.w",
     "extension": "LASX",
-    "form": "xvrepl128vei.w, xd, xj, imm",
+    "form": "xvrepl128vei.w xd, xj, imm",
     "description": "For each 128-bit lane, repeat that lane's element `idx` to fill the same lane."
   },
   "operands": [

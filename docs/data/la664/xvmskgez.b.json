@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmskgez.b",
     "extension": "LASX",
-    "form": "xvmskgez.b, xd, xj",
+    "form": "xvmskgez.b xd, xj",
     "description": "For each 128-bit lane, for each 8-bit element in `a`, set the bit at that element's index within the lane to one if the element is greater than or equal to zero, otherwise zero; the remaining bits of the lane are zero."
   },
   "operands": [

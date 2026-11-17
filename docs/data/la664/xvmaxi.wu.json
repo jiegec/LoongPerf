@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmaxi.wu",
     "extension": "LASX",
-    "form": "xvmaxi.wu, xd, xj, imm",
+    "form": "xvmaxi.wu xd, xj, imm",
     "description": "Compute elementwise maximum for unsigned 32-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

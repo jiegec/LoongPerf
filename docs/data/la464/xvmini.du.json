@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmini.du",
     "extension": "LASX",
-    "form": "xvmini.du, xd, xj, imm",
+    "form": "xvmini.du xd, xj, imm",
     "description": "Compute elementwise minimum for unsigned 64-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

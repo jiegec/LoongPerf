@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsubi.hu",
     "extension": "LSX",
-    "form": "vsubi.hu, vd, vj, imm",
+    "form": "vsubi.hu vd, vj, imm",
     "description": "Subtract the zero-extended `imm` from each 16-bit element in `a`, save the result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpackod.d",
     "extension": "LASX",
-    "form": "xvpackod.d, xd, xj, xk",
+    "form": "xvpackod.d xd, xj, xk",
     "description": "Interleave odd-positioned 64-bit elements of `a` and `b`: the element from `b` is placed at the even output position and the element from `a` at the following odd position."
   },
   "operands": [

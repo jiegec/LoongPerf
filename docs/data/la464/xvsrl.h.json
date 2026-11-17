@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsrl.h",
     "extension": "LASX",
-    "form": "xvsrl.h, xd, xj, xk",
+    "form": "xvsrl.h xd, xj, xk",
     "description": "Logical right shift each unsigned 16-bit element in `a` by the corresponding element of `b` modulo 16, store the result in `dst`."
   },
   "operands": [

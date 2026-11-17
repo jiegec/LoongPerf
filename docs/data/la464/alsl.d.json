@@ -32,7 +32,7 @@
     },
     {
       "index": 4,
-      "name": "sa",
+      "name": "sa2",
       "kind": "immediate",
       "access": "read",
       "description": "shift amount"

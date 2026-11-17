@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitset.b",
     "extension": "LSX",
-    "form": "vbitset.b, vd, vj, vk",
+    "form": "vbitset.b vd, vj, vk",
     "description": "For each 8-bit element, set the bit indexed by the corresponding element of `b` modulo 8, save the result in `dst`."
   },
   "operands": [

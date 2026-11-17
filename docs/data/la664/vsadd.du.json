@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsadd.du",
     "extension": "LSX",
-    "form": "vsadd.du, vd, vj, vk",
+    "form": "vsadd.du vd, vj, vk",
     "description": "Saturating add corresponding unsigned 64-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

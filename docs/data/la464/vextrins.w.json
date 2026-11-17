@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vextrins.w",
     "extension": "LSX",
-    "form": "vextrins.w, vd, vj, imm",
+    "form": "vextrins.w vd, vj, imm",
     "description": "Copy the 32-bit element of `b` selected by `imm[1:0]` into the element of `a` selected by `imm[5:4]`; other elements remain unchanged."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmaxi.bu",
     "extension": "LASX",
-    "form": "xvmaxi.bu, xd, xj, imm",
+    "form": "xvmaxi.bu xd, xj, imm",
     "description": "Compute elementwise maximum for unsigned 8-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

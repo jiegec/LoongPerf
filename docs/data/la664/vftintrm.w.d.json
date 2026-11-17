@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftintrm.w.d",
     "extension": "LSX",
-    "form": "vftintrm.w.d, vd, vj, vk",
+    "form": "vftintrm.w.d vd, vj, vk",
     "description": "For each 128-bit lane, convert double-precision floating point elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as signed 32-bit integers, rounding towards negative infinity."
   },
   "operands": [

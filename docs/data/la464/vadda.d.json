@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vadda.d",
     "extension": "LSX",
-    "form": "vadda.d, vd, vj, vk",
+    "form": "vadda.d vd, vj, vk",
     "description": "Add the absolute values of the 64-bit elements in `a` and `b`, save the result in `dst`."
   },
   "operands": [

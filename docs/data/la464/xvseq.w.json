@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvseq.w",
     "extension": "LASX",
-    "form": "xvseq.w, xd, xj, xk",
+    "form": "xvseq.w xd, xj, xk",
     "description": "Compare the 32-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

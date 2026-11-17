@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftinth.l.s",
     "extension": "LASX",
-    "form": "xvftinth.l.s, xd, xj",
+    "form": "xvftinth.l.s xd, xj",
     "description": "Convert single-precision floating point elements in higher part of every 128-bit vector of `a` to signed 64-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

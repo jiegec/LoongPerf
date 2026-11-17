@@ -3,7 +3,7 @@
     "name": "rotr.b",
     "extension": "LBT",
     "form": "rotr.b rd, rj, rk",
-    "description": "x86-style rotate right on b-bit values."
+    "description": "x86-style rotate right on 8-bit values."
   },
   "operands": [
     {

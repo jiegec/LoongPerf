@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftint.wu.s",
     "extension": "LSX",
-    "form": "vftint.wu.s, vd, vj",
+    "form": "vftint.wu.s vd, vj",
     "description": "Convert single-precision floating point elements in `a` to unsigned 32-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

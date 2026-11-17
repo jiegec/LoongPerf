@@ -3,7 +3,7 @@
     "name": "rcr.h",
     "extension": "LBT",
     "form": "rcr.h rd, rj, rk",
-    "description": "x86-style rotate right through carry on h-bit values."
+    "description": "x86-style rotate right through carry on 16-bit values."
   },
   "operands": [
     {

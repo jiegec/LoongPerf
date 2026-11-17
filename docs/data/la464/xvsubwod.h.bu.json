@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsubwod.h.bu",
     "extension": "LASX",
-    "form": "xvsubwod.h.bu, xd, xj, xk",
+    "form": "xvsubwod.h.bu xd, xj, xk",
     "description": "Subtract the odd-positioned unsigned 8-bit elements in `b` from the corresponding elements in `a`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

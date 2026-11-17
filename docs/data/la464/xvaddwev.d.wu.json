@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvaddwev.d.wu",
     "extension": "LASX",
-    "form": "xvaddwev.d.wu, xd, xj, xk",
+    "form": "xvaddwev.d.wu xd, xj, xk",
     "description": "Add the even-positioned unsigned 32-bit elements in `a` and the corresponding unsigned 32-bit elements in `b`, extending both to 64-bit, and save the 64-bit result in `dst`."
   },
   "operands": [

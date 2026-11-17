@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmini.b",
     "extension": "LSX",
-    "form": "vmini.b, vd, vj, imm",
+    "form": "vmini.b vd, vj, imm",
     "description": "Compute elementwise minimum for signed 8-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

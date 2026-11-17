@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsllwil.du.wu",
     "extension": "LASX",
-    "form": "xvsllwil.du.wu, xd, xj, imm",
+    "form": "xvsllwil.du.wu xd, xj, imm",
     "description": "For each 128-bit lane, zero-extend and shift the 32-bit elements in the lower part of that lane by `imm` to 64-bit result."
   },
   "operands": [

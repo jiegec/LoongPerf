@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmaxi.hu",
     "extension": "LSX",
-    "form": "vmaxi.hu, vd, vj, imm",
+    "form": "vmaxi.hu vd, vj, imm",
     "description": "Compute elementwise maximum for unsigned 16-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsll.h",
     "extension": "LSX",
-    "form": "vsll.h, vd, vj, vk",
+    "form": "vsll.h vd, vj, vk",
     "description": "Logical left shift each unsigned 16-bit element in `a` by the corresponding element of `b` modulo 16, store the result in `dst`."
   },
   "operands": [

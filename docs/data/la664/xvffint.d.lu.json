@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvffint.d.lu",
     "extension": "LASX",
-    "form": "xvffint.d.lu, xd, xj",
+    "form": "xvffint.d.lu xd, xj",
     "description": "Convert unsigned 64-bit integer elements in `a` to double-precision floating point numbers."
   },
   "operands": [

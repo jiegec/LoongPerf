@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvclz.h",
     "extension": "LASX",
-    "form": "xvclz.h, xd, xj",
+    "form": "xvclz.h xd, xj",
     "description": "Count leading zeros of 16-bit elements in `a`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrl.b",
     "extension": "LSX",
-    "form": "vsrl.b, vd, vj, vk",
+    "form": "vsrl.b vd, vj, vk",
     "description": "Logical right shift each unsigned 8-bit element in `a` by the corresponding element of `b` modulo 8, store the result in `dst`."
   },
   "operands": [

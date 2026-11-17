@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vshuf4i.d",
     "extension": "LSX",
-    "form": "vshuf4i.d, vd, vj, imm",
+    "form": "vshuf4i.d vd, vj, imm",
     "description": "For each 128-bit lane, select two 64-bit elements from the four elements formed by the corresponding lanes of `a` and `b` using `imm[1:0]` and `imm[3:2]`, save the result to `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsle.h",
     "extension": "LASX",
-    "form": "xvsle.h, xd, xj, xk",
+    "form": "xvsle.h xd, xj, xk",
     "description": "Compare the signed 16-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than or equal to `b`, zero otherwise."
   },
   "operands": [

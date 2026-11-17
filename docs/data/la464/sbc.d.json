@@ -2,7 +2,7 @@
   "instruction": {
     "name": "sbc.d",
     "extension": "LBT",
-    "form": "sbc.d rd, rj, rk, CF",
+    "form": "sbc.d rd, rj, rk",
     "description": "x86 add/subtract with carry"
   },
   "operands": [
@@ -36,7 +36,8 @@
       "kind": "flags",
       "access": "read",
       "bits": 1,
-      "description": ""
+      "description": "",
+      "implicit": true
     }
   ],
   "measurement": {

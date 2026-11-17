@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvreplve0.b",
     "extension": "LASX",
-    "form": "xvreplve0.b, xd, xj",
+    "form": "xvreplve0.b xd, xj",
     "description": "Repeat the first 8-bit lane from `a` to all lanes of `dst`."
   },
   "operands": [

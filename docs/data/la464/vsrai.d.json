@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrai.d",
     "extension": "LSX",
-    "form": "vsrai.d, vd, vj, imm",
+    "form": "vsrai.d vd, vj, imm",
     "description": "Arithmetic right shift the signed 64-bit elements in `a` by `imm`, store the result to `dst`."
   },
   "operands": [

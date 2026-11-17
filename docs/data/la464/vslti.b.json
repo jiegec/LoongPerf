@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vslti.b",
     "extension": "LSX",
-    "form": "vslti.b, vd, vj, imm",
+    "form": "vslti.b vd, vj, imm",
     "description": "Compare the signed 8-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if corresponding element in `a` is less than `imm`, zero otherwise."
   },
   "operands": [

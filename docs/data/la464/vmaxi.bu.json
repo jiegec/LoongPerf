@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmaxi.bu",
     "extension": "LSX",
-    "form": "vmaxi.bu, vd, vj, imm",
+    "form": "vmaxi.bu vd, vj, imm",
     "description": "Compute elementwise maximum for unsigned 8-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

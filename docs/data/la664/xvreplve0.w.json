@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvreplve0.w",
     "extension": "LASX",
-    "form": "xvreplve0.w, xd, xj",
+    "form": "xvreplve0.w xd, xj",
     "description": "Repeat the first 32-bit lane from `a` to all lanes of `dst`."
   },
   "operands": [

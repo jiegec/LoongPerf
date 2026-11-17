@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfcmp.cule.s",
     "extension": "LASX",
-    "form": "xvfcmp.cule.s, xd, xj, xk",
+    "form": "xvfcmp.cule.s xd, xj, xk",
     "description": "Compare corresponding single precision elements in `a` and `b`, save the comparison result (all ones if ULE(Unordered or Less than or Equal), all zeros otherwise) into `dst`. No exception is raised for QNaN."
   },
   "operands": [

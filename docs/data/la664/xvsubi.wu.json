@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsubi.wu",
     "extension": "LASX",
-    "form": "xvsubi.wu, xd, xj, imm",
+    "form": "xvsubi.wu xd, xj, imm",
     "description": "Subtract the zero-extended `imm` from each 32-bit element in `a`, save the result in `dst`."
   },
   "operands": [

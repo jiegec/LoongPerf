@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsrai.w",
     "extension": "LASX",
-    "form": "xvsrai.w, xd, xj, imm",
+    "form": "xvsrai.w xd, xj, imm",
     "description": "Arithmetic right shift the signed 32-bit elements in `a` by `imm`, store the result to `dst`."
   },
   "operands": [

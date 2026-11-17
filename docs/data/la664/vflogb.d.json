@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vflogb.d",
     "extension": "LSX",
-    "form": "vflogb.d, vd, vj",
+    "form": "vflogb.d vd, vj",
     "description": "Compute base-2 logarithm of double precision floating point elements in `a`."
   },
   "operands": [

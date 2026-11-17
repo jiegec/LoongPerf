@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsubwod.q.d",
     "extension": "LASX",
-    "form": "xvsubwod.q.d, xd, xj, xk",
+    "form": "xvsubwod.q.d xd, xj, xk",
     "description": "Subtract the odd-positioned signed 64-bit elements in `b` from the corresponding elements in `a`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vshuf4i.w",
     "extension": "LSX",
-    "form": "vshuf4i.w, vd, vj, imm",
+    "form": "vshuf4i.w vd, vj, imm",
     "description": "For each group of four consecutive 32-bit elements in `a`, permute the group according to the four 2-bit fields of `imm`, save the result to `dst`."
   },
   "operands": [

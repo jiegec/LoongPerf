@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvseq.h",
     "extension": "LASX",
-    "form": "xvseq.h, xd, xj, xk",
+    "form": "xvseq.h xd, xj, xk",
     "description": "Compare the 16-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

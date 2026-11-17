@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfmin.s",
     "extension": "LASX",
-    "form": "xvfmin.s, xd, xj, xk",
+    "form": "xvfmin.s xd, xj, xk",
     "description": "Compute the minimum (minNum) of single precision floating point elements in `a` and `b`."
   },
   "operands": [

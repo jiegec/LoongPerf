@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvffint.s.wu",
     "extension": "LASX",
-    "form": "xvffint.s.wu, xd, xj",
+    "form": "xvffint.s.wu xd, xj",
     "description": "Convert unsigned 32-bit integer elements in `a` to single-precision floating point numbers."
   },
   "operands": [

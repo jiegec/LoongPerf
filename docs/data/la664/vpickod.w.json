@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpickod.w",
     "extension": "LSX",
-    "form": "vpickod.w, vd, vj, vk",
+    "form": "vpickod.w vd, vj, vk",
     "description": "For each 128-bit lane, place odd-positioned 32-bit elements of `b` into its lower half and odd-positioned 32-bit elements of `a` into its upper half."
   },
   "operands": [

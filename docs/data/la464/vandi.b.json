@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vandi.b",
     "extension": "LSX",
-    "form": "vandi.b, vd, vj, imm",
+    "form": "vandi.b vd, vj, imm",
     "description": "Compute bitwise AND of elements in `a` and `imm`."
   },
   "operands": [

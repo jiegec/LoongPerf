@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vclo.w",
     "extension": "LSX",
-    "form": "vclo.w, vd, vj",
+    "form": "vclo.w vd, vj",
     "description": "Count leading ones of 32-bit elements in `a`."
   },
   "operands": [

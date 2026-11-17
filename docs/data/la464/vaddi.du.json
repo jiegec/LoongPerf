@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vaddi.du",
     "extension": "LSX",
-    "form": "vaddi.du, vd, vj, imm",
+    "form": "vaddi.du vd, vj, imm",
     "description": "Add the zero-extended `imm` to each 64-bit element in `a`, save the result in `dst`."
   },
   "operands": [

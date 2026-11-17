@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsubwod.w.h",
     "extension": "LSX",
-    "form": "vsubwod.w.h, vd, vj, vk",
+    "form": "vsubwod.w.h vd, vj, vk",
     "description": "Subtract the odd-positioned signed 16-bit elements in `b` from the corresponding elements in `a`, extending both to 32-bit, and save the 32-bit result in `dst`."
   },
   "operands": [

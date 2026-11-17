@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvslei.b",
     "extension": "LASX",
-    "form": "xvslei.b, xd, xj, imm",
+    "form": "xvslei.b xd, xj, imm",
     "description": "Compare the signed 8-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if corresponding element in `a` is less than or equal to `imm`, zero otherwise."
   },
   "operands": [

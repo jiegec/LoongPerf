@@ -3,7 +3,7 @@
     "name": "rotr.h",
     "extension": "LBT",
     "form": "rotr.h rd, rj, rk",
-    "description": "x86-style rotate right on h-bit values."
+    "description": "x86-style rotate right on 16-bit values."
   },
   "operands": [
     {

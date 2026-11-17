@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfrsqrte.s",
     "extension": "LSX",
-    "form": "vfrsqrte.s, vd, vj",
+    "form": "vfrsqrte.s vd, vj",
     "description": "Compute estimated reciprocal of square root of single precision floating point elements in `a`."
   },
   "operands": [

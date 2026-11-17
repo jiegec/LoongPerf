@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhaddw.qu.du",
     "extension": "LSX",
-    "form": "vhaddw.qu.du, vd, vj, vk",
+    "form": "vhaddw.qu.du vd, vj, vk",
     "description": "Add odd-positioned unsigned 64-bit elements in `a` to even-positioned unsigned 64-bit elements in `b`, zero-extending both to 128-bit, to get the 128-bit result."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmaxi.du",
     "extension": "LSX",
-    "form": "vmaxi.du, vd, vj, imm",
+    "form": "vmaxi.du vd, vj, imm",
     "description": "Compute elementwise maximum for unsigned 64-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

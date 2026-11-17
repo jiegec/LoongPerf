@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vori.b",
     "extension": "LSX",
-    "form": "vori.b, vd, vj, imm",
+    "form": "vori.b vd, vj, imm",
     "description": "Compute bitwise OR of elements in `a` and `imm`."
   },
   "operands": [

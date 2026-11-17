@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfadd.s",
     "extension": "LSX",
-    "form": "vfadd.s, vd, vj, vk",
+    "form": "vfadd.s vd, vj, vk",
     "description": "Add corresponding single precision floating point elements in `a` and `b`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmulwod.d.wu.w",
     "extension": "LASX",
-    "form": "xvmulwod.d.wu.w, xd, xj, xk",
+    "form": "xvmulwod.d.wu.w xd, xj, xk",
     "description": "Multiply the odd-positioned unsigned 32-bit elements in `a` and the corresponding signed 32-bit elements in `b`, extending both to 64-bit, and save the 64-bit result in `dst`."
   },
   "operands": [

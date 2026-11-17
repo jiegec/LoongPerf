@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvclz.b",
     "extension": "LASX",
-    "form": "xvclz.b, xd, xj",
+    "form": "xvclz.b xd, xj",
     "description": "Count leading zeros of 8-bit elements in `a`."
   },
   "operands": [

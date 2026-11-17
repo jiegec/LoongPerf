@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsle.du",
     "extension": "LSX",
-    "form": "vsle.du, vd, vj, vk",
+    "form": "vsle.du vd, vj, vk",
     "description": "Compare the unsigned 64-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than or equal to `b`, zero otherwise."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvxori.b",
     "extension": "LASX",
-    "form": "xvxori.b, xd, xj, imm",
+    "form": "xvxori.b xd, xj, imm",
     "description": "Compute bitwise XOR of elements in `a` and `imm`."
   },
   "operands": [

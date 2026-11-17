@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitrev.w",
     "extension": "LASX",
-    "form": "xvbitrev.w, xd, xj, xk",
+    "form": "xvbitrev.w xd, xj, xk",
     "description": "For each 32-bit element, toggle the bit indexed by the corresponding element of `b` modulo 32, save the result in `dst`."
   },
   "operands": [

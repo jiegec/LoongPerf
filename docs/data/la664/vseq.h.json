@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vseq.h",
     "extension": "LSX",
-    "form": "vseq.h, vd, vj, vk",
+    "form": "vseq.h vd, vj, vk",
     "description": "Compare the 16-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vclo.d",
     "extension": "LSX",
-    "form": "vclo.d, vd, vj",
+    "form": "vclo.d vd, vj",
     "description": "Count leading ones of 64-bit elements in `a`."
   },
   "operands": [

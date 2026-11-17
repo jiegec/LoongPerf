@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhaddw.q.d",
     "extension": "LSX",
-    "form": "vhaddw.q.d, vd, vj, vk",
+    "form": "vhaddw.q.d vd, vj, vk",
     "description": "Add odd-positioned signed 64-bit elements in `a` to even-positioned signed 64-bit elements in `b`, sign-extending both to 128-bit, to get the 128-bit result."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsle.wu",
     "extension": "LASX",
-    "form": "xvsle.wu, xd, xj, xk",
+    "form": "xvsle.wu xd, xj, xk",
     "description": "Compare the unsigned 32-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than or equal to `b`, zero otherwise."
   },
   "operands": [

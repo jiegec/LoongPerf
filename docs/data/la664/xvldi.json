@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvldi",
     "extension": "LASX",
-    "form": "xvldi xd, imm",
+    "form": "xvldi xd, si13",
     "description": "Load an immediate into all vector elements."
   },
   "operands": [
@@ -16,7 +16,7 @@
     },
     {
       "index": 2,
-      "name": "imm",
+      "name": "si13",
       "kind": "immediate",
       "access": "read",
       "description": "immediate"

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfmax.d",
     "extension": "LASX",
-    "form": "xvfmax.d, xd, xj, xk",
+    "form": "xvfmax.d xd, xj, xk",
     "description": "Compute the maximum (maxNum) of double precision floating point elements in `a` and `b`."
   },
   "operands": [

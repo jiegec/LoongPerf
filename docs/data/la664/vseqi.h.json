@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vseqi.h",
     "extension": "LSX",
-    "form": "vseqi.h, vd, vj, imm",
+    "form": "vseqi.h vd, vj, imm",
     "description": "Compare the 16-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmskltz.h",
     "extension": "LSX",
-    "form": "vmskltz.h, vd, vj",
+    "form": "vmskltz.h vd, vj",
     "description": "For each 128-bit lane, for each 16-bit element in `a`, set the bit at that element's index within the lane to one if the element is less than zero, otherwise zero; the remaining bits of the lane are zero."
   },
   "operands": [

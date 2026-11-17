@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsadd.d",
     "extension": "LASX",
-    "form": "xvsadd.d, xd, xj, xk",
+    "form": "xvsadd.d xd, xj, xk",
     "description": "Saturating add corresponding signed 64-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

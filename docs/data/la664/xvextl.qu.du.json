@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvextl.qu.du",
     "extension": "LASX",
-    "form": "xvextl.qu.du, xd, xj",
+    "form": "xvextl.qu.du xd, xj",
     "description": "Zero-extend 64-bit elements in the lower half of every 128-bit vector of `a` to 128-bit."
   },
   "operands": [

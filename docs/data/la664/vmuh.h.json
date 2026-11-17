@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmuh.h",
     "extension": "LSX",
-    "form": "vmuh.h, vd, vj, vk",
+    "form": "vmuh.h vd, vj, vk",
     "description": "Multiply corresponding signed 16-bit elements in `a` and `b`, save the upper half of the double-width product in `dst`."
   },
   "operands": [

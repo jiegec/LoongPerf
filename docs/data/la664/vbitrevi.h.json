@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitrevi.h",
     "extension": "LSX",
-    "form": "vbitrevi.h, vd, vj, imm",
+    "form": "vbitrevi.h vd, vj, imm",
     "description": "For each 16-bit element, toggle the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

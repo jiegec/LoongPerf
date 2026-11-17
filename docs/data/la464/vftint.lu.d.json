@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftint.lu.d",
     "extension": "LSX",
-    "form": "vftint.lu.d, vd, vj",
+    "form": "vftint.lu.d vd, vj",
     "description": "Convert double-precision floating point elements in `a` to unsigned 64-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vffint.s.wu",
     "extension": "LSX",
-    "form": "vffint.s.wu, vd, vj",
+    "form": "vffint.s.wu vd, vj",
     "description": "Convert unsigned 32-bit integer elements in `a` to single-precision floating point numbers."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsllwil.d.w",
     "extension": "LSX",
-    "form": "vsllwil.d.w, vd, vj, imm",
+    "form": "vsllwil.d.w vd, vj, imm",
     "description": "For each 128-bit lane, sign-extend and shift the 32-bit elements in the lower part of that lane by `imm` to 64-bit result."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsat.wu",
     "extension": "LSX",
-    "form": "vsat.wu, vd, vj, imm",
+    "form": "vsat.wu vd, vj, imm",
     "description": "Saturate each unsigned 32-bit element in `a` to the number of significant bits specified by `imm`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsat.hu",
     "extension": "LASX",
-    "form": "xvsat.hu, xd, xj, imm",
+    "form": "xvsat.hu xd, xj, imm",
     "description": "Saturate each unsigned 16-bit element in `a` to the number of significant bits specified by `imm`."
   },
   "operands": [

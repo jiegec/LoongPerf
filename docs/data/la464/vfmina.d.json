@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmina.d",
     "extension": "LSX",
-    "form": "vfmina.d, vd, vj, vk",
+    "form": "vfmina.d vd, vj, vk",
     "description": "Compute the minimum (minNumMag) of double precision floating point elements in `a` and `b`, selecting the element with the smaller absolute value."
   },
   "operands": [

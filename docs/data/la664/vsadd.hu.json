@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsadd.hu",
     "extension": "LSX",
-    "form": "vsadd.hu, vd, vj, vk",
+    "form": "vsadd.hu vd, vj, vk",
     "description": "Saturating add corresponding unsigned 16-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

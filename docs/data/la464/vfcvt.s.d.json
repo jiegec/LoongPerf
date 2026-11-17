@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfcvt.s.d",
     "extension": "LSX",
-    "form": "vfcvt.s.d, vd, vj, vk",
+    "form": "vfcvt.s.d vd, vj, vk",
     "description": "For each 128-bit lane, convert double-precision floating point elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as single-precision floating point numbers."
   },
   "operands": [

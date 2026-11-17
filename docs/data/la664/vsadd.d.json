@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsadd.d",
     "extension": "LSX",
-    "form": "vsadd.d, vd, vj, vk",
+    "form": "vsadd.d vd, vj, vk",
     "description": "Saturating add corresponding signed 64-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsadd.wu",
     "extension": "LSX",
-    "form": "vsadd.wu, vd, vj, vk",
+    "form": "vsadd.wu vd, vj, vk",
     "description": "Saturating add corresponding unsigned 32-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

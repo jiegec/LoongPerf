@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitclr.w",
     "extension": "LSX",
-    "form": "vbitclr.w, vd, vj, vk",
+    "form": "vbitclr.w vd, vj, vk",
     "description": "For each 32-bit element, clear the bit indexed by the corresponding element of `b` modulo 32, save the result in `dst`."
   },
   "operands": [

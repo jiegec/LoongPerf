@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhaddw.du.wu",
     "extension": "LSX",
-    "form": "vhaddw.du.wu, vd, vj, vk",
+    "form": "vhaddw.du.wu vd, vj, vk",
     "description": "Add odd-positioned unsigned 32-bit elements in `a` to even-positioned unsigned 32-bit elements in `b`, zero-extending both to 64-bit, to get the 64-bit result."
   },
   "operands": [

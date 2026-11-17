@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vflogb.s",
     "extension": "LSX",
-    "form": "vflogb.s, vd, vj",
+    "form": "vflogb.s vd, vj",
     "description": "Compute base-2 logarithm of single precision floating point elements in `a`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrani.d.q",
     "extension": "LSX",
-    "form": "vsrani.d.q, vd, vj, imm",
+    "form": "vsrani.d.q vd, vj, uimm",
     "description": "Arithmetic right shift the signed 128-bit elements in `a` and `b` by `imm`, write the 64-bit results into `dst`."
   },
   "operands": [
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "imm",
+      "name": "uimm",
       "kind": "immediate",
       "access": "read",
       "description": "immediate"

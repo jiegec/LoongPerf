@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmini.bu",
     "extension": "LASX",
-    "form": "xvmini.bu, xd, xj, imm",
+    "form": "xvmini.bu xd, xj, imm",
     "description": "Compute elementwise minimum for unsigned 8-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

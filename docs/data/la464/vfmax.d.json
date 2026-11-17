@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmax.d",
     "extension": "LSX",
-    "form": "vfmax.d, vd, vj, vk",
+    "form": "vfmax.d vd, vj, vk",
     "description": "Compute the maximum (maxNum) of double precision floating point elements in `a` and `b`."
   },
   "operands": [

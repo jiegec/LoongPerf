@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftint.lu.d",
     "extension": "LASX",
-    "form": "xvftint.lu.d, xd, xj",
+    "form": "xvftint.lu.d xd, xj",
     "description": "Convert double-precision floating point elements in `a` to unsigned 64-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

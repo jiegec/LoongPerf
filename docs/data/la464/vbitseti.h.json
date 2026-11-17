@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitseti.h",
     "extension": "LSX",
-    "form": "vbitseti.h, vd, vj, imm",
+    "form": "vbitseti.h vd, vj, imm",
     "description": "For each 16-bit element, set the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

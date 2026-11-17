@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpermi.w",
     "extension": "LASX",
-    "form": "xvpermi.w, xd, xj, imm",
+    "form": "xvpermi.w xd, xj, imm",
     "description": "For each 128-bit lane, use `imm[1:0]` and `imm[3:2]` to select words 0 and 1 from `b`, and `imm[5:4]` and `imm[7:6]` to select words 2 and 3 from `a`; store the result in `dst`."
   },
   "operands": [

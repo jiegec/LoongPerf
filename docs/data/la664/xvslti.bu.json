@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvslti.bu",
     "extension": "LASX",
-    "form": "xvslti.bu, xd, xj, imm",
+    "form": "xvslti.bu xd, xj, imm",
     "description": "Compare the unsigned 8-bit elements in `a` and the zero-extended `imm`, store all-ones to `dst` if corresponding element in `a` is less than `imm`, zero otherwise."
   },
   "operands": [

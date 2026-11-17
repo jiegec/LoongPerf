@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvssub.h",
     "extension": "LASX",
-    "form": "xvssub.h, xd, xj, xk",
+    "form": "xvssub.h xd, xj, xk",
     "description": "Saturating subtract corresponding signed 16-bit elements in `b` from elements in `a`, store the result to `dst`."
   },
   "operands": [

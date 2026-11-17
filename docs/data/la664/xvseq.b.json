@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvseq.b",
     "extension": "LASX",
-    "form": "xvseq.b, xd, xj, xk",
+    "form": "xvseq.b xd, xj, xk",
     "description": "Compare the 8-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

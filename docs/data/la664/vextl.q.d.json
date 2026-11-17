@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vextl.q.d",
     "extension": "LSX",
-    "form": "vextl.q.d, vd, vj",
+    "form": "vextl.q.d vd, vj",
     "description": "Sign-extend 64-bit elements in the lower half of every 128-bit vector of `a` to 128-bit."
   },
   "operands": [

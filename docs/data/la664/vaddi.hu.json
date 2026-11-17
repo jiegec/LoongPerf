@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vaddi.hu",
     "extension": "LSX",
-    "form": "vaddi.hu, vd, vj, imm",
+    "form": "vaddi.hu vd, vj, imm",
     "description": "Add the zero-extended `imm` to each 16-bit element in `a`, save the result in `dst`."
   },
   "operands": [

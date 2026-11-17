@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpickev.d",
     "extension": "LSX",
-    "form": "vpickev.d, vd, vj, vk",
+    "form": "vpickev.d vd, vj, vk",
     "description": "For each 128-bit lane, place even-positioned 64-bit elements of `b` into its lower half and even-positioned 64-bit elements of `a` into its upper half."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsubwod.q.du",
     "extension": "LSX",
-    "form": "vsubwod.q.du, vd, vj, vk",
+    "form": "vsubwod.q.du vd, vj, vk",
     "description": "Subtract the odd-positioned unsigned 64-bit elements in `b` from the corresponding elements in `a`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

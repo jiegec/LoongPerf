@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftintrz.w.d",
     "extension": "LSX",
-    "form": "vftintrz.w.d, vd, vj, vk",
+    "form": "vftintrz.w.d vd, vj, vk",
     "description": "For each 128-bit lane, convert double-precision floating point elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as signed 32-bit integers, rounding towards zero."
   },
   "operands": [

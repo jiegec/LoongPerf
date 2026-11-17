@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmin.s",
     "extension": "LSX",
-    "form": "vfmin.s, vd, vj, vk",
+    "form": "vfmin.s vd, vj, vk",
     "description": "Compute the minimum (minNum) of single precision floating point elements in `a` and `b`."
   },
   "operands": [

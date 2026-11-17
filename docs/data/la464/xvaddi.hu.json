@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvaddi.hu",
     "extension": "LASX",
-    "form": "xvaddi.hu, xd, xj, imm",
+    "form": "xvaddi.hu xd, xj, imm",
     "description": "Add the zero-extended `imm` to each 16-bit element in `a`, save the result in `dst`."
   },
   "operands": [

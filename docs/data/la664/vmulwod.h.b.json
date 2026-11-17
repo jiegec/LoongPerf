@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmulwod.h.b",
     "extension": "LSX",
-    "form": "vmulwod.h.b, vd, vj, vk",
+    "form": "vmulwod.h.b vd, vj, vk",
     "description": "Multiply the odd-positioned signed 8-bit elements in `a` and the corresponding signed 8-bit elements in `b`, extending both to 16-bit, and save the 16-bit result in `dst`."
   },
   "operands": [

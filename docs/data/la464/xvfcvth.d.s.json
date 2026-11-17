@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfcvth.d.s",
     "extension": "LASX",
-    "form": "xvfcvth.d.s, xd, xj",
+    "form": "xvfcvth.d.s xd, xj",
     "description": "Convert single precision floating point elements in higher half of every 128-bit vector of `a` to double precision."
   },
   "operands": [

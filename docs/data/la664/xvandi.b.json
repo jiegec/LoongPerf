@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvandi.b",
     "extension": "LASX",
-    "form": "xvandi.b, xd, xj, imm",
+    "form": "xvandi.b xd, xj, imm",
     "description": "Compute bitwise AND of elements in `a` and `imm`."
   },
   "operands": [

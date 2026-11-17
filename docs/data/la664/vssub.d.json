@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vssub.d",
     "extension": "LSX",
-    "form": "vssub.d, vd, vj, vk",
+    "form": "vssub.d vd, vj, vk",
     "description": "Saturating subtract corresponding signed 64-bit elements in `b` from elements in `a`, store the result to `dst`."
   },
   "operands": [

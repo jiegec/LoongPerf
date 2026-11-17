@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfcmp.sult.d",
     "extension": "LASX",
-    "form": "xvfcmp.sult.d, xd, xj, xk",
+    "form": "xvfcmp.sult.d xd, xj, xk",
     "description": "Compare corresponding double precision elements in `a` and `b`, save the comparison result (all ones if ULT(Unordered or Less than), all zeros otherwise) into `dst`. An exception is raised for QNaN."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftintrm.l.d",
     "extension": "LSX",
-    "form": "vftintrm.l.d, vd, vj",
+    "form": "vftintrm.l.d vd, vj",
     "description": "Convert double-precision floating point elements in `a` to signed 64-bit integer, rounding towards negative infinity."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhaddw.d.w",
     "extension": "LSX",
-    "form": "vhaddw.d.w, vd, vj, vk",
+    "form": "vhaddw.d.w vd, vj, vk",
     "description": "Add odd-positioned signed 32-bit elements in `a` to even-positioned signed 32-bit elements in `b`, sign-extending both to 64-bit, to get the 64-bit result."
   },
   "operands": [

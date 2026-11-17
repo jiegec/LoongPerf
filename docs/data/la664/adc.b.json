@@ -2,8 +2,8 @@
   "instruction": {
     "name": "adc.b",
     "extension": "LBT",
-    "form": "adc.b rd, rj, rk, CF",
-    "description": "x86-style add with carry on b-bit values."
+    "form": "adc.b rd, rj, rk",
+    "description": "x86-style add with carry on 8-bit values."
   },
   "operands": [
     {
@@ -36,7 +36,8 @@
       "kind": "flags",
       "access": "read",
       "bits": 1,
-      "description": "x86 carry flag"
+      "description": "x86 carry flag",
+      "implicit": true
     }
   ],
   "measurement": {

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfmaxa.s",
     "extension": "LSX",
-    "form": "vfmaxa.s, vd, vj, vk",
+    "form": "vfmaxa.s vd, vj, vk",
     "description": "Compute the maximum (maxNumMag) of single precision floating point elements in `a` and `b`, selecting the element with the larger absolute value."
   },
   "operands": [

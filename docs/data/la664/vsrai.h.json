@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrai.h",
     "extension": "LSX",
-    "form": "vsrai.h, vd, vj, imm",
+    "form": "vsrai.h vd, vj, imm",
     "description": "Arithmetic right shift the signed 16-bit elements in `a` by `imm`, store the result to `dst`."
   },
   "operands": [

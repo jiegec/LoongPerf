@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrli.h",
     "extension": "LSX",
-    "form": "vsrli.h, vd, vj, imm",
+    "form": "vsrli.h vd, vj, imm",
     "description": "Logical right shift the unsigned 16-bit elements in `a` by `imm`, store the result to `dst`."
   },
   "operands": [

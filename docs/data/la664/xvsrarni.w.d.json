@@ -2,13 +2,13 @@
   "instruction": {
     "name": "xvsrarni.w.d",
     "extension": "LASX",
-    "form": "xvsrarni.w.d, xd, xj, imm",
+    "form": "xvsrarni.w.d vd, vj, uimm",
     "description": "Arithmetic right shift with rounding the signed 64-bit elements in `a` and `b` by `imm`, write the lower 32 bits of the shifted result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
   },
   "operands": [
     {
       "index": 1,
-      "name": "xd",
+      "name": "vd",
       "kind": "vector",
       "access": "write",
       "bits": 256,
@@ -16,7 +16,7 @@
     },
     {
       "index": 2,
-      "name": "xj",
+      "name": "vj",
       "kind": "vector",
       "access": "read",
       "bits": 256,
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "imm",
+      "name": "uimm",
       "kind": "immediate",
       "access": "read",
       "description": "immediate"

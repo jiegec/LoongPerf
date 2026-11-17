@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfsub.s",
     "extension": "LSX",
-    "form": "vfsub.s, vd, vj, vk",
+    "form": "vfsub.s vd, vj, vk",
     "description": "Subtract corresponding single precision floating point elements in `b` from elements in `a`."
   },
   "operands": [

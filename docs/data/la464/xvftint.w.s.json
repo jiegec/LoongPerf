@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftint.w.s",
     "extension": "LASX",
-    "form": "xvftint.w.s, xd, xj",
+    "form": "xvftint.w.s xd, xj",
     "description": "Convert single-precision floating point elements in `a` to signed 32-bit integer, using current rounding mode specified in `fscr`."
   },
   "operands": [

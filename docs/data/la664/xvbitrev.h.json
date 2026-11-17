@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitrev.h",
     "extension": "LASX",
-    "form": "xvbitrev.h, xd, xj, xk",
+    "form": "xvbitrev.h xd, xj, xk",
     "description": "For each 16-bit element, toggle the bit indexed by the corresponding element of `b` modulo 16, save the result in `dst`."
   },
   "operands": [

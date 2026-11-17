@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsran.h.w",
     "extension": "LSX",
-    "form": "vsran.h.w, vd, vj, vk",
+    "form": "vsran.h.w vd, vj, vk",
     "description": "Arithmetic right shift each signed 32-bit element in `a` by the corresponding element of `b` modulo 32, write the lower 16 bits of the shifted result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
   },
   "operands": [

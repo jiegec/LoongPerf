@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvclo.d",
     "extension": "LASX",
-    "form": "xvclo.d, xd, xj",
+    "form": "xvclo.d xd, xj",
     "description": "Count leading ones of 64-bit elements in `a`."
   },
   "operands": [

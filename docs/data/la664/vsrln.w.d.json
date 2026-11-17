@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrln.w.d",
     "extension": "LSX",
-    "form": "vsrln.w.d, vd, vj, vk",
+    "form": "vsrln.w.d vd, vj, vk",
     "description": "Logical right shift each unsigned 64-bit element in `a` by the corresponding element of `b` modulo 64, write the lower 32 bits of the shifted result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
   },
   "operands": [

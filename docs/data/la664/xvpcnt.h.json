@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpcnt.h",
     "extension": "LASX",
-    "form": "xvpcnt.h, xd, xj",
+    "form": "xvpcnt.h xd, xj",
     "description": "Count the number of ones (population, popcount) in 16-bit elements in `a`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitclri.w",
     "extension": "LSX",
-    "form": "vbitclri.w, vd, vj, imm",
+    "form": "vbitclri.w vd, vj, imm",
     "description": "For each 32-bit element, clear the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

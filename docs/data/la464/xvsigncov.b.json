@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsigncov.b",
     "extension": "LASX",
-    "form": "xvsigncov.b, xd, xj, xk",
+    "form": "xvsigncov.b xd, xj, xk",
     "description": "If the 8-bit element in `a` equals to zero, set the result to zero. If the signed 8-bit element in `a` is positive, copy element in `b` to result. Otherwise, copy negated element in `b` to result. If `a` and `b` are the same vectors, it is equivalent to computing absolute value."
   },
   "operands": [

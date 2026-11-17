@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vexth.wu.hu",
     "extension": "LSX",
-    "form": "vexth.wu.hu, vd, vj",
+    "form": "vexth.wu.hu vd, vj",
     "description": "Zero-extend 16-bit elements in the higher half of every 128-bit vector of `a` to 32-bit."
   },
   "operands": [

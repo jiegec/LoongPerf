@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmskltz.w",
     "extension": "LASX",
-    "form": "xvmskltz.w, xd, xj",
+    "form": "xvmskltz.w xd, xj",
     "description": "For each 128-bit lane, for each 32-bit element in `a`, set the bit at that element's index within the lane to one if the element is less than zero, otherwise zero; the remaining bits of the lane are zero."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvaddi.du",
     "extension": "LASX",
-    "form": "xvaddi.du, xd, xj, imm",
+    "form": "xvaddi.du xd, xj, imm",
     "description": "Add the zero-extended `imm` to each 64-bit element in `a`, save the result in `dst`."
   },
   "operands": [

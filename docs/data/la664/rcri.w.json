@@ -3,7 +3,7 @@
     "name": "rcri.w",
     "extension": "LBT",
     "form": "rcri.w rd, rj, imm",
-    "description": "x86-style rotate right through carry by immediate on w-bit values."
+    "description": "x86-style rotate right through carry by immediate on 32-bit values."
   },
   "operands": [
     {

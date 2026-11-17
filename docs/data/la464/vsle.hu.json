@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsle.hu",
     "extension": "LSX",
-    "form": "vsle.hu, vd, vj, vk",
+    "form": "vsle.hu vd, vj, vk",
     "description": "Compare the unsigned 16-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than or equal to `b`, zero otherwise."
   },
   "operands": [

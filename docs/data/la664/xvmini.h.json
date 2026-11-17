@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmini.h",
     "extension": "LASX",
-    "form": "xvmini.h, xd, xj, imm",
+    "form": "xvmini.h xd, xj, imm",
     "description": "Compute elementwise minimum for signed 16-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

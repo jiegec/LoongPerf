@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vaddwod.d.w",
     "extension": "LSX",
-    "form": "vaddwod.d.w, vd, vj, vk",
+    "form": "vaddwod.d.w vd, vj, vk",
     "description": "Add the odd-positioned signed 32-bit elements in `a` and the corresponding signed 32-bit elements in `b`, extending both to 64-bit, and save the 64-bit result in `dst`."
   },
   "operands": [

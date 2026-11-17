@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpickev.h",
     "extension": "LSX",
-    "form": "vpickev.h, vd, vj, vk",
+    "form": "vpickev.h vd, vj, vk",
     "description": "For each 128-bit lane, place even-positioned 16-bit elements of `b` into its lower half and even-positioned 16-bit elements of `a` into its upper half."
   },
   "operands": [

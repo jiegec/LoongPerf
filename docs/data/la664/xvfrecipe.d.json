@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfrecipe.d",
     "extension": "LASX",
-    "form": "xvfrecipe.d, xd, xj",
+    "form": "xvfrecipe.d xd, xj",
     "description": "Compute estimated reciprocal of double precision floating point elements in `a`."
   },
   "operands": [

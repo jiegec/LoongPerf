@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vbitseti.w",
     "extension": "LSX",
-    "form": "vbitseti.w, vd, vj, imm",
+    "form": "vbitseti.w vd, vj, imm",
     "description": "For each 32-bit element, set the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

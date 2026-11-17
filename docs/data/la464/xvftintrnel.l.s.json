@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvftintrnel.l.s",
     "extension": "LASX",
-    "form": "xvftintrnel.l.s, xd, xj",
+    "form": "xvftintrnel.l.s xd, xj",
     "description": "Convert single-precision floating point elements in lower part of every 128-bit vector of `a` to signed 64-bit integer, rounding towards nearest even."
   },
   "operands": [

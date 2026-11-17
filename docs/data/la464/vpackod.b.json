@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpackod.b",
     "extension": "LSX",
-    "form": "vpackod.b, vd, vj, vk",
+    "form": "vpackod.b vd, vj, vk",
     "description": "Interleave odd-positioned 8-bit elements of `a` and `b`: the element from `b` is placed at the even output position and the element from `a` at the following odd position."
   },
   "operands": [

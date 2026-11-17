@@ -3,7 +3,7 @@
     "name": "rotri.b",
     "extension": "LBT",
     "form": "rotri.b rd, rj, imm",
-    "description": "x86-style rotate right by immediate on b-bit values."
+    "description": "x86-style rotate right by immediate on 8-bit values."
   },
   "operands": [
     {

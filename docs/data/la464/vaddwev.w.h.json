@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vaddwev.w.h",
     "extension": "LSX",
-    "form": "vaddwev.w.h, vd, vj, vk",
+    "form": "vaddwev.w.h vd, vj, vk",
     "description": "Add the even-positioned signed 16-bit elements in `a` and the corresponding signed 16-bit elements in `b`, extending both to 32-bit, and save the 32-bit result in `dst`."
   },
   "operands": [

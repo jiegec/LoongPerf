@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvaddwod.q.d",
     "extension": "LASX",
-    "form": "xvaddwod.q.d, xd, xj, xk",
+    "form": "xvaddwod.q.d xd, xj, xk",
     "description": "Add the odd-positioned signed 64-bit elements in `a` and the corresponding signed 64-bit elements in `b`, extending both to 128-bit, and save the 128-bit result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vseq.w",
     "extension": "LSX",
-    "form": "vseq.w, vd, vj, vk",
+    "form": "vseq.w vd, vj, vk",
     "description": "Compare the 32-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

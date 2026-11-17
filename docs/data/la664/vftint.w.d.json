@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vftint.w.d",
     "extension": "LSX",
-    "form": "vftint.w.d, vd, vj, vk",
+    "form": "vftint.w.d vd, vj, vk",
     "description": "For each 128-bit lane, convert double-precision floating point elements in the corresponding lane of `a` into the upper half and elements in `b` into the lower half, as signed 32-bit integers, using current rounding mode specified in `fscr`."
   },
   "operands": [

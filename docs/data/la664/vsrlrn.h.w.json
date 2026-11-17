@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrlrn.h.w",
     "extension": "LSX",
-    "form": "vsrlrn.h.w, vd, vj, vk",
+    "form": "vsrlrn.h.w vd, vj, vk",
     "description": "Logical right shift with rounding each unsigned 32-bit element in `a` by the corresponding element of `b` modulo 32, write the lower 16 bits of the shifted result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
   },
   "operands": [

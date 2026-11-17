@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfmsub.s",
     "extension": "LASX",
-    "form": "xvfmsub.s, xd, xj, xk, xa",
+    "form": "xvfmsub.s xd, xj, xk, xa",
     "description": "Compute packed single precision floating point FMA(Fused Multiply-Add): multiply elements in `a` and `b`, subtract elements in `c` and store the result in `dst`."
   },
   "operands": [

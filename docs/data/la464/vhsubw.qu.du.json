@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhsubw.qu.du",
     "extension": "LSX",
-    "form": "vhsubw.qu.du, vd, vj, vk",
+    "form": "vhsubw.qu.du vd, vj, vk",
     "description": "Subtract even-positioned unsigned 64-bit elements in `b` from odd-positioned unsigned 64-bit elements in `a`, zero-extending both to 128-bit, to get the 128-bit result."
   },
   "operands": [

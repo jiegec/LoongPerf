@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvhaddw.h.b",
     "extension": "LASX",
-    "form": "xvhaddw.h.b, xd, xj, xk",
+    "form": "xvhaddw.h.b xd, xj, xk",
     "description": "Add odd-positioned signed 8-bit elements in `a` to even-positioned signed 8-bit elements in `b`, sign-extending both to 16-bit, to get the 16-bit result."
   },
   "operands": [

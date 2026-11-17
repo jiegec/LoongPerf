@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsrl.w",
     "extension": "LASX",
-    "form": "xvsrl.w, xd, xj, xk",
+    "form": "xvsrl.w xd, xj, xk",
     "description": "Logical right shift each unsigned 32-bit element in `a` by the corresponding element of `b` modulo 32, store the result in `dst`."
   },
   "operands": [

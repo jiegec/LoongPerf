@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsllwil.w.h",
     "extension": "LASX",
-    "form": "xvsllwil.w.h, xd, xj, imm",
+    "form": "xvsllwil.w.h xd, xj, imm",
     "description": "For each 128-bit lane, sign-extend and shift the 16-bit elements in the lower part of that lane by `imm` to 32-bit result."
   },
   "operands": [

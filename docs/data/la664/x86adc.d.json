@@ -28,7 +28,8 @@
       "kind": "flags",
       "access": "read-write",
       "bits": 1,
-      "description": "x86 flags"
+      "description": "x86 flags",
+      "implicit": true
     }
   ],
   "measurement": {

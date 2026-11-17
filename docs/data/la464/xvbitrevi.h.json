@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitrevi.h",
     "extension": "LASX",
-    "form": "xvbitrevi.h, xd, xj, imm",
+    "form": "xvbitrevi.h xd, xj, imm",
     "description": "For each 16-bit element, toggle the bit indexed by `imm`, save the result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vseqi.d",
     "extension": "LSX",
-    "form": "vseqi.d, vd, vj, imm",
+    "form": "vseqi.d vd, vj, imm",
     "description": "Compare the 64-bit elements in `a` and the sign-extended `imm`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

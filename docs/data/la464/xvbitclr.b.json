@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitclr.b",
     "extension": "LASX",
-    "form": "xvbitclr.b, xd, xj, xk",
+    "form": "xvbitclr.b xd, xj, xk",
     "description": "For each 8-bit element, clear the bit indexed by the corresponding element of `b` modulo 8, save the result in `dst`."
   },
   "operands": [

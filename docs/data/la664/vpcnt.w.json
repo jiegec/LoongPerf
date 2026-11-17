@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vpcnt.w",
     "extension": "LSX",
-    "form": "vpcnt.w, vd, vj",
+    "form": "vpcnt.w vd, vj",
     "description": "Count the number of ones (population, popcount) in 32-bit elements in `a`."
   },
   "operands": [

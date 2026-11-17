@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vffint.d.l",
     "extension": "LSX",
-    "form": "vffint.d.l, vd, vj",
+    "form": "vffint.d.l vd, vj",
     "description": "Convert signed 64-bit integer elements in `a` to double-precision floating point numbers."
   },
   "operands": [

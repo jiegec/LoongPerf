@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvclo.b",
     "extension": "LASX",
-    "form": "xvclo.b, xd, xj",
+    "form": "xvclo.b xd, xj",
     "description": "Count leading ones of 8-bit elements in `a`."
   },
   "operands": [

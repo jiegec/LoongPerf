@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvhsubw.du.wu",
     "extension": "LASX",
-    "form": "xvhsubw.du.wu, xd, xj, xk",
+    "form": "xvhsubw.du.wu xd, xj, xk",
     "description": "Subtract even-positioned unsigned 32-bit elements in `b` from odd-positioned unsigned 32-bit elements in `a`, zero-extending both to 64-bit, to get the 64-bit result."
   },
   "operands": [

@@ -3,7 +3,7 @@
     "name": "rcri.b",
     "extension": "LBT",
     "form": "rcri.b rd, rj, imm",
-    "description": "x86-style rotate right through carry by immediate on b-bit values."
+    "description": "x86-style rotate right through carry by immediate on 8-bit values."
   },
   "operands": [
     {

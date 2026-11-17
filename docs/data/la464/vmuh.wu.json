@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmuh.wu",
     "extension": "LSX",
-    "form": "vmuh.wu, vd, vj, vk",
+    "form": "vmuh.wu vd, vj, vk",
     "description": "Multiply corresponding unsigned 32-bit elements in `a` and `b`, save the upper half of the double-width product in `dst`."
   },
   "operands": [

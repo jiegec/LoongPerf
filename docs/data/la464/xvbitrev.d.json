@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvbitrev.d",
     "extension": "LASX",
-    "form": "xvbitrev.d, xd, xj, xk",
+    "form": "xvbitrev.d xd, xj, xk",
     "description": "For each 64-bit element, toggle the bit indexed by the corresponding element of `b` modulo 64, save the result in `dst`."
   },
   "operands": [

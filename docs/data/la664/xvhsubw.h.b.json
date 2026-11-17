@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvhsubw.h.b",
     "extension": "LASX",
-    "form": "xvhsubw.h.b, xd, xj, xk",
+    "form": "xvhsubw.h.b xd, xj, xk",
     "description": "Subtract even-positioned signed 8-bit elements in `b` from odd-positioned signed 8-bit elements in `a`, sign-extending both to 16-bit, to get the 16-bit result."
   },
   "operands": [

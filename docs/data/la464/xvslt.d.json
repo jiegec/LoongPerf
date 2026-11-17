@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvslt.d",
     "extension": "LASX",
-    "form": "xvslt.d, xd, xj, xk",
+    "form": "xvslt.d xd, xj, xk",
     "description": "Compare the signed 64-bit elements in `a` and `b`, store all-ones to `dst` if corresponding element in `a` is less than `b`, zero otherwise."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrar.b",
     "extension": "LSX",
-    "form": "vsrar.b, vd, vj, vk",
+    "form": "vsrar.b vd, vj, vk",
     "description": "Arithmetic right shift with rounding each signed 8-bit element in `a` by the corresponding element of `b` modulo 8, store the result in `dst`."
   },
   "operands": [

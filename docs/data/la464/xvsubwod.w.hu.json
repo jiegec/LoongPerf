@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvsubwod.w.hu",
     "extension": "LASX",
-    "form": "xvsubwod.w.hu, xd, xj, xk",
+    "form": "xvsubwod.w.hu xd, xj, xk",
     "description": "Subtract the odd-positioned unsigned 16-bit elements in `b` from the corresponding elements in `a`, extending both to 32-bit, and save the 32-bit result in `dst`."
   },
   "operands": [

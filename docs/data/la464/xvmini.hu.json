@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvmini.hu",
     "extension": "LASX",
-    "form": "xvmini.hu, xd, xj, imm",
+    "form": "xvmini.hu xd, xj, imm",
     "description": "Compute elementwise minimum for unsigned 16-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

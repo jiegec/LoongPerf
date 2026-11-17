@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvflogb.s",
     "extension": "LASX",
-    "form": "xvflogb.s, xd, xj",
+    "form": "xvflogb.s xd, xj",
     "description": "Compute base-2 logarithm of single precision floating point elements in `a`."
   },
   "operands": [

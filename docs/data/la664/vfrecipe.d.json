@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfrecipe.d",
     "extension": "LSX",
-    "form": "vfrecipe.d, vd, vj",
+    "form": "vfrecipe.d vd, vj",
     "description": "Compute estimated reciprocal of double precision floating point elements in `a`."
   },
   "operands": [

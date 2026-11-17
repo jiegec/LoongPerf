@@ -2,8 +2,8 @@
   "instruction": {
     "name": "sbc.h",
     "extension": "LBT",
-    "form": "sbc.h rd, rj, rk, CF",
-    "description": "x86-style subtract with borrow on h-bit values."
+    "form": "sbc.h rd, rj, rk",
+    "description": "x86-style subtract with borrow on 16-bit values."
   },
   "operands": [
     {
@@ -36,7 +36,8 @@
       "kind": "flags",
       "access": "read",
       "bits": 1,
-      "description": "x86 carry flag"
+      "description": "x86 carry flag",
+      "implicit": true
     }
   ],
   "measurement": {

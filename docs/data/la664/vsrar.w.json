@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsrar.w",
     "extension": "LSX",
-    "form": "vsrar.w, vd, vj, vk",
+    "form": "vsrar.w vd, vj, vk",
     "description": "Arithmetic right shift with rounding each signed 32-bit element in `a` by the corresponding element of `b` modulo 32, store the result in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvexth.du.wu",
     "extension": "LASX",
-    "form": "xvexth.du.wu, xd, xj",
+    "form": "xvexth.du.wu xd, xj",
     "description": "Zero-extend 32-bit elements in the higher half of every 128-bit vector of `a` to 64-bit."
   },
   "operands": [

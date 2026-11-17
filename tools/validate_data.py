@@ -281,6 +281,41 @@ def check_experiment(path: Path, data: dict, experiment: dict) -> None:
                 error(path, "empty entry in chain_instructions")
 
 
+def check_operand_syntax(path: Path, data: dict) -> None:
+    """The form must list exactly the syntactic operands; the rest are implicit."""
+    name = data["instruction"]["name"]
+    form = data["instruction"]["form"]
+    if not form.startswith(name):
+        error(path, f"form {form!r} does not start with the instruction name")
+        return
+    tokens = [t.strip() for t in form[len(name):].split(",") if t.strip()]
+    syntactic = [op for op in data["operands"] if not op.get("implicit")]
+    if len(tokens) != len(syntactic):
+        error(path, f"form lists {len(tokens)} operand(s) {tokens} but {len(syntactic)} operand(s) are not implicit")
+        return
+    for token, op in zip(tokens, syntactic):
+        if token != op["name"]:
+            error(path, f"form operand {token!r} does not match operand name {op['name']!r}")
+    for op in data["operands"]:
+        if op.get("implicit") and op["kind"] not in ("flags", "other", "immediate", "gpr", "fpr", "vector"):
+            error(path, f"implicit operand {op['name']} has unexpected kind {op['kind']}")
+        if op["kind"] == "flags" and not op.get("implicit"):
+            error(path, f"flags operand {op['name']} must be marked implicit")
+
+
+def check_cross_uarch_forms(path: Path, data: dict) -> None:
+    """The same instruction must keep one form across microarchitectures."""
+    name = data["instruction"]["name"]
+    form = data["instruction"]["form"]
+    for other in DATA_DIR.glob(f"*/{name}.json"):
+        if other == path:
+            continue
+        odata = json.loads(other.read_text())
+        oform = odata["instruction"]["form"]
+        if oform != form:
+            error(path, f"form {form!r} differs from {other.parent.name} ({oform!r})")
+
+
 def check_operands(path: Path, data: dict) -> None:
     operands = data["operands"]
     indices = [op["index"] for op in operands]
@@ -375,6 +410,8 @@ def check_file(path: Path, schema: dict) -> None:
         error(path, f"missing instruction page {page.relative_to(ROOT)}")
 
     check_operands(path, data)
+    check_operand_syntax(path, data)
+    check_cross_uarch_forms(path, data)
     check_latencies(path, data)
     check_throughput(path, data)
 

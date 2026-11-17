@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfcvtl.d.s",
     "extension": "LSX",
-    "form": "vfcvtl.d.s, vd, vj",
+    "form": "vfcvtl.d.s vd, vj",
     "description": "Convert single precision floating point elements in lower half of every 128-bit vector of `a` to double precision."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvffintl.d.w",
     "extension": "LASX",
-    "form": "xvffintl.d.w, xd, xj",
+    "form": "xvffintl.d.w xd, xj",
     "description": "Convert signed 32-bit integer elements in lower part of every 128-bit vector of `a` to double precision floating point numbers."
   },
   "operands": [

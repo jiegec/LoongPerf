@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmaxi.d",
     "extension": "LSX",
-    "form": "vmaxi.d, vd, vj, imm",
+    "form": "vmaxi.d vd, vj, imm",
     "description": "Compute elementwise maximum for signed 64-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

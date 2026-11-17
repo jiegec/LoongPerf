@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmaxi.b",
     "extension": "LSX",
-    "form": "vmaxi.b, vd, vj, imm",
+    "form": "vmaxi.b vd, vj, imm",
     "description": "Compute elementwise maximum for signed 8-bit elements in `a` and the sign-extended `imm`."
   },
   "operands": [

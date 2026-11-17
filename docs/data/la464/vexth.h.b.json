@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vexth.h.b",
     "extension": "LSX",
-    "form": "vexth.h.b, vd, vj",
+    "form": "vexth.h.b vd, vj",
     "description": "Sign-extend 8-bit elements in the higher half of every 128-bit vector of `a` to 16-bit."
   },
   "operands": [

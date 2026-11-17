@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "imm",
+      "name": "si12",
       "kind": "immediate",
       "access": "read",
       "description": "byte offset"

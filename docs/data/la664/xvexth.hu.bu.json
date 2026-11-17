@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvexth.hu.bu",
     "extension": "LASX",
-    "form": "xvexth.hu.bu, xd, xj",
+    "form": "xvexth.hu.bu xd, xj",
     "description": "Zero-extend 8-bit elements in the higher half of every 128-bit vector of `a` to 16-bit."
   },
   "operands": [

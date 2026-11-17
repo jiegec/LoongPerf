@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vfrint.s",
     "extension": "LSX",
-    "form": "vfrint.s, vd, vj",
+    "form": "vfrint.s vd, vj",
     "description": "Round single-precision floating point elements in `a` to integers, using current rounding mode specified in `fscr`, and store as floating point numbers."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvilvh.d",
     "extension": "LASX",
-    "form": "xvilvh.d, xd, xj, xk",
+    "form": "xvilvh.d xd, xj, xk",
     "description": "For each 128-bit lane, interleave the 64-bit elements in the upper half of that lane from `a` and `b`: the element from `b` is placed at the even output position and the element from `a` at the following odd position."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfmax.s",
     "extension": "LASX",
-    "form": "xvfmax.s, xd, xj, xk",
+    "form": "xvfmax.s xd, xj, xk",
     "description": "Compute the maximum (maxNum) of single precision floating point elements in `a` and `b`."
   },
   "operands": [

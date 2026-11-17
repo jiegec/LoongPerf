@@ -2,13 +2,13 @@
   "instruction": {
     "name": "xvsran.b.h",
     "extension": "LASX",
-    "form": "xvsran.b.h, xd, xj, xk",
+    "form": "xvsran.b.h vd, vj, vk",
     "description": "Arithmetic right shift each signed 16-bit element in `a` by the corresponding element of `b` modulo 16, write the lower 8 bits of the shifted result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
   },
   "operands": [
     {
       "index": 1,
-      "name": "xd",
+      "name": "vd",
       "kind": "vector",
       "access": "write",
       "bits": 256,
@@ -16,7 +16,7 @@
     },
     {
       "index": 2,
-      "name": "xj",
+      "name": "vj",
       "kind": "vector",
       "access": "read",
       "bits": 256,
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "xk",
+      "name": "vk",
       "kind": "vector",
       "access": "read",
       "bits": 256,

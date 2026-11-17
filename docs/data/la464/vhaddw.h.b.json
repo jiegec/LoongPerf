@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vhaddw.h.b",
     "extension": "LSX",
-    "form": "vhaddw.h.b, vd, vj, vk",
+    "form": "vhaddw.h.b vd, vj, vk",
     "description": "Add odd-positioned signed 8-bit elements in `a` to even-positioned signed 8-bit elements in `b`, sign-extending both to 16-bit, to get the 16-bit result."
   },
   "operands": [

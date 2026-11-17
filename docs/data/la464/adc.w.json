@@ -2,7 +2,7 @@
   "instruction": {
     "name": "adc.w",
     "extension": "LBT",
-    "form": "adc.w rd, rj, rk, CF",
+    "form": "adc.w rd, rj, rk",
     "description": "x86 add/subtract with carry"
   },
   "operands": [
@@ -36,7 +36,8 @@
       "kind": "flags",
       "access": "read",
       "bits": 1,
-      "description": ""
+      "description": "",
+      "implicit": true
     }
   ],
   "measurement": {

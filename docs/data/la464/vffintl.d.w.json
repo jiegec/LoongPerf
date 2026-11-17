@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vffintl.d.w",
     "extension": "LSX",
-    "form": "vffintl.d.w, vd, vj",
+    "form": "vffintl.d.w vd, vj",
     "description": "Convert signed 32-bit integer elements in lower part of every 128-bit vector of `a` to double precision floating point numbers."
   },
   "operands": [

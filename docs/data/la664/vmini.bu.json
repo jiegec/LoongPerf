@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vmini.bu",
     "extension": "LSX",
-    "form": "vmini.bu, vd, vj, imm",
+    "form": "vmini.bu vd, vj, imm",
     "description": "Compute elementwise minimum for unsigned 8-bit elements in `a` and the zero-extended `imm`."
   },
   "operands": [

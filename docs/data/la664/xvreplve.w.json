@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvreplve.w",
     "extension": "LASX",
-    "form": "xvreplve.w xd, xj, rk",
+    "form": "xvreplve.w xd, xj, rj",
     "description": "Repeat an indexed element in each 128-bit lane."
   },
   "operands": [
@@ -24,7 +24,7 @@
     },
     {
       "index": 3,
-      "name": "rk",
+      "name": "rj",
       "kind": "gpr",
       "access": "read",
       "bits": 64,

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfrintrne.d",
     "extension": "LASX",
-    "form": "xvfrintrne.d, xd, xj",
+    "form": "xvfrintrne.d xd, xj",
     "description": "Round double-precision floating point elements in `a` to integers, rounding towards nearest even, and store as floating point numbers."
   },
   "operands": [

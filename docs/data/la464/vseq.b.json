@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vseq.b",
     "extension": "LSX",
-    "form": "vseq.b, vd, vj, vk",
+    "form": "vseq.b vd, vj, vk",
     "description": "Compare the 8-bit elements in `a` and `b`, store all-ones to `dst` if equal, zero otherwise."
   },
   "operands": [

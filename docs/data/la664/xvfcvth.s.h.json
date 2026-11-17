@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvfcvth.s.h",
     "extension": "LASX",
-    "form": "xvfcvth.s.h, xd, xj",
+    "form": "xvfcvth.s.h xd, xj",
     "description": "Convert half precision floating point elements in higher half of every 128-bit vector of `a` to single precision."
   },
   "operands": [

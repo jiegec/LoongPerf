@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpermi.d",
     "extension": "LASX",
-    "form": "xvpermi.d, xd, xj, imm",
+    "form": "xvpermi.d xd, xj, imm",
     "description": "Select four double words from `a` using `imm[1:0]`, `imm[3:2]`, `imm[5:4]`, and `imm[7:6]`, and store them in `dst`."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsadd.h",
     "extension": "LSX",
-    "form": "vsadd.h, vd, vj, vk",
+    "form": "vsadd.h vd, vj, vk",
     "description": "Saturating add corresponding signed 16-bit elements in `a` and `b`, store the result to `dst`."
   },
   "operands": [

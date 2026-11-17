@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsll.w",
     "extension": "LSX",
-    "form": "vsll.w, vd, vj, vk",
+    "form": "vsll.w vd, vj, vk",
     "description": "Logical left shift each unsigned 32-bit element in `a` by the corresponding element of `b` modulo 32, store the result in `dst`."
   },
   "operands": [

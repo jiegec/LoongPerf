@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvpickve.d",
     "extension": "LASX",
-    "form": "xvpickve.d, xd, xj, imm",
+    "form": "xvpickve.d xd, xj, imm",
     "description": "Copy one 64-bit lane from `a` specified by `imm` to the first lane of `dst`, and set the other lanes to zero."
   },
   "operands": [

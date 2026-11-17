@@ -2,7 +2,7 @@
   "instruction": {
     "name": "vsllwil.hu.bu",
     "extension": "LSX",
-    "form": "vsllwil.hu.bu, vd, vj, imm",
+    "form": "vsllwil.hu.bu vd, vj, imm",
     "description": "For each 128-bit lane, zero-extend and shift the 8-bit elements in the lower part of that lane by `imm` to 16-bit result."
   },
   "operands": [

@@ -2,7 +2,7 @@
   "instruction": {
     "name": "xvclo.w",
     "extension": "LASX",
-    "form": "xvclo.w, xd, xj",
+    "form": "xvclo.w xd, xj",
     "description": "Count leading ones of 32-bit elements in `a`."
   },
   "operands": [
