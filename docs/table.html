@@ -78,6 +78,16 @@
       .progress.indeterminate .progress-bar { animation: none; width: 100%; opacity: 0.55; }
     }
     .table-scroll { border: 1px solid var(--line); border-radius: 8px; }
+    .sticky-head {
+      position: fixed; top: 0; z-index: 20;
+      overflow: hidden; background: var(--head);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .sticky-head[hidden] { display: none; }
+    .sticky-head-scroll { will-change: transform; }
+    .sticky-head table { border-collapse: collapse; table-layout: fixed; width: 100%; min-width: 0; }
+    .sticky-head th { position: static; top: auto; z-index: auto; }
     table { border-collapse: collapse; width: 100%; min-width: 980px; }
     th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
     th {
@@ -108,7 +118,13 @@
     td.details-cell { overflow-wrap: anywhere; }
     @media (max-width: 1100px) {
       .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      td.details-cell > .uarch-detail { max-width: calc(100vw - 72px); }
+      td.details-cell > .uarch-detail {
+        position: sticky;
+        left: 12px;
+        z-index: 1;
+        max-width: calc(100vw - 72px);
+        background: var(--head);
+      }
       .details-grid { grid-template-columns: 1fr; gap: 14px; }
       td.details-cell { padding: 12px; }
       .details-grid th, .details-grid td { padding: 4px 6px; font-size: 12px; }
@@ -197,6 +213,9 @@
       <tbody id="tbody"></tbody>
     </table>
   </div>
+  <div id="sticky-head" class="sticky-head" hidden aria-hidden="true">
+    <div id="sticky-head-scroll" class="sticky-head-scroll"></div>
+  </div>
   <div class="pager">
     <button id="prev-page" type="button">Previous</button>
     <span id="page-info"></span>
@@ -228,6 +247,7 @@
   const openRows = new Set();
 
   const $ = (id) => document.getElementById(id);
+  const tableScroller = document.querySelector(".table-scroll");
   const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[ch]));
@@ -670,6 +690,71 @@
     return sortDir > 0 ? "ascending" : "descending";
   }
 
+  function changeSort(key, focusOriginal) {
+    if (sortKey === key) sortDir *= -1;
+    else { sortKey = key; sortDir = 1; }
+    render(true);
+    if (focusOriginal) {
+      const next = [...$("thead").querySelectorAll("th[data-sort]")]
+        .find((header) => header.dataset.sort === key);
+      if (next) next.focus();
+    }
+  }
+
+  function buildStickyHeader() {
+    const scroller = $("sticky-head-scroll");
+    const thead = $("thead");
+    if (!thead || !thead.rows.length) {
+      scroller.innerHTML = "";
+      return;
+    }
+    const selected = selectedUarches();
+    const columns = 3 + selected.length * 3;
+    const bodyRow = [...$("tbody").querySelectorAll("tr.instr")]
+      .find((row) => row.cells.length === columns);
+    let widths;
+    if (bodyRow) {
+      widths = [...bodyRow.cells].map((cell) => cell.getBoundingClientRect().width);
+    } else {
+      const totalWidth = $("table").getBoundingClientRect().width;
+      widths = Array(columns).fill(totalWidth / columns);
+    }
+    const total = widths.reduce((sum, width) => sum + width, 0);
+    let html = '<table style="width:' + total + 'px"><colgroup>';
+    for (const width of widths) {
+      html += '<col style="width:' + width + 'px">';
+    }
+    html += "</colgroup><thead>" + thead.innerHTML + "</thead></table>";
+    scroller.innerHTML = html;
+    scroller.style.width = total + "px";
+    scroller.querySelectorAll("th[data-sort]").forEach((th) => {
+      th.tabIndex = -1;
+      th.addEventListener("click", () => changeSort(th.dataset.sort, false));
+    });
+  }
+
+  function updateStickyHeader() {
+    const sticky = $("sticky-head");
+    const scroller = $("sticky-head-scroll");
+    const thead = $("thead");
+    const narrow = window.matchMedia("(max-width: 1100px)").matches;
+    if (!narrow || !tableScroller || !thead.rows.length ||
+        tableScroller.scrollWidth <= tableScroller.clientWidth + 1) {
+      sticky.hidden = true;
+      return;
+    }
+    const scrollRect = tableScroller.getBoundingClientRect();
+    const headRect = thead.getBoundingClientRect();
+    const tableRect = $("table").getBoundingClientRect();
+    const show = headRect.top < 0 && tableRect.bottom > headRect.height;
+    sticky.hidden = !show;
+    if (!show) return;
+    sticky.style.left = scrollRect.left + "px";
+    sticky.style.width = scrollRect.width + "px";
+    sticky.style.top = "0px";
+    scroller.style.transform = "translateX(" + (-tableScroller.scrollLeft) + "px)";
+  }
+
   function renderHeader(selected) {
     const signature = [selected.join("\u0001"), sortKey, sortDir].join("\u0000");
     if (signature === headerSignature) return;
@@ -700,15 +785,7 @@
     thead.innerHTML = top + bottom;
     updateStickyHeaderHeight();
     thead.querySelectorAll("th[data-sort]").forEach((th) => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.sort;
-        if (sortKey === key) sortDir *= -1;
-        else { sortKey = key; sortDir = 1; }
-        render(true);
-        const next = [...$("thead").querySelectorAll("th[data-sort]")]
-          .find((header) => header.dataset.sort === key);
-        if (next) next.focus();
-      });
+      th.addEventListener("click", () => changeSort(th.dataset.sort, true));
       th.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
@@ -831,6 +908,7 @@
       openRows.delete(group.key);
       details.classList.remove("open");
       tr.setAttribute("aria-expanded", "false");
+      updateStickyHeader();
       return;
     }
     openRows.add(group.key);
@@ -840,6 +918,7 @@
     }
     details.classList.add("open");
     tr.setAttribute("aria-expanded", "true");
+    updateStickyHeader();
   }
 
   function render(resetPage = false) {
@@ -916,6 +995,8 @@
     }
     updateUrl(selected, extensions);
     saveSettings();
+    buildStickyHeader();
+    updateStickyHeader();
   }
 
   function updateUrl(selected, extensions) {
@@ -1039,9 +1120,21 @@
     page += 1; render();
   });
 
-  window.addEventListener("resize", updateStickyHeaderHeight);
+  window.addEventListener("resize", () => {
+    updateStickyHeaderHeight();
+    buildStickyHeader();
+    updateStickyHeader();
+  });
+  window.addEventListener("scroll", updateStickyHeader, { passive: true });
+  tableScroller.addEventListener("scroll", updateStickyHeader, { passive: true });
   if (window.ResizeObserver) {
-    new ResizeObserver(updateStickyHeaderHeight).observe($("thead"));
+    const stickyObserver = new ResizeObserver(() => {
+      updateStickyHeaderHeight();
+      buildStickyHeader();
+      updateStickyHeader();
+    });
+    stickyObserver.observe($("thead"));
+    stickyObserver.observe(tableScroller);
   }
 
   renderDataMeta(null);
