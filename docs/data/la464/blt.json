@@ -69,7 +69,7 @@
         "cpi": 1.0,
         "ipc": 1.0
       },
-      "notes": "8 branches measured at unroll=1000 to stay within BTB capacity."
+      "notes": "8 not-taken branches measured at unroll=1000."
     },
     {
       "name": "8 taken branches",
@@ -87,19 +87,19 @@
       ],
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 7.32
+        "core_cycles": 8.14
       },
       "measurement": {
-        "unroll": 8,
-        "iters": 1000
+        "unroll": 12,
+        "iters": 10000
       },
-      "command": "./bench --unroll 8 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2' --asm 'blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4'",
+      "command": "./bench --unroll 12 --iters 10000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2' --asm 'blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4; blt $r4, $r5, 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.915,
-        "ipc": 1.0929
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 branches measured at unroll=8 to stay within BTB capacity."
+      "notes": "8 taken branches measured at unroll=12 to stay within BTB capacity."
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput only."

@@ -58,8 +58,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'pcaddu12i $r12, 1; pcaddu12i $r13, 1; pcaddu12i $r14, 1; pcaddu12i $r15, 1; pcaddu12i $r16, 1; pcaddu12i $r17, 1; pcaddu12i $r18, 1; pcaddu12i $r19, 1'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.4988,
-        "ipc": 2.005
+        "cpi": 0.5,
+        "ipc": 2.0
       },
       "notes": "8 independent instructions take 3.99 cycles."
     }

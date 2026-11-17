@@ -41,19 +41,19 @@
       ],
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 7.38
+        "core_cycles": 8.13
       },
       "measurement": {
-        "unroll": 8,
-        "iters": 100000
+        "unroll": 12,
+        "iters": 83334
       },
-      "command": "./bench --unroll 8 --iters 100000 --warmup 10 --reps 5 --core 0 --asm 'b 4; b 4; b 4; b 4; b 4; b 4; b 4; b 4'",
+      "command": "./bench --unroll 12 --iters 83334 --warmup 10 --reps 5 --core 0 --asm 'b 4; b 4; b 4; b 4; b 4; b 4; b 4; b 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.9225,
-        "ipc": 1.084
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 branches measured at unroll=8 to stay within BTB capacity."
+      "notes": "8 taken branches measured at unroll=12 to stay within BTB capacity."
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput only."

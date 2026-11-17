@@ -47,16 +47,16 @@
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "core_cycles": 2.01
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'fclass.d $f0, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'fclass.d $f0, $f0'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
     }
   ],
   "throughput": [
@@ -85,8 +85,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fclass.d $f0, $f8; fclass.d $f1, $f9; fclass.d $f2, $f10; fclass.d $f3, $f11; fclass.d $f4, $f12; fclass.d $f5, $f13; fclass.d $f6, $f14; fclass.d $f7, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.4988,
-        "ipc": 2.005
+        "cpi": 0.5,
+        "ipc": 2.0
       },
       "notes": "8 independent instructions take 3.99 cycles."
     }

@@ -50,13 +50,13 @@
             "core_cycles": 1.0
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'clz.d $r12, $r12'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'clz.d $r12, $r12'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
     }
   ],
   "throughput": [

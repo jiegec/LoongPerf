@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.05,
+      "cycles": 10.0,
       "experiments": [
         {
           "name": "dependent chain",
@@ -47,16 +47,16 @@
           "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 10.05
+            "core_cycles": 9.99
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'fsqrt.s $f0, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'fsqrt.s $f0, $f0'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 65536, iters 153."
+      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
     }
   ],
   "throughput": [
@@ -85,8 +85,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'fsqrt.s $f0, $f8; fsqrt.s $f1, $f9; fsqrt.s $f2, $f10; fsqrt.s $f3, $f11; fsqrt.s $f4, $f12; fsqrt.s $f5, $f13; fsqrt.s $f6, $f14; fsqrt.s $f7, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 5.5025,
-        "ipc": 0.1817
+        "cpi": 5.5,
+        "ipc": 0.1818
       },
       "notes": "Data-dependent throughput; one representative operand sample is shown."
     }

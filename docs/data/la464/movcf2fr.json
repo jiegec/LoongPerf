@@ -51,14 +51,14 @@
             "core_cycles": 2.0
           },
           "measurement": {
-            "unroll": 32768,
-            "iters": 306,
+            "unroll": 10000,
+            "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'movcf2fr $f0, $fcc0; movfr2cf $fcc0, $f0'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'movcf2fr $f0, $fcc0; movfr2cf $fcc0, $f0'"
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 32768, iters 306."
+      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
     }
   ],
   "throughput": [
@@ -87,8 +87,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4; movgr2cf $fcc1, $r4; movgr2cf $fcc2, $r4; movgr2cf $fcc3, $r4; movgr2cf $fcc4, $r4; movgr2cf $fcc5, $r4; movgr2cf $fcc6, $r4; movgr2cf $fcc7, $r4' --asm 'movcf2fr $f0, $fcc0; movcf2fr $f1, $fcc1; movcf2fr $f2, $fcc2; movcf2fr $f3, $fcc3; movcf2fr $f4, $fcc4; movcf2fr $f5, $fcc5; movcf2fr $f6, $fcc6; movcf2fr $f7, $fcc7'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.4988,
-        "ipc": 2.005
+        "cpi": 0.5,
+        "ipc": 2.0
       },
       "notes": "8 independent instructions take 3.99 cycles."
     }

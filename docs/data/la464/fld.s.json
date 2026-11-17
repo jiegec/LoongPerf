@@ -55,17 +55,17 @@
           "chain_latency": 4,
           "result": {
             "instructions_retired": 3.0,
-            "core_cycles": 9.0
+            "core_cycles": 8.98
           },
           "measurement": {
-            "unroll": 21845,
-            "iters": 458,
+            "unroll": 6666,
+            "iters": 1501,
             "reps": 7
           },
-          "command": "./bench --unroll 21845 --iters 458 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'"
+          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'"
         }
       ],
-      "notes": "4 cycles of helper latency are subtracted. Unroll 21845, iters 458."
+      "notes": "4 cycles of helper latency are subtracted. Unroll 6666, iters 1501."
     }
   ],
   "throughput": [

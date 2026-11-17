@@ -50,13 +50,13 @@
             "core_cycles": 1.0
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'fabs.s $f0, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4' --asm 'fabs.s $f0, $f0'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
     }
   ],
   "throughput": [
@@ -85,8 +85,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'fabs.s $f0, $f8; fabs.s $f1, $f9; fabs.s $f2, $f10; fabs.s $f3, $f11; fabs.s $f4, $f12; fabs.s $f5, $f13; fabs.s $f6, $f14; fabs.s $f7, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.4988,
-        "ipc": 2.005
+        "cpi": 0.5,
+        "ipc": 2.0
       },
       "notes": "8 independent instructions take 3.99 cycles."
     }

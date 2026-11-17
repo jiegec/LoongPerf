@@ -47,16 +47,16 @@
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 10.0
+            "core_cycles": 9.99
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'fsqrt.d $f0, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'fsqrt.d $f0, $f0'"
         }
       ],
-      "notes": "Data-dependent; one representative operand sample is shown. Unroll 65536, iters 153."
+      "notes": "Data-dependent; one representative operand sample is shown. Unroll 20000, iters 500."
     }
   ],
   "throughput": [
@@ -85,8 +85,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fsqrt.d $f0, $f8; fsqrt.d $f1, $f9; fsqrt.d $f2, $f10; fsqrt.d $f3, $f11; fsqrt.d $f4, $f12; fsqrt.d $f5, $f13; fsqrt.d $f6, $f14; fsqrt.d $f7, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 5.495,
-        "ipc": 0.182
+        "cpi": 5.5,
+        "ipc": 0.1818
       },
       "notes": "Data-dependent throughput; one representative operand sample is shown."
     }

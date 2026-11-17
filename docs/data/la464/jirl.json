@@ -80,7 +80,7 @@
         "ipc": 0.4776
       },
       "baseline_cycles": 1.97,
-      "notes": "8 JIRLs plus 8 pcaddi/addi address-setup instructions take 18.72 cycles. A comparable body with the same setup plus 8 independent addi.d instructions takes 1.97 cycles, so marginal JIRL throughput is (18.72-1.97)/8 = 2.094 CPI. Eight static JIRLs are used to stay within BTB capacity."
+      "notes": "8 JIRLs plus 8 pcaddi/addi address-setup instructions take 18.72 cycles. The same setup without JIRLs takes 1.97 cycles, so marginal JIRL throughput is (18.72-1.97)/8 = 2.094 CPI. Eight static JIRLs are used to stay within BTB capacity."
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput only."

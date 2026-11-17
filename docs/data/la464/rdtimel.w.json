@@ -59,7 +59,7 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'rdtimel.w $r12, $r0; rdtimel.w $r13, $r0; rdtimel.w $r14, $r0; rdtimel.w $r15, $r0; rdtimel.w $r16, $r0; rdtimel.w $r17, $r0; rdtimel.w $r18, $r0; rdtimel.w $r19, $r0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 10.9962,
+        "cpi": 11.0,
         "ipc": 0.0909
       }
     },
@@ -88,7 +88,7 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'rdtimel.w $r4, $r12; rdtimel.w $r5, $r13; rdtimel.w $r6, $r14; rdtimel.w $r7, $r15; rdtimel.w $r8, $r16; rdtimel.w $r9, $r17; rdtimel.w $r10, $r18; rdtimel.w $r11, $r19'",
       "throughput": {
         "lanes": 8,
-        "cpi": 10.9962,
+        "cpi": 11.0,
         "ipc": 0.0909
       }
     }

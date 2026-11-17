@@ -57,14 +57,14 @@
           "chain_latency": 1.0,
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 6.0
+            "core_cycles": 5.99
           },
           "measurement": {
-            "unroll": 32768,
-            "iters": 306,
+            "unroll": 10000,
+            "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0; li.d $r5, 0' --asm 'ldx.b $r4, $r20, $r4; add.d $r4, $r4, $r5'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0; li.d $r5, 0' --asm 'ldx.b $r4, $r20, $r4; add.d $r4, $r4, $r5'"
         },
         {
           "name": "load-to-AGU bypass calibration",
@@ -76,15 +76,15 @@
             "core_cycles": 4.0
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153,
+            "unroll": 20000,
+            "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0' --asm 'ldx.b $r4, $r20, $r4'",
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0' --asm 'ldx.b $r4, $r20, $r4'",
           "notes": "Calibration experiment (not used for the reported latency)."
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 32768, iters 306."
+      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
     }
   ],
   "throughput": [
@@ -113,8 +113,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56' --asm 'ldx.b $r12, $r20, $r4; ldx.b $r13, $r20, $r5; ldx.b $r14, $r20, $r6; ldx.b $r15, $r20, $r7; ldx.b $r16, $r20, $r8; ldx.b $r17, $r20, $r9; ldx.b $r18, $r20, $r10; ldx.b $r19, $r20, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.9975,
-        "ipc": 1.0025
+        "cpi": 1.0,
+        "ipc": 1.0
       },
       "notes": "8 independent instructions take 7.98 cycles."
     }

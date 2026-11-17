@@ -67,8 +67,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4; addi.d $r12, $r0, 0; addi.d $r13, $r0, 8; addi.d $r14, $r0, 16; addi.d $r15, $r0, 24; addi.d $r16, $r0, 32; addi.d $r17, $r0, 40; addi.d $r18, $r0, 48; addi.d $r19, $r0, 56' --asm 'fstx.s $f0, $r20, $r12; fstx.s $f1, $r20, $r13; fstx.s $f2, $r20, $r14; fstx.s $f3, $r20, $r15; fstx.s $f4, $r20, $r16; fstx.s $f5, $r20, $r17; fstx.s $f6, $r20, $r18; fstx.s $f7, $r20, $r19'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0088,
-        "ipc": 0.9913
+        "cpi": 1.0,
+        "ipc": 1.0
       },
       "notes": "8 independent instructions take 8.07 cycles."
     }
