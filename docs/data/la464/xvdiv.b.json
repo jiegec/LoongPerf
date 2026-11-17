@@ -44,27 +44,27 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 36,
-      "cycles_min": 28,
-      "cycles_max": 36,
+      "cycles": 61.0,
+      "cycles_min": 29,
+      "cycles_max": 61,
       "experiments": [
         {
           "name": "reset-chain measurement",
           "role": "measurement",
-          "asm": "xvdiv.b $xr0, $xr0, $xr2; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4",
-          "init": "li.d $r4, 270582939711; xvreplgr2vr.w $xr0, $r4; li.d $r4, 12884901891; xvreplgr2vr.w $xr2, $r4; li.d $r5, -180388626475; li.d $r6, 180388626474",
+          "asm": "xvdiv.b $xr0, $xr0, $xr2; vpickve2gr.b $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.b $xr0, $r4",
+          "init": "li.d $r4, 9187201950435737471; xvreplgr2vr.b $xr0, $r4; li.d $r4, 217020518514230019; xvreplgr2vr.b $xr2, $r4; li.d $r5, -6148914691236517206; li.d $r6, 6148914691236517205",
           "result": {
-            "instructions_retired": 6,
-            "core_cycles": 45.98
+            "instructions_retired": 7.0,
+            "core_cycles": 69.0
           },
           "measurement": {
-            "unroll": 4000,
+            "unroll": 1000,
             "iters": 300,
             "reps": 7
           },
-          "command": "./bench --unroll 4000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 270582939711; xvreplgr2vr.w $xr0, $r4; li.d $r4, 12884901891; xvreplgr2vr.w $xr2, $r4; li.d $r5, -180388626475; li.d $r6, 180388626474' --asm 'xvdiv.b $xr0, $xr0, $xr2; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4'",
+          "command": "./bench --unroll 1000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 9187201950435737471; xvreplgr2vr.b $xr0, $r4; li.d $r4, 217020518514230019; xvreplgr2vr.b $xr2, $r4; li.d $r5, -6148914691236517206; li.d $r6, 6148914691236517205' --asm 'xvdiv.b $xr0, $xr0, $xr2; vpickve2gr.b $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.b $xr0, $r4'",
           "notes": "Element-0 reset chain; the closure latency is cancelled by the calibration experiment.",
-          "chain_latency": 9.98,
+          "chain_latency": 8.0,
           "machine_code": [
             "0380fc04  ori         \t$a0, $zero, 63",
             "160007e4  lu32i.d     \t$a0, 63",
@@ -148,5 +148,5 @@
       "notes": "Data-dependent. CPI ranges 15 to 19 over the same operand pairs; the stored experiment uses 63/3."
     }
   ],
-  "notes": "Vector variable-latency divide/modulo. Latency 28-36 cycles and throughput CPI 15-19 are data-dependent."
+  "notes": "Latency model: the vector divider retires 4 quotient bits per cycle on every element width and the slowest lane dominates. lat = 29 when the quotient is 0, 53 when it fits in four bits, otherwise 53 + 8 * floor(bits(quotient)/4); for b elements the quotient is at most 8 bits, so the maximum is 61.  Measured with a calibrated reset chain (closure 8 cycles) on the maximum-latency operand pair; 1000-unroll slope method."
 }
