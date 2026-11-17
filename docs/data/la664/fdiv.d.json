@@ -68,9 +68,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. Min ~7.9 cycles for inf/NaN/0/0 fast path; ~9.9 for exact quotients such as 1/1, 1/2, 3/4, 5/8; ~22.7 for general full-precision division such as 1/3, 1/5, 1/10; up to ~23.7 with subnormal inputs (e.g. maxsub/1, 1/maxsub). The experiment below uses 1.0/1.0.",
-      "cycles_min": 7.9,
-      "cycles_max": 23.7
+      "notes": "Data-dependent latency, measured with unroll=100000 and iters=100 to remove per-call overhead. ~8 for inf/NaN/0/0; ~10 for exact quotients 1/1, 1/2, 3/4, 5/8; ~23 for general full-precision division (1/3, 1/5, 1/10); 24 with maxsub/1 or 1/maxsub. The experiment below uses 1.0.",
+      "cycles_min": 8,
+      "cycles_max": 24
     },
     {
       "from_operands": [
@@ -99,9 +99,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. Min ~7.9 cycles for inf/NaN/0/0 fast path; ~9.9 for exact quotients such as 1/1, 1/2, 3/4, 5/8; ~22.7 for general full-precision division such as 1/3, 1/5, 1/10; up to ~23.7 with subnormal inputs (e.g. maxsub/1, 1/maxsub). The experiment below uses 1.0/1.0.",
-      "cycles_min": 7.9,
-      "cycles_max": 23.7
+      "notes": "Data-dependent latency, measured with unroll=100000 and iters=100 to remove per-call overhead. ~8 for inf/NaN/0/0; ~10 for exact quotients 1/1, 1/2, 3/4, 5/8; ~23 for general full-precision division (1/3, 1/5, 1/10); 24 with maxsub/1 or 1/maxsub. The experiment below uses 1.0.",
+      "cycles_min": 8,
+      "cycles_max": 24
     }
   ],
   "throughput": [
@@ -136,5 +136,5 @@
       "notes": "Data-dependent. 8 independent lanes. CPI over operand values: ~1.5 for inf/NaN fast path, ~2.0 for exact quotients such as 1/1, ~5.25 for general division, ~5.5 with subnormal inputs. CPI is unchanged for 1-20 independent lanes, so throughput is initiation-interval bound rather than latency bound."
     }
   ],
-  "notes": "Floating-point division is data-dependent in both latency and throughput. Measurements cover special values, exact and non-exact quotients, subnormals, and exponent sweeps. Latency was cross-checked with both an integer-domain reset chain and an FP-domain fdiv+fmul chain."
+  "notes": "Latency and throughput are data-dependent. The latency range was re-measured with unroll=100000; unroll=1000 produced values about 0.2 cycles lower because the per-call overhead was not fully amortised. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."
 }

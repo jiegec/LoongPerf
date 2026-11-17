@@ -40,7 +40,37 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "high-unroll dependency chain",
+          "role": "measurement",
+          "asm": "ldgt.d $r4, $r4, $r0",
+          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ldgt.d $r4, $r4, $r0'",
+          "result": {
+            "instructions_retired": 1,
+            "core_cycles": 4.0
+          },
+          "chain_latency": 0,
+          "notes": "Bound-checked pointer chase: address r4, bound 0, so the condition rj > rk is true. Bound check adds 1 cycle over ld.d."
+        }
+      ],
+      "notes": "Bound-checked pointer chase: address r4, bound 0, so the condition rj > rk is true. Bound check adds 1 cycle over ld.d."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent addresses",
@@ -69,5 +99,5 @@
       "notes": "8 bound-checked memory operations take 8.00 cycles."
     }
   ],
-  "notes": "Bound-checked memory operation. Latency depends on cache/coherence state; throughput only."
+  "notes": "L1D-hit latency 4 cycles, measured by pointer chase with unroll=100000. Throughput is 1 CPI."
 }

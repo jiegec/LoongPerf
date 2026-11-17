@@ -49,14 +49,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 1; movgr2cf $fcc0, $r4' --asm 'bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0; bceqz $fcc0, 0'",
       "result": {
         "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "core_cycles": 8.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.5,
-        "ipc": 2.0
+        "cpi": 1.0,
+        "ipc": 1.0
       },
-      "notes": "8 not-taken conditional branches take 4.00 cycles."
+      "notes": "8 not-taken FCC conditional branches take 8.00 cycles (1 CPI). Re-measured at unroll 8 and 1000 with offsets 0/4/8; the earlier 0.5 CPI was not reproducible for FCC branches."
     },
     {
       "name": "8 taken branches",
@@ -88,5 +88,5 @@
       }
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches. Taken branches use unroll=8 to stay within BTB capacity."
+  "notes": "No destination data dependency; latency is not defined. Throughput measured separately for taken and not-taken branches. FCC conditional branches are 1 CPI both taken and not-taken; unlike integer branches, not-taken FCC branches do not reach 2/cycle. Taken branches use unroll=8 to stay within BTB capacity."
 }

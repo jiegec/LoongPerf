@@ -40,7 +40,37 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "high-unroll dependency chain",
+          "role": "measurement",
+          "asm": "ldx.d $r4, $r0, $r4",
+          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ldx.d $r4, $r0, $r4'",
+          "result": {
+            "instructions_retired": 1,
+            "core_cycles": 4.0
+          },
+          "chain_latency": 0,
+          "notes": "Indexed pointer chase: ld.d with rj=$r0, rk=r4. Indexed address generation adds 1 cycle over ld.d."
+        }
+      ],
+      "notes": "Indexed pointer chase: ld.d with rj=$r0, rk=r4. Indexed address generation adds 1 cycle over ld.d."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -69,5 +99,5 @@
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }
   ],
-  "notes": "Throughput measured with a 1KB stack buffer. Latency not measured; memory latency depends on cache state."
+  "notes": "L1D-hit latency 4 cycles, measured by pointer chase with unroll=100000. Throughput is 0.5 CPI."
 }

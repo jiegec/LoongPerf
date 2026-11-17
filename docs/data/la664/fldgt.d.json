@@ -40,7 +40,37 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "high-unroll dependency chain",
+          "role": "measurement",
+          "asm": "fldgt.d $f0, $r4, $r0; movfr2gr.d $r4, $f0",
+          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'fldgt.d $f0, $r4, $r0; movfr2gr.d $r4, $f0'",
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 7.0
+          },
+          "chain_latency": 3,
+          "notes": "FPR load followed by movfr2gr to close the address chain; chain_latency subtracts the 3-cycle movfr2gr."
+        }
+      ],
+      "notes": "FPR load followed by movfr2gr to close the address chain; chain_latency subtracts the 3-cycle movfr2gr."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent addresses",
@@ -69,5 +99,5 @@
       "notes": "8 bound-checked floating-point memory operations take 8.00 cycles."
     }
   ],
-  "notes": "Bound-checked floating-point memory operation. Latency depends on cache state; throughput only."
+  "notes": "L1D-hit latency 4 cycles, measured by pointer chase with unroll=100000. Throughput is 1 CPI."
 }

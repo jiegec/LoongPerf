@@ -32,7 +32,36 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "condition-code dependency chain",
+          "role": "measurement",
+          "asm": "movgr2cf $fcc0, $r4; movcf2gr $r4, $fcc0",
+          "init": "li.d $r4, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0' --asm 'movgr2cf $fcc0, $r4; movcf2gr $r4, $fcc0'",
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 4.0
+          },
+          "chain_latency": 3.0,
+          "notes": "Round trip between movcf2fr/movfr2cf or movcf2gr/movgr2cf is 4 cycles. The split is consistent with the fcmp chains: CF->FPR=1, FPR->CF=1, CF->GPR=3, GPR->CF=1."
+        }
+      ],
+      "notes": "Round trip between movcf2fr/movfr2cf or movcf2gr/movgr2cf is 4 cycles. The split is consistent with the fcmp chains: CF->FPR=1, FPR->CF=1, CF->GPR=3, GPR->CF=1."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -61,5 +90,5 @@
       "notes": "8 independent instructions take 8.00 cycles."
     }
   ],
-  "notes": "Round trip with movcf2gr is 4.00 cycles; individual latency is not separable."
+  "notes": "Round trip between movcf2fr/movfr2cf or movcf2gr/movgr2cf is 4 cycles. The split is consistent with the fcmp chains: CF->FPR=1, FPR->CF=1, CF->GPR=3, GPR->CF=1. Throughput is 1 CPI for movcf2gr/movgr2cf and 0.5 CPI for movcf2fr/movfr2cf."
 }

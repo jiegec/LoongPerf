@@ -60,9 +60,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Data-dependent. ~7.9 cycles for 0/Inf/NaN/negative fast path; ~9.9 for exact squares (1, 4, 0.25, minnorm); ~21.7 for general non-square inputs (2, 3, 0.5, max); up to ~22.7 with maxsub/minsub. The experiment below uses 1.0.",
-      "cycles_min": 7.9,
-      "cycles_max": 22.7
+      "notes": "Data-dependent latency, measured with unroll=100000 and iters=100 to remove per-call overhead. 8 for 0/Inf/NaN/negative; 10 for exact squares 1, 4, 0.25, minnorm; 22 for general non-square inputs; 23 with maxsub. The experiment below uses 1.0.",
+      "cycles_min": 8,
+      "cycles_max": 23
     }
   ],
   "throughput": [
@@ -97,5 +97,5 @@
       "notes": "Data-dependent. 8 independent lanes. CPI ~1.5 for special values, ~2.0 for exact squares, ~5.0 for general inputs, up to ~5.25 with maxsub/minsub. CPI is unchanged for 1-20 independent lanes; mixed fast/slow lanes are additive."
     }
   ],
-  "notes": "Latency and throughput are data-dependent. Values cover special values, exact squares/powers of two, general inputs, subnormals, and overflow/underflow boundaries. The experiment below uses 1.0. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."
+  "notes": "Latency and throughput are data-dependent. The latency range was re-measured with unroll=100000; unroll=1000 produced values about 0.2 cycles lower because the per-call overhead was not fully amortised. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."
 }

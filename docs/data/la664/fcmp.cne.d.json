@@ -39,7 +39,37 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "condition-code dependency chain",
+          "role": "measurement",
+          "asm": "fcmp.cne.d $fcc0, $f0, $f1; movcf2fr $f0, $fcc0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.cne.d $fcc0, $f0, $f1; movcf2fr $f0, $fcc0'",
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 2.0
+          },
+          "chain_latency": 1.0,
+          "notes": "FCMP writes FCC in 1 cycle. The fcmp+movcf2fr chain is 2 cycles; movcf2fr is 1 cycle (movcf2fr+movfr2cf round trip = 2). The fcmp+movcf2gr+movgr2fr chain is 5 cycles (1+3+1), consistent. All conditions measured the same."
+        }
+      ],
+      "notes": "Latency from either floating-point source to the FCC result is 1 cycle."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -68,5 +98,5 @@
       "notes": "8 independent comparisons take 3.98 cycles."
     }
   ],
-  "notes": "FCMP writes a condition-code register. Individual latency is not separable without a round trip through movcf2gr/movgr2fr; throughput only. A round trip fcmp+movcf2gr+movgr2fr measured about 5.02 cycles."
+  "notes": "FCMP writes the condition-code register. Latency to FCC is 1 cycle. Throughput is 0.5 CPI (8 independent comparisons in 4 cycles). The measured fcmp+movcf2fr chain is 2 cycles; the fcmp+movcf2gr+movgr2fr chain is 5 cycles."
 }

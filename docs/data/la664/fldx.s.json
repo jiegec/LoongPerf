@@ -40,7 +40,37 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "high-unroll dependency chain",
+          "role": "measurement",
+          "asm": "fldx.s $f0, $r20, $r4; movfr2gr.s $r4, $f0",
+          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r4, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r4, 0' --asm 'fldx.s $f0, $r20, $r4; movfr2gr.s $r4, $f0'",
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 7.0
+          },
+          "chain_latency": 3,
+          "notes": "FPR load followed by movfr2gr to close the address chain; chain_latency subtracts the 3-cycle movfr2gr."
+        }
+      ],
+      "notes": "FPR load followed by movfr2gr to close the address chain; chain_latency subtracts the 3-cycle movfr2gr."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -69,5 +99,5 @@
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }
   ],
-  "notes": "Throughput measured with a 1KB stack buffer. Latency not measured; memory latency depends on cache state."
+  "notes": "L1D-hit latency 4 cycles, measured by index chase with unroll=100000. Throughput is 0.5 CPI."
 }

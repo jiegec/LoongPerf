@@ -46,29 +46,28 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 38.03,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "high-unroll fixed-operand chain",
           "role": "measurement",
-          "asm": "div.d $r12, $r12, $r13",
-          "init": "addi.d $r12, $r0, 10; addi.d $r13, $r0, 3",
+          "asm": "div.d $r12, $r12, $r13; and $r12, $r12, $r5; or $r12, $r12, $r6",
+          "init": "li.d $r12, 9223372036854775807; li.d $r13, 2; li.d $r5, 1; li.d $r6, 9223372036854775806",
           "measurement": {
             "unroll": 100000,
-            "iters": 100
+            "iters": 100,
+            "reps": 5
           },
-          "machine_code": [
-            "0022358c  div.d       \t$t0, $t0, $t1"
-          ],
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 10; addi.d $r13, $r0, 3' --asm 'div.d $r12, $r12, $r13'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 5 --init 'li.d $r12, 9223372036854775807; li.d $r13, 2; li.d $r5, 1; li.d $r6, 9223372036854775806' --asm 'div.d $r12, $r12, $r13; and $r12, $r12, $r5; or $r12, $r12, $r6'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 3,
+            "core_cycles": 40.03
           },
-          "notes": "Consecutive unrolled copies form a dependency chain."
+          "chain_latency": 2.0,
+          "notes": "Fixed dividend=max, divisor=2, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
         }
       ],
-      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.\n\nMin 5 cycles at divisor=0x8000000000000000; max 38 cycles at divisor=0x1; dividend=0x7fffffffffffffff.",
+      "notes": "Data-dependent. Sample uses max/2. Min 5 cycles at small/even divisors; max 38 cycles at divisor=1 (unsigned) or max/1. Measured with unroll=100000; unroll=1000 was biased low by about 0.2 cycles.",
       "cycles_min": 5,
       "cycles_max": 38
     },
@@ -77,29 +76,28 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 7.5,
+      "cycles": 38.03,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "high-unroll fixed-operand chain",
           "role": "measurement",
-          "asm": "div.d $r12, $r13, $r12",
-          "init": "addi.d $r12, $r0, 10; addi.d $r13, $r0, 3",
+          "asm": "div.d $r12, $r13, $r12; and $r12, $r12, $r5; or $r12, $r12, $r6",
+          "init": "li.d $r12, 2; li.d $r13, 9223372036854775807; li.d $r5, 1; li.d $r6, 2",
           "measurement": {
             "unroll": 100000,
-            "iters": 100
+            "iters": 100,
+            "reps": 5
           },
-          "machine_code": [
-            "002231ac  div.d       \t$t0, $t1, $t0"
-          ],
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 10; addi.d $r13, $r0, 3' --asm 'div.d $r12, $r13, $r12'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 5 --init 'li.d $r12, 2; li.d $r13, 9223372036854775807; li.d $r5, 1; li.d $r6, 2' --asm 'div.d $r12, $r13, $r12; and $r12, $r12, $r5; or $r12, $r12, $r6'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 7.5
+            "instructions_retired": 3,
+            "core_cycles": 40.03
           },
-          "notes": "Consecutive unrolled copies form a dependency chain."
+          "chain_latency": 2.0,
+          "notes": "Fixed divisor=2, dividend=max, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
         }
       ],
-      "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.\n\nMin 5 cycles at divisor=0x8000000000000000; max 38 cycles at divisor=0x1; dividend=0x7fffffffffffffff.",
+      "notes": "Data-dependent. Sample uses max/2. Min 5 cycles at small/even divisors; max 38 cycles at divisor=1 (unsigned) or max/1. Measured with unroll=100000; unroll=1000 was biased low by about 0.2 cycles.",
       "cycles_min": 5,
       "cycles_max": 38
     }
@@ -136,5 +134,5 @@
       "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 3.499 at divisor=0x8000000000000000; max CPI 20.001 at divisor=0xffffffffffffffff; dividend=0x7fffffffffffffff."
     }
   ],
-  "notes": "Latency: 100 outer iterations x 100 divisions; each block is <op>; and; add.d, and the measured cycles/division include the 2-cycle and+add chain, so 2 is subtracted. Throughput: 8 independent lanes with the same dividend/divisor pair."
+  "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent."
 }

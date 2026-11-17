@@ -38,26 +38,28 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 0.95,
+      "cycles": 1.0,
       "experiments": [
         {
-          "name": "memory-assisted dependency chain",
+          "name": "high-unroll memory-assisted chain",
           "role": "measurement",
-          "asm": "movgr2fr.d $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0",
-          "init": "li.d $r4, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0",
+          "asm": "movgr2fr.d $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5",
+          "init": "li.d $r4, 1; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0",
           "measurement": {
+            "unroll": 100000,
+            "iters": 100,
             "reps": 7
           },
-          "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2fr.d $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0'",
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2fr.d $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'",
           "result": {
-            "instructions_retired": 3,
-            "core_cycles": 10.85
+            "instructions_retired": 4,
+            "core_cycles": 12.05
           },
-          "chain_latency": 9.9,
-          "notes": "Derived by subtracting the FPR-store -> GPR-load forwarding latency (9.90 cycles) from the 10.85-cycle chain."
+          "chain_latency": 11.04,
+          "notes": "12.05-cycle chain minus 11.04 cycles (10.04 FPR-store -> GPR-load forwarding + 1 add.d) = 1.01 cycles. Measured with unroll=100000; unroll=1000 gave 0.95 because per-call overhead was not fully amortised."
         }
       ],
-      "notes": "GPR -> FPR latency is about 1 cycle. The direct round trip movgr2fr.d + movfr2gr.d is 3.83 cycles, so the two directions are not separately observable with a simple round trip; the value here comes from a memory-assisted decomposition."
+      "notes": "GPR -> FPR latency is 1 cycle. The full movgr2fr.d + movfr2gr.d round trip is 4 cycles; inserting fadd or fmul changes it by exactly the inserted latency, so the round trip is additive. This rules out a 3+2 split for the .d/.w/.s moves."
     }
   ],
   "throughput": [
@@ -88,5 +90,5 @@
       "notes": "8 independent instructions take 8.00 cycles."
     }
   ],
-  "notes": "Individual GPR->FPR latency is about 1 cycle. Round trip with movfr2gr.d is 3.83 cycles (~4). Round trip with movgr2frh.w + movfrh2gr.s is 4.99 cycles (~5). Throughput is 1 CPI for 1-20 independent lanes."
+  "notes": "Individual GPR->FPR latency is 1 cycle. Round trip with movfr2gr.d is 4 cycles; high-half round trip movgr2frh.w + movfrh2gr.s is 5 cycles. 3+2 cycles for movgr2fr/movfr2gr is incompatible with the 4-cycle full round trip. Throughput is 1 CPI for 1-20 independent lanes."
 }
