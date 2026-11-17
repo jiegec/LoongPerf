@@ -117,6 +117,12 @@
     .details-grid table { min-width: 0; }
     .details-grid th { position: static; top: auto; z-index: auto; }
     .details-grid th, .details-grid td { padding: 5px 7px; font-size: 13px; }
+    .case-count { display: block; color: var(--muted); font-size: 11px; font-weight: 400; }
+    .case-group { margin-top: 10px; }
+    .case-group h4 { margin: 0 0 3px; font-size: 12px; color: var(--muted); }
+    .case-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+    .case-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 12px; }
+    .case-list .num { color: var(--fg); }
     td.details-cell { overflow-wrap: anywhere; }
     @media (max-width: 1100px) {
       td.details-cell > .uarch-detail {
@@ -449,6 +455,7 @@
     const search = [
       ...operands.map((op) => [op.name, op.kind, op.access].join(" ")),
       ...latencies.map((lat) => [lat.from, lat.to, lat.cycles].join(" ")),
+      ...latencies.flatMap((lat) => (lat.cases || []).map((item) => item.name + " " + item.cycles)),
       ...throughput.flatMap((item) => [item.asm || "", JSON.stringify(item.throughput || {})])
     ].join(" ").toLowerCase();
 
@@ -813,7 +820,23 @@
     if (!row) return '<span class="muted">-</span>';
     if (row.unsupported) return '<span class="sigill" title="' + esc(row.notes) + '">SIGILL</span>';
     if (row.minLatency === null) return '<span class="muted">-</span>';
-    return row.minLatency === row.maxLatency ? fmt(row.minLatency) : fmt(row.minLatency) + " – " + fmt(row.maxLatency);
+    const text = row.minLatency === row.maxLatency
+      ? fmt(row.minLatency)
+      : fmt(row.minLatency) + " – " + fmt(row.maxLatency);
+    const cases = row.latencies.flatMap((lat) =>
+      (lat.cases || []).map((item) => ({
+        from: lat.from,
+        to: lat.to,
+        name: item.name,
+        cycles: item.cycles
+      }))
+    );
+    if (!cases.length) return text;
+    const title = cases.map((item) =>
+      item.from + " -> " + item.to + ": " + item.name + " (" + fmt(item.cycles) + ")").join("; ");
+    return '<span class="lat-range">' + text + '</span> ' +
+      '<span class="case-count" title="' + esc(title) + '">' +
+      cases.length + " case" + (cases.length === 1 ? "" : "s") + "</span>";
   }
 
   function cpiCell(row) {
@@ -827,14 +850,16 @@
   }
 
   function detailsHtml(row) {
-    const latencyRows = row.latencies.map((lat) => {
-      const cases = lat.cases.length
-        ? '<br><span class="muted">' +
-          lat.cases.map((c) => esc(c.name) + " " + fmt(c.cycles)).join(" · ") + "</span>"
-        : "";
-      return "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + '</td><td class="num">' +
-        fmtRange(lat.minCycles, lat.maxCycles) + cases + "</td></tr>";
-    }).join("");
+    const latencyRows = row.latencies.map((lat) =>
+      "<tr><td>" + esc(lat.from) + "</td><td>" + esc(lat.to) + '</td><td class="num">' +
+      fmtRange(lat.minCycles, lat.maxCycles) + "</td></tr>"
+    ).join("");
+    const caseGroups = row.latencies.filter((lat) => lat.cases && lat.cases.length).map((lat) =>
+      '<div class="case-group"><h4>' + esc(lat.from) + " → " + esc(lat.to) + '</h4><ul class="case-list">' +
+      lat.cases.map((item) =>
+        '<li><span>' + esc(item.name) + '</span> <span class="num">' + esc(fmt(item.cycles)) + "</span></li>"
+      ).join("") + "</ul></div>"
+    ).join("");
     const throughputRows = row.throughput.map((item) => {
       const t = item.throughput || {};
       const cpi = fmtRange(t.cpi_min ?? t.cpi, t.cpi_max ?? t.cpi);
@@ -855,7 +880,8 @@
       '<div><h3>Operands</h3><div class="details-table"><table><thead><tr><th>#</th><th>Operand</th><th>Kind</th><th>Access</th></tr></thead><tbody>' +
       operandRows + "</tbody></table></div></div>" +
       '<div><h3>Latency</h3><div class="details-table"><table><thead><tr><th>From</th><th>To</th><th>Cycles</th></tr></thead><tbody>' +
-      (latencyRows || '<tr><td colspan="3" class="muted">No data</td></tr>') + "</tbody></table></div></div>" +
+      (latencyRows || '<tr><td colspan="3" class="muted">No data</td></tr>') + "</tbody></table></div>" +
+      caseGroups + "</div>" +
       '<div><h3>Throughput</h3><div class="details-table"><table><thead><tr><th>Experiment</th><th>Lanes</th><th>Insns</th><th>Cycles</th><th>CPI</th><th>IPC</th><th>Extra counters</th></tr></thead><tbody>' +
       (throughputRows || '<tr><td colspan="7" class="muted">No data</td></tr>') + "</tbody></table></div></div>" +
       '</div><div class="links"><a href="' + esc(row.page) + '">Full measurement page</a>' +
