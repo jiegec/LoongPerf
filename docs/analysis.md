@@ -1,11 +1,13 @@
 # Analysis
 
-What the measurements say about the LA664 core: the latency models behind the
-instructions whose timing depends on their operands. How those numbers are
-produced is on the [Methodology](methodology.md) page.
+What the measurements say about the LA664 and LA464 cores: the latency models
+behind the instructions whose timing depends on their operands. How those
+numbers are produced is on the [Methodology](methodology.md) page.
 
-This page currently covers LA664 only. The LA464 column is being measured
-separately and will be added once that campaign is complete.
+The two cores implement the same models. Where they differ, the difference is
+called out next to the numbers; the floating-point units and the vector integer
+divider are identical, and the scalar integer divider differs only in how the
+remainder path terminates.
 
 ## Integer division and remainder
 
@@ -53,8 +55,23 @@ quotient is narrow: `0x10 / 1` takes 7 cycles while `0xf / 1` takes 9, and a
 dividend with an even number of trailing zeros collapses further, since the
 divider normalises two bits per step.
 
-`mod` and `div` are the same instruction unit and measure identically for every
-width: 5-22, 5-23, 5-38 and 5-39.
+`mod` and `div` are the same instruction unit. On LA664 they measure identically
+for every width (5-22, 5-23, 5-38 and 5-39), but on LA464 the remainder path
+leaves the long path as soon as the remainder becomes zero, which costs the last
+digit:
+
+```text
+                 div.w   div.wu   div.d   div.du
+LA664            5-22     5-23    5-38     5-39
+LA464            5-22     5-23    5-38     5-39
+LA664 mod.*      5-22     5-23    5-38     5-39
+LA464 mod.*      5-22     5-22    5-38     5-38
+```
+
+A wide quotient with a zero remainder only exists for divisor 1 (`max / 1` and
+`-1 / 1`), so the divide reaches 23 and 39 through that case while the remainder
+never does on LA464. Both cores agree on `mod.w` and `mod.d`, where a 31-bit or
+63-bit quotient is wide enough with a non-zero remainder.
 
 ### Vector divider
 
@@ -103,6 +120,10 @@ Like the scalar divider, the vector unit divides magnitudes only and skips
 trailing zero digits: `2^40 / 1` (a 41-bit quotient) still measures 11 cycles
 because the 40 trailing zeros cost nothing.
 
+LA464 and LA664 agree on every vector integer number: 29-61 for `.b`, 17-41 for
+`.h`, 11-31 for `.w` and 8-26 for `.d`, with `mod` one digit behind (29-69,
+17-45, 11-33 and 8-27), and both cores give LSX and LASX the same range.
+
 `mod` costs one extra digit, because the remainder needs the last digit that the
 quotient path can discard, which adds 1, 2, 4 or 8 cycles depending on the
 element width: 27/33/45/69 signed and 28/35/49/77 unsigned.
@@ -127,7 +148,9 @@ is active.
 
 ## Floating-point division, square root and reciprocal
 
-The five floating-point units of interest here share one mechanism. A result is
+The five floating-point units of interest here share one mechanism, and LA464
+reproduces every class below exactly: `fdiv`, `fsqrt`, `frecip` and `frsqrt` are
+identical on the two cores, as are their vector forms. A result is
 produced one four-bit "digit" of the mantissa at a time and the unit stops as
 soon as the remainder is zero, so latency is a small set of classes rather than a
 ladder:
@@ -308,6 +331,10 @@ vfrecip.s, xvfrecip.s      11       15          17             25          27   
 | `frecip.d` | 8-24 | same |
 | `vfrecip.s` | 11-29 | 15 + 2 digit times |
 | `vfrecip.d` | 8-24 | identical to `frecip.d` |
+
+Every entry in this table holds for both cores except `mod.wu` (5-22 on LA464,
+5-23 on LA664) and `mod.du` (5-38 against 5-39), the only two numbers that the
+two microarchitectures do not share.
 
 The floating-point classes are a fixed set that covers every possible operand,
 so the JSON lists them as an exhaustive `cases` array, and no formula is needed
