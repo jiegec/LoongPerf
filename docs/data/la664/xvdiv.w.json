@@ -1,0 +1,116 @@
+{
+  "instruction": {
+    "name": "xvdiv.w",
+    "extension": "LASX",
+    "form": "xvdiv.w xd, xj, xk",
+    "description": "Divide each signed 32-bit element in `a` by the corresponding element in `b`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "dividend"
+    },
+    {
+      "index": 3,
+      "name": "xk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "divisor"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 16.99,
+      "cycles_min": 11.0,
+      "cycles_max": 30.99,
+      "experiments": [
+        {
+          "name": "dependent chain with element-0 reset helper",
+          "role": "measurement",
+          "asm": "xvdiv.w $xr0, $xr0, $xr2; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4",
+          "init": "li.w $r4, 1; xvreplgr2vr.w $xr0, $r4; li.w $r4, 1; xvreplgr2vr.w $xr2, $r4; li.w $r5, 1; li.w $r6, 0",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1; xvreplgr2vr.w $xr0, $r4; li.w $r4, 1; xvreplgr2vr.w $xr2, $r4; li.w $r5, 1; li.w $r6, 0' --asm 'xvdiv.w $xr0, $xr0, $xr2; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4'",
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 25.98
+          },
+          "chain_latency": 8.99,
+          "notes": "Element 0 is extracted, forced back to the test dividend, and replicated; vadd.b baseline subtracted."
+        },
+        {
+          "name": "vadd.b reset-helper baseline",
+          "role": "calibration",
+          "asm": "xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4",
+          "init": "li.w $r4, 1; xvreplgr2vr.w $xr0, $r4; li.w $r4, 1; xvreplgr2vr.w $xr2, $r4; li.w $r5, 1; li.w $r6, 0",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1; xvreplgr2vr.w $xr0, $r4; li.w $r4, 1; xvreplgr2vr.w $xr2, $r4; li.w $r5, 1; li.w $r6, 0' --asm 'xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4'",
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 9.99
+          },
+          "notes": "Same helper with vadd.b replacing the variable operation."
+        }
+      ],
+      "notes": "Data-dependent. Range over 16 dividend/divisor pairs; min 11.00 at 0/1, max 30.99 at 2147483647/1. Sample uses 1/1."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvdiv.w $xr0, $xr8, $xr16; xvdiv.w $xr1, $xr9, $xr17; xvdiv.w $xr2, $xr10, $xr18; xvdiv.w $xr3, $xr11, $xr19; xvdiv.w $xr4, $xr12, $xr20; xvdiv.w $xr5, $xr13, $xr21; xvdiv.w $xr6, $xr14, $xr22; xvdiv.w $xr7, $xr15, $xr23",
+      "init": "li.w $r4, 1; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1; xvreplgr2vr.w $xr16, $r4; li.w $r4, 1; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1; xvreplgr2vr.w $xr17, $r4; li.w $r4, 1; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1; xvreplgr2vr.w $xr18, $r4; li.w $r4, 1; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1; xvreplgr2vr.w $xr19, $r4; li.w $r4, 1; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1; xvreplgr2vr.w $xr20, $r4; li.w $r4, 1; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1; xvreplgr2vr.w $xr21, $r4; li.w $r4, 1; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1; xvreplgr2vr.w $xr22, $r4; li.w $r4, 1; xvreplgr2vr.w $xr15, $r4; li.w $r4, 1; xvreplgr2vr.w $xr23, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1; xvreplgr2vr.w $xr16, $r4; li.w $r4, 1; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1; xvreplgr2vr.w $xr17, $r4; li.w $r4, 1; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1; xvreplgr2vr.w $xr18, $r4; li.w $r4, 1; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1; xvreplgr2vr.w $xr19, $r4; li.w $r4, 1; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1; xvreplgr2vr.w $xr20, $r4; li.w $r4, 1; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1; xvreplgr2vr.w $xr21, $r4; li.w $r4, 1; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1; xvreplgr2vr.w $xr22, $r4; li.w $r4, 1; xvreplgr2vr.w $xr15, $r4; li.w $r4, 1; xvreplgr2vr.w $xr23, $r4' --asm 'xvdiv.w $xr0, $xr8, $xr16; xvdiv.w $xr1, $xr9, $xr17; xvdiv.w $xr2, $xr10, $xr18; xvdiv.w $xr3, $xr11, $xr19; xvdiv.w $xr4, $xr12, $xr20; xvdiv.w $xr5, $xr13, $xr21; xvdiv.w $xr6, $xr14, $xr22; xvdiv.w $xr7, $xr15, $xr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 59.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 7.4988,
+        "ipc": 0.1334,
+        "cpi_min": 4.497,
+        "cpi_max": 14.499,
+        "ipc_min": 0.069,
+        "ipc_max": 0.2223
+      },
+      "notes": "Range over the same pairs: min CPI 4.50 at 0/1, max CPI 14.50 at 2147483647/1. Sample uses 1/1."
+    }
+  ],
+  "notes": "LASX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values."
+}
