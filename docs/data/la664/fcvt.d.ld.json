@@ -125,7 +125,34 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent lanes take 2.00 cycles, i.e. 0.25 CPI. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000); larger unroll factors inflated the value through L1I pressure."
+      "notes": "8 independent lanes take 2.00 cycles, i.e. 0.25 CPI. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000); larger unroll factors inflated the value through L1I pressure.",
+      "machine_code": [
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "0114a888  movgr2fr.d  \t$ft0, $a0",
+        "0114a890  movgr2fr.d  \t$ft8, $a0",
+        "0114a889  movgr2fr.d  \t$ft1, $a0",
+        "0114a891  movgr2fr.d  \t$ft9, $a0",
+        "0114a88a  movgr2fr.d  \t$ft2, $a0",
+        "0114a892  movgr2fr.d  \t$ft10, $a0",
+        "0114a88b  movgr2fr.d  \t$ft3, $a0",
+        "0114a893  movgr2fr.d  \t$ft11, $a0",
+        "0114a88c  movgr2fr.d  \t$ft4, $a0",
+        "0114a894  movgr2fr.d  \t$ft12, $a0",
+        "0114a88d  movgr2fr.d  \t$ft5, $a0",
+        "0114a895  movgr2fr.d  \t$ft13, $a0",
+        "0114a88e  movgr2fr.d  \t$ft6, $a0",
+        "0114a896  movgr2fr.d  \t$ft14, $a0",
+        "0114a88f  movgr2fr.d  \t$ft7, $a0",
+        "0114a897  movgr2fr.d  \t$ft15, $a0",
+        "01154100  fcvt.d.ld   \t$fa0, $ft0, $ft8",
+        "01154521  fcvt.d.ld   \t$fa1, $ft1, $ft9",
+        "01154942  fcvt.d.ld   \t$fa2, $ft2, $ft10",
+        "01154d63  fcvt.d.ld   \t$fa3, $ft3, $ft11",
+        "01155184  fcvt.d.ld   \t$fa4, $ft4, $ft12",
+        "011555a5  fcvt.d.ld   \t$fa5, $ft5, $ft13",
+        "011559c6  fcvt.d.ld   \t$fa6, $ft6, $ft14",
+        "01155de7  fcvt.d.ld   \t$fa7, $ft7, $ft15"
+      ]
     }
   ],
   "notes": "LBT x87 conversion instruction. Every source-to-result path is recorded."

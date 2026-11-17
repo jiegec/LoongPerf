@@ -91,7 +91,26 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.60 cycles. Measured CPI 1.0750; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
+      "notes": "8 independent instructions take 8.60 cycles. Measured CPI 1.0750; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure.",
+      "machine_code": [
+        "02c00404  li.d        \t$a0, 1",
+        "02c00805  li.d        \t$a1, 2",
+        "02c00c06  li.d        \t$a2, 3",
+        "02c01007  li.d        \t$a3, 4",
+        "02c01408  li.d        \t$a4, 5",
+        "02c01809  li.d        \t$a5, 6",
+        "02c01c0a  li.d        \t$a6, 7",
+        "02c0200b  li.d        \t$a7, 8",
+        "005c0020  x86mtflag   \t$zero, 0x0",
+        "00007c8c  setx86loopne\t$t0, $a0",
+        "00007cad  setx86loopne\t$t1, $a1",
+        "00007cce  setx86loopne\t$t2, $a2",
+        "00007cef  setx86loopne\t$t3, $a3",
+        "00007d10  setx86loopne\t$t4, $a4",
+        "00007d31  setx86loopne\t$t5, $a5",
+        "00007d52  setx86loopne\t$t6, $a6",
+        "00007d73  setx86loopne\t$t7, $a7"
+      ]
     }
   ],
   "notes": "LBT instruction. Latency is recorded for the rj counter path and the EFLAGS path."

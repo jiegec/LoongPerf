@@ -85,7 +85,25 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfa normalised per instruction."
+      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfa normalised per instruction.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "03800805  li.w        \t$a1, 0x2",
+        "03800c06  li.w        \t$a2, 0x3",
+        "03801007  li.w        \t$a3, 0x4",
+        "03801408  li.w        \t$a4, 0x5",
+        "03801809  li.w        \t$a5, 0x6",
+        "03801c0a  li.w        \t$a6, 0x7",
+        "0380200b  li.w        \t$a7, 0x8",
+        "769f0480  xvreplgr2vr.h\t$xr0, $a0",
+        "769f04a1  xvreplgr2vr.h\t$xr1, $a1",
+        "769f04c2  xvreplgr2vr.h\t$xr2, $a2",
+        "769f04e3  xvreplgr2vr.h\t$xr3, $a3",
+        "769f0504  xvreplgr2vr.h\t$xr4, $a4",
+        "769f0525  xvreplgr2vr.h\t$xr5, $a5",
+        "769f0546  xvreplgr2vr.h\t$xr6, $a6",
+        "769f0567  xvreplgr2vr.h\t$xr7, $a7"
+      ]
     }
   ],
   "notes": "xvreplgr2vr.h latency is 2 cycle(s), measured as a round trip through xvpickve2gr.w."

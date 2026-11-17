@@ -81,7 +81,33 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent instructions take 2.00 cycles."
+      "notes": "8 independent instructions take 2.00 cycles.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0088  xvreplgr2vr.b\t$xr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0089  xvreplgr2vr.b\t$xr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008a  xvreplgr2vr.b\t$xr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008b  xvreplgr2vr.b\t$xr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008c  xvreplgr2vr.b\t$xr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008d  xvreplgr2vr.b\t$xr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008e  xvreplgr2vr.b\t$xr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008f  xvreplgr2vr.b\t$xr15, $a0",
+        "770d0100  xvextl.qu.du\t$xr0, $xr8",
+        "770d0121  xvextl.qu.du\t$xr1, $xr9",
+        "770d0142  xvextl.qu.du\t$xr2, $xr10",
+        "770d0163  xvextl.qu.du\t$xr3, $xr11",
+        "770d0184  xvextl.qu.du\t$xr4, $xr12",
+        "770d01a5  xvextl.qu.du\t$xr5, $xr13",
+        "770d01c6  xvextl.qu.du\t$xr6, $xr14",
+        "770d01e7  xvextl.qu.du\t$xr7, $xr15"
+      ]
     }
   ],
   "notes": "LASX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

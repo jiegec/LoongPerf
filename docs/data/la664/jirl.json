@@ -67,7 +67,29 @@
         "ipc_min": 0.3333,
         "ipc_max": 1.0
       },
-      "notes": "A taken indirect branch retires at one per cycle: a loop with 8 static JIRLs plus the loop branch executes 9 taken branches in 9.00 cycles (measured 9009.91 cycles per 1000 iterations, reproduced within 0.1%), so the cost per branch is 1 cycle. The same measurement with 1 and 2 static JIRLs gives 1.00 cycles each. The earlier 1.279 CPI came from subtracting a loop-only baseline that shared instructions with the JIRL body. As with direct branches, a static JIRL stream larger than the BTB is expected to degrade towards 3 cycles per branch. The numbers are normalised per JIRL, so core_cycles shows the per-JIRL cost; the raw loop measurement is 9009.91 cycles for 1000 iterations of 8 JIRLs plus the loop branch."
+      "notes": "A taken indirect branch retires at one per cycle: a loop with 8 static JIRLs plus the loop branch executes 9 taken branches in 9.00 cycles (measured 9009.91 cycles per 1000 iterations, reproduced within 0.1%), so the cost per branch is 1 cycle. The same measurement with 1 and 2 static JIRLs gives 1.00 cycles each. The earlier 1.279 CPI came from subtracting a loop-only baseline that shared instructions with the JIRL body. As with direct branches, a static JIRL stream larger than the BTB is expected to degrade towards 3 cycles per branch. The numbers are normalised per JIRL, so core_cycles shows the per-JIRL cost; the raw loop measurement is 9009.91 cycles for 1000 iterations of 8 JIRLs plus the loop branch.",
+      "machine_code": [
+        "038fa00c  li.w        \t$t0, 0x3e8",
+        "1a000004  pcalau12i   \t$a0, 0",
+        "02c00084  addi.d      \t$a0, $a0, 0",
+        "02c01085  addi.d      \t$a1, $a0, 4",
+        "02c02086  addi.d      \t$a2, $a0, 8",
+        "02c03087  addi.d      \t$a3, $a0, 12",
+        "02c04088  addi.d      \t$a4, $a0, 16",
+        "02c05089  addi.d      \t$a5, $a0, 20",
+        "02c0608a  addi.d      \t$a6, $a0, 24",
+        "02c0708b  addi.d      \t$a7, $a0, 28",
+        "4c000480  jirl        \t$zero, $a0, 4",
+        "4c0004a0  jirl        \t$zero, $a1, 4",
+        "4c0004c0  jirl        \t$zero, $a2, 4",
+        "4c0004e0  jirl        \t$zero, $a3, 4",
+        "4c000500  jirl        \t$zero, $a4, 4",
+        "4c000520  jirl        \t$zero, $a5, 4",
+        "4c000540  jirl        \t$zero, $a6, 4",
+        "4c000560  jirl        \t$zero, $a7, 4",
+        "02fffd8c  addi.d      \t$t0, $t0, -1",
+        "47ffdd9f  bnez        \t$t0, -36\t# 28 <.Lloop>"
+      ]
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Taken indirect branch throughput is 1 CPI when the static JIRL stream fits the BTB, with up to about 3 CPI once it does not."

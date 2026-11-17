@@ -93,7 +93,41 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfb normalised per instruction."
+      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfb normalised per instruction.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0088  vreplgr2vr.b\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0089  vreplgr2vr.b\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008a  vreplgr2vr.b\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008b  vreplgr2vr.b\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008c  vreplgr2vr.b\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008d  vreplgr2vr.b\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008e  vreplgr2vr.b\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008f  vreplgr2vr.b\t$vr15, $a0",
+        "00150004  move        \t$a0, $zero",
+        "00150005  move        \t$a1, $zero",
+        "00150006  move        \t$a2, $zero",
+        "00150007  move        \t$a3, $zero",
+        "00150008  move        \t$a4, $zero",
+        "00150009  move        \t$a5, $zero",
+        "0015000a  move        \t$a6, $zero",
+        "0015000b  move        \t$a7, $zero",
+        "71221100  vreplve.b   \t$vr0, $vr8, $a0",
+        "71221521  vreplve.b   \t$vr1, $vr9, $a1",
+        "71221942  vreplve.b   \t$vr2, $vr10, $a2",
+        "71221d63  vreplve.b   \t$vr3, $vr11, $a3",
+        "71222184  vreplve.b   \t$vr4, $vr12, $a4",
+        "712225a5  vreplve.b   \t$vr5, $vr13, $a5",
+        "712229c6  vreplve.b   \t$vr6, $vr14, $a6",
+        "71222de7  vreplve.b   \t$vr7, $vr15, $a7"
+      ]
     }
   ],
   "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes."

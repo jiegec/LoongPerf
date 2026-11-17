@@ -85,7 +85,25 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.01 cycles. Counter 0xfa normalised per instruction. The measured CPI 1.0012 is the nominal 1 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 8.01 cycles. Counter 0xfa normalised per instruction. The measured CPI 1.0012 is the nominal 1 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "03800805  li.w        \t$a1, 0x2",
+        "03800c06  li.w        \t$a2, 0x3",
+        "03801007  li.w        \t$a3, 0x4",
+        "03801408  li.w        \t$a4, 0x5",
+        "03801809  li.w        \t$a5, 0x6",
+        "03801c0a  li.w        \t$a6, 0x7",
+        "0380200b  li.w        \t$a7, 0x8",
+        "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
+        "769f0ca1  xvreplgr2vr.d\t$xr1, $a1",
+        "769f0cc2  xvreplgr2vr.d\t$xr2, $a2",
+        "769f0ce3  xvreplgr2vr.d\t$xr3, $a3",
+        "769f0d04  xvreplgr2vr.d\t$xr4, $a4",
+        "769f0d25  xvreplgr2vr.d\t$xr5, $a5",
+        "769f0d46  xvreplgr2vr.d\t$xr6, $a6",
+        "769f0d67  xvreplgr2vr.d\t$xr7, $a7"
+      ]
     }
   ],
   "notes": "xvreplgr2vr.d latency is 1 cycle(s), measured as a round trip through xvpickve2gr.d."

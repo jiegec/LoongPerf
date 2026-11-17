@@ -85,7 +85,28 @@
         "cpi": 0.5,
         "ipc": 2
       },
-      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower.",
+      "machine_code": [
+        "02f00074  addi.d      \t$t8, $sp, -1024",
+        "00150004  move        \t$a0, $zero",
+        "03804005  li.w        \t$a1, 0x10",
+        "03808006  li.w        \t$a2, 0x20",
+        "0380c007  li.w        \t$a3, 0x30",
+        "03810008  li.w        \t$a4, 0x40",
+        "03814009  li.w        \t$a5, 0x50",
+        "0381800a  li.w        \t$a6, 0x60",
+        "0381c00b  li.w        \t$a7, 0x70",
+        "02bf0004  li.w        \t$a0, -64",
+        "00149294  and         \t$t8, $t8, $a0",
+        "38401280  vldx        \t$vr0, $t8, $a0",
+        "38401681  vldx        \t$vr1, $t8, $a1",
+        "38401a82  vldx        \t$vr2, $t8, $a2",
+        "38401e83  vldx        \t$vr3, $t8, $a3",
+        "38402284  vldx        \t$vr4, $t8, $a4",
+        "38402685  vldx        \t$vr5, $t8, $a5",
+        "38402a86  vldx        \t$vr6, $t8, $a6",
+        "38402e87  vldx        \t$vr7, $t8, $a7"
+      ]
     }
   ],
   "notes": "L1D-hit vector load latency is 4 cycles, the same as the scalar floating-point loads."

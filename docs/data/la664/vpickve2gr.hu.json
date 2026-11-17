@@ -92,7 +92,33 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfb normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfb normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0088  vreplgr2vr.b\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0089  vreplgr2vr.b\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008a  vreplgr2vr.b\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008b  vreplgr2vr.b\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008c  vreplgr2vr.b\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008d  vreplgr2vr.b\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008e  vreplgr2vr.b\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008f  vreplgr2vr.b\t$vr15, $a0",
+        "72f3c10c  vpickve2gr.hu\t$t0, $vr8, 0x0",
+        "72f3c12d  vpickve2gr.hu\t$t1, $vr9, 0x0",
+        "72f3c14e  vpickve2gr.hu\t$t2, $vr10, 0x0",
+        "72f3c16f  vpickve2gr.hu\t$t3, $vr11, 0x0",
+        "72f3c190  vpickve2gr.hu\t$t4, $vr12, 0x0",
+        "72f3c1b1  vpickve2gr.hu\t$t5, $vr13, 0x0",
+        "72f3c1d2  vpickve2gr.hu\t$t6, $vr14, 0x0",
+        "72f3c1f3  vpickve2gr.hu\t$t7, $vr15, 0x0"
+      ]
     }
   ],
   "notes": "vpickve2gr.hu latency is 4 cycles, the same as the signed form, measured as a round trip through vreplgr2vr.h."

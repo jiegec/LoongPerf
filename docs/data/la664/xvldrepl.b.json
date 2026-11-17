@@ -98,7 +98,20 @@
         "cpi": 0.5,
         "ipc": 2
       },
-      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower.",
+      "machine_code": [
+        "02f00074  addi.d      \t$t8, $sp, -1024",
+        "02bf0004  li.w        \t$a0, -64",
+        "00149294  and         \t$t8, $t8, $a0",
+        "32800280  xvldrepl.b  \t$xr0, $t8, 0",
+        "32800681  xvldrepl.b  \t$xr1, $t8, 1",
+        "32800a82  xvldrepl.b  \t$xr2, $t8, 2",
+        "32800e83  xvldrepl.b  \t$xr3, $t8, 3",
+        "32801284  xvldrepl.b  \t$xr4, $t8, 4",
+        "32801685  xvldrepl.b  \t$xr5, $t8, 5",
+        "32801a86  xvldrepl.b  \t$xr6, $t8, 6",
+        "32801e87  xvldrepl.b  \t$xr7, $t8, 7"
+      ]
     }
   ],
   "notes": "L1D-hit replicating vector load; latency 4 cycles."

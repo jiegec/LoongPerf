@@ -85,7 +85,25 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfb is normalised per instruction."
+      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfb is normalised per instruction.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "03800805  li.w        \t$a1, 0x2",
+        "03800c06  li.w        \t$a2, 0x3",
+        "03801007  li.w        \t$a3, 0x4",
+        "03801408  li.w        \t$a4, 0x5",
+        "03801809  li.w        \t$a5, 0x6",
+        "03801c0a  li.w        \t$a6, 0x7",
+        "0380200b  li.w        \t$a7, 0x8",
+        "729f0080  vreplgr2vr.b\t$vr0, $a0",
+        "729f00a1  vreplgr2vr.b\t$vr1, $a1",
+        "729f00c2  vreplgr2vr.b\t$vr2, $a2",
+        "729f00e3  vreplgr2vr.b\t$vr3, $a3",
+        "729f0104  vreplgr2vr.b\t$vr4, $a4",
+        "729f0125  vreplgr2vr.b\t$vr5, $a5",
+        "729f0146  vreplgr2vr.b\t$vr6, $a6",
+        "729f0167  vreplgr2vr.b\t$vr7, $a7"
+      ]
     }
   ],
   "notes": "LSX two-uop instruction. Individual latency is not separable without a round trip through the reverse move; throughput is measured with 8 independent lanes. Extra counter 0xfb records the classified uop count."

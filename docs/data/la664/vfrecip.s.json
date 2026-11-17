@@ -122,7 +122,33 @@
         "ipc_min": 0.0741,
         "ipc_max": 0.2223
       },
-      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 13.50 at maxsub. Sample uses 1."
+      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 13.50 at maxsub. Sample uses 1.",
+      "machine_code": [
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f0888  vreplgr2vr.w\t$vr8, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f0889  vreplgr2vr.w\t$vr9, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f088a  vreplgr2vr.w\t$vr10, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f088b  vreplgr2vr.w\t$vr11, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f088c  vreplgr2vr.w\t$vr12, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f088d  vreplgr2vr.w\t$vr13, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f088e  vreplgr2vr.w\t$vr14, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "729f088f  vreplgr2vr.w\t$vr15, $a0",
+        "729cf500  vfrecip.s   \t$vr0, $vr8",
+        "729cf521  vfrecip.s   \t$vr1, $vr9",
+        "729cf542  vfrecip.s   \t$vr2, $vr10",
+        "729cf563  vfrecip.s   \t$vr3, $vr11",
+        "729cf584  vfrecip.s   \t$vr4, $vr12",
+        "729cf5a5  vfrecip.s   \t$vr5, $vr13",
+        "729cf5c6  vfrecip.s   \t$vr6, $vr14",
+        "729cf5e7  vfrecip.s   \t$vr7, $vr15"
+      ]
     }
   ],
   "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

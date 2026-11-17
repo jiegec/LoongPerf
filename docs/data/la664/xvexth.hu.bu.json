@@ -81,7 +81,33 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent instructions take 2.71 cycles. Measured CPI 0.3387; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure."
+      "notes": "8 independent instructions take 2.71 cycles. Measured CPI 0.3387; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0088  xvreplgr2vr.b\t$xr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0089  xvreplgr2vr.b\t$xr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008a  xvreplgr2vr.b\t$xr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008b  xvreplgr2vr.b\t$xr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008c  xvreplgr2vr.b\t$xr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008d  xvreplgr2vr.b\t$xr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008e  xvreplgr2vr.b\t$xr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008f  xvreplgr2vr.b\t$xr15, $a0",
+        "769ef100  xvexth.hu.bu\t$xr0, $xr8",
+        "769ef121  xvexth.hu.bu\t$xr1, $xr9",
+        "769ef142  xvexth.hu.bu\t$xr2, $xr10",
+        "769ef163  xvexth.hu.bu\t$xr3, $xr11",
+        "769ef184  xvexth.hu.bu\t$xr4, $xr12",
+        "769ef1a5  xvexth.hu.bu\t$xr5, $xr13",
+        "769ef1c6  xvexth.hu.bu\t$xr6, $xr14",
+        "769ef1e7  xvexth.hu.bu\t$xr7, $xr15"
+      ]
     }
   ],
   "notes": "LASX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

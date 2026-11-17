@@ -123,7 +123,18 @@
         "cpi": 2,
         "ipc": 0.5
       },
-      "notes": "8 independent instructions take 16.00 cycles."
+      "notes": "8 independent instructions take 16.00 cycles.",
+      "machine_code": [
+        "005c0420  x86mtflag   \t$zero, 0x1",
+        "00544595  x86rotli.h  \t$t0, 0x1",
+        "005445b5  x86rotli.h  \t$t1, 0x1",
+        "005445d5  x86rotli.h  \t$t2, 0x1",
+        "005445f5  x86rotli.h  \t$t3, 0x1",
+        "00544615  x86rotli.h  \t$t4, 0x1",
+        "00544635  x86rotli.h  \t$t5, 0x1",
+        "00544655  x86rotli.h  \t$t6, 0x1",
+        "00544675  x86rotli.h  \t$t7, 0x1"
+      ]
     }
   ],
   "notes": "LBT x86-style instruction with an immediate operand. Latency is recorded for the rd accumulator path and the EFLAGS path."

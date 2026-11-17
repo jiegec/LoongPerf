@@ -125,7 +125,25 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000); larger unroll factors inflated the value through L1I pressure."
+      "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000); larger unroll factors inflated the value through L1I pressure.",
+      "machine_code": [
+        "02c00404  li.d        \t$a0, 1",
+        "02c00805  li.d        \t$a1, 2",
+        "02c00c06  li.d        \t$a2, 3",
+        "02c01007  li.d        \t$a3, 4",
+        "02c01408  li.d        \t$a4, 5",
+        "02c01809  li.d        \t$a5, 6",
+        "02c01c0a  li.d        \t$a6, 7",
+        "02c0200b  li.d        \t$a7, 8",
+        "0035908c  rcr.d       \t$t0, $a0, $a0",
+        "003594ad  rcr.d       \t$t1, $a1, $a1",
+        "003598ce  rcr.d       \t$t2, $a2, $a2",
+        "00359cef  rcr.d       \t$t3, $a3, $a3",
+        "0035a110  rcr.d       \t$t4, $a4, $a4",
+        "0035a531  rcr.d       \t$t5, $a5, $a5",
+        "0035a952  rcr.d       \t$t6, $a6, $a6",
+        "0035ad73  rcr.d       \t$t7, $a7, $a7"
+      ]
     }
   ],
   "notes": "LBT instruction. Each source-to-result path is recorded separately."

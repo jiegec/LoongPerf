@@ -84,7 +84,33 @@
         "cpi": 0.5,
         "ipc": 2
       },
-      "notes": "8 independent instructions take 3.99 cycles. Extra counters per instruction (normalized by 8 lanes): 0xfa=2.00. The measured CPI 0.4988 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 3.99 cycles. Extra counters per instruction (normalized by 8 lanes): 0xfa=2.00. The measured CPI 0.4988 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f0888  xvreplgr2vr.w\t$xr8, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f0889  xvreplgr2vr.w\t$xr9, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088a  xvreplgr2vr.w\t$xr10, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088b  xvreplgr2vr.w\t$xr11, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088c  xvreplgr2vr.w\t$xr12, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088d  xvreplgr2vr.w\t$xr13, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088e  xvreplgr2vr.w\t$xr14, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088f  xvreplgr2vr.w\t$xr15, $a0",
+        "769ea100  xvftintrnel.l.s\t$xr0, $xr8",
+        "769ea121  xvftintrnel.l.s\t$xr1, $xr9",
+        "769ea142  xvftintrnel.l.s\t$xr2, $xr10",
+        "769ea163  xvftintrnel.l.s\t$xr3, $xr11",
+        "769ea184  xvftintrnel.l.s\t$xr4, $xr12",
+        "769ea1a5  xvftintrnel.l.s\t$xr5, $xr13",
+        "769ea1c6  xvftintrnel.l.s\t$xr6, $xr14",
+        "769ea1e7  xvftintrnel.l.s\t$xr7, $xr15"
+      ]
     }
   ],
   "notes": "LASX vector conversion. Measured on LA664 with normal float or small integer source values; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

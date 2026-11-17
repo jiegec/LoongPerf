@@ -123,7 +123,18 @@
         "cpi": 2,
         "ipc": 0.5
       },
-      "notes": "8 independent instructions take 16.02 cycles. The measured CPI 2.0025 is the nominal 2 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 16.02 cycles. The measured CPI 2.0025 is the nominal 2 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "005c0420  x86mtflag   \t$zero, 0x1",
+        "0054858a  x86srai.w   \t$t0, 0x1",
+        "005485aa  x86srai.w   \t$t1, 0x1",
+        "005485ca  x86srai.w   \t$t2, 0x1",
+        "005485ea  x86srai.w   \t$t3, 0x1",
+        "0054860a  x86srai.w   \t$t4, 0x1",
+        "0054862a  x86srai.w   \t$t5, 0x1",
+        "0054864a  x86srai.w   \t$t6, 0x1",
+        "0054866a  x86srai.w   \t$t7, 0x1"
+      ]
     }
   ],
   "notes": "LBT x86-style instruction with an immediate operand. Latency is recorded for the rd accumulator path and the EFLAGS path."

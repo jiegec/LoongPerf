@@ -92,7 +92,41 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfa normalised per instruction."
+      "notes": "8 independent instructions take 8.00 cycles. Counter 0xfa normalised per instruction.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0081  xvreplgr2vr.b\t$xr1, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0082  xvreplgr2vr.b\t$xr2, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0083  xvreplgr2vr.b\t$xr3, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0084  xvreplgr2vr.b\t$xr4, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0085  xvreplgr2vr.b\t$xr5, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0086  xvreplgr2vr.b\t$xr6, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0087  xvreplgr2vr.b\t$xr7, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "03800805  li.w        \t$a1, 0x2",
+        "03800c06  li.w        \t$a2, 0x3",
+        "03801007  li.w        \t$a3, 0x4",
+        "03801408  li.w        \t$a4, 0x5",
+        "03801809  li.w        \t$a5, 0x6",
+        "03801c0a  li.w        \t$a6, 0x7",
+        "0380200b  li.w        \t$a7, 0x8",
+        "76ebc080  xvinsgr2vr.w\t$xr0, $a0, 0x0",
+        "76ebc0a1  xvinsgr2vr.w\t$xr1, $a1, 0x0",
+        "76ebc0c2  xvinsgr2vr.w\t$xr2, $a2, 0x0",
+        "76ebc0e3  xvinsgr2vr.w\t$xr3, $a3, 0x0",
+        "76ebc104  xvinsgr2vr.w\t$xr4, $a4, 0x0",
+        "76ebc125  xvinsgr2vr.w\t$xr5, $a5, 0x0",
+        "76ebc146  xvinsgr2vr.w\t$xr6, $a6, 0x0",
+        "76ebc167  xvinsgr2vr.w\t$xr7, $a7, 0x0"
+      ]
     }
   ],
   "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes."

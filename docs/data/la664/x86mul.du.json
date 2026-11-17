@@ -199,7 +199,26 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.49 cycles. Measured CPI 1.0613; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
+      "notes": "8 independent instructions take 8.49 cycles. Measured CPI 1.0613; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure.",
+      "machine_code": [
+        "02c00404  li.d        \t$a0, 1",
+        "02c00805  li.d        \t$a1, 2",
+        "02c00c06  li.d        \t$a2, 3",
+        "02c01007  li.d        \t$a3, 4",
+        "02c01408  li.d        \t$a4, 5",
+        "02c01809  li.d        \t$a5, 6",
+        "02c01c0a  li.d        \t$a6, 7",
+        "02c0200b  li.d        \t$a7, 8",
+        "005c0420  x86mtflag   \t$zero, 0x1",
+        "003e9187  x86mul.du   \t$t0, $a0",
+        "003e95a7  x86mul.du   \t$t1, $a1",
+        "003e99c7  x86mul.du   \t$t2, $a2",
+        "003e9de7  x86mul.du   \t$t3, $a3",
+        "003ea207  x86mul.du   \t$t4, $a4",
+        "003ea627  x86mul.du   \t$t5, $a5",
+        "003eaa47  x86mul.du   \t$t6, $a6",
+        "003eae67  x86mul.du   \t$t7, $a7"
+      ]
     }
   ],
   "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path."

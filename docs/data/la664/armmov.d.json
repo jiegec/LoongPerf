@@ -123,7 +123,18 @@
         "cpi": 2,
         "ipc": 0.5
       },
-      "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter."
+      "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter.",
+      "machine_code": [
+        "005ce460  armmtflag   \t$zero, 0x39",
+        "003ff99e  armmov.d    \t$t0, 0xe",
+        "003ff9be  armmov.d    \t$t1, 0xe",
+        "003ff9de  armmov.d    \t$t2, 0xe",
+        "003ff9fe  armmov.d    \t$t3, 0xe",
+        "003ffa1e  armmov.d    \t$t4, 0xe",
+        "003ffa3e  armmov.d    \t$t5, 0xe",
+        "003ffa5e  armmov.d    \t$t6, 0xe",
+        "003ffa7e  armmov.d    \t$t7, 0xe"
+      ]
     }
   ],
   "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path."

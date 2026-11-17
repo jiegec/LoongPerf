@@ -199,7 +199,26 @@
         "cpi": 2,
         "ipc": 0.5
       },
-      "notes": "8 independent instructions take 16.02 cycles. The measured CPI 2.0025 is the nominal 2 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 16.02 cycles. The measured CPI 2.0025 is the nominal 2 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "02c00404  li.d        \t$a0, 1",
+        "02c00805  li.d        \t$a1, 2",
+        "02c00c06  li.d        \t$a2, 3",
+        "02c01007  li.d        \t$a3, 4",
+        "02c01408  li.d        \t$a4, 5",
+        "02c01809  li.d        \t$a5, 6",
+        "02c01c0a  li.d        \t$a6, 7",
+        "02c0200b  li.d        \t$a7, 8",
+        "005c0420  x86mtflag   \t$zero, 0x1",
+        "003f1197  x86sll.d    \t$t0, $a0",
+        "003f15b7  x86sll.d    \t$t1, $a1",
+        "003f19d7  x86sll.d    \t$t2, $a2",
+        "003f1df7  x86sll.d    \t$t3, $a3",
+        "003f2217  x86sll.d    \t$t4, $a4",
+        "003f2637  x86sll.d    \t$t5, $a5",
+        "003f2a57  x86sll.d    \t$t6, $a6",
+        "003f2e77  x86sll.d    \t$t7, $a7"
+      ]
     }
   ],
   "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path."

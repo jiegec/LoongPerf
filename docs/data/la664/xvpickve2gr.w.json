@@ -92,7 +92,33 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfa is normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfa is normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0088  xvreplgr2vr.b\t$xr8, $a0",
+        "03800804  li.w        \t$a0, 0x2",
+        "769f0089  xvreplgr2vr.b\t$xr9, $a0",
+        "03800c04  li.w        \t$a0, 0x3",
+        "769f008a  xvreplgr2vr.b\t$xr10, $a0",
+        "03801004  li.w        \t$a0, 0x4",
+        "769f008b  xvreplgr2vr.b\t$xr11, $a0",
+        "03801404  li.w        \t$a0, 0x5",
+        "769f008c  xvreplgr2vr.b\t$xr12, $a0",
+        "03801804  li.w        \t$a0, 0x6",
+        "769f008d  xvreplgr2vr.b\t$xr13, $a0",
+        "03801c04  li.w        \t$a0, 0x7",
+        "769f008e  xvreplgr2vr.b\t$xr14, $a0",
+        "03802004  li.w        \t$a0, 0x8",
+        "769f008f  xvreplgr2vr.b\t$xr15, $a0",
+        "76efc10c  xvpickve2gr.w\t$t0, $xr8, 0x0",
+        "76efc12d  xvpickve2gr.w\t$t1, $xr9, 0x0",
+        "76efc14e  xvpickve2gr.w\t$t2, $xr10, 0x0",
+        "76efc16f  xvpickve2gr.w\t$t3, $xr11, 0x0",
+        "76efc190  xvpickve2gr.w\t$t4, $xr12, 0x0",
+        "76efc1b1  xvpickve2gr.w\t$t5, $xr13, 0x0",
+        "76efc1d2  xvpickve2gr.w\t$t6, $xr14, 0x0",
+        "76efc1f3  xvpickve2gr.w\t$t7, $xr15, 0x0"
+      ]
     }
   ],
   "notes": "LASX two-uop instruction. Individual latency is not separable without a round trip through the reverse move; throughput is measured with 8 independent lanes. Extra counter 0xfa records the classified uop count."

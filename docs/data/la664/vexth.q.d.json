@@ -81,7 +81,33 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent instructions take 2.69 cycles. Measured CPI 0.3362; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure."
+      "notes": "8 independent instructions take 2.69 cycles. Measured CPI 0.3362; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0088  vreplgr2vr.b\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0089  vreplgr2vr.b\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008a  vreplgr2vr.b\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008b  vreplgr2vr.b\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008c  vreplgr2vr.b\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008d  vreplgr2vr.b\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008e  vreplgr2vr.b\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008f  vreplgr2vr.b\t$vr15, $a0",
+        "729eed00  vexth.q.d   \t$vr0, $vr8",
+        "729eed21  vexth.q.d   \t$vr1, $vr9",
+        "729eed42  vexth.q.d   \t$vr2, $vr10",
+        "729eed63  vexth.q.d   \t$vr3, $vr11",
+        "729eed84  vexth.q.d   \t$vr4, $vr12",
+        "729eeda5  vexth.q.d   \t$vr5, $vr13",
+        "729eedc6  vexth.q.d   \t$vr6, $vr14",
+        "729eede7  vexth.q.d   \t$vr7, $vr15"
+      ]
     }
   ],
   "notes": "LSX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

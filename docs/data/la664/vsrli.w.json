@@ -88,7 +88,33 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent instructions take 1.99 cycles. The measured CPI 0.2487 is the nominal 0.25 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 1.99 cycles. The measured CPI 0.2487 is the nominal 0.25 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0088  vreplgr2vr.b\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0089  vreplgr2vr.b\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008a  vreplgr2vr.b\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008b  vreplgr2vr.b\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008c  vreplgr2vr.b\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008d  vreplgr2vr.b\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008e  vreplgr2vr.b\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008f  vreplgr2vr.b\t$vr15, $a0",
+        "73308500  vsrli.w     \t$vr0, $vr8, 0x1",
+        "73308521  vsrli.w     \t$vr1, $vr9, 0x1",
+        "73308542  vsrli.w     \t$vr2, $vr10, 0x1",
+        "73308563  vsrli.w     \t$vr3, $vr11, 0x1",
+        "73308584  vsrli.w     \t$vr4, $vr12, 0x1",
+        "733085a5  vsrli.w     \t$vr5, $vr13, 0x1",
+        "733085c6  vsrli.w     \t$vr6, $vr14, 0x1",
+        "733085e7  vsrli.w     \t$vr7, $vr15, 0x1"
+      ]
     }
   ],
   "notes": "LSX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

@@ -47,7 +47,18 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent instructions take 2.33 cycles. Measured CPI 0.2913; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure."
+      "notes": "8 independent instructions take 2.33 cycles. Measured CPI 0.2913; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 0.25. Large unroll factors inflate short bodies through L1I pressure.",
+      "machine_code": [
+        "03400000  nop",
+        "77e00020  xvldi       \t$xr0, 1",
+        "77e00021  xvldi       \t$xr1, 1",
+        "77e00022  xvldi       \t$xr2, 1",
+        "77e00023  xvldi       \t$xr3, 1",
+        "77e00024  xvldi       \t$xr4, 1",
+        "77e00025  xvldi       \t$xr5, 1",
+        "77e00026  xvldi       \t$xr6, 1",
+        "77e00027  xvldi       \t$xr7, 1"
+      ]
     }
   ],
   "notes": "LASX vector instruction measured on LA664."

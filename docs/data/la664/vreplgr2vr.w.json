@@ -85,7 +85,25 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.53 cycles. Counter 0xfb is normalised per instruction. Measured CPI 1.0662; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
+      "notes": "8 independent instructions take 8.53 cycles. Counter 0xfb is normalised per instruction. Measured CPI 1.0662; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "03800805  li.w        \t$a1, 0x2",
+        "03800c06  li.w        \t$a2, 0x3",
+        "03801007  li.w        \t$a3, 0x4",
+        "03801408  li.w        \t$a4, 0x5",
+        "03801809  li.w        \t$a5, 0x6",
+        "03801c0a  li.w        \t$a6, 0x7",
+        "0380200b  li.w        \t$a7, 0x8",
+        "729f0880  vreplgr2vr.w\t$vr0, $a0",
+        "729f08a1  vreplgr2vr.w\t$vr1, $a1",
+        "729f08c2  vreplgr2vr.w\t$vr2, $a2",
+        "729f08e3  vreplgr2vr.w\t$vr3, $a3",
+        "729f0904  vreplgr2vr.w\t$vr4, $a4",
+        "729f0925  vreplgr2vr.w\t$vr5, $a5",
+        "729f0946  vreplgr2vr.w\t$vr6, $a6",
+        "729f0967  vreplgr2vr.w\t$vr7, $a7"
+      ]
     }
   ],
   "notes": "LSX two-uop instruction. Throughput measured with 8 independent lanes; latency measured through a vpickve2gr round trip."

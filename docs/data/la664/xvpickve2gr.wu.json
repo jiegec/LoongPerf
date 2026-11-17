@@ -92,7 +92,33 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfa normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 7.99 cycles. Counter 0xfa normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0088  xvreplgr2vr.b\t$xr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0089  xvreplgr2vr.b\t$xr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008a  xvreplgr2vr.b\t$xr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008b  xvreplgr2vr.b\t$xr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008c  xvreplgr2vr.b\t$xr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008d  xvreplgr2vr.b\t$xr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008e  xvreplgr2vr.b\t$xr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008f  xvreplgr2vr.b\t$xr15, $a0",
+        "76f3c10c  xvpickve2gr.wu\t$t0, $xr8, 0x0",
+        "76f3c12d  xvpickve2gr.wu\t$t1, $xr9, 0x0",
+        "76f3c14e  xvpickve2gr.wu\t$t2, $xr10, 0x0",
+        "76f3c16f  xvpickve2gr.wu\t$t3, $xr11, 0x0",
+        "76f3c190  xvpickve2gr.wu\t$t4, $xr12, 0x0",
+        "76f3c1b1  xvpickve2gr.wu\t$t5, $xr13, 0x0",
+        "76f3c1d2  xvpickve2gr.wu\t$t6, $xr14, 0x0",
+        "76f3c1f3  xvpickve2gr.wu\t$t7, $xr15, 0x0"
+      ]
     }
   ],
   "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes. Latency 6 cycles from a xvreplgr2vr.w round trip of 7.03 cycles."

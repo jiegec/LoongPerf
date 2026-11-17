@@ -88,7 +88,33 @@
         "cpi": 0.5,
         "ipc": 2
       },
-      "notes": "8 independent instructions take 4.00 cycles."
+      "notes": "8 independent instructions take 4.00 cycles.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0088  vreplgr2vr.b\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0089  vreplgr2vr.b\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008a  vreplgr2vr.b\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008b  vreplgr2vr.b\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008c  vreplgr2vr.b\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008d  vreplgr2vr.b\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008e  vreplgr2vr.b\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008f  vreplgr2vr.b\t$vr15, $a0",
+        "73690500  vssrarni.w.d\t$vr0, $vr8, 0x1",
+        "73690521  vssrarni.w.d\t$vr1, $vr9, 0x1",
+        "73690542  vssrarni.w.d\t$vr2, $vr10, 0x1",
+        "73690563  vssrarni.w.d\t$vr3, $vr11, 0x1",
+        "73690584  vssrarni.w.d\t$vr4, $vr12, 0x1",
+        "736905a5  vssrarni.w.d\t$vr5, $vr13, 0x1",
+        "736905c6  vssrarni.w.d\t$vr6, $vr14, 0x1",
+        "736905e7  vssrarni.w.d\t$vr7, $vr15, 0x1"
+      ]
     }
   ],
   "notes": "LSX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."

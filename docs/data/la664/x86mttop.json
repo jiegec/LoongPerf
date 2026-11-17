@@ -39,7 +39,18 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent instructions take 8.47 cycles. Measured CPI 1.0588; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
+      "notes": "8 independent instructions take 8.47 cycles. Measured CPI 1.0588; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure.",
+      "machine_code": [
+        "00007000  x86mttop    \t0x0",
+        "00007020  x86mttop    \t0x1",
+        "00007020  x86mttop    \t0x1",
+        "00007020  x86mttop    \t0x1",
+        "00007020  x86mttop    \t0x1",
+        "00007020  x86mttop    \t0x1",
+        "00007020  x86mttop    \t0x1",
+        "00007020  x86mttop    \t0x1",
+        "00007020  x86mttop    \t0x1"
+      ]
     }
   ],
   "notes": "The TOP pointer is renamed; a mttop/mftop loop runs at about 1.2 cycles per pair, so no latency chain through TOP is observable. Only throughput is recorded."

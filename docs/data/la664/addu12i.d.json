@@ -87,7 +87,25 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent instructions take 2.00 cycles."
+      "notes": "8 independent instructions take 2.00 cycles.",
+      "machine_code": [
+        "02c02404  li.d        \t$a0, 9",
+        "02c02805  li.d        \t$a1, 10",
+        "02c02c06  li.d        \t$a2, 11",
+        "02c03007  li.d        \t$a3, 12",
+        "02c03408  li.d        \t$a4, 13",
+        "02c03809  li.d        \t$a5, 14",
+        "02c03c0a  li.d        \t$a6, 15",
+        "02c0400b  li.d        \t$a7, 16",
+        "0029848c  addu12i.d   \t$t0, $a0, 1",
+        "002984ad  addu12i.d   \t$t1, $a1, 1",
+        "002984ce  addu12i.d   \t$t2, $a2, 1",
+        "002984ef  addu12i.d   \t$t3, $a3, 1",
+        "00298510  addu12i.d   \t$t4, $a4, 1",
+        "00298531  addu12i.d   \t$t5, $a5, 1",
+        "00298552  addu12i.d   \t$t6, $a6, 1",
+        "00298573  addu12i.d   \t$t7, $a7, 1"
+      ]
     }
   ],
   "notes": "LBT instruction measured on LA664."

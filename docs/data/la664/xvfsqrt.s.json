@@ -122,7 +122,33 @@
         "ipc_min": 0.0513,
         "ipc_max": 0.2223
       },
-      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 19.50 at maxsub. Sample uses 1."
+      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 19.50 at maxsub. Sample uses 1.",
+      "machine_code": [
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f0888  xvreplgr2vr.w\t$xr8, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f0889  xvreplgr2vr.w\t$xr9, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088a  xvreplgr2vr.w\t$xr10, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088b  xvreplgr2vr.w\t$xr11, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088c  xvreplgr2vr.w\t$xr12, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088d  xvreplgr2vr.w\t$xr13, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088e  xvreplgr2vr.w\t$xr14, $a0",
+        "147f0004  lu12i.w     \t$a0, 260096",
+        "769f088f  xvreplgr2vr.w\t$xr15, $a0",
+        "769ce500  xvfsqrt.s   \t$xr0, $xr8",
+        "769ce521  xvfsqrt.s   \t$xr1, $xr9",
+        "769ce542  xvfsqrt.s   \t$xr2, $xr10",
+        "769ce563  xvfsqrt.s   \t$xr3, $xr11",
+        "769ce584  xvfsqrt.s   \t$xr4, $xr12",
+        "769ce5a5  xvfsqrt.s   \t$xr5, $xr13",
+        "769ce5c6  xvfsqrt.s   \t$xr6, $xr14",
+        "769ce5e7  xvfsqrt.s   \t$xr7, $xr15"
+      ]
     }
   ],
   "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

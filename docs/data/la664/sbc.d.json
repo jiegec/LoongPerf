@@ -178,7 +178,26 @@
         "cpi": 1,
         "ipc": 1
       },
-      "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI: the instruction sustains one per cycle. Repeated runs report 8.15-8.86 cycles (1.02-1.11 CPI), which is the residual measurement floor for this short body rather than a real sub-1 IPC. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000)."
+      "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI: the instruction sustains one per cycle. Repeated runs report 8.15-8.86 cycles (1.02-1.11 CPI), which is the residual measurement floor for this short body rather than a real sub-1 IPC. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000).",
+      "machine_code": [
+        "02c00404  li.d        \t$a0, 1",
+        "02c00805  li.d        \t$a1, 2",
+        "02c00c06  li.d        \t$a2, 3",
+        "02c01007  li.d        \t$a3, 4",
+        "02c01408  li.d        \t$a4, 5",
+        "02c01809  li.d        \t$a5, 6",
+        "02c01c0a  li.d        \t$a6, 7",
+        "02c0200b  li.d        \t$a7, 8",
+        "005c0420  x86mtflag   \t$zero, 0x1",
+        "0033948c  sbc.d       \t$t0, $a0, $a1",
+        "003398ad  sbc.d       \t$t1, $a1, $a2",
+        "00339cce  sbc.d       \t$t2, $a2, $a3",
+        "0033a0ef  sbc.d       \t$t3, $a3, $a4",
+        "0033a510  sbc.d       \t$t4, $a4, $a5",
+        "0033a931  sbc.d       \t$t5, $a5, $a6",
+        "0033ad52  sbc.d       \t$t6, $a6, $a7",
+        "0033b173  sbc.d       \t$t7, $a7, $t0"
+      ]
     }
   ],
   "notes": "LBT instruction. Every source-to-result path is recorded separately: rj, rk, rj+rk, and CF."

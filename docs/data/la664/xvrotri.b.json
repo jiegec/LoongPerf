@@ -88,7 +88,33 @@
         "cpi": 0.25,
         "ipc": 4
       },
-      "notes": "8 independent instructions take 1.99 cycles. The measured CPI 0.2487 is the nominal 0.25 within measurement noise; the value is reported as the nominal figure."
+      "notes": "8 independent instructions take 1.99 cycles. The measured CPI 0.2487 is the nominal 0.25 within measurement noise; the value is reported as the nominal figure.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0088  xvreplgr2vr.b\t$xr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0089  xvreplgr2vr.b\t$xr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008a  xvreplgr2vr.b\t$xr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008b  xvreplgr2vr.b\t$xr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008c  xvreplgr2vr.b\t$xr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008d  xvreplgr2vr.b\t$xr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008e  xvreplgr2vr.b\t$xr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "769f008f  xvreplgr2vr.b\t$xr15, $a0",
+        "76a02500  xvrotri.b   \t$xr0, $xr8, 0x1",
+        "76a02521  xvrotri.b   \t$xr1, $xr9, 0x1",
+        "76a02542  xvrotri.b   \t$xr2, $xr10, 0x1",
+        "76a02563  xvrotri.b   \t$xr3, $xr11, 0x1",
+        "76a02584  xvrotri.b   \t$xr4, $xr12, 0x1",
+        "76a025a5  xvrotri.b   \t$xr5, $xr13, 0x1",
+        "76a025c6  xvrotri.b   \t$xr6, $xr14, 0x1",
+        "76a025e7  xvrotri.b   \t$xr7, $xr15, 0x1"
+      ]
     }
   ],
   "notes": "LASX vector instruction. Measured on LA664 with integer vector operands."

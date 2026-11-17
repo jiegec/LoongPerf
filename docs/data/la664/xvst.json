@@ -55,7 +55,36 @@
         "cpi": 0.5,
         "ipc": 2
       },
-      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
+      "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+        "03800804  li.w        \t$a0, 0x2",
+        "769f0081  xvreplgr2vr.b\t$xr1, $a0",
+        "03800c04  li.w        \t$a0, 0x3",
+        "769f0082  xvreplgr2vr.b\t$xr2, $a0",
+        "03801004  li.w        \t$a0, 0x4",
+        "769f0083  xvreplgr2vr.b\t$xr3, $a0",
+        "03801404  li.w        \t$a0, 0x5",
+        "769f0084  xvreplgr2vr.b\t$xr4, $a0",
+        "03801804  li.w        \t$a0, 0x6",
+        "769f0085  xvreplgr2vr.b\t$xr5, $a0",
+        "03801c04  li.w        \t$a0, 0x7",
+        "769f0086  xvreplgr2vr.b\t$xr6, $a0",
+        "03802004  li.w        \t$a0, 0x8",
+        "769f0087  xvreplgr2vr.b\t$xr7, $a0",
+        "02f00074  addi.d      \t$t8, $sp, -1024",
+        "02bf0004  li.w        \t$a0, -64",
+        "00149294  and         \t$t8, $t8, $a0",
+        "2cc00280  xvst        \t$xr0, $t8, 0",
+        "2cc08281  xvst        \t$xr1, $t8, 32",
+        "2cc10282  xvst        \t$xr2, $t8, 64",
+        "2cc18283  xvst        \t$xr3, $t8, 96",
+        "2cc20284  xvst        \t$xr4, $t8, 128",
+        "2cc28285  xvst        \t$xr5, $t8, 160",
+        "2cc30286  xvst        \t$xr6, $t8, 192",
+        "2cc38287  xvst        \t$xr7, $t8, 224"
+      ]
     }
   ],
   "notes": "Vector memory operation. Throughput measured with a hot, 64-byte-aligned 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."

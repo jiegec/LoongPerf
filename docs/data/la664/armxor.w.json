@@ -171,7 +171,26 @@
         "cpi": 2,
         "ipc": 0.5
       },
-      "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter."
+      "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter.",
+      "machine_code": [
+        "02c00404  li.d        \t$a0, 1",
+        "02c00805  li.d        \t$a1, 2",
+        "02c00c06  li.d        \t$a2, 3",
+        "02c01007  li.d        \t$a3, 4",
+        "02c01408  li.d        \t$a4, 5",
+        "02c01809  li.d        \t$a5, 6",
+        "02c01c0a  li.d        \t$a6, 7",
+        "02c0200b  li.d        \t$a7, 8",
+        "005ce460  armmtflag   \t$zero, 0x39",
+        "003a119e  armxor.w    \t$t0, $a0, 0xe",
+        "003a15be  armxor.w    \t$t1, $a1, 0xe",
+        "003a19de  armxor.w    \t$t2, $a2, 0xe",
+        "003a1dfe  armxor.w    \t$t3, $a3, 0xe",
+        "003a221e  armxor.w    \t$t4, $a4, 0xe",
+        "003a263e  armxor.w    \t$t5, $a5, 0xe",
+        "003a2a5e  armxor.w    \t$t6, $a6, 0xe",
+        "003a2e7e  armxor.w    \t$t7, $a7, 0xe"
+      ]
     }
   ],
   "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path."

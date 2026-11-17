@@ -86,7 +86,33 @@
         "cpi": 0.5,
         "ipc": 2
       },
-      "notes": "8 independent instructions take 4.00 cycles."
+      "notes": "8 independent instructions take 4.00 cycles.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0088  vreplgr2vr.b\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0089  vreplgr2vr.b\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008a  vreplgr2vr.b\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008b  vreplgr2vr.b\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008c  vreplgr2vr.b\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008d  vreplgr2vr.b\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008e  vreplgr2vr.b\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008f  vreplgr2vr.b\t$vr15, $a0",
+        "729cb900  vsetallnez.w\t$fcc0, $vr8",
+        "729cb921  vsetallnez.w\t$fcc1, $vr9",
+        "729cb942  vsetallnez.w\t$fcc2, $vr10",
+        "729cb963  vsetallnez.w\t$fcc3, $vr11",
+        "729cb984  vsetallnez.w\t$fcc4, $vr12",
+        "729cb9a5  vsetallnez.w\t$fcc5, $vr13",
+        "729cb9c6  vsetallnez.w\t$fcc6, $vr14",
+        "729cb9e7  vsetallnez.w\t$fcc7, $vr15"
+      ]
     }
   ],
   "notes": "vsetallnez.w latency to FCC is 2 cycles, measured by closing the loop through movcf2gr and vreplgr2vr.d (round trip 6.00 cycles minus 4)."

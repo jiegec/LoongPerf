@@ -84,7 +84,33 @@
         "cpi": 0.5,
         "ipc": 2
       },
-      "notes": "8 independent instructions take 4.00 cycles. Extra counters per instruction (normalized by 8 lanes): 0xfb=2.00."
+      "notes": "8 independent instructions take 4.00 cycles. Extra counters per instruction (normalized by 8 lanes): 0xfb=2.00.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0088  vreplgr2vr.b\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0089  vreplgr2vr.b\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008a  vreplgr2vr.b\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008b  vreplgr2vr.b\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008c  vreplgr2vr.b\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008d  vreplgr2vr.b\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008e  vreplgr2vr.b\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f008f  vreplgr2vr.b\t$vr15, $a0",
+        "729de900  vfcvtl.s.h  \t$vr0, $vr8",
+        "729de921  vfcvtl.s.h  \t$vr1, $vr9",
+        "729de942  vfcvtl.s.h  \t$vr2, $vr10",
+        "729de963  vfcvtl.s.h  \t$vr3, $vr11",
+        "729de984  vfcvtl.s.h  \t$vr4, $vr12",
+        "729de9a5  vfcvtl.s.h  \t$vr5, $vr13",
+        "729de9c6  vfcvtl.s.h  \t$vr6, $vr14",
+        "729de9e7  vfcvtl.s.h  \t$vr7, $vr15"
+      ]
     }
   ],
   "notes": "LSX vector conversion. Measured on LA664 with normal float or small integer source values; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
