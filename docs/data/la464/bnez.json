@@ -64,35 +64,55 @@
       "notes": "8 not-taken branches measured at unroll=1000."
     },
     {
-      "name": "8 taken branches",
+      "name": "8 taken branches, 32 static sites (fits in the BTB)",
       "asm": "bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4",
       "init": "addi.d $r4, $r0, 1",
-      "machine_code": [
-        "44000480  bnez        \t$a0, 4\t# 0x4",
-        "44000480  bnez        \t$a0, 4\t# 0x8",
-        "44000480  bnez        \t$a0, 4\t# 0xc",
-        "44000480  bnez        \t$a0, 4\t# 0x10",
-        "44000480  bnez        \t$a0, 4\t# 0x14",
-        "44000480  bnez        \t$a0, 4\t# 0x18",
-        "44000480  bnez        \t$a0, 4\t# 0x1c",
-        "44000480  bnez        \t$a0, 4\t# 0x20"
-      ],
       "result": {
-        "instructions_retired": 8,
-        "core_cycles": 8.13
+        "instructions_retired": 8.0,
+        "core_cycles": 7.97
       },
       "measurement": {
-        "unroll": 12,
-        "iters": 10000
+        "unroll": 4,
+        "iters": 30000,
+        "reps": 9
       },
-      "command": "./bench --unroll 12 --iters 10000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1' --asm 'bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4'",
+      "command": "./bench --unroll 4 --unroll2 5 --iters 30000 --warmup 10 --reps 9 --core 0 --init 'addi.d $r4, $r0, 1' --asm 'bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1,
-        "ipc": 1
+        "cpi": 1.0,
+        "ipc": 1.0,
+        "cpi_min": 1.0,
+        "cpi_max": 1.0,
+        "ipc_min": 1.0,
+        "ipc_max": 1.0
       },
-      "notes": "8 taken branches measured at unroll=12 to stay within BTB capacity."
+      "notes": "Taken branches to the next instruction, 8 lanes x 4 static sites; the slope method compares the 8x4 body with 8x128, so at most 1024 branch sites. Fits in the LA464 BTB: 1 cycle per branch."
+    },
+    {
+      "name": "8 taken branches, 960 static sites (exceeds the BTB)",
+      "asm": "bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4",
+      "init": "addi.d $r4, $r0, 1",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 23.85
+      },
+      "measurement": {
+        "unroll": 120,
+        "iters": 1000,
+        "reps": 9
+      },
+      "command": "./bench --unroll 120 --unroll2 128 --iters 1000 --warmup 10 --reps 9 --core 0 --init 'addi.d $r4, $r0, 1' --asm 'bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 3.0,
+        "ipc": 0.3333,
+        "cpi_min": 3.0,
+        "cpi_max": 3.0,
+        "ipc_min": 0.3333,
+        "ipc_max": 0.3333
+      },
+      "notes": "Taken branches to the next instruction, 8 lanes x 120 static sites; the slope method compares the 8x120 body with 8x128, so at most 1024 branch sites. Far beyond the LA464 BTB: about 3 cycles per branch."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "No destination data dependency; latency is not defined. Throughput only. Taken-branch throughput is recorded both for a footprint that fits in the BTB (1 CPI) and one that overflows it (~3 CPI)."
 }

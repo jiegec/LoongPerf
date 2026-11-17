@@ -93,9 +93,13 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.875,
-        "ipc": 1.1429
+        "ipc": 1.1429,
+        "cpi_min": 0.875,
+        "cpi_max": 0.875,
+        "ipc_min": 1.1429,
+        "ipc_max": 1.1429
       },
-      "notes": "8 independent instructions take 7.00 cycles."
+      "notes": "8 independent lanes retire in about 7 cycles (7.00 measured), so the sustained rate is 8/7 = 1.14 IPC (CPI 7/8 = 0.875). Recorded as the exact fraction rather than an integer, since 8 lanes cannot complete in 7 cycles at an integer CPI. Measured with the slope method."
     }
   ]
 }
