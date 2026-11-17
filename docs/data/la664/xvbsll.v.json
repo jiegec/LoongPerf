@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -59,8 +59,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4' --asm 'xvbsll.v $xr0, $xr0, 1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "notes": "Dependent vector-register chain."
         }
@@ -75,13 +75,13 @@
       "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4' --asm 'xvbsll.v $xr0, $xr8, 1; xvbsll.v $xr1, $xr9, 1; xvbsll.v $xr2, $xr10, 1; xvbsll.v $xr3, $xr11, 1; xvbsll.v $xr4, $xr12, 1; xvbsll.v $xr5, $xr13, 1; xvbsll.v $xr6, $xr14, 1; xvbsll.v $xr7, $xr15, 1'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 2.0
+        "instructions_retired": 8,
+        "core_cycles": 2
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4.0
+        "ipc": 4
       },
       "notes": "8 independent instructions take 1.99 cycles. The measured CPI 0.2487 is the nominal 0.25 within measurement noise; the value is reported as the nominal figure."
     }

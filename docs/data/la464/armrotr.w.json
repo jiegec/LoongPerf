@@ -54,16 +54,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armrotr.w $r12, $r13, 14",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 1.93
           },
           "measurement": {
@@ -81,16 +81,16 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armrotr.w $r13, $r12, 14; armrotr.w $r12, $r13, 14",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.06
           },
           "measurement": {
@@ -108,16 +108,16 @@
         1
       ],
       "to_operand": 4,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armrotr.w $r12, $r13, 14; armmfflag $r12, 0x39",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.04
           },
           "measurement": {
@@ -137,7 +137,7 @@
       "asm": "armrotr.w $r12, $r4, 14; armrotr.w $r13, $r5, 14; armrotr.w $r14, $r6, 14; armrotr.w $r15, $r7, 14; armrotr.w $r16, $r8, 14; armrotr.w $r17, $r9, 14; armrotr.w $r18, $r10, 14; armrotr.w $r19, $r11, 14",
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 16.01
       },
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39' --asm 'armrotr.w $r12, $r4, 14; armrotr.w $r13, $r5, 14; armrotr.w $r14, $r6, 14; armrotr.w $r15, $r7, 14; armrotr.w $r16, $r8, 14; armrotr.w $r17, $r9, 14; armrotr.w $r18, $r10, 14; armrotr.w $r19, $r11, 14'",

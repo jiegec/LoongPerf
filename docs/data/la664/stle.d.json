@@ -58,13 +58,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, 1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'stle.d $r4, $r21, $r30; stle.d $r5, $r23, $r30; stle.d $r6, $r24, $r30; stle.d $r7, $r25, $r30; stle.d $r8, $r26, $r30; stle.d $r9, $r27, $r30; stle.d $r10, $r28, $r30; stle.d $r11, $r29, $r30'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 bound-checked memory operations take 8.00 cycles."
     }

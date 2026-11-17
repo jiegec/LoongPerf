@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -53,8 +53,8 @@
           "asm": "xvssrani.hu.w $xr0, $xr0, 1",
           "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 20000,
@@ -73,7 +73,7 @@
       "asm": "xvssrani.hu.w $xr0, $xr8, 1; xvssrani.hu.w $xr1, $xr9, 1; xvssrani.hu.w $xr2, $xr10, 1; xvssrani.hu.w $xr3, $xr11, 1; xvssrani.hu.w $xr4, $xr12, 1; xvssrani.hu.w $xr5, $xr13, 1; xvssrani.hu.w $xr6, $xr14, 1; xvssrani.hu.w $xr7, $xr15, 1",
       "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4",
       "result": {
-        "instructions_retired": 16.0,
+        "instructions_retired": 16,
         "core_cycles": 8.18
       },
       "measurement": {
@@ -83,8 +83,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4' --asm 'xvssrani.hu.w $xr0, $xr8, 1; xvssrani.hu.w $xr1, $xr9, 1; xvssrani.hu.w $xr2, $xr10, 1; xvssrani.hu.w $xr3, $xr11, 1; xvssrani.hu.w $xr4, $xr12, 1; xvssrani.hu.w $xr5, $xr13, 1; xvssrani.hu.w $xr6, $xr14, 1; xvssrani.hu.w $xr7, $xr15, 1'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.18 cycles."
     }

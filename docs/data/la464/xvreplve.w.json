@@ -43,7 +43,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -51,8 +51,8 @@
           "asm": "xvreplve.w $xr0, $xr0, $r5",
           "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 1.0
+            "instructions_retired": 2,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 20000,
@@ -70,8 +70,8 @@
       "asm": "xvreplve.w $xr0, $xr8, $r5; xvreplve.w $xr1, $xr9, $r5; xvreplve.w $xr2, $xr10, $r5; xvreplve.w $xr3, $xr11, $r5; xvreplve.w $xr4, $xr12, $r5; xvreplve.w $xr5, $xr13, $r5; xvreplve.w $xr6, $xr14, $r5; xvreplve.w $xr7, $xr15, $r5",
       "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 8.0
+        "instructions_retired": 16,
+        "core_cycles": 8
       },
       "measurement": {
         "unroll": 1000,
@@ -80,8 +80,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvreplve.w $xr0, $xr8, $r5; xvreplve.w $xr1, $xr9, $r5; xvreplve.w $xr2, $xr10, $r5; xvreplve.w $xr3, $xr11, $r5; xvreplve.w $xr4, $xr12, $r5; xvreplve.w $xr5, $xr13, $r5; xvreplve.w $xr6, $xr14, $r5; xvreplve.w $xr7, $xr15, $r5'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "Throughput measured with 8 independent lanes."
     }

@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.0,
+      "cycles": 10,
       "experiments": [
         {
           "name": "dependent chain",
@@ -54,8 +54,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4' --asm 'fsqrt.d $f0, $f0'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 10.0
+            "instructions_retired": 1,
+            "core_cycles": 10
           },
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
@@ -82,12 +82,12 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fsqrt.d $f0, $f8; fsqrt.d $f1, $f9; fsqrt.d $f2, $f10; fsqrt.d $f3, $f11; fsqrt.d $f4, $f12; fsqrt.d $f5, $f13; fsqrt.d $f6, $f14; fsqrt.d $f7, $f15'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5,
         "cpi_min": 1.5,
         "cpi_max": 8.75,

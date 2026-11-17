@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -54,8 +54,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, -1' --asm 'revb.d $r12, $r12'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "notes": "rd == rj; consecutive unrolled copies form a $r12 dependency chain."
         }
@@ -80,13 +80,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'revb.d $r12, $r4; revb.d $r13, $r5; revb.d $r14, $r6; revb.d $r15, $r7; revb.d $r16, $r8; revb.d $r17, $r9; revb.d $r18, $r10; revb.d $r19, $r11'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 2.0
+        "instructions_retired": 8,
+        "core_cycles": 2
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4.0
+        "ipc": 4
       },
       "notes": "8 independent instructions take 2.00 cycles: 0.25 cycles per instruction (4 IPC)."
     }

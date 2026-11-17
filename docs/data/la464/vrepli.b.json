@@ -36,8 +36,8 @@
       "asm": "vrepli.b $vr0, 1; vrepli.b $vr1, 1; vrepli.b $vr2, 1; vrepli.b $vr3, 1; vrepli.b $vr4, 1; vrepli.b $vr5, 1; vrepli.b $vr6, 1; vrepli.b $vr7, 1",
       "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "measurement": {
         "unroll": 1000,
@@ -47,7 +47,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "Throughput measured with 8 independent lanes."
     }

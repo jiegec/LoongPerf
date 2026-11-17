@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 15.0,
+      "cycles": 15,
       "experiments": [
         {
           "name": "dependent chain",
@@ -46,7 +46,7 @@
           "asm": "frsqrt.s $f0, $f0",
           "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 14.98
           },
           "measurement": {
@@ -57,8 +57,8 @@
         }
       ],
       "notes": "Data-dependent latency: 11 cycles for 0/Inf/NaN/negative; 15 for exact squares 1, 4, 0.25 and minnorm; 33 for general inputs; 34 for maxsub and minsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
-      "cycles_min": 11.0,
-      "cycles_max": 34.0
+      "cycles_min": 11,
+      "cycles_max": 34
     }
   ],
   "throughput": [
@@ -77,7 +77,7 @@
         "011465e7  frsqrt.s    \t$fa7, $ft7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 64.09
       },
       "measurement": {
@@ -87,9 +87,9 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4' --asm 'frsqrt.s $f0, $f8; frsqrt.s $f1, $f9; frsqrt.s $f2, $f10; frsqrt.s $f3, $f11; frsqrt.s $f4, $f12; frsqrt.s $f5, $f13; frsqrt.s $f6, $f14; frsqrt.s $f7, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 8.0,
+        "cpi": 8,
         "ipc": 0.125,
-        "cpi_min": 6.0,
+        "cpi_min": 6,
         "cpi_max": 17.5,
         "ipc_min": 0.0571,
         "ipc_max": 0.1667

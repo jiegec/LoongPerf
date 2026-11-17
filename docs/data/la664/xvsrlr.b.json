@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,8 +60,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvsrlr.b $xr0, $xr0, $xr1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 3.0
+            "instructions_retired": 1,
+            "core_cycles": 3
           },
           "notes": "vj -> result chain."
         }
@@ -73,7 +73,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -87,8 +87,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvsrlr.b $xr0, $xr1, $xr0'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 3.0
+            "instructions_retired": 1,
+            "core_cycles": 3
           },
           "notes": "vk -> result chain."
         }
@@ -103,13 +103,13 @@
       "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 2; xvreplgr2vr.b $xr16, $r4; li.d $r4, 2; xvreplgr2vr.b $xr17, $r4; li.d $r4, 2; xvreplgr2vr.b $xr18, $r4; li.d $r4, 2; xvreplgr2vr.b $xr19, $r4; li.d $r4, 2; xvreplgr2vr.b $xr20, $r4; li.d $r4, 2; xvreplgr2vr.b $xr21, $r4; li.d $r4, 2; xvreplgr2vr.b $xr22, $r4; li.d $r4, 2; xvreplgr2vr.b $xr23, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 2; xvreplgr2vr.b $xr16, $r4; li.d $r4, 2; xvreplgr2vr.b $xr17, $r4; li.d $r4, 2; xvreplgr2vr.b $xr18, $r4; li.d $r4, 2; xvreplgr2vr.b $xr19, $r4; li.d $r4, 2; xvreplgr2vr.b $xr20, $r4; li.d $r4, 2; xvreplgr2vr.b $xr21, $r4; li.d $r4, 2; xvreplgr2vr.b $xr22, $r4; li.d $r4, 2; xvreplgr2vr.b $xr23, $r4' --asm 'xvsrlr.b $xr0, $xr8, $xr16; xvsrlr.b $xr1, $xr9, $xr17; xvsrlr.b $xr2, $xr10, $xr18; xvsrlr.b $xr3, $xr11, $xr19; xvsrlr.b $xr4, $xr12, $xr20; xvsrlr.b $xr5, $xr13, $xr21; xvsrlr.b $xr6, $xr14, $xr22; xvsrlr.b $xr7, $xr15, $xr23'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.06 cycles. The measured CPI 0.5075 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure."
     }

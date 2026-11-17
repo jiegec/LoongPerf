@@ -56,8 +56,8 @@
         "68000085  bltu        \t$a0, $a1, 0\t# 0x1c"
       ],
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "measurement": {
         "unroll": 1000,
@@ -66,8 +66,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 2; addi.d $r5, $r0, 1' --asm 'bltu $r4, $r5, 0; bltu $r4, $r5, 0; bltu $r4, $r5, 0; bltu $r4, $r5, 0; bltu $r4, $r5, 0; bltu $r4, $r5, 0; bltu $r4, $r5, 0; bltu $r4, $r5, 0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 not-taken branches measured at unroll=1000."
     },
@@ -86,7 +86,7 @@
         "68000485  bltu        \t$a0, $a1, 4\t# 0x20"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 8.13
       },
       "measurement": {
@@ -96,8 +96,8 @@
       "command": "./bench --unroll 12 --iters 10000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2' --asm 'bltu $r4, $r5, 4; bltu $r4, $r5, 4; bltu $r4, $r5, 4; bltu $r4, $r5, 4; bltu $r4, $r5, 4; bltu $r4, $r5, 4; bltu $r4, $r5, 4; bltu $r4, $r5, 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 taken branches measured at unroll=12 to stay within BTB capacity."
     }

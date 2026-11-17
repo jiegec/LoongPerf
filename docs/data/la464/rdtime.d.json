@@ -49,7 +49,7 @@
         "00006813  rdtime.d    \t$t7, $zero"
       ],
       "result": {
-        "instructions_retired": 16.0,
+        "instructions_retired": 16,
         "core_cycles": 87.98
       },
       "measurement": {
@@ -59,7 +59,7 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'rdtime.d $r12, $r0; rdtime.d $r13, $r0; rdtime.d $r14, $r0; rdtime.d $r15, $r0; rdtime.d $r16, $r0; rdtime.d $r17, $r0; rdtime.d $r18, $r0; rdtime.d $r19, $r0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 11.0,
+        "cpi": 11,
         "ipc": 0.0909
       },
       "notes": "Both rj == $r0 and rj != 0 measure 11 CPI on LA464; the rj == $r0 sequence is shown."

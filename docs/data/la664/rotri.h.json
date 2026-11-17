@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -59,8 +59,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1' --asm 'rotri.h $r12, $r12, 1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "rj -> rd chain."
         }
@@ -75,13 +75,13 @@
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'rotri.h $r12, $r4, 1; rotri.h $r13, $r5, 1; rotri.h $r14, $r6, 1; rotri.h $r15, $r7, 1; rotri.h $r16, $r8, 1; rotri.h $r17, $r9, 1; rotri.h $r18, $r10, 1; rotri.h $r19, $r11, 1'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000); larger unroll factors inflated the value through L1I pressure."
     }

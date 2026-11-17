@@ -44,19 +44,19 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 10.0,
-      "cycles_min": 8.0,
-      "cycles_max": 11.0,
+      "cycles": 10,
+      "cycles_min": 8,
+      "cycles_max": 11,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "xvfdiv.d $xr0, $xr0, $xr0; xvpickve2gr.d $r7, $xr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; xvreplgr2vr.d $xr0, $r7",
           "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r5, -1; li.d $r6, 0",
-          "chain_latency": 9.0,
+          "chain_latency": 9,
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 19.0
+            "instructions_retired": 6,
+            "core_cycles": 19
           },
           "measurement": {
             "unroll": 1000,
@@ -75,8 +75,8 @@
       "asm": "xvfdiv.d $xr0, $xr8, $xr16; xvfdiv.d $xr1, $xr9, $xr17; xvfdiv.d $xr2, $xr10, $xr18; xvfdiv.d $xr3, $xr11, $xr19; xvfdiv.d $xr4, $xr12, $xr20; xvfdiv.d $xr5, $xr13, $xr21; xvfdiv.d $xr6, $xr14, $xr22; xvfdiv.d $xr7, $xr15, $xr23",
       "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 36.0
+        "instructions_retired": 8,
+        "core_cycles": 36
       },
       "measurement": {
         "unroll": 1000,
@@ -89,7 +89,7 @@
         "cpi": 4.5,
         "ipc": 0.2222,
         "cpi_min": 4.5,
-        "cpi_max": 6.0,
+        "cpi_max": 6,
         "ipc_min": 0.1667,
         "ipc_max": 0.2222
       },

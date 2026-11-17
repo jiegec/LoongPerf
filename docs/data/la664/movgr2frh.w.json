@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "high-unroll memory-assisted chain",
@@ -52,7 +52,7 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; li.d $r5, 1; movgr2fr.d $f0, $r4; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movgr2frh.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'",
           "result": {
-            "instructions_retired": 5.0,
+            "instructions_retired": 5,
             "core_cycles": 13.02
           },
           "chain_latency": 11.04,
@@ -66,7 +66,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -80,8 +80,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 1; movgr2fr.d $f0, $r4' --asm 'movgr2frh.w $f0, $r4'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 1.0
+            "instructions_retired": 2,
+            "core_cycles": 1
           },
           "notes": "fd -> fd chain: writing the high half merges with the existing low half, so the old fd value is a real source."
         }
@@ -106,16 +106,16 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfc --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2frh.w $f0, $r4; movgr2frh.w $f1, $r5; movgr2frh.w $f2, $r6; movgr2frh.w $f3, $r7; movgr2frh.w $f4, $r8; movgr2frh.w $f5, $r9; movgr2frh.w $f6, $r10; movgr2frh.w $f7, $r11'",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 8.0,
+        "instructions_retired": 16,
+        "core_cycles": 8,
         "counters": {
-          "0xfc": 1.0
+          "0xfc": 1
         }
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.00 cycles. Extra counters per instruction (normalized by 8 lanes): 0xfc=1.00."
     }

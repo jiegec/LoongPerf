@@ -55,15 +55,15 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "rd == rj",
           "asm": "adc.w $r12, $r12, $r13",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "measurement": {
             "unroll": 20000,
@@ -79,15 +79,15 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "rd == rk",
           "asm": "adc.w $r12, $r13, $r12",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "measurement": {
             "unroll": 20000,
@@ -104,15 +104,15 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "rd == rj == rk",
           "asm": "adc.w $r12, $r12, $r12",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; x86mtflag $r0, 0x1",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "measurement": {
             "unroll": 20000,
@@ -128,7 +128,7 @@
         4
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "CF -> rd via x86mtflag",
@@ -138,10 +138,10 @@
           "chain_instructions": [
             "x86mtflag $r12, 0x1"
           ],
-          "chain_latency": 3.0,
+          "chain_latency": 3,
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 10000,
@@ -155,8 +155,8 @@
           "asm": "x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 1.0
+            "instructions_retired": 2,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 10000,
@@ -171,8 +171,8 @@
           "asm": "adc.w $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 1.0
+            "instructions_retired": 3,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 6666,
@@ -187,8 +187,8 @@
           "asm": "adc.w $r12, $r13, $r14; x86mtflag $r12, 0x1; x86mfflag $r12, 0x1; x86mfflag $r12, 0x1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 0x1",
           "result": {
-            "instructions_retired": 4.0,
-            "core_cycles": 1.0
+            "instructions_retired": 4,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 5000,
@@ -207,7 +207,7 @@
       "asm": "adc.w $r12, $r4, $r4; adc.w $r13, $r5, $r5; adc.w $r14, $r6, $r6; adc.w $r15, $r7, $r7; adc.w $r16, $r8, $r8; adc.w $r17, $r9, $r9; adc.w $r18, $r10, $r10; adc.w $r19, $r11, $r11",
       "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; x86mtflag $r0, 0x1",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 7.97
       },
       "measurement": {
@@ -217,8 +217,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16; x86mtflag $r0, 0x1' --asm 'adc.w $r12, $r4, $r4; adc.w $r13, $r5, $r5; adc.w $r14, $r6, $r6; adc.w $r15, $r7, $r7; adc.w $r16, $r8, $r8; adc.w $r17, $r9, $r9; adc.w $r18, $r10, $r10; adc.w $r19, $r11, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 7.97 cycles."
     }

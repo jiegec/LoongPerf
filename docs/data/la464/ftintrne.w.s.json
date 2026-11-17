@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "dependent chain",
@@ -46,8 +46,8 @@
           "asm": "ftintrne.w.s $f0, $f0",
           "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 4.0
+            "instructions_retired": 1,
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 20000,
@@ -75,7 +75,7 @@
         "011ac5e7  ftintrne.w.s\t$fa7, $ft7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 3.99
       },
       "measurement": {
@@ -86,7 +86,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 3.99 cycles."
     }

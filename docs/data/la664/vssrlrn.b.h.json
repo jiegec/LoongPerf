@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,8 +60,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vssrlrn.b.h $vr0, $vr0, $vr1'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "vj -> result chain."
         }
@@ -73,7 +73,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -87,8 +87,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vssrlrn.b.h $vr0, $vr1, $vr0'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "vk -> result chain."
         }
@@ -103,13 +103,13 @@
       "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4' --asm 'vssrlrn.b.h $vr0, $vr8, $vr16; vssrlrn.b.h $vr1, $vr9, $vr17; vssrlrn.b.h $vr2, $vr10, $vr18; vssrlrn.b.h $vr3, $vr11, $vr19; vssrlrn.b.h $vr4, $vr12, $vr20; vssrlrn.b.h $vr5, $vr13, $vr21; vssrlrn.b.h $vr6, $vr14, $vr22; vssrlrn.b.h $vr7, $vr15, $vr23'",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 4.0
+        "instructions_retired": 16,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }

@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -53,8 +53,8 @@
           "asm": "xvhseli.d $xr0, $xr0, 1",
           "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 20000,
@@ -73,7 +73,7 @@
       "asm": "xvhseli.d $xr0, $xr8, 1; xvhseli.d $xr1, $xr9, 1; xvhseli.d $xr2, $xr10, 1; xvhseli.d $xr3, $xr11, 1; xvhseli.d $xr4, $xr12, 1; xvhseli.d $xr5, $xr13, 1; xvhseli.d $xr6, $xr14, 1; xvhseli.d $xr7, $xr15, 1",
       "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 4.06
       },
       "measurement": {
@@ -84,7 +84,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.06 cycles."
     }

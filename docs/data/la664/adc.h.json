@@ -55,7 +55,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -69,8 +69,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.h $r12, $r12, $r13'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "rj -> rd chain: rj and rd are the same register."
         }
@@ -84,7 +84,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -98,8 +98,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.h $r13, $r14, $r12; adc.h $r12, $r14, $r13'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "rk -> rd chain: two copies alternate rd/rk, latency is half the measured cycle count."
         }
@@ -114,7 +114,7 @@
         4
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -128,11 +128,11 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'adc.h $r12, $r13, $r14; x86mtflag $r12, 1'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "CF -> rd: the chain closes through x86mtflag, so 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted.",
-          "chain_latency": 3.0
+          "chain_latency": 3
         }
       ],
       "notes": "Carry-in path: 1 cycle. Across all sources the instruction latency spans 1-2 cycles: the EFLAGS/CF input reaches rd in 1 cycle, while rj/rk need 2. Measured with --method slope on 2026-11-17 (LA664, core 0, --unroll 1000 --unroll2 4000); the chain reads 4.00 cycles and x86mtflag rd -> EFLAGS is 2.99, so this path is exactly 1 cycle.",
@@ -147,13 +147,13 @@
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'adc.h $r12, $r4, $r5; adc.h $r13, $r5, $r6; adc.h $r14, $r6, $r7; adc.h $r15, $r7, $r8; adc.h $r16, $r8, $r9; adc.h $r17, $r9, $r10; adc.h $r18, $r10, $r11; adc.h $r19, $r11, $r12'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI: the instruction sustains one per cycle. Repeated runs report 8.15-8.86 cycles (1.02-1.11 CPI), which is the residual measurement floor for this short body rather than a real sub-1 IPC. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000)."
     }

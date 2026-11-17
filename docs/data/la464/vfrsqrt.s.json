@@ -38,17 +38,17 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 25.0,
+      "cycles": 25,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "vfrsqrt.s $vr0, $vr0; vpickve2gr.w $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.w $vr0, $r7",
           "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r5, -9187343239835811841; li.d $r6, 0",
-          "chain_latency": 7.0,
+          "chain_latency": 7,
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 32.0
+            "instructions_retired": 6,
+            "core_cycles": 32
           },
           "measurement": {
             "unroll": 1000,
@@ -59,8 +59,8 @@
         }
       ],
       "notes": "Data-dependent latency. Chain: tested op, then vpickve2gr.w+and+or+vreplgr2vr.w to restore the input pattern; the 7-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 17-63 cycles, CPI 8.9975-32. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
-      "cycles_min": 17.0,
-      "cycles_max": 63.0
+      "cycles_min": 17,
+      "cycles_max": 63
     }
   ],
   "throughput": [
@@ -69,7 +69,7 @@
       "asm": "vfrsqrt.s $vr0, $vr8; vfrsqrt.s $vr1, $vr9; vfrsqrt.s $vr2, $vr10; vfrsqrt.s $vr3, $vr11; vfrsqrt.s $vr4, $vr12; vfrsqrt.s $vr5, $vr13; vfrsqrt.s $vr6, $vr14; vfrsqrt.s $vr7, $vr15",
       "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 103.99
       },
       "measurement": {
@@ -80,10 +80,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4' --asm 'vfrsqrt.s $vr0, $vr8; vfrsqrt.s $vr1, $vr9; vfrsqrt.s $vr2, $vr10; vfrsqrt.s $vr3, $vr11; vfrsqrt.s $vr4, $vr12; vfrsqrt.s $vr5, $vr13; vfrsqrt.s $vr6, $vr14; vfrsqrt.s $vr7, $vr15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 12.9987,
+        "cpi": 13,
         "ipc": 0.0769,
-        "cpi_min": 8.9975,
-        "cpi_max": 32.0,
+        "cpi_min": 9,
+        "cpi_max": 32,
         "ipc_min": 0.0312,
         "ipc_max": 0.1111
       },

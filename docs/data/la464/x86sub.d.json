@@ -47,16 +47,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86sub.d $r12, $r13",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 1.96
           },
           "measurement": {
@@ -74,16 +74,16 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86sub.d $r13, $r12; x86sub.d $r12, $r13",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.07
           },
           "measurement": {
@@ -101,16 +101,16 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86sub.d $r12, $r13; x86mfflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.07
           },
           "measurement": {
@@ -128,16 +128,16 @@
         2
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86sub.d $r12, $r13; x86mfflag $r13, 1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.05
           },
           "measurement": {
@@ -157,7 +157,7 @@
       "asm": "x86sub.d $r12, $r4; x86sub.d $r13, $r5; x86sub.d $r14, $r6; x86sub.d $r15, $r7; x86sub.d $r16, $r8; x86sub.d $r17, $r9; x86sub.d $r18, $r10; x86sub.d $r19, $r11",
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 16.01
       },
       "measurement": {

@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "round trip through the reverse move",
@@ -52,10 +52,10 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1' --asm 'vreplgr2vr.h $vr0, $r4; vpickve2gr.h $r4, $vr0, 0'",
           "result": {
-            "instructions_retired": 4.0,
-            "core_cycles": 6.0
+            "instructions_retired": 4,
+            "core_cycles": 6
           },
-          "chain_latency": 4.0,
+          "chain_latency": 4,
           "notes": "Round trip 6.06 cycles. vpickve2gr.h is 4 cycles, so vreplgr2vr.h is 2.06 cycles."
         }
       ],
@@ -69,16 +69,16 @@
       "init": "li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'vreplgr2vr.h $vr0, $r4; vreplgr2vr.h $vr1, $r5; vreplgr2vr.h $vr2, $r6; vreplgr2vr.h $vr3, $r7; vreplgr2vr.h $vr4, $r8; vreplgr2vr.h $vr5, $r9; vreplgr2vr.h $vr6, $r10; vreplgr2vr.h $vr7, $r11'",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 8.0,
+        "instructions_retired": 16,
+        "core_cycles": 8,
         "counters": {
-          "0xfb": 1.0
+          "0xfb": 1
         }
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.00 cycles. Counter 0xfb is normalised per instruction."
     }

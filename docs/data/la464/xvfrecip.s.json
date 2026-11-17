@@ -38,17 +38,17 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 15.0,
+      "cycles": 15,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "xvfrecip.s $xr0, $xr0; xvpickve2gr.w $r7, $xr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; xvreplgr2vr.w $xr0, $r7",
           "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r5, -9187343239835811841; li.d $r6, 0",
-          "chain_latency": 9.0,
+          "chain_latency": 9,
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 24.0
+            "instructions_retired": 6,
+            "core_cycles": 24
           },
           "measurement": {
             "unroll": 1000,
@@ -59,8 +59,8 @@
         }
       ],
       "notes": "Data-dependent latency. Chain: tested op, then xvpickve2gr.w+and+or+xvreplgr2vr.w to restore the input pattern; the 9-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 11-29 cycles, CPI 5.9988-15. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
-      "cycles_min": 11.0,
-      "cycles_max": 29.0
+      "cycles_min": 11,
+      "cycles_max": 29
     }
   ],
   "throughput": [
@@ -69,8 +69,8 @@
       "asm": "xvfrecip.s $xr0, $xr8; xvfrecip.s $xr1, $xr9; xvfrecip.s $xr2, $xr10; xvfrecip.s $xr3, $xr11; xvfrecip.s $xr4, $xr12; xvfrecip.s $xr5, $xr13; xvfrecip.s $xr6, $xr14; xvfrecip.s $xr7, $xr15",
       "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 64.0
+        "instructions_retired": 8,
+        "core_cycles": 64
       },
       "measurement": {
         "unroll": 1000,
@@ -80,10 +80,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4' --asm 'xvfrecip.s $xr0, $xr8; xvfrecip.s $xr1, $xr9; xvfrecip.s $xr2, $xr10; xvfrecip.s $xr3, $xr11; xvfrecip.s $xr4, $xr12; xvfrecip.s $xr5, $xr13; xvfrecip.s $xr6, $xr14; xvfrecip.s $xr7, $xr15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 8.0,
+        "cpi": 8,
         "ipc": 0.125,
-        "cpi_min": 5.9988,
-        "cpi_max": 15.0,
+        "cpi_min": 6,
+        "cpi_max": 15,
         "ipc_min": 0.0667,
         "ipc_max": 0.1667
       },

@@ -49,7 +49,7 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --asm 'pcalau12i $r12, 1; pcalau12i $r13, 1; pcalau12i $r14, 1; pcalau12i $r15, 1; pcalau12i $r16, 1; pcalau12i $r17, 1; pcalau12i $r18, 1; pcalau12i $r19, 1'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 3.33
       },
       "throughput": {

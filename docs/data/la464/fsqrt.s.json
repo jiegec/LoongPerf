@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.0,
+      "cycles": 10,
       "experiments": [
         {
           "name": "dependent chain",
@@ -46,7 +46,7 @@
           "asm": "fsqrt.s $f0, $f0",
           "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 9.99
           },
           "measurement": {
@@ -57,8 +57,8 @@
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/Inf/NaN/negative; 10 for exact squares 1, 4, 0.25 and minnorm; 22 for general non-square inputs; 23 for maxsub and minsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
-      "cycles_min": 8.0,
-      "cycles_max": 23.0
+      "cycles_min": 8,
+      "cycles_max": 23
     }
   ],
   "throughput": [
@@ -77,7 +77,7 @@
         "011445e7  fsqrt.s     \t$fa7, $ft7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 44.02
       },
       "measurement": {
@@ -90,7 +90,7 @@
         "cpi": 5.5,
         "ipc": 0.1818,
         "cpi_min": 4.5,
-        "cpi_max": 12.0,
+        "cpi_max": 12,
         "ipc_min": 0.0833,
         "ipc_max": 0.2222
       },

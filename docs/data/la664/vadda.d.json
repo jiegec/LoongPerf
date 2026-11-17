@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,8 +60,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vadda.d $vr0, $vr0, $vr1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 3.0
+            "instructions_retired": 1,
+            "core_cycles": 3
           },
           "notes": "vj -> result chain."
         }
@@ -73,7 +73,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -87,8 +87,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vadda.d $vr0, $vr1, $vr0'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 3.0
+            "instructions_retired": 1,
+            "core_cycles": 3
           },
           "notes": "vk -> result chain."
         }
@@ -103,13 +103,13 @@
       "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4' --asm 'vadda.d $vr0, $vr8, $vr16; vadda.d $vr1, $vr9, $vr17; vadda.d $vr2, $vr10, $vr18; vadda.d $vr3, $vr11, $vr19; vadda.d $vr4, $vr12, $vr20; vadda.d $vr5, $vr13, $vr21; vadda.d $vr6, $vr14, $vr22; vadda.d $vr7, $vr15, $vr23'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 3.99 cycles. The measured CPI 0.4988 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure."
     }

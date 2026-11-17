@@ -38,17 +38,17 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "fcvt.ld.d $f0, $f0",
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "measurement": {
             "unroll": 100000,
@@ -67,7 +67,7 @@
       "asm": "fcvt.ld.d $f0, $f8; fcvt.ld.d $f1, $f9; fcvt.ld.d $f2, $f10; fcvt.ld.d $f3, $f11; fcvt.ld.d $f4, $f12; fcvt.ld.d $f5, $f13; fcvt.ld.d $f6, $f14; fcvt.ld.d $f7, $f15",
       "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 4.02
       },
       "measurement": {

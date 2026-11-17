@@ -44,19 +44,19 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 10.0,
-      "cycles_min": 8.0,
-      "cycles_max": 11.0,
+      "cycles": 10,
+      "cycles_min": 8,
+      "cycles_max": 11,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "vfdiv.d $vr0, $vr0, $vr0; vpickve2gr.d $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.d $vr0, $r7",
           "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, -1; li.d $r6, 0",
-          "chain_latency": 7.0,
+          "chain_latency": 7,
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 17.0
+            "instructions_retired": 6,
+            "core_cycles": 17
           },
           "measurement": {
             "unroll": 1000,
@@ -75,8 +75,8 @@
       "asm": "vfdiv.d $vr0, $vr8, $vr16; vfdiv.d $vr1, $vr9, $vr17; vfdiv.d $vr2, $vr10, $vr18; vfdiv.d $vr3, $vr11, $vr19; vfdiv.d $vr4, $vr12, $vr20; vfdiv.d $vr5, $vr13, $vr21; vfdiv.d $vr6, $vr14, $vr22; vfdiv.d $vr7, $vr15, $vr23",
       "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 36.0
+        "instructions_retired": 8,
+        "core_cycles": 36
       },
       "measurement": {
         "unroll": 1000,
@@ -89,7 +89,7 @@
         "cpi": 4.5,
         "ipc": 0.2222,
         "cpi_min": 4.4988,
-        "cpi_max": 6.0,
+        "cpi_max": 6,
         "ipc_min": 0.1667,
         "ipc_max": 0.2223
       },

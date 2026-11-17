@@ -54,7 +54,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -68,8 +68,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armxor.w $r12, $r13, 14'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "rd -> rd chain."
         }
@@ -81,7 +81,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -95,8 +95,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armxor.w $r13, $r12, 14; armxor.w $r12, $r13, 14'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "rk -> rd chain: two copies alternate rd/rk, cycles halved."
         }
@@ -109,7 +109,7 @@
         1
       ],
       "to_operand": 4,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -123,11 +123,11 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armxor.w $r12, $r13, 14; armmfflag $r12, 0x39'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
-          "chain_latency": 1.0
+          "chain_latency": 1
         }
       ],
       "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted. Raw slope-method measurement was 3.02; the nominal value is 3 cycle(s)."
@@ -140,12 +140,12 @@
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39' --asm 'armxor.w $r12, $r4, 14; armxor.w $r13, $r5, 14; armxor.w $r14, $r6, 14; armxor.w $r15, $r7, 14; armxor.w $r16, $r8, 14; armxor.w $r17, $r9, 14; armxor.w $r18, $r10, 14; armxor.w $r19, $r11, 14'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter."

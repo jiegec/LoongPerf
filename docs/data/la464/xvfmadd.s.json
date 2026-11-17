@@ -54,7 +54,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "accumulator dependency chain",
@@ -62,8 +62,8 @@
           "asm": "xvfmadd.s $xr0, $xr0, $xr2, $xr3",
           "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr2, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr3, $r4",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "measurement": {
             "unroll": 20000,
@@ -82,8 +82,8 @@
       "asm": "xvfmadd.s $xr0, $xr8, $xr16, $xr24; xvfmadd.s $xr1, $xr9, $xr17, $xr25; xvfmadd.s $xr2, $xr10, $xr18, $xr26; xvfmadd.s $xr3, $xr11, $xr19, $xr27; xvfmadd.s $xr4, $xr12, $xr20, $xr28; xvfmadd.s $xr5, $xr13, $xr21, $xr29; xvfmadd.s $xr6, $xr14, $xr22, $xr30; xvfmadd.s $xr7, $xr15, $xr23, $xr31",
       "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr16, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr17, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr18, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr19, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr20, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr21, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr22, $r4; li.d $r4, 1073741824; xvreplgr2vr.w $xr23, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr24, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr25, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr26, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr27, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr28, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr29, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr30, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr31, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "measurement": {
         "unroll": 1000,
@@ -93,7 +93,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }

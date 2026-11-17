@@ -50,13 +50,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --asm 'rdtimeh.w $r12, $r0; rdtimeh.w $r13, $r0; rdtimeh.w $r14, $r0; rdtimeh.w $r15, $r0; rdtimeh.w $r16, $r0; rdtimeh.w $r17, $r0; rdtimeh.w $r18, $r0; rdtimeh.w $r19, $r0'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent RDTIME instructions with rj == $r0 take 8.00 cycles. The Counter ID write is discarded, so each instruction retires once."
     },
@@ -76,12 +76,12 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --asm 'rdtimeh.w $r4, $r12; rdtimeh.w $r5, $r13; rdtimeh.w $r6, $r14; rdtimeh.w $r7, $r15; rdtimeh.w $r8, $r16; rdtimeh.w $r9, $r17; rdtimeh.w $r10, $r18; rdtimeh.w $r11, $r19'",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 16.0
+        "instructions_retired": 16,
+        "core_cycles": 16
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "8 independent RDTIME instructions with a non-zero rj destination take 16.00 cycles. Each instruction retires as 2 instructions."

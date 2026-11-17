@@ -48,13 +48,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 not-taken FCC conditional branches take 8.00 cycles (1 CPI). Re-measured at unroll 8 and 1000 with offsets 0/4/8; the earlier 0.5 CPI was not reproducible for FCC branches."
     },
@@ -74,13 +74,13 @@
       ],
       "command": "./bench --unroll 8 --iters 1000 --warmup 10 --init 'li.d $r4, 1; movgr2cf $fcc0, $r4' --asm 'bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 taken branches to the next instruction take 8.00 cycles. Measured with unroll=8 to keep the static branch footprint within BTB capacity.",
       "measurement": {

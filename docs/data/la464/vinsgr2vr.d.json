@@ -45,7 +45,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -53,8 +53,8 @@
           "asm": "vinsgr2vr.d $vr0, $r5, 0",
           "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r5, 1",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 1.0
+            "instructions_retired": 2,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 20000,
@@ -73,7 +73,7 @@
       "asm": "vinsgr2vr.d $vr0, $r4, 0; vinsgr2vr.d $vr1, $r5, 0; vinsgr2vr.d $vr2, $r6, 0; vinsgr2vr.d $vr3, $r7, 0; vinsgr2vr.d $vr4, $r8, 0; vinsgr2vr.d $vr5, $r9, 0; vinsgr2vr.d $vr6, $r10, 0; vinsgr2vr.d $vr7, $r11, 0",
       "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4; li.d $r4, 1; vreplgr2vr.b $vr3, $r4; li.d $r4, 1; vreplgr2vr.b $vr4, $r4; li.d $r4, 1; vreplgr2vr.b $vr5, $r4; li.d $r4, 1; vreplgr2vr.b $vr6, $r4; li.d $r4, 1; vreplgr2vr.b $vr7, $r4; li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
       "result": {
-        "instructions_retired": 16.0,
+        "instructions_retired": 16,
         "core_cycles": 8.05
       },
       "measurement": {
@@ -83,8 +83,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr1, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4; li.d $r4, 1; vreplgr2vr.b $vr3, $r4; li.d $r4, 1; vreplgr2vr.b $vr4, $r4; li.d $r4, 1; vreplgr2vr.b $vr5, $r4; li.d $r4, 1; vreplgr2vr.b $vr6, $r4; li.d $r4, 1; vreplgr2vr.b $vr7, $r4; li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'vinsgr2vr.d $vr0, $r4, 0; vinsgr2vr.d $vr1, $r5, 0; vinsgr2vr.d $vr2, $r6, 0; vinsgr2vr.d $vr3, $r7, 0; vinsgr2vr.d $vr4, $r8, 0; vinsgr2vr.d $vr5, $r9, 0; vinsgr2vr.d $vr6, $r10, 0; vinsgr2vr.d $vr7, $r11, 0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.05 cycles."
     }

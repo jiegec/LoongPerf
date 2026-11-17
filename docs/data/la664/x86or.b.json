@@ -47,7 +47,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,8 +61,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86or.b $r12, $r13'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "rd -> rd chain: the destination is also a source."
         }
@@ -74,7 +74,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -88,7 +88,7 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86or.b $r13, $r12; x86or.b $r12, $r13'",
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.01
           },
           "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved."
@@ -102,7 +102,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -116,11 +116,11 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86or.b $r12, $r13; x86mfflag $r12, 1'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted.",
-          "chain_latency": 1.0
+          "chain_latency": 1
         }
       ],
       "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 3.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -130,7 +130,7 @@
         2
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -144,11 +144,11 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1' --asm 'x86or.b $r12, $r13; x86mfflag $r13, 1'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted.",
-          "chain_latency": 1.0
+          "chain_latency": 1
         }
       ],
       "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
@@ -161,12 +161,12 @@
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'x86or.b $r12, $r4; x86or.b $r13, $r5; x86or.b $r14, $r6; x86or.b $r15, $r7; x86or.b $r16, $r8; x86or.b $r17, $r9; x86or.b $r18, $r10; x86or.b $r19, $r11'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "8 independent instructions take 16.02 cycles. The measured CPI 2.0025 is the nominal 2 within measurement noise; the value is reported as the nominal figure."

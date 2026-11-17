@@ -38,16 +38,16 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.0,
+      "cycles": 10,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "vfrecip.d $vr0, $vr0; vpickve2gr.d $r7, $vr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; vreplgr2vr.d $vr0, $r7",
           "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, -1; li.d $r6, 0",
-          "chain_latency": 7.0,
+          "chain_latency": 7,
           "result": {
-            "instructions_retired": 6.0,
+            "instructions_retired": 6,
             "core_cycles": 16.99
           },
           "measurement": {
@@ -59,8 +59,8 @@
         }
       ],
       "notes": "Data-dependent latency. Chain: tested op, then vpickve2gr.d+and+or+vreplgr2vr.d to restore the input pattern; the 7-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 8-24 cycles, CPI 4.5-12.5. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
-      "cycles_min": 8.0,
-      "cycles_max": 24.0
+      "cycles_min": 8,
+      "cycles_max": 24
     }
   ],
   "throughput": [
@@ -69,8 +69,8 @@
       "asm": "vfrecip.d $vr0, $vr8; vfrecip.d $vr1, $vr9; vfrecip.d $vr2, $vr10; vfrecip.d $vr3, $vr11; vfrecip.d $vr4, $vr12; vfrecip.d $vr5, $vr13; vfrecip.d $vr6, $vr14; vfrecip.d $vr7, $vr15",
       "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 44.0
+        "instructions_retired": 8,
+        "core_cycles": 44
       },
       "measurement": {
         "unroll": 1000,

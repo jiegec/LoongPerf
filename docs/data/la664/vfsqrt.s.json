@@ -38,9 +38,9 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 15.0,
-      "cycles_min": 11.0,
-      "cycles_max": 41.0,
+      "cycles": 15,
+      "cycles_min": 11,
+      "cycles_max": 41,
       "experiments": [
         {
           "name": "dependent vector chain with reset helper",
@@ -54,7 +54,7 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.w $r5, 1; li.w $r6, 1065353216' --asm 'vfsqrt.s $vr0, $vr0; vpickve2gr.w $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4'",
           "result": {
-            "instructions_retired": 6.0,
+            "instructions_retired": 6,
             "core_cycles": 22.07
           },
           "chain_latency": 7.07,
@@ -72,8 +72,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.w $r5, 1; li.w $r6, 1065353216' --asm 'vadd.b $vr0, $vr0, $vr0; vpickve2gr.w $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4'",
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 15.0
+            "instructions_retired": 6,
+            "core_cycles": 15
           },
           "notes": "Same helper chain with vadd.b replacing the variable-latency operation."
         }
@@ -88,7 +88,7 @@
       "init": "li.w $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr15, $r4' --asm 'vfsqrt.s $vr0, $vr8; vfsqrt.s $vr1, $vr9; vfsqrt.s $vr2, $vr10; vfsqrt.s $vr3, $vr11; vfsqrt.s $vr4, $vr12; vfsqrt.s $vr5, $vr13; vfsqrt.s $vr6, $vr14; vfsqrt.s $vr7, $vr15'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 51.99
       },
       "throughput": {

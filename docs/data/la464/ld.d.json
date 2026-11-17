@@ -45,16 +45,16 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "high-unroll ALU-consumer chain",
           "role": "measurement",
           "asm": "ld.d $r4, $r4, 0; add.d $r4, $r4, $r5",
           "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 5.99
           },
           "measurement": {
@@ -70,8 +70,8 @@
           "asm": "ld.d $r4, $r4, 0",
           "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 4.0
+            "instructions_retired": 1,
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 20000,
@@ -83,8 +83,8 @@
         }
       ],
       "notes": "L1D-hit load latency: 4 cycles through the load-to-AGU address bypass, 5 cycles through the ALU-consumer path. The measurement experiment adds add.d to force the ALU path; the calibration experiment is the bare pointer chase.",
-      "cycles_min": 4.0,
-      "cycles_max": 5.0
+      "cycles_min": 4,
+      "cycles_max": 5
     }
   ],
   "throughput": [
@@ -103,8 +103,8 @@
         "28c0e293  ld.d        \t$t7, $t8, 56"
       ],
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "measurement": {
         "unroll": 1000,
@@ -114,7 +114,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }

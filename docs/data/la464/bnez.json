@@ -48,8 +48,8 @@
         "44000080  bnez        \t$a0, 0\t# 0x1c"
       ],
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "measurement": {
         "unroll": 1000,
@@ -58,8 +58,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 0' --asm 'bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0; bnez $r4, 0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 not-taken branches measured at unroll=1000."
     },
@@ -78,7 +78,7 @@
         "44000480  bnez        \t$a0, 4\t# 0x20"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 8.13
       },
       "measurement": {
@@ -88,8 +88,8 @@
       "command": "./bench --unroll 12 --iters 10000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1' --asm 'bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4; bnez $r4, 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 taken branches measured at unroll=12 to stay within BTB capacity."
     }

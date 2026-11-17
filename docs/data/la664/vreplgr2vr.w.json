@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "round trip through the reverse move",
@@ -52,10 +52,10 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1' --asm 'vreplgr2vr.w $vr0, $r4; vpickve2gr.w $r4, $vr0, 0'",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 5.0
+            "instructions_retired": 3,
+            "core_cycles": 5
           },
-          "chain_latency": 4.0,
+          "chain_latency": 4,
           "notes": "Round trip 5.05 cycles. vpickve2gr.w is 4 cycles, so vreplgr2vr.w is 1.05 cycles."
         }
       ],
@@ -69,16 +69,16 @@
       "init": "li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfb --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'vreplgr2vr.w $vr0, $r4; vreplgr2vr.w $vr1, $r5; vreplgr2vr.w $vr2, $r6; vreplgr2vr.w $vr3, $r7; vreplgr2vr.w $vr4, $r8; vreplgr2vr.w $vr5, $r9; vreplgr2vr.w $vr6, $r10; vreplgr2vr.w $vr7, $r11'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0,
+        "instructions_retired": 8,
+        "core_cycles": 8,
         "counters": {
-          "0xfb": 0.0
+          "0xfb": 0
         }
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.53 cycles. Counter 0xfb is normalised per instruction. Measured CPI 1.0662; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
     }

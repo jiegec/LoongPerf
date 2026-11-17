@@ -39,7 +39,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -53,8 +53,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86dec.b $r12'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "rd -> rd chain: the destination is also a source."
         }
@@ -66,7 +66,7 @@
         1
       ],
       "to_operand": 2,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -80,11 +80,11 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86dec.b $r12; x86mfflag $r12, 1'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted.",
-          "chain_latency": 1.0
+          "chain_latency": 1
         }
       ],
       "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted."
@@ -97,12 +97,12 @@
       "init": "x86mtflag $r0, 1",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'x86mtflag $r0, 1' --asm 'x86dec.b $r12; x86dec.b $r13; x86dec.b $r14; x86dec.b $r15; x86dec.b $r16; x86dec.b $r17; x86dec.b $r18; x86dec.b $r19'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "8 independent instructions take 15.99 cycles. The measured CPI 1.9988 is the nominal 2 within measurement noise; the value is reported as the nominal figure."

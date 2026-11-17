@@ -37,7 +37,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "dependency chain through FCC",
@@ -51,10 +51,10 @@
           },
           "command": "./bench --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --method slope --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vseteqz.v $fcc0, $vr0; movcf2gr $r4, $fcc0; vreplgr2vr.d $vr0, $r4'",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 6.0
+            "instructions_retired": 3,
+            "core_cycles": 6
           },
-          "chain_latency": 4.0,
+          "chain_latency": 4,
           "notes": "The chain closes through movcf2gr (3 cycles) and vreplgr2vr.d (1 cycle), so 4 cycles of closure are subtracted. Measured with the slope method (--unroll 1000 --unroll2 4000) on 2026-11-17."
         }
       ],
@@ -68,16 +68,16 @@
       "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --counter 0xfb --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vseteqz.v $fcc0, $vr8; vseteqz.v $fcc1, $vr9; vseteqz.v $fcc2, $vr10; vseteqz.v $fcc3, $vr11; vseteqz.v $fcc4, $vr12; vseteqz.v $fcc5, $vr13; vseteqz.v $fcc6, $vr14; vseteqz.v $fcc7, $vr15'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0,
+        "instructions_retired": 8,
+        "core_cycles": 4,
         "counters": {
-          "0xfb": 1.0
+          "0xfb": 1
         }
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.03 cycles. The measured CPI 0.5038 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure."
     }

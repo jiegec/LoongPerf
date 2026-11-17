@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 8.0,
+      "cycles": 8,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,22 +60,22 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvmod.du $xr0, $xr0, $xr1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 8.0
+            "instructions_retired": 1,
+            "core_cycles": 8
           },
           "notes": "xj -> result chain."
         }
       ],
       "notes": "xj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 8.0,
-      "cycles_max": 27.0
+      "cycles_min": 8,
+      "cycles_max": 27
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 8.0,
+      "cycles": 8,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -89,15 +89,15 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4' --asm 'xvmod.du $xr0, $xr1, $xr0'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 8.0
+            "instructions_retired": 1,
+            "core_cycles": 8
           },
           "notes": "xk -> result chain."
         }
       ],
       "notes": "xk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
-      "cycles_min": 8.0,
-      "cycles_max": 27.0
+      "cycles_min": 8,
+      "cycles_max": 27
     }
   ],
   "throughput": [
@@ -107,7 +107,7 @@
       "init": "li.d $r4, 1; xvreplgr2vr.d $xr8, $r4; li.d $r4, 1; xvreplgr2vr.d $xr16, $r4; li.d $r4, 1; xvreplgr2vr.d $xr9, $r4; li.d $r4, 1; xvreplgr2vr.d $xr17, $r4; li.d $r4, 1; xvreplgr2vr.d $xr10, $r4; li.d $r4, 1; xvreplgr2vr.d $xr18, $r4; li.d $r4, 1; xvreplgr2vr.d $xr11, $r4; li.d $r4, 1; xvreplgr2vr.d $xr19, $r4; li.d $r4, 1; xvreplgr2vr.d $xr12, $r4; li.d $r4, 1; xvreplgr2vr.d $xr20, $r4; li.d $r4, 1; xvreplgr2vr.d $xr13, $r4; li.d $r4, 1; xvreplgr2vr.d $xr21, $r4; li.d $r4, 1; xvreplgr2vr.d $xr14, $r4; li.d $r4, 1; xvreplgr2vr.d $xr22, $r4; li.d $r4, 1; xvreplgr2vr.d $xr15, $r4; li.d $r4, 1; xvreplgr2vr.d $xr23, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.d $xr8, $r4; li.d $r4, 1; xvreplgr2vr.d $xr16, $r4; li.d $r4, 1; xvreplgr2vr.d $xr9, $r4; li.d $r4, 1; xvreplgr2vr.d $xr17, $r4; li.d $r4, 1; xvreplgr2vr.d $xr10, $r4; li.d $r4, 1; xvreplgr2vr.d $xr18, $r4; li.d $r4, 1; xvreplgr2vr.d $xr11, $r4; li.d $r4, 1; xvreplgr2vr.d $xr19, $r4; li.d $r4, 1; xvreplgr2vr.d $xr12, $r4; li.d $r4, 1; xvreplgr2vr.d $xr20, $r4; li.d $r4, 1; xvreplgr2vr.d $xr13, $r4; li.d $r4, 1; xvreplgr2vr.d $xr21, $r4; li.d $r4, 1; xvreplgr2vr.d $xr14, $r4; li.d $r4, 1; xvreplgr2vr.d $xr22, $r4; li.d $r4, 1; xvreplgr2vr.d $xr15, $r4; li.d $r4, 1; xvreplgr2vr.d $xr23, $r4' --asm 'xvmod.du $xr0, $xr8, $xr16; xvmod.du $xr1, $xr9, $xr17; xvmod.du $xr2, $xr10, $xr18; xvmod.du $xr3, $xr11, $xr19; xvmod.du $xr4, $xr12, $xr20; xvmod.du $xr5, $xr13, $xr21; xvmod.du $xr6, $xr14, $xr22; xvmod.du $xr7, $xr15, $xr23'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 39.98
       },
       "throughput": {

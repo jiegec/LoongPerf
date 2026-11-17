@@ -44,9 +44,9 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 32.0,
-      "cycles_min": 10.0,
-      "cycles_max": 32.0,
+      "cycles": 32,
+      "cycles_min": 10,
+      "cycles_max": 32,
       "experiments": [
         {
           "name": "reset-chain measurement",
@@ -54,7 +54,7 @@
           "asm": "vdiv.wu $vr0, $vr0, $vr2; vpickve2gr.wu $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4",
           "init": "li.d $r4, 4294967295; vreplgr2vr.w $vr0, $r4; li.d $r4, 1; vreplgr2vr.w $vr2, $r4; li.d $r5, -1; li.d $r6, 0",
           "result": {
-            "instructions_retired": 6.0,
+            "instructions_retired": 6,
             "core_cycles": 39.99
           },
           "measurement": {
@@ -72,8 +72,8 @@
           "asm": "vadd.b $vr0, $vr0, $vr2; vpickve2gr.wu $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4",
           "init": "li.d $r4, 4294967295; vreplgr2vr.w $vr0, $r4; li.d $r4, 1; vreplgr2vr.w $vr2, $r4; li.d $r5, -1; li.d $r6, 0",
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 32.0
+            "instructions_retired": 6,
+            "core_cycles": 32
           },
           "measurement": {
             "unroll": 4000,
@@ -93,7 +93,7 @@
       "asm": "vdiv.wu $vr0, $vr8, $vr16; vdiv.wu $vr1, $vr9, $vr17; vdiv.wu $vr2, $vr10, $vr18; vdiv.wu $vr3, $vr11, $vr19; vdiv.wu $vr4, $vr12, $vr20; vdiv.wu $vr5, $vr13, $vr21; vdiv.wu $vr6, $vr14, $vr22; vdiv.wu $vr7, $vr15, $vr23",
       "init": "li.d $r4, 4294967295; vreplgr2vr.w $vr8, $r4; li.d $r4, 1; vreplgr2vr.w $vr16, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr9, $r4; li.d $r4, 1; vreplgr2vr.w $vr17, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr10, $r4; li.d $r4, 1; vreplgr2vr.w $vr18, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr11, $r4; li.d $r4, 1; vreplgr2vr.w $vr19, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr12, $r4; li.d $r4, 1; vreplgr2vr.w $vr20, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr13, $r4; li.d $r4, 1; vreplgr2vr.w $vr21, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr14, $r4; li.d $r4, 1; vreplgr2vr.w $vr22, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr15, $r4; li.d $r4, 1; vreplgr2vr.w $vr23, $r4",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 135.96
       },
       "measurement": {
@@ -104,10 +104,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 4294967295; vreplgr2vr.w $vr8, $r4; li.d $r4, 1; vreplgr2vr.w $vr16, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr9, $r4; li.d $r4, 1; vreplgr2vr.w $vr17, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr10, $r4; li.d $r4, 1; vreplgr2vr.w $vr18, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr11, $r4; li.d $r4, 1; vreplgr2vr.w $vr19, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr12, $r4; li.d $r4, 1; vreplgr2vr.w $vr20, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr13, $r4; li.d $r4, 1; vreplgr2vr.w $vr21, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr14, $r4; li.d $r4, 1; vreplgr2vr.w $vr22, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr15, $r4; li.d $r4, 1; vreplgr2vr.w $vr23, $r4' --asm 'vdiv.wu $vr0, $vr8, $vr16; vdiv.wu $vr1, $vr9, $vr17; vdiv.wu $vr2, $vr10, $vr18; vdiv.wu $vr3, $vr11, $vr19; vdiv.wu $vr4, $vr12, $vr20; vdiv.wu $vr5, $vr13, $vr21; vdiv.wu $vr6, $vr14, $vr22; vdiv.wu $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 17.0,
+        "cpi": 17,
         "ipc": 0.0588,
-        "cpi_min": 6.0,
-        "cpi_max": 17.0,
+        "cpi_min": 6,
+        "cpi_max": 17,
         "ipc_min": 0.0588,
         "ipc_max": 0.1667
       },

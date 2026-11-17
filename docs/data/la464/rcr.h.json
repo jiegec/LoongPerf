@@ -47,7 +47,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "dependent chain",
@@ -55,8 +55,8 @@
           "asm": "rcr.h $r12, $r12, $r13",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "measurement": {
             "unroll": 20000,
@@ -75,7 +75,7 @@
       "asm": "rcr.h $r12, $r4, $r4; rcr.h $r13, $r5, $r5; rcr.h $r14, $r6, $r6; rcr.h $r15, $r7, $r7; rcr.h $r16, $r8, $r8; rcr.h $r17, $r9, $r9; rcr.h $r18, $r10, $r10; rcr.h $r19, $r11, $r11",
       "init": "addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 7.97
       },
       "measurement": {
@@ -85,8 +85,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16' --asm 'rcr.h $r12, $r4, $r4; rcr.h $r13, $r5, $r5; rcr.h $r14, $r6, $r6; rcr.h $r15, $r7, $r7; rcr.h $r16, $r8, $r8; rcr.h $r17, $r9, $r9; rcr.h $r18, $r10, $r10; rcr.h $r19, $r11, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 7.97 cycles."
     }

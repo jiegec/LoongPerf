@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "condition-code dependency chain",
@@ -53,9 +53,9 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0' --asm 'movgr2cf $fcc0, $r4; movcf2gr $r4, $fcc0'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 4.0
+            "core_cycles": 4
           },
-          "chain_latency": 3.0,
+          "chain_latency": 3,
           "notes": "Round trip between movcf2fr/movfr2cf or movcf2gr/movgr2cf is 4 cycles. The split is consistent with the fcmp chains: CF->FPR=1, FPR->CF=1, CF->GPR=3, GPR->CF=1."
         }
       ],
@@ -79,13 +79,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2cf $fcc0, $r4; movgr2cf $fcc1, $r5; movgr2cf $fcc2, $r6; movgr2cf $fcc3, $r7; movgr2cf $fcc4, $r8; movgr2cf $fcc5, $r9; movgr2cf $fcc6, $r10; movgr2cf $fcc7, $r11'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.00 cycles."
     }

@@ -53,16 +53,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armsrli.w $r12, 1, 14",
           "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 1.94
           },
           "measurement": {
@@ -80,16 +80,16 @@
         1
       ],
       "to_operand": 4,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armsrli.w $r12, 1, 14; armmfflag $r12, 0x39",
           "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.1
           },
           "measurement": {
@@ -109,7 +109,7 @@
       "asm": "armsrli.w $r12, 1, 14; armsrli.w $r13, 1, 14; armsrli.w $r14, 1, 14; armsrli.w $r15, 1, 14; armsrli.w $r16, 1, 14; armsrli.w $r17, 1, 14; armsrli.w $r18, 1, 14; armsrli.w $r19, 1, 14",
       "init": "armmtflag $r0, 0x39",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 16.63
       },
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14; armsrli.w $r13, 1, 14; armsrli.w $r14, 1, 14; armsrli.w $r15, 1, 14; armsrli.w $r16, 1, 14; armsrli.w $r17, 1, 14; armsrli.w $r18, 1, 14; armsrli.w $r19, 1, 14'",

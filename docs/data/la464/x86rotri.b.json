@@ -46,16 +46,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86rotri.b $r12, 1",
           "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 1.99
           },
           "measurement": {
@@ -73,16 +73,16 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86rotri.b $r12, 1; x86mfflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.06
           },
           "measurement": {
@@ -102,7 +102,7 @@
       "asm": "x86rotri.b $r12, 1; x86rotri.b $r13, 1; x86rotri.b $r14, 1; x86rotri.b $r15, 1; x86rotri.b $r16, 1; x86rotri.b $r17, 1; x86rotri.b $r18, 1; x86rotri.b $r19, 1",
       "init": "x86mtflag $r0, 1",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 15.98
       },
       "measurement": {

@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -46,8 +46,8 @@
           "asm": "vfrintrne.s $vr0, $vr0",
           "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 4.0
+            "instructions_retired": 1,
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 20000,
@@ -66,8 +66,8 @@
       "asm": "vfrintrne.s $vr0, $vr8; vfrintrne.s $vr1, $vr9; vfrintrne.s $vr2, $vr10; vfrintrne.s $vr3, $vr11; vfrintrne.s $vr4, $vr12; vfrintrne.s $vr5, $vr13; vfrintrne.s $vr6, $vr14; vfrintrne.s $vr7, $vr15",
       "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "measurement": {
         "unroll": 1000,
@@ -77,7 +77,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }
