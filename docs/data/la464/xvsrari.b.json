@@ -1,0 +1,88 @@
+{
+  "instruction": {
+    "name": "xvsrari.b",
+    "extension": "LASX",
+    "form": "xvsrari.b vd, vj, uimm",
+    "description": "Arithmetic right shift of b elements by an immediate."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128
+    },
+    {
+      "index": 3,
+      "name": "uimm",
+      "kind": "immediate",
+      "access": "read"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 3.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "xvsrari.b $xr0, $xr0, 1",
+          "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 3.05
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvsrari.b $xr0, $xr0, 1'"
+        }
+      ],
+      "notes": "vj -> vd; consecutive unrolled copies form a chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvsrari.b $xr0, $xr8, 1; xvsrari.b $xr1, $xr9, 1; xvsrari.b $xr2, $xr10, 1; xvsrari.b $xr3, $xr11, 1; xvsrari.b $xr4, $xr12, 1; xvsrari.b $xr5, $xr13, 1; xvsrari.b $xr6, $xr14, 1; xvsrari.b $xr7, $xr15, 1",
+      "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvsrari.b $xr0, $xr8, 1; xvsrari.b $xr1, $xr9, 1; xvsrari.b $xr2, $xr10, 1; xvsrari.b $xr3, $xr11, 1; xvsrari.b $xr4, $xr12, 1; xvsrari.b $xr5, $xr13, 1; xvsrari.b $xr6, $xr14, 1; xvsrari.b $xr7, $xr15, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "Throughput measured with 8 independent lanes."
+    }
+  ]
+}

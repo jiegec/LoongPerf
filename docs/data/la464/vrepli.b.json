@@ -1,0 +1,56 @@
+{
+  "instruction": {
+    "name": "vrepli.b",
+    "extension": "LSX",
+    "form": "vrepli.b vd, imm",
+    "description": "Replicate a signed immediate into every b element."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vrepli.b $vr0, 1; vrepli.b $vr1, 1; vrepli.b $vr2, 1; vrepli.b $vr3, 1; vrepli.b $vr4, 1; vrepli.b $vr5, 1; vrepli.b $vr6, 1; vrepli.b $vr7, 1",
+      "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4' --asm 'vrepli.b $vr0, 1; vrepli.b $vr1, 1; vrepli.b $vr2, 1; vrepli.b $vr3, 1; vrepli.b $vr4, 1; vrepli.b $vr5, 1; vrepli.b $vr6, 1; vrepli.b $vr7, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "Throughput measured with 8 independent lanes."
+    }
+  ],
+  "notes": "No source operand data dependency; latency is not defined. Throughput only."
+}

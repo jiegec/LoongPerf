@@ -1,0 +1,89 @@
+{
+  "instruction": {
+    "name": "xvsrarn.h.w",
+    "extension": "LASX",
+    "form": "xvsrarn.h.w vd, vj, vk",
+    "description": "Rounding arithmetic right shift narrowing w to h."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128
+    },
+    {
+      "index": 3,
+      "name": "vk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "xvsrarn.h.w $xr0, $xr0, $xr1",
+          "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.06
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100
+          },
+          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvsrarn.h.w $xr0, $xr0, $xr1'"
+        }
+      ],
+      "notes": "vj -> vd; consecutive unrolled copies form a chain."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvsrarn.h.w $xr0, $xr8, $xr16; xvsrarn.h.w $xr1, $xr9, $xr17; xvsrarn.h.w $xr2, $xr10, $xr18; xvsrarn.h.w $xr3, $xr11, $xr19; xvsrarn.h.w $xr4, $xr12, $xr20; xvsrarn.h.w $xr5, $xr13, $xr21; xvsrarn.h.w $xr6, $xr14, $xr22; xvsrarn.h.w $xr7, $xr15, $xr23",
+      "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 8.07
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvsrarn.h.w $xr0, $xr8, $xr16; xvsrarn.h.w $xr1, $xr9, $xr17; xvsrarn.h.w $xr2, $xr10, $xr18; xvsrarn.h.w $xr3, $xr11, $xr19; xvsrarn.h.w $xr4, $xr12, $xr20; xvsrarn.h.w $xr5, $xr13, $xr21; xvsrarn.h.w $xr6, $xr14, $xr22; xvsrarn.h.w $xr7, $xr15, $xr23'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "Throughput measured with 8 independent lanes."
+    }
+  ]
+}

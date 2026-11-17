@@ -1,0 +1,56 @@
+{
+  "instruction": {
+    "name": "xvldi",
+    "extension": "LASX",
+    "form": "xvldi xd, si13",
+    "description": "Load a 256-bit vector register with a sign-extended immediate."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256
+    },
+    {
+      "index": 2,
+      "name": "si13",
+      "kind": "immediate",
+      "access": "read"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvldi $xr0, 1; xvldi $xr1, 1; xvldi $xr2, 1; xvldi $xr3, 1; xvldi $xr4, 1; xvldi $xr5, 1; xvldi $xr6, 1; xvldi $xr7, 1",
+      "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvldi $xr0, 1; xvldi $xr1, 1; xvldi $xr2, 1; xvldi $xr3, 1; xvldi $xr4, 1; xvldi $xr5, 1; xvldi $xr6, 1; xvldi $xr7, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "Throughput measured with 8 independent lanes."
+    }
+  ],
+  "notes": "No source operand data dependency; latency is not defined. Throughput only."
+}
