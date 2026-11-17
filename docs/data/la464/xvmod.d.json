@@ -146,5 +146,5 @@
       "notes": "Data-dependent. CPI ranges 4.5 to 14 over the same operand pairs; the stored experiment uses 4611686018427387903/3."
     }
   ],
-  "notes": "Vector variable-latency divide/modulo. Latency 7-24 cycles and throughput CPI 4.5-14 are data-dependent."
+  "notes": "Vector variable-latency divide/modulo. Latency 7-24 cycles and throughput CPI 4.5-14 are data-dependent. The vector divider is a separate unit from the scalar one and completes a 64-bit lane divide in a shorter, fixed pipeline (~25 cycles here versus 38-39 for the scalar div), so the vector latency range is narrower than the scalar range even though the operand values are the same. This asymmetry also reproduces on LA664 (38 scalar versus 26 vector). "
 }

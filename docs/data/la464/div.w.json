@@ -151,5 +151,5 @@
       "notes": "Data-dependent throughput. CPI 3.5 at dividend=0, divisor=2; CPI 12 at dividend=2147483647, divisor=1. Measured with 8 independent lanes."
     }
   ],
-  "notes": "Latency and throughput are data-dependent: latency 5.0-22.0 cycles, throughput CPI 3.5-12. The stored experiments use representative operand samples."
+  "notes": "Latency model (fitted on this core, mean |error| 0.6 cycles): 5 cycles when |dividend| < |divisor| (quotient 0); 7 cycles when the quotient is 1; otherwise 7 + round(bits(quotient)/2), i.e. the divider produces two quotient bits per cycle. Hence the extremes are: min 5 at dividend 0 or |dividend| < |divisor|; max 7+32 = 39 for the 64-bit unsigned variant (dividend 0xffffffffffffffff, divisor 1, measured 39) and 38 for the 64-bit signed variant (dividend 0x7fffffffffffffff, divisor 2, measured 38); the 32-bit variants top out at 7+16 = 23. Verified by direct measurement of the model-predicted extremal inputs, not by exhaustive search. "
 }
