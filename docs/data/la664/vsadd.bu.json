@@ -1,0 +1,92 @@
+{
+  "instruction": {
+    "name": "vsadd.bu",
+    "extension": "LSX",
+    "form": "vsadd.bu, vd, vj, vk",
+    "description": "Saturating add corresponding unsigned 8-bit elements in `a` and `b`, store the result to `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "vk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vsadd.bu $vr0, $vr0, $vr2",
+          "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr2, $r4' --asm 'vsadd.bu $vr0, $vr0, $vr2'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Consecutive unrolled copies form a vector-register dependency chain. Measured with unroll=100000 to amortise call overhead."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vsadd.bu $vr0, $vr8, $vr16; vsadd.bu $vr1, $vr9, $vr17; vsadd.bu $vr2, $vr10, $vr18; vsadd.bu $vr3, $vr11, $vr19; vsadd.bu $vr4, $vr12, $vr20; vsadd.bu $vr5, $vr13, $vr21; vsadd.bu $vr6, $vr14, $vr22; vsadd.bu $vr7, $vr15, $vr23",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4' --asm 'vsadd.bu $vr0, $vr8, $vr16; vsadd.bu $vr1, $vr9, $vr17; vsadd.bu $vr2, $vr10, $vr18; vsadd.bu $vr3, $vr11, $vr19; vsadd.bu $vr4, $vr12, $vr20; vsadd.bu $vr5, $vr13, $vr21; vsadd.bu $vr6, $vr14, $vr22; vsadd.bu $vr7, $vr15, $vr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 1.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.2487,
+        "ipc": 4.0201
+      },
+      "notes": "8 independent instructions take 1.99 cycles."
+    }
+  ],
+  "notes": "LSX vector instruction. Measured on LA664 with register-only operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}
