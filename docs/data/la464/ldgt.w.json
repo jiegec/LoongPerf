@@ -43,40 +43,141 @@
   "latencies": [
     {
       "from_operands": [
-        2,
-        3
+        2
       ],
       "to_operand": 1,
       "cycles": 5.0,
-      "experiments": [
+      "cycles_min": 4.0,
+      "cycles_max": 5.0,
+      "cases": [
         {
-          "name": "high-unroll dependency chain",
-          "role": "measurement",
-          "asm": "ldgt.w $r4, $r20, $r0; add.d $r20, $r20, $r4",
-          "init": "addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8",
-          "chain_latency": 1,
-          "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 6.0
-          },
-          "measurement": {
-            "unroll": 10000,
-            "iters": 1000,
-            "reps": 7
-          },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.w $r4, 8; st.w $r4, $r20, 0; li.w $r4, -8; st.w $r4, $r20, 8' --asm 'ldgt.w $r4, $r20, $r0; add.d $r20, $r20, $r4'",
-          "machine_code": [
-            "02f00074  addi.d      \t$t8, $sp, -1024",
-            "03802004  ori         \t$a0, $zero, 8",
-            "29800284  st.w        \t$a0, $t8, 0",
-            "02bfe004  addi.w      \t$a0, $zero, -8",
-            "29802284  st.w        \t$a0, $t8, 8",
-            "38790284  ldgt.w      \t$a0, $t8, $zero",
-            "00109294  add.d       \t$t8, $t8, $a0"
-          ]
+          "name": "base operand through an ALU operation",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "ldgt.w $r4, $r4, $r0; add.d $r4, $r4, $r20",
+            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0' --asm 'ldgt.w $r4, $r4, $r0; add.d $r4, $r4, $r20'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.93
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "index operand path (reference)",
+          "cycles": 4.0,
+          "experiment": {
+            "asm": "ldgt.w $r4, $r20, $r4",
+            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0' --asm 'ldgt.w $r4, $r20, $r4'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 3.97
+            },
+            "chain_latency": 0.0
+          }
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "experiments": [
+        {
+          "asm": "ldgt.w $r4, $r4, $r0; add.d $r4, $r4, $r20",
+          "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0' --asm 'ldgt.w $r4, $r4, $r0; add.d $r4, $r4, $r20'",
+          "measurement": {
+            "unroll": 800,
+            "iters": 40,
+            "reps": 5
+          },
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 5.93
+          },
+          "chain_latency": 1.0,
+          "name": "base operand path",
+          "role": "measurement"
+        }
+      ],
+      "notes": "Latency from the base operand rj to the destination. The loaded value is turned back into an address with add.d (or add.d plus movfr2gr for the floating-point loads), and those helper cycles are subtracted."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "cycles_min": 4.0,
+      "cycles_max": 5.0,
+      "cases": [
+        {
+          "name": "index/bound operand feeding the address directly",
+          "cycles": 4.0,
+          "experiment": {
+            "asm": "ldgt.w $r4, $r20, $r4",
+            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0' --asm 'ldgt.w $r4, $r20, $r4'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 3.97
+            },
+            "chain_latency": 0.0
+          }
+        },
+        {
+          "name": "index/bound operand through an ALU operation",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "ldgt.w $r4, $r20, $r4; andi $r4, $r4, 7",
+            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0' --asm 'ldgt.w $r4, $r20, $r4; andi $r4, $r4, 7'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 5
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.97
+            },
+            "chain_latency": 1.0
+          }
+        }
+      ],
+      "experiments": [
+        {
+          "asm": "ldgt.w $r4, $r20, $r4",
+          "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0' --asm 'ldgt.w $r4, $r20, $r4'",
+          "measurement": {
+            "unroll": 800,
+            "iters": 40,
+            "reps": 5
+          },
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 3.97
+          },
+          "chain_latency": 0.0,
+          "name": "index/bound operand path",
+          "role": "measurement"
+        }
+      ],
+      "notes": "Latency from the index or bound operand rk to the destination. The loaded value is the operand itself, so no ALU step is needed; a second case puts andi/xori in the path, which adds one cycle."
     }
   ],
   "throughput": [
@@ -111,5 +212,5 @@
       "notes": "8 independent lanes: 7.98 core cycles per 8 instructions, CPI 1. Slope method (--unroll 1000, --unroll2 2000)."
     }
   ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Latency measured per source operand on LA464: base operand rj -> destination 5 cycles, index/bound operand rk -> destination 4 cycles when the loaded value feeds the address generation directly, and one cycle more when an ALU operation sits in the path. The 64-byte-aligned buffer holds 8 and 0 so the chase stays inside one cache line."
 }
