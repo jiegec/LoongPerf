@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 2.75,
       "experiments": [
         {
           "name": "dependent chain",

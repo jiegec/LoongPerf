@@ -46,24 +46,24 @@
       "to_operand": 1,
       "cycles": 10.0,
       "cycles_min": 8.0,
-      "cycles_max": 24.0,
+      "cycles_max": 23.0,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
-          "asm": "vfdiv.d $vr0, $vr0, $vr2; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4",
+          "asm": "vfdiv.d $vr0, $vr0, $vr2; vfdiv.d $vr0, $vr0, $vr2; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4",
           "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr2, $r4; li.d $r5, -1; li.d $r6, 0",
           "chain_latency": 7.0,
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 17.0
+            "instructions_retired": 7.0,
+            "core_cycles": 27.01
           },
           "measurement": {
             "unroll": 2000,
             "iters": 300,
             "reps": 7
           },
-          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr2, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vfdiv.d $vr0, $vr0, $vr2; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'",
+          "command": "./bench --unroll 2000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr2, $r4; li.d $r5, -1; li.d $r6, 0' --asm 'vfdiv.d $vr0, $vr0, $vr2; vfdiv.d $vr0, $vr0, $vr2; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'",
           "machine_code": [
             "030ffc04  lu52i.d     \t$a0, $zero, 1023",
             "729f0c80  vreplgr2vr.d\t$vr0, $a0",
@@ -77,7 +77,8 @@
           ]
         }
       ],
-      "notes": "Data-dependent latency. Chain: tested op, then vpickve2gr.d+and+or+vreplgr2vr.d to restore the input pattern; the 7-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 8-11 cycles, CPI 4.4988-6. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "Data-dependent latency. Chain: tested op, then vpickve2gr.d+and+or+vreplgr2vr.d to restore the input pattern; the 7-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 8-11 cycles, CPI 4.4988-6. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_divisor": 2
     }
   ],
   "throughput": [
@@ -107,5 +108,5 @@
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 4.4988-6 over the same 26-value sweep; the stored experiment uses 1.0."
     }
   ],
-  "notes": "Latency model (measured with a 1-/2-/3-copy chain so the per-instruction latency is read off the increments, not the closure): 8 cycles when the operands are special (0, Inf or NaN on either side); 10 cycles when the divisor is a power of two (including 1.0); 22-23 cycles for a general divisor; up to 24 with a subnormal operand. Every lane of the vector divider runs in parallel and only the slowest lane matters (1 and 2 slow lanes both measure 24), so vfdiv.d/xvfdiv.d match the scalar numbers exactly. The 32-bit vector variants are slower (11 / 15 / 25-27) because 32-bit lanes are not fully parallel, the same behaviour as the integer .w divides. The stored experiment uses 1.0/1.0, i.e. the power-of-two-divisor path."
+  "notes": "Latency model: 8 cycles for special operands, 10 when the divisor is a power of two (the stored sample uses 1.0/1.0), 23 for a general divisor, up to +1 with a subnormal operand. The stored experiment runs the division twice, so cycles = (core_cycles - 7) / 2. 64-bit vector lanes match the scalar numbers and run in parallel (slowest lane dominates); 32-bit vector lanes cost 2 x scalar - 5."
 }
