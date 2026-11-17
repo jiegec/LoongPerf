@@ -2,27 +2,27 @@
   "instruction": {
     "name": "xvdiv.du",
     "extension": "LASX",
-    "form": "xvdiv.du vd, vj, vk",
+    "form": "xvdiv.du xd, xj, xk",
     "description": "Vector divide of du elements."
   },
   "operands": [
     {
       "index": 1,
-      "name": "vd",
+      "name": "xd",
       "kind": "vector",
       "access": "write",
       "bits": 256
     },
     {
       "index": 2,
-      "name": "vj",
+      "name": "xj",
       "kind": "vector",
       "access": "read",
       "bits": 256
     },
     {
       "index": 3,
-      "name": "vk",
+      "name": "xk",
       "kind": "vector",
       "access": "read",
       "bits": 256
