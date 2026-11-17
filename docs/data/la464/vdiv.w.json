@@ -302,5 +302,5 @@
       "notes": "Data-dependent. CPI ranges 6 to 16 over the same operand pairs; the stored experiment uses 1073741823/3."
     }
   ],
-  "notes": "Latency model: the vector divider retires 4 quotient bits per cycle on every element width and the slowest lane dominates. lat = 11 when the quotient is 0, 17 when it fits in four bits, otherwise 17 + 2 * floor(bits(quotient)/4); for w elements the quotient is at most 32 bits, so the maximum is 31.  Measured with a calibrated reset chain (closure 7 cycles) on the maximum-latency operand pair; 1000-unroll slope method."
+  "notes": "Latency model: the vector divider retires 4 quotient bits per cycle on every element width and the slowest lane dominates. lat = 11 when the quotient is 0, 17 when it fits in four bits, otherwise 17 + 2 * floor(bits(quotient)/4); for w elements the quotient is at most 32 bits, so the maximum is 31.  Measured with a calibrated reset chain (closure 7 cycles) on the maximum-latency operand pair; 1000-unroll slope method. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }

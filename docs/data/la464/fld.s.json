@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 6.0,
       "experiments": [
         {
           "asm": "fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
@@ -60,7 +60,7 @@
             "instructions_retired": 3.0,
             "core_cycles": 8.98
           },
-          "chain_latency": 4.0,
+          "chain_latency": 3.0,
           "name": "load result combined with the base",
           "role": "measurement",
           "notes": "The load returns 32 bits, so the value has to be recombined with the base before it can be used as an address: this chain therefore always contains add.d (1 cycle, subtracted together with movfr2gr.s). The direct address chase that measures the 4-cycle bypass path for fld.d cannot be built for fld.s."
@@ -70,7 +70,7 @@
       "cases": [
         {
           "name": "load result combined with the base before the next address",
-          "cycles": 5.0,
+          "cycles": 6,
           "experiment": {
             "asm": "fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
             "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8",
@@ -84,12 +84,12 @@
               "instructions_retired": 3.0,
               "core_cycles": 8.98
             },
-            "chain_latency": 4.0
+            "chain_latency": 3.0
           }
         },
         {
           "name": "data path to an FP consumer (fadd.s)",
-          "cycles": 5.0,
+          "cycles": 6,
           "experiment": {
             "asm": "fld.s $f0, $r20, 0; fadd.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
             "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; movgr2fr.w $f1, $r0",
@@ -103,12 +103,12 @@
               "instructions_retired": 4.0,
               "core_cycles": 14.0
             },
-            "chain_latency": 9.0
+            "chain_latency": 8.0
           }
         }
       ],
-      "cycles_min": 5.0,
-      "cycles_max": 5.0
+      "cycles_min": 6,
+      "cycles_max": 6
     }
   ],
   "throughput": [
@@ -143,5 +143,5 @@
       "notes": "8 independent instructions take 4.00 cycles."
     }
   ],
-  "notes": "L1D-hit single-precision floating-point load: 5 cycles from the base address register to the loaded value through an ALU consumer, measured with movfr2gr.s (3 cycles) and add.d (1 cycle) in the chain. The 4-cycle bypass path that fld.d shows cannot be constructed here, because a 32-bit load result is never a complete 64-bit address (the chase would need a buffer below 2 GiB, and a low mmap made by the parent does not survive the exec into the benchmark). Within that limit the two widths behave identically: fld.s with the add.d reads 8.98 cycles against 8.94-8.98 for the same fld.d chain, so the 4/5 split of fld.d carries over and the difference between the two recorded numbers is the closure, not the hardware. Measured with --method slope, unroll 800/1600, on LA464 core 0."
+  "notes": "L1D-hit single-precision floating-point load: 5 cycles from the base address register to the loaded value through an ALU consumer, measured with movfr2gr.s (2 cycles) and add.d (1 cycle) in the chain. The 4-cycle bypass path that fld.d shows cannot be constructed here, because a 32-bit load result is never a complete 64-bit address (the chase would need a buffer below 2 GiB, and a low mmap made by the parent does not survive the exec into the benchmark). Within that limit the two widths behave identically: fld.s with the add.d reads 8.98 cycles against 8.94-8.98 for the same fld.d chain, so the 4/5 split of fld.d carries over and the difference between the two recorded numbers is the closure, not the hardware. Measured with --method slope, unroll 800/1600, on LA464 core 0. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }

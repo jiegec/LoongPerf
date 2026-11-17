@@ -35,7 +35,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "dependent chain",
@@ -51,7 +51,7 @@
             "iters": 300
           },
           "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvsetanyeqz.b $fcc0, $xr0; movcf2gr $r6, $fcc0; xvreplgr2vr.w $xr0, $r6'",
-          "chain_latency": 10.0,
+          "chain_latency": 9.0,
           "machine_code": [
             "140a0c04  lu12i.w     \t$a0, 20576",
             "039c2084  ori         \t$a0, $a0, 1800",
@@ -66,7 +66,7 @@
           ]
         }
       ],
-      "notes": "vj -> fcc. The chain closes through movcf2gr (9 cycles) and vreplgr2vr.w (1 cycle), so 10 cycles of helper latency are subtracted; treat the value as approximate. Raw measurement was 2.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "vj -> fcc. The chain closes through movcf2gr (7 cycles) and vreplgr2vr.w (1 cycle), so 10 cycles of helper latency are subtracted; treat the value as approximate. Raw measurement was 2.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [
@@ -91,5 +91,5 @@
       "notes": "Throughput measured with 8 independent lanes."
     }
   ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }

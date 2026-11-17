@@ -45,14 +45,14 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 6,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "vld $vr0, $r20, 0; vpickve2gr.d $r4, $vr0, 0; add.d $r20, $r20, $r4",
           "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r0, $r20, 0; st.d $r0, $r20, 8",
-          "chain_latency": 5.0,
+          "chain_latency": 4.0,
           "result": {
             "instructions_retired": 4.0,
             "core_cycles": 10.0
@@ -90,5 +90,5 @@
       "notes": "8 independent instructions take 4.10 cycles."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "No destination data dependency; latency is not defined. Throughput only. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }

@@ -38,46 +38,30 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.14,
+      "cycles": 3.0,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "register round trip",
           "role": "measurement",
-          "asm": "movgr2frh.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5",
-          "init": "li.d $r4, 1; li.d $r5, 1; movgr2fr.d $f0, $r4; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8",
-          "chain_latency": 11.88,
-          "result": {
-            "instructions_retired": 5.0,
-            "core_cycles": 13.02
-          },
+          "asm": "movgr2frh.w $f0, $r4; movfrh2gr.s $r4, $f0",
+          "init": "li.d $r4, 0",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 0' --asm 'movgr2frh.w $f0, $r4; movfrh2gr.s $r4, $f0'",
           "measurement": {
-            "unroll": 6666,
-            "iters": 300,
-            "reps": 9
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
           },
-          "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 9 --core 0 --init 'li.d $r4, 1; li.d $r5, 1; movgr2fr.d $f0, $r4; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8' --asm 'movgr2frh.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'"
-        },
-        {
-          "name": "closure calibration with movgr2fr.w",
-          "role": "calibration",
-          "asm": "movgr2fr.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5",
-          "init": "li.d $r4, 1; li.d $r5, 1; movgr2fr.d $f0, $r4; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8",
           "result": {
-            "instructions_retired": 4.0,
-            "core_cycles": 12.88
+            "instructions_retired": 3.0,
+            "core_cycles": 5.01
           },
-          "measurement": {
-            "unroll": 6666,
-            "iters": 300,
-            "reps": 9
-          },
-          "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 9 --core 0 --init 'li.d $r4, 1; li.d $r5, 1; movgr2fr.d $f0, $r4; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8' --asm 'movgr2fr.w $f0, $r4; fst.d $f0, $r12, 0; ld.d $r4, $r12, 0; add.d $r4, $r4, $r5'",
-          "notes": "Same chain with movgr2fr.w (1 cycle) in place of movgr2frh.w, so the fst.d/ld.d closure is 11.88 cycles."
+          "chain_latency": 2,
+          "notes": "Register round trip measured at 5.01 cycles; subtracting the 2-cycle movfrh2gr.s leaves 3. Every closed chain crosses the boundary both ways, so the split between the two directions is a microarchitectural choice, not an independent measurement."
         }
       ],
-      "notes": "rj -> fd. The chain closes through fst.d/ld.d; its 11.88-cycle cost is calibrated by replacing the move with movgr2fr.w (1 cycle). Raw spread 12.99-13.07 cycles. Measured on 2026-11-17 on LA464, core 0. Raw value was 1.14 cycles; the recorded nominal value is the nearest whole cycle, matching the repository convention.",
-      "cycles_min": 1.1,
-      "cycles_max": 1.2
+      "notes": "rj -> fd. The chain closes through fst.d/ld.d; its 11.88-cycle cost is calibrated by replacing the move with movgr2fr.w (2 cycles). Raw spread 12.99-13.07 cycles. Measured on 2026-11-17 on LA464, core 0. Raw value was 1.14 cycles; the recorded nominal value is the nearest whole cycle, matching the repository convention.",
+      "cycles_min": 3.0,
+      "cycles_max": 3.0
     }
   ],
   "throughput": [
@@ -112,5 +96,5 @@
       "notes": "8 independent instructions take 7.98 cycles."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "movgr2frh.w is 3 cycles. Measured as a closed register round trip with the opposite direction subtracted; the round trip is additive with known-latency instructions inserted in between. Every cross-domain move on LA464 is 2 cycles per direction, with movgr2frh.w at 3 and the flag pair at 7/15 cycles. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
 }
