@@ -87,7 +87,10 @@ def check_command(path: Path, data: dict, experiment: dict) -> None:
 
 def check_result_count(path: Path, data: dict, experiment: dict) -> None:
     name = data["instruction"]["name"]
-    multiplier = 2 if name.startswith("am") else RETIRED_MULTIPLIER.get(name, 1)
+    if name in {"rdtimel.w", "rdtimeh.w", "rdtime.d"}:
+        multiplier = 1 if ", $r0" in experiment["asm"] else 2
+    else:
+        multiplier = 2 if name.startswith("am") else RETIRED_MULTIPLIER.get(name, 1)
     expected = asm_instruction_count(experiment["asm"]) * multiplier
     actual = experiment["result"]["instructions_retired"]
     if not close(actual, expected):
