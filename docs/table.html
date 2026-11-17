@@ -84,7 +84,7 @@
     <h1>LoongArch instruction table</h1>
     <span class="sub">LoongPerf measurements</span>
   </header>
-  <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name, the Page link, or a row for details.</p>
+  <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name or a row for details.</p>
 
   <div class="controls">
     <div class="control">
@@ -342,8 +342,7 @@
     let top = '<tr>' +
       '<th rowspan="2" data-sort="extension">Extension</th>' +
       '<th rowspan="2" data-sort="name">Instruction</th>' +
-      '<th rowspan="2" data-sort="form">Form</th>' +
-      '<th rowspan="2">Page</th>';
+      '<th rowspan="2" data-sort="form">Form</th>';
     let bottom = "<tr>";
     for (const uarch of selected) {
       top += '<th colspan="3" class="uarch-head">' + esc(uarch.toUpperCase()) + "</th>";
@@ -434,7 +433,7 @@
 
     const tbody = $("tbody");
     tbody.innerHTML = "";
-    const columns = 4 + selected.length * 3;
+    const columns = 3 + selected.length * 3;
 
     if (!selected.length) {
       tbody.innerHTML = '<tr><td colspan="' + columns + '" class="empty">Select at least one microarchitecture.</td></tr>';
@@ -452,8 +451,7 @@
 
       let cells = "<td>" + esc(group.extension) + "</td>" +
         '<td><a class="instr-link" href="' + esc(first.page) + '"><code>' + esc(group.name) + "</code></a></td>" +
-        "<td><code>" + esc(group.form) + "</code></td>" +
-        '<td><a class="instr-link" href="' + esc(first.page) + '">open</a></td>';
+        "<td><code>" + esc(group.form) + "</code></td>";
       for (const uarch of selected) {
         const row = group.variants.get(uarch);
         cells += '<td class="num uarch-cell">' + latencyCell(row) + "</td>";
