@@ -326,7 +326,9 @@
         esc(info.commit.sha || info.commit.short) + '"><code>' +
         esc(info.commit.short) + "</code></a></span>");
     }
-    parts.push('<a href="' + esc(info.repo || REPO_URL) + '">LoongPerf on GitHub</a>');
+    const repo = info.repo || REPO_URL;
+    parts.push('<a href="' + esc(repo) + '">LoongPerf on GitHub</a>');
+    parts.push('<a href="' + esc(repo + "/issues/new") + '">Report issues</a>');
     const box = $("data-meta");
     box.innerHTML = parts.join(' <span class="sep" aria-hidden="true">·</span> ');
     box.hidden = false;
