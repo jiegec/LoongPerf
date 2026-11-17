@@ -134,5 +134,5 @@
       "notes": "Data-dependent. Min/max measured over a range of dividends and divisors with 8 independent lanes.\n\nMin CPI 3.5 at dividend=0, divisor=8; max CPI 20.5 at dividend=0xffffffffffffffff, divisor=0x1."
     }
   ],
-  "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent."
 }

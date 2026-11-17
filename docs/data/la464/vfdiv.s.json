@@ -96,5 +96,5 @@
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 5.9962-9 over the same 26-value sweep; the stored experiment uses 1.0."
     }
   ],
-  "notes": "Vector variable-latency floating-point divide/modulo. Latency 10-26 cycles and throughput CPI 6-14 are data-dependent. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Vector variable-latency floating-point divide/modulo. Latency 10-26 cycles and throughput CPI 6-14 are data-dependent."
 }

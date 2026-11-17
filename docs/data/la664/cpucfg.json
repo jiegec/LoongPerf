@@ -90,6 +90,5 @@
       },
       "notes": "8 independent CPUCFG operations take 88.69 cycles. Instruction-retired is 0 for CPUCFG on this machine."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

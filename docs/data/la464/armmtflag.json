@@ -118,6 +118,5 @@
       },
       "notes": "8 independent instructions take 16.19 cycles."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

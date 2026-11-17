@@ -141,5 +141,5 @@
       "notes": "8 independent instructions take 6.98 cycles."
     }
   ],
-  "notes": "Every source-to-result path is recorded separately; vd is read as the accumulator. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Every source-to-result path is recorded separately; vd is read as the accumulator."
 }

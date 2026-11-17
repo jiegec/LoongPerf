@@ -88,5 +88,5 @@
       "notes": "8 independent instructions take 8.82 cycles. Measured CPI 1.1025; a repeat run with --unroll 250 --unroll2 1000 gives the nominal 1. Large unroll factors inflate short bodies through L1I pressure."
     }
   ],
-  "notes": "LBT instruction. Latency is recorded for the rj counter path and the EFLAGS path. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LBT instruction. Latency is recorded for the rj counter path and the EFLAGS path."
 }

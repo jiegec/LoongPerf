@@ -108,5 +108,5 @@
       "notes": "8 independent instructions take 16.01 cycles. The measured CPI 2.0013 is the nominal 2 within measurement noise; the value is reported as the nominal figure."
     }
   ],
-  "notes": "LBT x86-style instruction. Latency is recorded for the rd accumulator path and the EFLAGS write path. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LBT x86-style instruction. Latency is recorded for the rd accumulator path and the EFLAGS write path."
 }

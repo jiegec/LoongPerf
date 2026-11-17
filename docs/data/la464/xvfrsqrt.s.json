@@ -89,6 +89,5 @@
       },
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 8.9975-32 over the same 26-value sweep; the stored experiment uses 1.0."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

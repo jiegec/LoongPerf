@@ -122,5 +122,5 @@
       "notes": "Throughput range over 22 operand values: min CPI 4.50 at 1/0, max CPI 13.50 at 1/maxsub. Sample uses 1/1."
     }
   ],
-  "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
 }

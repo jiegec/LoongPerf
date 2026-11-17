@@ -114,5 +114,5 @@
       "notes": "Data-dependent. CPI ranges 9 to 17 over the same operand pairs; the stored experiment uses 65535/1."
     }
   ],
-  "notes": "Vector variable-latency divide/modulo. Latency 16-32 cycles and throughput CPI 9-17 are data-dependent. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Vector variable-latency divide/modulo. Latency 16-32 cycles and throughput CPI 9-17 are data-dependent."
 }

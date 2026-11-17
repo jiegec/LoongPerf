@@ -85,6 +85,5 @@
       },
       "notes": "Throughput measured with 8 independent lanes."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

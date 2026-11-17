@@ -158,5 +158,5 @@
       "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI: the instruction sustains one per cycle. Repeated runs report 8.15-8.86 cycles (1.02-1.11 CPI), which is the residual measurement floor for this short body rather than a real sub-1 IPC. Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000)."
     }
   ],
-  "notes": "LBT instruction. Every source-to-result path is recorded separately: rj, rk, rj+rk, and CF. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LBT instruction. Every source-to-result path is recorded separately: rj, rk, rj+rk, and CF."
 }
