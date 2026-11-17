@@ -27,6 +27,9 @@ RETIRED_MULTIPLIER = {
     "rdtimeh.w": 2,
     "rdtime.d": 2,
     "movgr2frh.w": 2,
+    "llacq.w": 2,
+    "llacq.d": 2,
+    "sc.q": 2,
 }
 errors: list[str] = []
 warnings: list[str] = []
