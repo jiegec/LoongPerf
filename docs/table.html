@@ -76,6 +76,8 @@
     .pager button { padding: 6px 12px; }
     .pager button:disabled { opacity: 0.45; cursor: default; }
     .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
+    .sigill { color: #cf222e; font-weight: 600; }
+    .note { margin-top: 12px; color: var(--muted); font-size: 13px; }
   </style>
 </head>
 <body>
@@ -84,7 +86,7 @@
     <h1>LoongArch instruction table</h1>
     <span class="sub">LoongPerf measurements</span>
   </header>
-  <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name or a row for details.</p>
+  <p class="sub">One row per instruction. Select one or more microarchitectures to show Latency / Throughput CPI / Throughput IPC columns for each of them. Click the instruction name or a row for details. SIGILL marks an instruction that is not supported on the selected microarchitecture.</p>
 
   <div class="controls">
     <div class="control">
@@ -188,6 +190,8 @@
       name: doc.instruction.name,
       form: doc.instruction.form,
       description: doc.instruction.description,
+      notes: doc.notes || "",
+      unsupported: /SIGILL/.test(doc.notes || ""),
       operands: doc.operands || [],
       latencies,
       throughput,
@@ -364,7 +368,9 @@
   }
 
   function latencyCell(row) {
-    if (!row || row.minLatency === null) return '<span class="muted">-</span>';
+    if (!row) return '<span class="muted">-</span>';
+    if (row.unsupported) return '<span class="sigill" title="' + esc(row.notes) + '">SIGILL</span>';
+    if (row.minLatency === null) return '<span class="muted">-</span>';
     return row.minLatency === row.maxLatency ? fmt(row.minLatency) : fmt(row.minLatency) + " – " + fmt(row.maxLatency);
   }
 
@@ -405,7 +411,8 @@
       '<div><h3>Throughput</h3><table><thead><tr><th>Experiment</th><th>Lanes</th><th>Insns</th><th>Cycles</th><th>CPI</th><th>IPC</th></tr></thead><tbody>' +
       (throughputRows || '<tr><td colspan="6" class="muted">No data</td></tr>') + "</tbody></table></div>" +
       '</div><div class="links"><a href="' + esc(row.page) + '">Full measurement page</a>' +
-      '<a href="' + esc(row.raw) + '">Raw JSON</a></div>';
+      '<a href="' + esc(row.raw) + '">Raw JSON</a></div>' +
+      (row.notes ? '<div class="note">' + esc(row.notes) + "</div>" : "");
   }
 
   function detailsForGroup(group, selected) {
