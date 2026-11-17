@@ -1,0 +1,44 @@
+{
+  "instruction": {
+    "name": "jirl",
+    "extension": "Base",
+    "form": "jirl rd, rj, offs",
+    "description": "Indirect jump and link."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 3,
+      "name": "offs",
+      "kind": "immediate",
+      "access": "read",
+      "description": "branch offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "notes": "Indirect branch throughput requires target setup and is not measured yet. N/A."
+}

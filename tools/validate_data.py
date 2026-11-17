@@ -148,6 +148,7 @@ def check_latencies(path: Path, data: dict) -> None:
         expected = experiment["result"]["core_cycles"]
         if "chain_latency" in experiment:
             expected -= experiment["chain_latency"]
+        expected /= latency.get("cycles_divisor", 1)
         if not close(latency["cycles"], expected):
             error(path, f"latency cycles {latency['cycles']} != core_cycles - chain_latency ({expected})")
 

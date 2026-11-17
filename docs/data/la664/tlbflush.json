@@ -1,0 +1,20 @@
+{
+  "instruction": {
+    "name": "tlbflush",
+    "extension": "Base",
+    "form": "tlbflush",
+    "description": "Flush TLB entries."
+  },
+  "operands": [],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "notes": "Privileged TLB operation; traps in user mode."
+}

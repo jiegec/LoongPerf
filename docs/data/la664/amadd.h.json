@@ -40,7 +40,39 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 13.01,
+      "cycles_divisor": 2,
+      "experiments": [
+        {
+          "name": "two-atomic dependency cycle",
+          "role": "measurement",
+          "asm": "amadd.h $r12, $r13, $r20; amadd.h $r13, $r12, $r20",
+          "init": "addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0",
+          "measurement": {
+            "unroll": 10000,
+            "iters": 100
+          },
+          "machine_code": [
+            "385db68c  amadd.h     \t$t0, $t1, $t8",
+            "385db28d  amadd.h     \t$t1, $t0, $t8"
+          ],
+          "command": "./bench --unroll 10000 --iters 100 --warmup 10 --init 'addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0' --asm 'amadd.h $r12, $r13, $r20; amadd.h $r13, $r12, $r20'",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 26.01
+          },
+          "notes": "Two atomics alternate rd/rk; per-instruction latency = core_cycles / 2."
+        }
+      ],
+      "notes": "Latency measured with a two-atomic dependency cycle on a fixed address."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent addresses",
@@ -69,5 +101,5 @@
       "notes": "8 atomic operations on independent addresses take 104.08 cycles."
     }
   ],
-  "notes": "Atomic memory operation. Latency depends on cache/coherence state and is not measured; throughput only. Each atomic instruction retires as 2 instructions."
+  "notes": "Atomic memory operation. Latency depends on cache/coherence state and is not measured; throughput only. Each atomic instruction retires as 2 instructions.\nLatency measured with a two-atomic rd/rk cycle."
 }

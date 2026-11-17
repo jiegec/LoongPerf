@@ -1,0 +1,44 @@
+{
+  "instruction": {
+    "name": "invtlb",
+    "extension": "Base",
+    "form": "invtlb op, rj, rk",
+    "description": "Invalidate TLB entries."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "op",
+      "kind": "immediate",
+      "access": "read",
+      "description": "operation"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "notes": "Privileged TLB operation; traps in user mode."
+}

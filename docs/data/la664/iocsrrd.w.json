@@ -1,0 +1,37 @@
+{
+  "instruction": {
+    "name": "iocsrrd.w",
+    "extension": "Base",
+    "form": "iocsrrd.w rd, rj",
+    "description": "IOCSR read (W)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "notes": "Privileged IOCSR access; traps in user mode."
+}
