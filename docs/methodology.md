@@ -333,7 +333,16 @@ A few more traps specific to this data:
   float constant either.
 * a vector divide only pays for the lanes that need work, so a body whose lanes
   are partly zero measures below the worst case; build the operand pattern with
-  `vinsgr2vr.*` if the number of active lanes matters.
+  `vinsgr2vr.*` if the number of active lanes matters;
+* `ldgt.*`/`ldle.*` raise a bounds-check exception on LA464 when the range check
+  fails instead of writing zero, and this kernel does not emulate it: the process
+  dies with `SIGSEGV` whose `si_addr` is the load address `rj`, even when that
+  address is mapped, so the crash looks like a bad pointer in the benchmark
+  rather than a failing check. Every bound-check chain must keep the check
+  passing: hold the bound at `0x7fffffffffffffff` for `ldle` (which loads when
+  `rj <= rk`), at zero for `ldgt` (`rj > rk`), or add the loaded value back to
+  the base before it becomes the next bound. `ldgt` and `ldle` otherwise behave
+  identically, per-operand latencies included.
 
 Room and time budget: a sweep of nine operands through a calibrated helper takes
 about a minute per instruction at `--unroll 1500 --iters 50 --reps 4`, which is a
