@@ -1,3 +1,7 @@
+---
+hide:
+  - navigation
+---
 # Analysis
 
 What the measurements say about the LA664 and LA464 cores: the latency models
