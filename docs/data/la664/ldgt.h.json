@@ -64,7 +64,19 @@
             "core_cycles": 4.99
           },
           "chain_latency": 1.0,
-          "notes": "rj -> rd chain, the bound stays 0 so the check passes; add.d subtracted."
+          "notes": "rj -> rd chain, the bound stays 0 so the check passes; add.d subtracted.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0016  li.w        \t$fp, -64",
+            "0014da94  and         \t$t8, $t8, $fp",
+            "03802016  li.w        \t$fp, 0x8",
+            "29400296  st.h        \t$fp, $t8, 0",
+            "02bfe016  li.w        \t$fp, -8",
+            "29402296  st.h        \t$fp, $t8, 8",
+            "00150015  move        \t$r21, $zero",
+            "3878d684  ldgt.h      \t$a0, $t8, $r21",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "rj -> rd chain, the bound stays 0 so the check passes; add.d subtracted."
@@ -92,7 +104,17 @@
             "core_cycles": 5.98
           },
           "chain_latency": 1.0,
-          "notes": "rk -> rd chain: the bound toggles 0/1 through xori and always stays below the address; xori subtracted."
+          "notes": "rk -> rd chain: the bound toggles 0/1 through xori and always stays below the address; xori subtracted.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0016  li.w        \t$fp, -64",
+            "0014da94  and         \t$t8, $t8, $fp",
+            "00150016  move        \t$fp, $zero",
+            "29c00296  st.d        \t$fp, $t8, 0",
+            "00150004  move        \t$a0, $zero",
+            "38789284  ldgt.h      \t$a0, $t8, $a0",
+            "03c00484  xori        \t$a0, $a0, 0x1"
+          ]
         }
       ],
       "notes": "rk -> rd chain: the bound toggles 0/1 through xori and always stays below the address; xori subtracted."

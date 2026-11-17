@@ -62,7 +62,11 @@
             "instructions_retired": 1.0,
             "core_cycles": 1.0
           },
-          "notes": "Consecutive unrolled copies form a dependency chain."
+          "notes": "Consecutive unrolled copies form a dependency chain.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "0029058c  addu12i.w   \t$t0, $t0, 1"
+          ]
         }
       ],
       "notes": "Register dependency latency."

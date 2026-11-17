@@ -63,7 +63,12 @@
             "core_cycles": 7.0
           },
           "chain_latency": 1.0,
-          "notes": "Round trip 7.05 cycles. xvreplgr2vr.w is 1 cycle, so xvpickve2gr.w is 6.05 cycles."
+          "notes": "Round trip 7.05 cycles. xvreplgr2vr.w is 1 cycle, so xvpickve2gr.w is 6.05 cycles.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "76efc004  xvpickve2gr.w\t$a0, $xr0, 0x0"
+          ]
         }
       ],
       "notes": "Round trip 7.05 cycles. xvreplgr2vr.w is 1 cycle, so xvpickve2gr.w is 6.05 cycles. Nominal values: round-trip core cycles rounded to the nearest integer."

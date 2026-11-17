@@ -63,7 +63,21 @@
             "core_cycles": 15.04
           },
           "chain_latency": 11.04,
-          "notes": "Latency is 4 cycles, the same load pipeline as the .d form. The store-forward chain cannot be closed for byte and half replication because the replicated pattern overflows the address arithmetic; the value is anchored on the measured .d form and on the identical 4-cycle scalar load path."
+          "notes": "Latency is 4 cycles, the same load pipeline as the .d form. The store-forward chain cannot be closed for byte and half replication because the replicated pattern overflows the address arithmetic; the value is anchored on the measured .d form and on the identical 4-cycle scalar load path.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0016  li.w        \t$fp, -64",
+            "0014da94  and         \t$t8, $t8, $fp",
+            "02c20297  addi.d      \t$s0, $t8, 128",
+            "03802004  li.w        \t$a0, 0x8",
+            "29c00284  st.d        \t$a0, $t8, 0",
+            "00150004  move        \t$a0, $zero",
+            "29c02284  st.d        \t$a0, $t8, 8",
+            "30400280  vldrepl.h   \t$vr0, $t8, 0",
+            "2c4002e0  vst         \t$vr0, $s0, 0",
+            "28c002e4  ld.d        \t$a0, $s0, 0",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "Latency is 4 cycles, the same load pipeline as the .d form. The store-forward chain cannot be closed for byte and half replication because the replicated pattern overflows the address arithmetic; the value is anchored on the measured .d form and on the identical 4-cycle scalar load path."

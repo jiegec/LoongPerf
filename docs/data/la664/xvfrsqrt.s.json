@@ -58,7 +58,18 @@
             "core_cycles": 34.07
           },
           "chain_latency": 9.07,
-          "notes": "vpickve2gr extracts element 0, and/or forces it back to the test value, vreplgr2vr replicates it; the vadd.b baseline is subtracted."
+          "notes": "vpickve2gr extracts element 0, and/or forces it back to the test value, vreplgr2vr replicates it; the vadd.b baseline is subtracted.",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "03800405  li.w        \t$a1, 0x1",
+            "147f0006  lu12i.w     \t$a2, 260096",
+            "769d0400  xvfrsqrt.s  \t$xr0, $xr0",
+            "76efc004  xvpickve2gr.w\t$a0, $xr0, 0x0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0"
+          ]
         },
         {
           "name": "vadd.b reset-helper baseline",
@@ -75,7 +86,18 @@
             "instructions_retired": 6.0,
             "core_cycles": 25.0
           },
-          "notes": "Same helper chain with vadd.b replacing the variable-latency operation."
+          "notes": "Same helper chain with vadd.b replacing the variable-latency operation.",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "03800405  li.w        \t$a1, 0x1",
+            "147f0006  lu12i.w     \t$a2, 260096",
+            "740a0000  xvadd.b     \t$xr0, $xr0, $xr0",
+            "76efc004  xvpickve2gr.w\t$a0, $xr0, 0x0",
+            "00149484  and         \t$a0, $a0, $a1",
+            "00151884  or          \t$a0, $a0, $a2",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0"
+          ]
         }
       ],
       "notes": "Data-dependent. Latency range measured over 11 operand values with the element-0 reset helper. Min 16.98 at inf, max 63.00 at maxsub. Sample uses 1."

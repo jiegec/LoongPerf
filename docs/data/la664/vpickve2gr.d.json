@@ -63,7 +63,12 @@
             "core_cycles": 5.0
           },
           "chain_latency": 1.0,
-          "notes": "Round trip 5.06 cycles. The vreplgr2vr.d half is 1 cycles (from the memory-assisted decomposition: vrepl-only chain minus vector-store->GPR-load forwarding), so vpickve2gr.d is 4.06 cycles."
+          "notes": "Round trip 5.06 cycles. The vreplgr2vr.d half is 1 cycles (from the memory-assisted decomposition: vrepl-only chain minus vector-store->GPR-load forwarding), so vpickve2gr.d is 4.06 cycles.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0c80  vreplgr2vr.d\t$vr0, $a0",
+            "72eff004  vpickve2gr.d\t$a0, $vr0, 0x0"
+          ]
         }
       ],
       "notes": "Round trip 5.06 cycles. The vreplgr2vr.d half is 1 cycles (from the memory-assisted decomposition: vrepl-only chain minus vector-store->GPR-load forwarding), so vpickve2gr.d is 4.06 cycles. Nominal values: round-trip core cycles rounded to the nearest integer."

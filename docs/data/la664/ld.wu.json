@@ -63,7 +63,18 @@
             "core_cycles": 7.0
           },
           "chain_latency": 3.0,
-          "notes": "L1D hit, load-to-ALU latency 4 cycles. The unsigned result is explicitly sign-extended with slli/srai so the base pointer can alternate +8/-8; chain_latency subtracts 2 shift cycles and 1 add. Measured with unroll=100000."
+          "notes": "L1D hit, load-to-ALU latency 4 cycles. The unsigned result is explicitly sign-extended with slli/srai so the base pointer can alternate +8/-8; chain_latency subtracts 2 shift cycles and 1 add. Measured with unroll=100000.",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  li.w        \t$a0, 0x8",
+            "29800284  st.w        \t$a0, $t8, 0",
+            "02bfe004  li.w        \t$a0, -8",
+            "29802284  st.w        \t$a0, $t8, 8",
+            "2a800284  ld.wu       \t$a0, $t8, 0",
+            "00418084  slli.d      \t$a0, $a0, 0x20",
+            "00498084  srai.d      \t$a0, $a0, 0x20",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "L1D-hit load-to-ALU latency is nominally 4 cycles. Re-measured with an ext.w/add.w extension chain: raw 6.06-6.10 cycles, extension-chain baseline 2.19 cycles, giving about 3.9-4.1 cycles. The unsigned extension path adds about 0.1 cycle of uncertainty, so the value is not exactly 4.00 in every measurement. Raw measurement was 4.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 4.00; the value is 4 cycle(s) and any earlier range was a rounding artifact."

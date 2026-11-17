@@ -64,7 +64,21 @@
             "core_cycles": 5.0
           },
           "chain_latency": 1.0,
-          "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes."
+          "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0004  li.w        \t$a0, -64",
+            "00149294  and         \t$t8, $t8, $a0",
+            "03802004  li.w        \t$a0, 0x8",
+            "29000284  st.b        \t$a0, $t8, 0",
+            "02bfe004  li.w        \t$a0, -8",
+            "29002284  st.b        \t$a0, $t8, 8",
+            "02bffc15  li.w        \t$r21, -1",
+            "031ffeb5  lu52i.d     \t$r21, $r21, 2047",
+            "00150005  move        \t$a1, $zero",
+            "387a5684  ldle.b      \t$a0, $t8, $r21",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes. Raw measurement was 4.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 4.00; the value is 4 cycle(s) and any earlier range was a rounding artifact."
@@ -92,7 +106,20 @@
             "core_cycles": 4.0
           },
           "chain_latency": 0.0,
-          "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check."
+          "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0004  li.w        \t$a0, -64",
+            "00149294  and         \t$t8, $t8, $a0",
+            "02bffc05  li.w        \t$a1, -1",
+            "031ffca5  lu52i.d     \t$a1, $a1, 2047",
+            "29c00285  st.d        \t$a1, $t8, 0",
+            "02bffc0c  li.w        \t$t0, -1",
+            "031ffd8c  lu52i.d     \t$t0, $t0, 2047",
+            "02bffc04  li.w        \t$a0, -1",
+            "031ffc84  lu52i.d     \t$a0, $a0, 2047",
+            "387a1284  ldle.b      \t$a0, $t8, $a0"
+          ]
         }
       ],
       "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check. Raw measurement was 4.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 4.00; the value is 4 cycle(s) and any earlier range was a rounding artifact."

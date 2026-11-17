@@ -63,7 +63,13 @@
             "instructions_retired": 1.0,
             "core_cycles": 2.0
           },
-          "notes": "rj -> rd chain."
+          "notes": "rj -> rd chain.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "02c0080d  li.d        \t$t1, 2",
+            "02c00c0e  li.d        \t$t2, 3",
+            "0035358c  rcr.w       \t$t0, $t0, $t1"
+          ]
         }
       ],
       "notes": "rj -> rd chain. Raw slope-method measurement was 2.03; the value is 2 cycle(s) and any earlier range was a rounding artifact."
@@ -90,7 +96,14 @@
             "instructions_retired": 2.0,
             "core_cycles": 4.0
           },
-          "notes": "rk -> rd chain: two copies alternate rd/rk."
+          "notes": "rk -> rd chain: two copies alternate rd/rk.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "02c0080d  li.d        \t$t1, 2",
+            "02c00c0e  li.d        \t$t2, 3",
+            "003531cd  rcr.w       \t$t1, $t2, $t0",
+            "003535cc  rcr.w       \t$t0, $t2, $t1"
+          ]
         }
       ],
       "notes": "rk -> rd chain: two copies alternate rd/rk. Raw slope-method measurement was 2.02; the value is 2 cycle(s) and any earlier range was a rounding artifact.",

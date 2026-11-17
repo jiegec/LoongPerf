@@ -71,7 +71,18 @@
             "instructions_retired": 1.0,
             "core_cycles": 5.0
           },
-          "notes": "vj -> vd chain."
+          "notes": "vj -> vd chain.",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0881  xvreplgr2vr.w\t$xr1, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0882  xvreplgr2vr.w\t$xr2, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0883  xvreplgr2vr.w\t$xr3, $a0",
+            "0ae18800  xvfnmsub.d  \t$xr0, $xr0, $xr2, $xr3"
+          ]
         }
       ],
       "notes": "vj -> vd chain."
@@ -98,7 +109,18 @@
             "instructions_retired": 1.0,
             "core_cycles": 5.0
           },
-          "notes": "vk -> vd chain."
+          "notes": "vk -> vd chain.",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0881  xvreplgr2vr.w\t$xr1, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0882  xvreplgr2vr.w\t$xr2, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0883  xvreplgr2vr.w\t$xr3, $a0",
+            "0ae18020  xvfnmsub.d  \t$xr0, $xr1, $xr0, $xr3"
+          ]
         }
       ],
       "notes": "vk -> vd chain."
@@ -125,7 +147,18 @@
             "instructions_retired": 1.0,
             "core_cycles": 5.0
           },
-          "notes": "va -> vd chain."
+          "notes": "va -> vd chain.",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0881  xvreplgr2vr.w\t$xr1, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0882  xvreplgr2vr.w\t$xr2, $a0",
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0883  xvreplgr2vr.w\t$xr3, $a0",
+            "0ae00820  xvfnmsub.d  \t$xr0, $xr1, $xr2, $xr0"
+          ]
         }
       ],
       "notes": "va -> vd chain."

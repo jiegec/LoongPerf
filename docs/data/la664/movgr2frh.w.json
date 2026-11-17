@@ -56,7 +56,18 @@
             "core_cycles": 13.02
           },
           "chain_latency": 11.04,
-          "notes": "13.02 cycles minus 11.04 (10.04 FPR-store -> GPR-load forwarding + 1 add.d) = 1.98 cycles, reported as 2."
+          "notes": "13.02 cycles minus 11.04 (10.04 FPR-store -> GPR-load forwarding + 1 add.d) = 1.98 cycles, reported as 2.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "03800405  li.w        \t$a1, 0x1",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "02f0006c  addi.d      \t$t0, $sp, -1024",
+            "29c00184  st.d        \t$a0, $t0, 0",
+            "0114ac80  movgr2frh.w \t$fa0, $a0",
+            "2bc00180  fst.d       \t$fa0, $t0, 0",
+            "28c00184  ld.d        \t$a0, $t0, 0",
+            "00109484  add.d       \t$a0, $a0, $a1"
+          ]
         }
       ],
       "notes": "Writing the high half costs 2 cycles, one more than movgr2fr.d/w. The instruction retires as 2 uops, but throughput is still 1 CPI."
@@ -83,7 +94,12 @@
             "instructions_retired": 2.0,
             "core_cycles": 1.0
           },
-          "notes": "fd -> fd chain: writing the high half merges with the existing low half, so the old fd value is a real source."
+          "notes": "fd -> fd chain: writing the high half merges with the existing low half, so the old fd value is a real source.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114ac80  movgr2frh.w \t$fa0, $a0"
+          ]
         }
       ],
       "notes": "fd -> fd chain: writing the high half merges with the existing low half, so the old fd value is a real source. Raw measurement was 1.07; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the value is 1 cycle(s) and any earlier range was a rounding artifact."

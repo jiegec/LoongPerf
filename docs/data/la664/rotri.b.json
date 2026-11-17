@@ -62,7 +62,11 @@
             "instructions_retired": 1.0,
             "core_cycles": 2.0
           },
-          "notes": "rj -> rd chain."
+          "notes": "rj -> rd chain.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "004c258c  rotri.b     \t$t0, $t0, 0x1"
+          ]
         }
       ],
       "notes": "rj -> rd chain. Raw slope-method measurement was 2.03; the value is 2 cycle(s) and any earlier range was a rounding artifact."

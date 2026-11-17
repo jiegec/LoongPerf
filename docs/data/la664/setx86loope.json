@@ -64,7 +64,13 @@
             "instructions_retired": 1.0,
             "core_cycles": 1.0
           },
-          "notes": "rj -> rd chain."
+          "notes": "rj -> rd chain.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "02c0080d  li.d        \t$t1, 2",
+            "005c0020  x86mtflag   \t$zero, 0x0",
+            "0000798c  setx86loope \t$t0, $t0"
+          ]
         }
       ],
       "notes": "rj -> rd chain. Raw measurement was 1.09; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."

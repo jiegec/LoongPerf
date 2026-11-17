@@ -63,7 +63,16 @@
             "instructions_retired": 1.0,
             "core_cycles": 2.0
           },
-          "notes": "vj -> result chain."
+          "notes": "vj -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "0c660400  vfcmp.cueq.d\t$vr0, $vr0, $vr1"
+          ]
         }
       ],
       "notes": "vj -> result chain."
@@ -90,7 +99,16 @@
             "instructions_retired": 1.0,
             "core_cycles": 2.0
           },
-          "notes": "vk -> result chain."
+          "notes": "vk -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "0c660020  vfcmp.cueq.d\t$vr0, $vr1, $vr0"
+          ]
         }
       ],
       "notes": "vk -> result chain."

@@ -62,7 +62,12 @@
             "instructions_retired": 1.0,
             "core_cycles": 2.0
           },
-          "notes": "Consecutive unrolled copies form a vector-register dependency chain. Measured with unroll=100000 to amortise call overhead."
+          "notes": "Consecutive unrolled copies form a vector-register dependency chain. Measured with unroll=100000 to amortise call overhead.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+            "77144400  xvbitseti.h \t$xr0, $xr0, 0x1"
+          ]
         }
       ],
       "notes": "Register-to-register latency."

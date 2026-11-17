@@ -55,7 +55,12 @@
             "instructions_retired": 2.0,
             "core_cycles": 5.0
           },
-          "notes": "Register-to-register dependency chain. Source values are normal floats or small integers as appropriate."
+          "notes": "Register-to-register dependency chain. Source values are normal floats or small integers as appropriate.",
+          "machine_code": [
+            "147f0004  lu12i.w     \t$a0, 260096",
+            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
+            "769e8400  xvftinth.l.s\t$xr0, $xr0"
+          ]
         }
       ],
       "notes": "Register-to-register latency."

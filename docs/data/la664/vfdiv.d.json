@@ -63,7 +63,16 @@
             "instructions_retired": 1.0,
             "core_cycles": 8.0
           },
-          "notes": "vj -> result chain."
+          "notes": "vj -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "713b0400  vfdiv.d     \t$vr0, $vr0, $vr1"
+          ]
         }
       ],
       "notes": "vj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
@@ -92,7 +101,16 @@
             "instructions_retired": 1.0,
             "core_cycles": 17.0
           },
-          "notes": "vk -> result chain."
+          "notes": "vk -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "713b0020  vfdiv.d     \t$vr0, $vr1, $vr0"
+          ]
         }
       ],
       "notes": "vk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",

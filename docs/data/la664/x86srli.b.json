@@ -63,7 +63,12 @@
             "instructions_retired": 1.0,
             "core_cycles": 2.0
           },
-          "notes": "rd -> rd chain: the destination is also a source."
+          "notes": "rd -> rd chain: the destination is also a source.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "005c0420  x86mtflag   \t$zero, 0x1",
+            "00542584  x86srli.b   \t$t0, 0x1"
+          ]
         }
       ],
       "notes": "rd -> rd chain: the destination is also a source."
@@ -91,7 +96,13 @@
             "core_cycles": 4.0
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted.",
-          "chain_latency": 1.0
+          "chain_latency": 1.0,
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "005c0420  x86mtflag   \t$zero, 0x1",
+            "00542584  x86srli.b   \t$t0, 0x1",
+            "005c040c  x86mfflag   \t$t0, 0x1"
+          ]
         }
       ],
       "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted."

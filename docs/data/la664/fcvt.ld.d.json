@@ -55,7 +55,12 @@
             "instructions_retired": 1.0,
             "core_cycles": 2.0
           },
-          "notes": "fj -> fd chain."
+          "notes": "fj -> fd chain.",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114e000  fcvt.ld.d   \t$fa0, $fa0"
+          ]
         }
       ],
       "notes": "fj -> fd chain. Raw slope-method measurement was 2.01; the value is 2 cycle(s) and any earlier range was a rounding artifact."

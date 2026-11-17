@@ -56,7 +56,13 @@
             "core_cycles": 4.0
           },
           "chain_latency": 1.0,
-          "notes": "Round trip between movcf2fr/movfr2cf or movcf2gr/movgr2cf is 4 cycles. The split is consistent with the fcmp chains: CF->FPR=1, FPR->CF=1, CF->GPR=3, GPR->CF=1."
+          "notes": "Round trip between movcf2fr/movfr2cf or movcf2gr/movgr2cf is 4 cycles. The split is consistent with the fcmp chains: CF->FPR=1, FPR->CF=1, CF->GPR=3, GPR->CF=1.",
+          "machine_code": [
+            "00150004  move        \t$a0, $zero",
+            "0114d880  movgr2cf    \t$fcc0, $a0",
+            "0114dc04  movcf2gr    \t$a0, $fcc0",
+            "0114d880  movgr2cf    \t$fcc0, $a0"
+          ]
         }
       ],
       "notes": "Round trip between movcf2fr/movfr2cf or movcf2gr/movgr2cf is 4 cycles. The split is consistent with the fcmp chains: CF->FPR=1, FPR->CF=1, CF->GPR=3, GPR->CF=1."

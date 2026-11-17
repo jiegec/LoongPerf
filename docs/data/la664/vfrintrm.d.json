@@ -55,7 +55,12 @@
             "instructions_retired": 1.0,
             "core_cycles": 4.0
           },
-          "notes": "Vector registers initialised with normal 1.0/2.0 values, not byte-replicated integers. Measured with unroll=100000."
+          "notes": "Vector registers initialised with normal 1.0/2.0 values, not byte-replicated integers. Measured with unroll=100000.",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "729f0c80  vreplgr2vr.d\t$vr0, $a0",
+            "729d4800  vfrintrm.d  \t$vr0, $vr0"
+          ]
         }
       ],
       "notes": "Register-to-register latency."

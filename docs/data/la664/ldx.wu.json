@@ -64,7 +64,17 @@
             "core_cycles": 5.0
           },
           "chain_latency": 1.0,
-          "notes": "rj -> rd chain: the base register is updated from the loaded value and the index stays 0; the add.d is subtracted."
+          "notes": "rj -> rd chain: the base register is updated from the loaded value and the index stays 0; the add.d is subtracted.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0015  li.w        \t$r21, -64",
+            "0014d694  and         \t$t8, $t8, $r21",
+            "00150015  move        \t$r21, $zero",
+            "03800416  li.w        \t$fp, 0x1",
+            "29c00296  st.d        \t$fp, $t8, 0",
+            "38285684  ldx.wu      \t$a0, $t8, $r21",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "rj -> rd chain: the base register is updated from the loaded value and the index stays 0; the add.d is subtracted."
@@ -92,7 +102,17 @@
             "core_cycles": 6.0
           },
           "chain_latency": 1.0,
-          "notes": "rk -> rd chain: the index register is loop-carried; andi keeps it inside the buffer and its 1 cycle is subtracted."
+          "notes": "rk -> rd chain: the index register is loop-carried; andi keeps it inside the buffer and its 1 cycle is subtracted.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0015  li.w        \t$r21, -64",
+            "0014d694  and         \t$t8, $t8, $r21",
+            "03802016  li.w        \t$fp, 0x8",
+            "29c00296  st.d        \t$fp, $t8, 0",
+            "00150004  move        \t$a0, $zero",
+            "38281284  ldx.wu      \t$a0, $t8, $a0",
+            "03401c84  andi        \t$a0, $a0, 0x7"
+          ]
         }
       ],
       "notes": "rk -> rd chain: the index register is loop-carried; andi keeps it inside the buffer and its 1 cycle is subtracted."

@@ -56,7 +56,12 @@
             "core_cycles": 7.0
           },
           "chain_latency": 6,
-          "notes": "xvreplgr2vr.d latency from a round trip through xvpickve2gr.d; the pick contributes 6 cycles."
+          "notes": "xvreplgr2vr.d latency from a round trip through xvpickve2gr.d; the pick contributes 6 cycles.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
+            "76efe004  xvpickve2gr.d\t$a0, $xr0, 0x0"
+          ]
         }
       ],
       "notes": "xvreplgr2vr.d latency from a round trip through xvpickve2gr.d; the pick contributes 6 cycles."

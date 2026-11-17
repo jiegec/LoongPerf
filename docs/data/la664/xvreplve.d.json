@@ -63,7 +63,13 @@
             "instructions_retired": 2.0,
             "core_cycles": 1.0
           },
-          "notes": "Dependent vector chain."
+          "notes": "Dependent vector chain.",
+          "machine_code": [
+            "00150004  move        \t$a0, $zero",
+            "03800405  li.w        \t$a1, 0x1",
+            "769f00a0  xvreplgr2vr.b\t$xr0, $a1",
+            "75239000  xvreplve.d  \t$xr0, $xr0, $a0"
+          ]
         }
       ],
       "notes": "Register dependency latency. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."

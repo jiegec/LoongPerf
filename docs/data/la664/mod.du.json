@@ -64,7 +64,16 @@
             "core_cycles": 40.0
           },
           "chain_latency": 2.0,
-          "notes": "Fixed dividend=max, divisor=2, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
+          "notes": "Fixed dividend=max, divisor=2, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain.",
+          "machine_code": [
+            "02bffc0c  li.w        \t$t0, -1",
+            "0380080d  li.w        \t$t1, 0x2",
+            "03800405  li.w        \t$a1, 0x1",
+            "02bff806  li.w        \t$a2, -2",
+            "0023b58c  mod.du      \t$t0, $t0, $t1",
+            "0014958c  and         \t$t0, $t0, $a1",
+            "0015198c  or          \t$t0, $t0, $a2"
+          ]
         }
       ],
       "notes": "Data-dependent. Sample uses max/2. Min 5 cycles at small/even divisors; max 39 cycles at divisor=1 (unsigned) or max/1. Measured with unroll=100000; unroll=1000 was biased low by about 0.2 cycles.",
@@ -94,7 +103,16 @@
             "core_cycles": 40.0
           },
           "chain_latency": 2.0,
-          "notes": "Fixed divisor=2, dividend=max, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
+          "notes": "Fixed divisor=2, dividend=max, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain.",
+          "machine_code": [
+            "0380080c  li.w        \t$t0, 0x2",
+            "02bffc0d  li.w        \t$t1, -1",
+            "03800405  li.w        \t$a1, 0x1",
+            "03800806  li.w        \t$a2, 0x2",
+            "0023b1ac  mod.du      \t$t0, $t1, $t0",
+            "0014958c  and         \t$t0, $t0, $a1",
+            "0015198c  or          \t$t0, $t0, $a2"
+          ]
         }
       ],
       "notes": "Data-dependent. Sample uses max/2. Min 5 cycles at small/even divisors; max 39 cycles at divisor=1 (unsigned) or max/1. Measured with unroll=100000; unroll=1000 was biased low by about 0.2 cycles.",
