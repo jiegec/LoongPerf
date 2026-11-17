@@ -57,7 +57,7 @@
           "chain_latency": 1,
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 5.99
+            "core_cycles": 6
           },
           "measurement": {
             "unroll": 10000,
@@ -84,7 +84,7 @@
           "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r4, 0",
           "result": {
             "instructions_retired": 1,
-            "core_cycles": 4
+            "core_cycles": 5.0
           },
           "measurement": {
             "unroll": 20000,

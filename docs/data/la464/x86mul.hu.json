@@ -57,7 +57,7 @@
           "chain_latency": 0,
           "result": {
             "instructions_retired": 1,
-            "core_cycles": 0.93
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 100000,
@@ -91,7 +91,7 @@
           "chain_latency": 0,
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 2.45
+            "core_cycles": 2.46
           },
           "measurement": {
             "unroll": 100000,
@@ -129,7 +129,7 @@
           "chain_latency": 1,
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 7.05
+            "core_cycles": 7
           },
           "measurement": {
             "unroll": 100000,
@@ -164,7 +164,7 @@
           "chain_latency": 1,
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 7.05
+            "core_cycles": 7
           },
           "measurement": {
             "unroll": 100000,

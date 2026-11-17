@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.98,
+      "cycles": 4.0,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -61,7 +61,7 @@
           "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.w $r22, $r20, 0; li.d $r22, -8; st.w $r22, $r20, 8; li.d $r21, 0' --asm 'fldgt.s $f0, $r20, $r21; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 7.98
+            "core_cycles": 8.0
           },
           "chain_latency": 4,
           "notes": "rj -> fd chain; the movfr2gr.s (3) + add.d (1) closure is subtracted.",

@@ -47,7 +47,7 @@
           "init": "li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4",
           "result": {
             "instructions_retired": 1,
-            "core_cycles": 14.98
+            "core_cycles": 15.0
           },
           "measurement": {
             "unroll": 20000,

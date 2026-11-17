@@ -56,7 +56,7 @@
           "chain_latency": 3,
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 4.06
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 100000,
