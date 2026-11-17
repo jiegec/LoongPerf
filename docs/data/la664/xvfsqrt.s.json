@@ -100,7 +100,112 @@
           ]
         }
       ],
-      "notes": "Data-dependent. 11 cycles when the input is zero, Inf or NaN; 15 when the result is exact (the input is an even power of two such as 1.0, 4.0 or 0.25); 11 for an exact result from a subnormal input; 39 when the square root needs the full 23-bit mantissa (sqrt(2.0), sqrt(max)); 37 for that case with a subnormal input (sqrt(maxsub)). The long path retires one mantissa bit per cycle (15 + 2*ceil(23/4) = 36), so a square root costs twice the digit time of a divide."
+      "notes": "Data-dependent. 11 cycles when the input is zero, Inf or NaN; 15 when the result is exact (the input is an even power of two such as 1.0, 4.0 or 0.25); 11 for an exact result from a subnormal input; 39 when the square root needs the full 23-bit mantissa (sqrt(2.0), sqrt(max)); 37 for that case with a subnormal input (sqrt(maxsub)). The long path retires one mantissa bit per cycle (15 + 2*ceil(23/4) = 36), so a square root costs twice the digit time of a divide.",
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "xvfsqrt.s $xr0, $xr0",
+            "init": "li.d $r4, 0; xvreplgr2vr.w $xr0, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.w $xr0, $r4; li.d $r8, 0' --asm 'xvfsqrt.s $xr0, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 10.99
+            }
+          }
+        },
+        {
+          "name": "exact result",
+          "cycles": 15,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "xvfsqrt.s $xr0, $xr0",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1065353216' --asm 'xvfsqrt.s $xr0, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 14.91
+            }
+          }
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 17,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "xvfsqrt.s $xr0, $xr0; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 2097152; xvreplgr2vr.w $xr0, $r4; li.d $r8, 2097152",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2097152; xvreplgr2vr.w $xr0, $r4; li.d $r8, 2097152' --asm 'xvfsqrt.s $xr0, $xr0; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 25.94
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "inexact result",
+          "cycles": 39,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "xvfsqrt.s $xr0, $xr0; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 1073741824; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1073741824",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1073741824; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1073741824' --asm 'xvfsqrt.s $xr0, $xr0; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 47.97
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 41,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "xvfsqrt.s $xr0, $xr0; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 8388607; xvreplgr2vr.w $xr0, $r4; li.d $r8, 8388607",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 8388607; xvreplgr2vr.w $xr0, $r4; li.d $r8, 8388607' --asm 'xvfsqrt.s $xr0, $xr0; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 49.97
+            },
+            "chain_latency": 8.99
+          }
+        }
+      ]
     }
   ],
   "throughput": [

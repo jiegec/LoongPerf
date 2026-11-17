@@ -104,23 +104,106 @@
       "cases": [
         {
           "name": "zero, Inf or NaN input",
-          "cycles": 8
+          "cycles": 8,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "xvfrecip.d $xr0, $xr0",
+            "init": "li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.d $xr0, $r4; li.d $r8, 0' --asm 'xvfrecip.d $xr0, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 7.97
+            }
+          }
         },
         {
           "name": "exact result",
-          "cycles": 10
+          "cycles": 10,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "xvfrecip.d $xr0, $xr0",
+            "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4607182418800017408",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4607182418800017408' --asm 'xvfrecip.d $xr0, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 10.0
+            }
+          }
         },
         {
           "name": "exact result, subnormal operand",
-          "cycles": 11
+          "cycles": 11,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.d (8.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "xvfrecip.d $xr0, $xr0; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 2251799813685248; xvreplgr2vr.d $xr0, $r4; li.d $r8, 2251799813685248",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2251799813685248; xvreplgr2vr.d $xr0, $r4; li.d $r8, 2251799813685248' --asm 'xvfrecip.d $xr0, $xr0; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 20.0
+            },
+            "chain_latency": 8.99
+          }
         },
         {
           "name": "inexact result",
-          "cycles": 23
+          "cycles": 23,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.d (8.99 cycles)",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "xvfrecip.d $xr0, $xr0; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4613937818241073152",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4613937818241073152' --asm 'xvfrecip.d $xr0, $xr0; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 31.96
+            },
+            "chain_latency": 8.99
+          }
         },
         {
           "name": "inexact result, subnormal operand",
-          "cycles": 24
+          "cycles": 24,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.d (8.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "xvfrecip.d $xr0, $xr0; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6",
+            "init": "li.d $r4, 4503599627370495; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4503599627370495",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4503599627370495; xvreplgr2vr.d $xr0, $r4; li.d $r8, 4503599627370495' --asm 'xvfrecip.d $xr0, $xr0; xvpickve2gr.d $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.d $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 32.99
+            },
+            "chain_latency": 8.99
+          }
         }
       ]
     }

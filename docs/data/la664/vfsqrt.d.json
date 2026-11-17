@@ -104,23 +104,106 @@
       "cases": [
         {
           "name": "zero, Inf or NaN input",
-          "cycles": 8
+          "cycles": 8,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "vfsqrt.d $vr0, $vr0",
+            "init": "li.d $r4, 0; vreplgr2vr.d $vr0, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; vreplgr2vr.d $vr0, $r4; li.d $r8, 0' --asm 'vfsqrt.d $vr0, $vr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 8.0
+            }
+          }
         },
         {
           "name": "exact result",
-          "cycles": 10
+          "cycles": 10,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "vfsqrt.d $vr0, $vr0",
+            "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r8, 4607182418800017408",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r8, 4607182418800017408' --asm 'vfsqrt.d $vr0, $vr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 10.01
+            }
+          }
         },
         {
           "name": "exact result, subnormal operand",
-          "cycles": 11
+          "cycles": 11,
+          "notes": "helper reset chain, its cost calibrated against vfadd.d (6.97 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "vfsqrt.d $vr0, $vr0; vpickve2gr.d $r6, $vr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; vreplgr2vr.d $vr0, $r6",
+            "init": "li.d $r4, 1125899906842624; vreplgr2vr.d $vr0, $r4; li.d $r8, 1125899906842624",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1125899906842624; vreplgr2vr.d $vr0, $r4; li.d $r8, 1125899906842624' --asm 'vfsqrt.d $vr0, $vr0; vpickve2gr.d $r6, $vr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; vreplgr2vr.d $vr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 17.98
+            },
+            "chain_latency": 6.97
+          }
         },
         {
           "name": "inexact result",
-          "cycles": 36
+          "cycles": 36,
+          "notes": "helper reset chain, its cost calibrated against vfadd.d (6.97 cycles)",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "vfsqrt.d $vr0, $vr0; vpickve2gr.d $r6, $vr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; vreplgr2vr.d $vr0, $r6",
+            "init": "li.d $r4, 4611686018427387904; vreplgr2vr.d $vr0, $r4; li.d $r8, 4611686018427387904",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4611686018427387904; vreplgr2vr.d $vr0, $r4; li.d $r8, 4611686018427387904' --asm 'vfsqrt.d $vr0, $vr0; vpickve2gr.d $r6, $vr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; vreplgr2vr.d $vr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 42.93
+            },
+            "chain_latency": 6.97
+          }
         },
         {
           "name": "inexact result, subnormal operand",
-          "cycles": 37
+          "cycles": 37,
+          "notes": "helper reset chain, its cost calibrated against vfadd.d (6.97 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "vfsqrt.d $vr0, $vr0; vpickve2gr.d $r6, $vr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; vreplgr2vr.d $vr0, $r6",
+            "init": "li.d $r4, 4503599627370495; vreplgr2vr.d $vr0, $r4; li.d $r8, 4503599627370495",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4503599627370495; vreplgr2vr.d $vr0, $r4; li.d $r8, 4503599627370495' --asm 'vfsqrt.d $vr0, $vr0; vpickve2gr.d $r6, $vr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; vreplgr2vr.d $vr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 44.0
+            },
+            "chain_latency": 6.97
+          }
         }
       ]
     }

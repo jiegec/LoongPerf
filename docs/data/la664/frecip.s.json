@@ -66,27 +66,127 @@
       "cases": [
         {
           "name": "zero, Inf or NaN input",
-          "cycles": 8
+          "cycles": 8,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "frecip.s $f0, $f0",
+            "init": "li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r8, 0' --asm 'frecip.s $f0, $f0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 7.98
+            }
+          }
         },
         {
           "name": "exact result",
-          "cycles": 10
+          "cycles": 10,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "frecip.s $f0, $f0",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r8, 1065353216' --asm 'frecip.s $f0, $f0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 9.99
+            }
+          }
         },
         {
           "name": "exact result, subnormal operand",
-          "cycles": 11
+          "cycles": 11,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 4194304; movgr2fr.w $f0, $r4; li.d $r8, 4194304",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 4194304; movgr2fr.w $f0, $r4; li.d $r8, 4194304' --asm 'frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 16.99
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "tiny inexact result",
-          "cycles": 15
+          "cycles": 15,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "tiny inexact result",
+            "asm": "frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 2139095039; movgr2fr.w $f0, $r4; li.d $r8, 2139095039",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2139095039; movgr2fr.w $f0, $r4; li.d $r8, 2139095039' --asm 'frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 20.99
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "inexact result",
-          "cycles": 16
+          "cycles": 16,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 1077936128; movgr2fr.w $f0, $r4; li.d $r8, 1077936128",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1077936128; movgr2fr.w $f0, $r4; li.d $r8, 1077936128' --asm 'frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 21.99
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "inexact result, subnormal operand",
-          "cycles": 17
+          "cycles": 17,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r8, 8388607",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r8, 8388607' --asm 'frecip.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 22.96
+            },
+            "chain_latency": 5.99
+          }
         }
       ]
     }

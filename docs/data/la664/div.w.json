@@ -78,7 +78,7 @@
           ]
         }
       ],
-      "notes": "Data-dependent. The scalar divider retires two quotient bits per cycle, so latency = 7 + floor(quotient_bits/2): 22 for a 31-bit quotient, 23 for a full 32-bit unsigned one.",
+      "notes": "Data-dependent, and a ladder rather than a set of discrete classes: latency = 7 + floor(bits(|quotient|)/2), because the divider retires two quotient bits per cycle. The minimum is 5 with a zero dividend and a divisor of 2 or more; a divisor of 1 costs one cycle more (6) because the quotient then equals the dividend and is never zero. The maximum is 22 for a 31-bit quotient. The divider works on the magnitudes, so the sign of the operands does not matter, and it skips trailing zero digits, which is why 0x10 / 1 costs 7 cycles instead of 9 and -2^63 / 1 is fast. Measured with the exact chain `div.w $r4, $r4, $r5` and divisor 1, which returns its own value and walks the ladder by changing --init. `mod` shares the divider and measures the same. The cases array holds named sample points on this ladder, not an exhaustive classification.",
       "cycles_min": 5,
       "cycles_max": 22,
       "cases": [
@@ -132,7 +132,7 @@
           ]
         }
       ],
-      "notes": "Data-dependent. The scalar divider retires two quotient bits per cycle, so latency = 7 + floor(quotient_bits/2): 22 for a 31-bit quotient, 23 for a full 32-bit unsigned one.",
+      "notes": "Data-dependent, and a ladder rather than a set of discrete classes: latency = 7 + floor(bits(|quotient|)/2), because the divider retires two quotient bits per cycle. The minimum is 5 with a zero dividend and a divisor of 2 or more; a divisor of 1 costs one cycle more (6) because the quotient then equals the dividend and is never zero. The maximum is 22 for a 31-bit quotient. The divider works on the magnitudes, so the sign of the operands does not matter, and it skips trailing zero digits, which is why 0x10 / 1 costs 7 cycles instead of 9 and -2^63 / 1 is fast. Measured with the exact chain `div.w $r4, $r4, $r5` and divisor 1, which returns its own value and walks the ladder by changing --init. `mod` shares the divider and measures the same. The cases array holds named sample points on this ladder, not an exhaustive classification.",
       "cycles_min": 5,
       "cycles_max": 22,
       "cases": [

@@ -66,23 +66,106 @@
       "cases": [
         {
           "name": "zero, Inf or NaN input",
-          "cycles": 8
+          "cycles": 8,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "fsqrt.s $f0, $f0",
+            "init": "li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r8, 0' --asm 'fsqrt.s $f0, $f0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 7.99
+            }
+          }
         },
         {
           "name": "exact result",
-          "cycles": 10
+          "cycles": 10,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "fsqrt.s $f0, $f0",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r8, 1065353216' --asm 'fsqrt.s $f0, $f0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 9.97
+            }
+          }
         },
         {
           "name": "exact result, subnormal operand",
-          "cycles": 11
+          "cycles": 11,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "fsqrt.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 2097152; movgr2fr.w $f0, $r4; li.d $r8, 2097152",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2097152; movgr2fr.w $f0, $r4; li.d $r8, 2097152' --asm 'fsqrt.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 16.97
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "inexact result",
-          "cycles": 22
+          "cycles": 22,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "fsqrt.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 1073741824; movgr2fr.w $f0, $r4; li.d $r8, 1073741824",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1073741824; movgr2fr.w $f0, $r4; li.d $r8, 1073741824' --asm 'fsqrt.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 27.96
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "inexact result, subnormal operand",
-          "cycles": 23
+          "cycles": 23,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "fsqrt.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r8, 8388607",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r8, 8388607' --asm 'fsqrt.s $f0, $f0; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 28.94
+            },
+            "chain_latency": 5.99
+          }
         }
       ]
     }

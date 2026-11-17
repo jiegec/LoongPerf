@@ -366,6 +366,14 @@ def check_latencies(path: Path, data: dict) -> None:
             error(path, f"latency cycles {latency['cycles']} != core_cycles - chain_latency ({expected})")
 
         cases = latency.get("cases")
+        for case in cases or []:
+            experiment = case.get("experiment")
+            if not experiment:
+                continue
+            check_experiment(path, data, experiment)
+            case_expected = experiment["result"]["core_cycles"] - experiment.get("chain_latency", 0)
+            if not close(case["cycles"], case_expected, 0.5):
+                error(path, f"case {case['name']!r} cycles {case['cycles']} != core_cycles - chain_latency ({case_expected})")
         if cases:
             values = [case["cycles"] for case in cases]
             low, high = min(values), max(values)

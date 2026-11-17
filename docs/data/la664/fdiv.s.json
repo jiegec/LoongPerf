@@ -80,31 +80,147 @@
       "cases": [
         {
           "name": "zero, Inf or NaN input",
-          "cycles": 8
+          "cycles": 8,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "fdiv.s $f0, $f0, $f1",
+            "init": "li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 0' --asm 'fdiv.s $f0, $f0, $f1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 7.99
+            }
+          }
         },
         {
           "name": "result overflows or underflows",
-          "cycles": 9
+          "cycles": 9,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "result overflows or underflows",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 2139095039; movgr2fr.w $f0, $r4; li.d $r4, 8388608; movgr2fr.w $f1, $r4; li.d $r8, 2139095039",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2139095039; movgr2fr.w $f0, $r4; li.d $r4, 8388608; movgr2fr.w $f1, $r4; li.d $r8, 2139095039' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 14.95
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "exact result",
-          "cycles": 10
+          "cycles": 10,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "fdiv.s $f0, $f0, $f1",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 1065353216' --asm 'fdiv.s $f0, $f0, $f1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 9.91
+            }
+          }
         },
         {
           "name": "exact result, subnormal operand",
-          "cycles": 11
+          "cycles": 11,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 8388607",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 8388607' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 16.99
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "tiny inexact result",
-          "cycles": 15
+          "cycles": 15,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "tiny inexact result",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 2139095039; movgr2fr.w $f1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 2139095039; movgr2fr.w $f1, $r4; li.d $r8, 1065353216' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 21.0
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "inexact result",
-          "cycles": 16
+          "cycles": 16,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "fdiv.s $f0, $f1, $f0",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r4, 1077936128; movgr2fr.w $f0, $r4; li.d $r8, 1077936128",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r4, 1077936128; movgr2fr.w $f0, $r4; li.d $r8, 1077936128' --asm 'fdiv.s $f0, $f1, $f0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 15.98
+            }
+          }
         },
         {
           "name": "inexact result, subnormal operand",
-          "cycles": 17
+          "cycles": 17,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 1065353216' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 22.98
+            },
+            "chain_latency": 5.99
+          }
         }
       ]
     },
@@ -146,31 +262,147 @@
       "cases": [
         {
           "name": "zero, Inf or NaN input",
-          "cycles": 8
+          "cycles": 8,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "fdiv.s $f0, $f0, $f1",
+            "init": "li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 0' --asm 'fdiv.s $f0, $f0, $f1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 7.99
+            }
+          }
         },
         {
           "name": "result overflows or underflows",
-          "cycles": 9
+          "cycles": 9,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "result overflows or underflows",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 2139095039; movgr2fr.w $f0, $r4; li.d $r4, 8388608; movgr2fr.w $f1, $r4; li.d $r8, 2139095039",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2139095039; movgr2fr.w $f0, $r4; li.d $r4, 8388608; movgr2fr.w $f1, $r4; li.d $r8, 2139095039' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 14.95
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "exact result",
-          "cycles": 10
+          "cycles": 10,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "fdiv.s $f0, $f0, $f1",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r8, 1065353216' --asm 'fdiv.s $f0, $f0, $f1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 9.91
+            }
+          }
         },
         {
           "name": "exact result, subnormal operand",
-          "cycles": 11
+          "cycles": 11,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 8388607",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 8388607; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 8388607' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 16.99
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "tiny inexact result",
-          "cycles": 15
+          "cycles": 15,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "tiny inexact result",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 2139095039; movgr2fr.w $f1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 2139095039; movgr2fr.w $f1, $r4; li.d $r8, 1065353216' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 21.0
+            },
+            "chain_latency": 5.99
+          }
         },
         {
           "name": "inexact result",
-          "cycles": 16
+          "cycles": 16,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "fdiv.s $f0, $f1, $f0",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r4, 1077936128; movgr2fr.w $f0, $r4; li.d $r8, 1077936128",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f1, $r4; li.d $r4, 1077936128; movgr2fr.w $f0, $r4; li.d $r8, 1077936128' --asm 'fdiv.s $f0, $f1, $f0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 15.98
+            }
+          }
         },
         {
           "name": "inexact result, subnormal operand",
-          "cycles": 17
+          "cycles": 17,
+          "notes": "helper reset chain, its cost calibrated against fadd.s (5.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6",
+            "init": "li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; movgr2fr.w $f0, $r4; li.d $r4, 8388607; movgr2fr.w $f1, $r4; li.d $r8, 1065353216' --asm 'fdiv.s $f0, $f0, $f1; movfr2gr.s $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.w $f0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 5,
+              "core_cycles": 22.98
+            },
+            "chain_latency": 5.99
+          }
         }
       ]
     }

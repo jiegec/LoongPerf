@@ -76,7 +76,153 @@
       ],
       "notes": "Data-dependent. Same classes as the LSX form, with two quotient bits per cycle instead of four: 11 for 0, Inf or NaN inputs; 13 when the quotient overflows or underflows; 15 when the quotient is exact; 17 for an exact quotient with a subnormal operand; 25 when the inexact quotient is tiny (1.0/max); 27 when the quotient needs the full 23-bit mantissa; 29 with a subnormal operand. Long path: 15 + 2*ceil(23/4) = 27, so the vector single-precision divide is slower than the scalar one even though both doubles match.",
       "cycles_min": 11,
-      "cycles_max": 29
+      "cycles_max": 29,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 0; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 0' --asm 'xvfdiv.s $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 10.99
+            }
+          }
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 13,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "result overflows or underflows",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 2139095039; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388608; xvreplgr2vr.w $xr1, $r4; li.d $r8, 2139095039",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2139095039; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388608; xvreplgr2vr.w $xr1, $r4; li.d $r8, 2139095039' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 22.0
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "exact result",
+          "cycles": 15,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216' --asm 'xvfdiv.s $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 14.99
+            }
+          }
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 17,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 8388607; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 8388607",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 8388607; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 8388607' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 26.0
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "tiny inexact result",
+          "cycles": 25,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "tiny inexact result",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 2139095039; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 2139095039; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 33.99
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "inexact result",
+          "cycles": 27,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "xvfdiv.s $xr0, $xr1, $xr0",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1077936128",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1077936128' --asm 'xvfdiv.s $xr0, $xr1, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 26.97
+            }
+          }
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 29,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 37.99
+            },
+            "chain_latency": 8.99
+          }
+        }
+      ]
     },
     {
       "from_operands": [
@@ -112,7 +258,153 @@
       ],
       "notes": "Data-dependent. Same classes as the LSX form, with two quotient bits per cycle instead of four: 11 for 0, Inf or NaN inputs; 13 when the quotient overflows or underflows; 15 when the quotient is exact; 17 for an exact quotient with a subnormal operand; 25 when the inexact quotient is tiny (1.0/max); 27 when the quotient needs the full 23-bit mantissa; 29 with a subnormal operand. Long path: 15 + 2*ceil(23/4) = 27, so the vector single-precision divide is slower than the scalar one even though both doubles match.",
       "cycles_min": 11,
-      "cycles_max": 29
+      "cycles_max": 29,
+      "cases": [
+        {
+          "name": "zero, Inf or NaN input",
+          "cycles": 11,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "zero, Inf or NaN input",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 0; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 0' --asm 'xvfdiv.s $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 10.99
+            }
+          }
+        },
+        {
+          "name": "result overflows or underflows",
+          "cycles": 13,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "result overflows or underflows",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 2139095039; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388608; xvreplgr2vr.w $xr1, $r4; li.d $r8, 2139095039",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2139095039; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388608; xvreplgr2vr.w $xr1, $r4; li.d $r8, 2139095039' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 22.0
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "exact result",
+          "cycles": 15,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "exact result",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216' --asm 'xvfdiv.s $xr0, $xr0, $xr1'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 14.99
+            }
+          }
+        },
+        {
+          "name": "exact result, subnormal operand",
+          "cycles": 17,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "exact result, subnormal operand",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 8388607; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 8388607",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 8388607; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 8388607' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 26.0
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "tiny inexact result",
+          "cycles": 25,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "tiny inexact result",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 2139095039; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 2139095039; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 33.99
+            },
+            "chain_latency": 8.99
+          }
+        },
+        {
+          "name": "inexact result",
+          "cycles": 27,
+          "notes": "drift-free chain, no helper",
+          "experiment": {
+            "name": "inexact result",
+            "asm": "xvfdiv.s $xr0, $xr1, $xr0",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1077936128",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr1, $r4; li.d $r4, 1077936128; xvreplgr2vr.w $xr0, $r4; li.d $r8, 1077936128' --asm 'xvfdiv.s $xr0, $xr1, $xr0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 26.97
+            }
+          }
+        },
+        {
+          "name": "inexact result, subnormal operand",
+          "cycles": 29,
+          "notes": "helper reset chain, its cost calibrated against xvfadd.s (8.99 cycles)",
+          "experiment": {
+            "name": "inexact result, subnormal operand",
+            "asm": "xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6",
+            "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r4, 8388607; xvreplgr2vr.w $xr1, $r4; li.d $r8, 1065353216' --asm 'xvfdiv.s $xr0, $xr0, $xr1; xvpickve2gr.w $r6, $xr0, 0; and $r6, $r6, $r0; or $r6, $r6, $r8; xvreplgr2vr.w $xr0, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 6,
+              "core_cycles": 37.99
+            },
+            "chain_latency": 8.99
+          }
+        }
+      ]
     }
   ],
   "throughput": [

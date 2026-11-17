@@ -281,9 +281,15 @@ counters per core).
   Genuine averages keep their fraction together with a range: `ll.w`/`ll.d` are
   9.5 cycles with `cycles_min` 9 and `cycles_max` 10 because consecutive LLs
   alternate, and LA464 `x86mul.wu`/`hu` hold 1.23 from the vendor campaign.
-- Instructions whose latency depends on the operands carry a `cases` array of
-  named classes (`{"name": ..., "cycles": ...}`); `cycles_min`/`cycles_max` must
-  equal the smallest and largest case, and the validator enforces it.
+- A data-dependent latency lists its special cases in `cases`
+  (`{"name": ..., "cycles": ...}`) and `cycles_min`/`cycles_max` must equal the
+  smallest and largest case. If those cases cover every possible operand, as
+  they do for the floating-point divide, square root and reciprocal units, no
+  formula is needed and each case carries an `experiment` with the operand setup
+  and the `bench` command that provokes it. If they do not, as for integer
+  division where the latency is a continuous ladder, the `notes` must also give
+  the formula that covers the remaining inputs and the cases are only named
+  sample points.
 - Keep the arithmetic consistent: `cpi == 1/ipc` within rounding,
   `cycles == (core_cycles - chain_latency) / cycles_divisor` and
   `cpi == (core_cycles - baseline_cycles) / lanes`.

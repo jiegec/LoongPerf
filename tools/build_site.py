@@ -330,10 +330,15 @@ def render_instruction(uarch: str, data: dict) -> str:
                 f'{esc(operand_ref(data, [item["to_operand"]]))}: '
                 f'{esc(fmt(item["cycles"]))} cycles</h3>']
         if item.get("cases"):
-            out += [table_html(
-                ["Case", "Cycles"],
-                [[esc(case["name"]), esc(fmt(case["cycles"]))] for case in item["cases"]],
-            )]
+            rows = []
+            for case in item["cases"]:
+                experiment = case.get("experiment") or {}
+                setup = experiment.get("init", "")
+                commands = f'<code>{esc(experiment["command"])}</code>' if experiment.get("command") else ""
+                rows.append([esc(case["name"]), esc(fmt(case["cycles"])),
+                             f'<code>{esc(setup)}</code>' if setup else "",
+                             commands])
+            out += [table_html(["Case", "Cycles", "Operand setup", "Command"], rows)]
         if item.get("notes"):
             out += [para(item["notes"])]
         for exp in item.get("experiments", []):

@@ -235,7 +235,7 @@
         "cases": {
           "type": "array",
           "minItems": 2,
-          "description": "Named latency classes for an instruction whose latency depends on the operands. cycles_min and cycles_max must bracket them.",
+          "description": "Special cases of a data-dependent latency, each with a name and its measured cycles. If the listed cases cover every possible operand (floating-point divide, square root, reciprocal) they are exhaustive and the notes need no formula; if they do not (integer divide, whose latency is a continuous ladder) the notes must also state the formula that covers the rest, and cycles_min/cycles_max remain the authoritative range.",
           "items": {
             "type": "object",
             "required": [
@@ -253,6 +253,9 @@
               },
               "notes": {
                 "type": "string"
+              },
+              "experiment": {
+                "$ref": "#/$defs/experiment"
               }
             },
             "additionalProperties": false

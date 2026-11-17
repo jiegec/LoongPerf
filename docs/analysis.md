@@ -150,6 +150,20 @@ Three further effects shift the numbers:
 * a subnormal operand costs one extra digit time, while a tiny inexact *result*
   rather than a tiny operand saves one cycle instead.
 
+Each class has a reproducible recipe, and the JSON stores it with the class (the
+`cases` array carries the `init`, the `asm` and the full `bench` command):
+
+| class | recipe |
+| --- | --- |
+| `0`, `Inf`, `NaN` input | dividend or input `0`, divisor `1.0`; a fixed point |
+| overflow or underflow | dividend `max`, divisor `minnorm`; needs the reset helper, because the quotient is `Inf` and a chain would then measure the `Inf` input class |
+| exact | `1.0/1.0`, `sqrt(1.0)`, `rsqrt(1.0)`, `1/1.0`; all fixed points |
+| exact, subnormal operand | `maxsub/maxsub`, `sqrt(2^-1024)`, `1/2^-1023`: a subnormal whose result is exact |
+| inexact | divisor chain started at `3.0`, `sqrt(2.0)`, `rsqrt(2.0)`, `1/3.0`; needs the helper except for the divisor chain |
+| inexact, subnormal operand | `1.0/maxsub` (division) or `sqrt(maxsub)`, `rsqrt(maxsub)`, `1/maxsub` |
+| tiny inexact result (single precision) | `1.0/max` |
+| just above an exact power of two (`rsqrt`) | `(1+2^-52)/1` or `(1+2^-23)/1` |
+
 ### Division
 
 #### Scalar
@@ -232,6 +246,7 @@ frsqrt.d            11      15          16               41            54       
                         0/Inf/NaN  exact  exact+subnormal  inexact  inexact+subnormal
 vfrsqrt.d, xvfrsqrt.d       11      15          16           54          55
 vfrsqrt.s, xvfrsqrt.s       17      25          27           61          63
+vfrsqrt.s intermediate class (input just above an exact power of two): 49
 ```
 
 The single-precision vector form measures `2*33 - 5 = 61` for the general case,
@@ -294,6 +309,9 @@ vfrecip.s, xvfrecip.s      11       15          17             25          27   
 | `vfrecip.s` | 11-29 | 15 + 2 digit times |
 | `vfrecip.d` | 8-24 | identical to `frecip.d` |
 
-Every one of these ranges is stored in the JSON as a `cases` array, so the
-individual classes are visible on each instruction page without reading the
-notes.
+The floating-point classes are a fixed set that covers every possible operand,
+so the JSON lists them as an exhaustive `cases` array with the operand setup and
+the `bench` command for each one, and no formula is needed on the instruction
+page. The integer ladders are continuous: their `cases` entries are only the
+named special cases (zero dividend, one-digit quotient, full-width quotient) and
+the notes carry the formula for everything in between.
