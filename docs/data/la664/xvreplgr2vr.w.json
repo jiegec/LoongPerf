@@ -32,7 +32,36 @@
     "core": 0,
     "date": "2026-11-17"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "round trip through the reverse move",
+          "role": "measurement",
+          "asm": "xvreplgr2vr.w $xr0, $r4; xvpickve2gr.d $r4, $xr0, 0",
+          "init": "li.d $r4, 1",
+          "measurement": {
+            "unroll": 1000,
+            "iters": 1000,
+            "reps": 20
+          },
+          "command": "./bench --method slope --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1' --asm 'xvreplgr2vr.w $xr0, $r4; xvpickve2gr.d $r4, $xr0, 0'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 7.0
+          },
+          "chain_latency": 6,
+          "notes": "xvreplgr2vr.w latency from a round trip through xvpickve2gr.d; the pick contributes 6 cycles."
+        }
+      ],
+      "notes": "xvreplgr2vr.w latency from a round trip through xvpickve2gr.d; the pick contributes 6 cycles."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -54,5 +83,5 @@
       "notes": "8 independent instructions take 8.00 cycles. Counter 0xfa normalised per instruction."
     }
   ],
-  "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes."
+  "notes": "xvreplgr2vr.w latency is 1 cycle(s), measured as a round trip through xvpickve2gr.d."
 }

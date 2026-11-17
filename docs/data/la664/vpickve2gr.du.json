@@ -39,7 +39,36 @@
     "core": 0,
     "date": "2026-11-17"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "round trip through the reverse move",
+          "role": "measurement",
+          "asm": "vreplgr2vr.d $vr0, $r4; vpickve2gr.du $r4, $vr0, 0",
+          "init": "li.d $r4, 1",
+          "measurement": {
+            "unroll": 1000,
+            "iters": 1000,
+            "reps": 20
+          },
+          "command": "./bench --method slope --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1' --asm 'vreplgr2vr.d $vr0, $r4; vpickve2gr.du $r4, $vr0, 0'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 5.0
+          },
+          "chain_latency": 1,
+          "notes": "vpickve2gr.du latency from a round trip through vreplgr2vr.d; the reverse move contributes 1 cycle(s)."
+        }
+      ],
+      "notes": "vpickve2gr.du latency from a round trip through vreplgr2vr.d; the reverse move contributes 1 cycle(s)."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -61,5 +90,5 @@
       "notes": "8 independent instructions take 7.99 cycles. Counter 0xfb normalised per instruction. The measured CPI 0.9988 is the nominal 1 within measurement noise; the value is reported as the nominal figure."
     }
   ],
-  "notes": "Vector insert/extract/replication instruction. Throughput uses 8 independent lanes."
+  "notes": "vpickve2gr.du latency is 4 cycles, the same as the signed form, measured as a round trip through vreplgr2vr.d."
 }
