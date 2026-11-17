@@ -68,7 +68,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Measured with a 100000-instruction unrolled chain."
+      "notes": "Data-dependent. Min/max measured over many numerator/denominator values. inf/NaN/0/0 -> ~7.9; 1/3 -> ~15.3; 1/1e30 -> ~15.8. The experiment below uses 1.0/1.0.",
+      "cycles_min": 7.9,
+      "cycles_max": 15.8
     },
     {
       "from_operands": [
@@ -97,7 +99,9 @@
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
       ],
-      "notes": "Measured with a 100000-instruction unrolled chain."
+      "notes": "Data-dependent. Min/max measured over many numerator/denominator values. inf/NaN/0/0 -> ~7.9; 1/3 -> ~15.3; 1/1e30 -> ~15.8. The experiment below uses 1.0/1.0.",
+      "cycles_min": 7.9,
+      "cycles_max": 15.8
     }
   ],
   "throughput": [
@@ -127,5 +131,6 @@
       },
       "notes": "8 independent instructions take 16.00 cycles."
     }
-  ]
+  ],
+  "notes": "Floating-point division latency is data-dependent. Throughput is measured with independent lanes."
 }
