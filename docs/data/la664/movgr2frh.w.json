@@ -60,6 +60,33 @@
         }
       ],
       "notes": "Writing the high half costs 2 cycles, one more than movgr2fr.d/w. The instruction retires as 2 uops, but throughput is still 1 CPI."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 1.07,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "movgr2frh.w $f0, $r4",
+          "init": "li.d $r4, 1; movgr2fr.d $f0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 1; movgr2fr.d $f0, $r4' --asm 'movgr2frh.w $f0, $r4'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 1.07
+          },
+          "notes": "fd -> fd chain: writing the high half merges with the existing low half, so the old fd value is a real source."
+        }
+      ],
+      "notes": "fd -> fd chain: writing the high half merges with the existing low half, so the old fd value is a real source."
     }
   ],
   "throughput": [

@@ -123,6 +123,34 @@
         }
       ],
       "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted."
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 3,
+      "cycles": 3.05,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "x86sll.d $r12, $r13; x86mfflag $r13, 1",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1' --asm 'x86sll.d $r12, $r13; x86mfflag $r13, 1'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.05
+          },
+          "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted.",
+          "chain_latency": 1.0
+        }
+      ],
+      "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted."
     }
   ],
   "throughput": [

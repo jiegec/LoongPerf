@@ -67,6 +67,33 @@
         }
       ],
       "notes": "Register dependency latency."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 1.02,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "xvinsve0.d $xr0, $xr1, 1",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; xvreplgr2vr.b $xr1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; xvreplgr2vr.b $xr1, $r4' --asm 'xvinsve0.d $xr0, $xr1, 1'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.02
+          },
+          "notes": "vd -> vd chain: the other lanes are preserved, so vd is a real source."
+        }
+      ],
+      "notes": "vd -> vd chain: the other lanes are preserved, so vd is a real source."
     }
   ],
   "throughput": [

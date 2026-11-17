@@ -77,6 +77,33 @@
         }
       ],
       "notes": "Register-to-register latency."
+    },
+    {
+      "from_operands": [
+        4
+      ],
+      "to_operand": 1,
+      "cycles": 1.01,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "xvbitsel.v $xr0, $xr1, $xr2, $xr0",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; xvreplgr2vr.b $xr1, $r4; xvreplgr2vr.b $xr2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; xvreplgr2vr.b $xr1, $r4; xvreplgr2vr.b $xr2, $r4' --asm 'xvbitsel.v $xr0, $xr1, $xr2, $xr0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.01
+          },
+          "notes": "third source -> vd chain."
+        }
+      ],
+      "notes": "third source -> vd chain."
     }
   ],
   "throughput": [

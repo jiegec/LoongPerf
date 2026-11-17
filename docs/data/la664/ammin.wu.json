@@ -105,5 +105,5 @@
       "notes": "Nominal 13 CPI. Measured values converge to 13 ± 0.03; higher unroll does not remove the residual. Extra counters per instruction (normalized by 8 lanes): 0xa8=1.00, 0xb0=1.00."
     }
   ],
-  "notes": "Atomic memory operation. Latency/throughput are nominally 13 cycles (16 for _db variants). Repeated measurements at unroll 1,000–1,000,000 converge to these values with about ±0.03 cycle noise."
+  "notes": "Atomic memory operation. Latency/throughput are nominally 13 cycles (16 for _db variants). Repeated measurements at unroll 1,000–1,000,000 converge to these values with about ±0.03 cycle noise. rk is only stored to memory; rk -> rd is not a dependency."
 }
