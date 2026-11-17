@@ -63,7 +63,15 @@
             "core_cycles": 5
           },
           "notes": "fj -> fcc chain; the loop is closed through movcf2gr and movgr2fr, and that closure costs the same for both entries.",
-          "chain_latency": 4
+          "chain_latency": 4,
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "0c248400  fcmp.sun.d  \t$fcc0, $fa0, $fa1",
+            "0114dc04  movcf2gr    \t$a0, $fcc0",
+            "0114a880  movgr2fr.d  \t$fa0, $a0"
+          ]
         }
       ],
       "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.07; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the value is 1 cycle(s) and any earlier range was a rounding artifact."
@@ -91,7 +99,15 @@
             "core_cycles": 5
           },
           "notes": "fk -> fcc chain; the loop is closed through movcf2gr and movgr2fr.",
-          "chain_latency": 4
+          "chain_latency": 4,
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "0114a881  movgr2fr.d  \t$fa1, $a0",
+            "0c248400  fcmp.sun.d  \t$fcc0, $fa0, $fa1",
+            "0114dc04  movcf2gr    \t$a0, $fcc0",
+            "0114a881  movgr2fr.d  \t$fa1, $a0"
+          ]
         }
       ],
       "notes": "Latency to FCC is 1 cycle. The chain closure through movcf2gr (3 cycles) and movgr2fr (1 cycle) is subtracted; the residual 0.08 is calibration noise. Raw measurement was 1.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the value is 1 cycle(s) and any earlier range was a rounding artifact."

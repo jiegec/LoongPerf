@@ -72,7 +72,18 @@
             "core_cycles": 1
           },
           "chain_latency": 0,
-          "notes": "first source -> result chain."
+          "notes": "first source -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0083  vreplgr2vr.b\t$vr3, $a0",
+            "0d110400  vbitsel.v   \t$vr0, $vr0, $vr1, $vr2"
+          ]
         }
       ],
       "notes": "first source -> result chain."
@@ -100,7 +111,18 @@
             "core_cycles": 1
           },
           "chain_latency": 0,
-          "notes": "second source -> result chain."
+          "notes": "second source -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0083  vreplgr2vr.b\t$vr3, $a0",
+            "0d110020  vbitsel.v   \t$vr0, $vr1, $vr0, $vr2"
+          ]
         }
       ],
       "notes": "second source -> result chain."
@@ -127,7 +149,14 @@
             "instructions_retired": 1,
             "core_cycles": 1
           },
-          "notes": "third source -> vd chain."
+          "notes": "third source -> vd chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "0d100820  vbitsel.v   \t$vr0, $vr1, $vr2, $vr0"
+          ]
         }
       ],
       "notes": "third source -> vd chain."

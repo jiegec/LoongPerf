@@ -63,7 +63,12 @@
             "core_cycles": 6
           },
           "chain_latency": 2,
-          "notes": "vpickve2gr.hu latency from a round trip through vreplgr2vr.h; the reverse move contributes 2 cycle(s)."
+          "notes": "vpickve2gr.hu latency from a round trip through vreplgr2vr.h; the reverse move contributes 2 cycle(s).",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0480  vreplgr2vr.h\t$vr0, $a0",
+            "72f3c004  vpickve2gr.hu\t$a0, $vr0, 0x0"
+          ]
         }
       ],
       "notes": "vpickve2gr.hu latency from a round trip through vreplgr2vr.h; the reverse move contributes 2 cycle(s)."

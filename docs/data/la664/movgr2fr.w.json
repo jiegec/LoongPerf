@@ -56,7 +56,17 @@
             "core_cycles": 12.05
           },
           "chain_latency": 11.04,
-          "notes": "12.05-cycle chain minus 11.04 cycles (10.04 FPR-store -> GPR-load forwarding + 1 add.d) = 1.01 cycles. Measured with unroll=100000; unroll=1000 gave 0.95 because per-call overhead was not fully amortised."
+          "notes": "12.05-cycle chain minus 11.04 cycles (10.04 FPR-store -> GPR-load forwarding + 1 add.d) = 1.01 cycles. Measured with unroll=100000; unroll=1000 gave 0.95 because per-call overhead was not fully amortised.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "03800405  li.w        \t$a1, 0x1",
+            "02f0006c  addi.d      \t$t0, $sp, -1024",
+            "29c00184  st.d        \t$a0, $t0, 0",
+            "0114a480  movgr2fr.w  \t$fa0, $a0",
+            "2bc00180  fst.d       \t$fa0, $t0, 0",
+            "28c00184  ld.d        \t$a0, $t0, 0",
+            "00109484  add.d       \t$a0, $a0, $a1"
+          ]
         }
       ],
       "notes": "GPR -> FPR latency is 1 cycle. The full movgr2fr.d + movfr2gr.d round trip is 4 cycles; inserting fadd or fmul changes it by exactly the inserted latency, so the round trip is additive. This rules out a 3+2 split for the .d/.w/.s moves."

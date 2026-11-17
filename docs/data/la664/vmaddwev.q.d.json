@@ -63,7 +63,18 @@
             "instructions_retired": 1,
             "core_cycles": 7
           },
-          "notes": "vd -> vd accumulator chain."
+          "notes": "vd -> vd accumulator chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0083  vreplgr2vr.b\t$vr3, $a0",
+            "70ad8820  vmaddwev.q.d\t$vr0, $vr1, $vr2"
+          ]
         }
       ],
       "notes": "vd -> vd accumulator chain."
@@ -90,7 +101,18 @@
             "instructions_retired": 1,
             "core_cycles": 7
           },
-          "notes": "vj -> vd chain."
+          "notes": "vj -> vd chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0083  vreplgr2vr.b\t$vr3, $a0",
+            "70ad8800  vmaddwev.q.d\t$vr0, $vr0, $vr2"
+          ]
         }
       ],
       "notes": "vj -> vd chain."
@@ -117,7 +139,18 @@
             "instructions_retired": 1,
             "core_cycles": 7
           },
-          "notes": "vk -> vd chain."
+          "notes": "vk -> vd chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0081  vreplgr2vr.b\t$vr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0082  vreplgr2vr.b\t$vr2, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0083  vreplgr2vr.b\t$vr3, $a0",
+            "70ad8020  vmaddwev.q.d\t$vr0, $vr1, $vr0"
+          ]
         }
       ],
       "notes": "vk -> vd chain."

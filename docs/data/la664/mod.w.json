@@ -64,7 +64,18 @@
             "core_cycles": 24
           },
           "chain_latency": 2,
-          "notes": "Fixed dividend=max, divisor=2, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
+          "notes": "Fixed dividend=max, divisor=2, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain.",
+          "machine_code": [
+            "14ffffec  lu12i.w     \t$t0, 524287",
+            "03bffd8c  ori         \t$t0, $t0, 0xfff",
+            "0380080d  li.w        \t$t1, 0x2",
+            "03800405  li.w        \t$a1, 0x1",
+            "14ffffe6  lu12i.w     \t$a2, 524287",
+            "03bff8c6  ori         \t$a2, $a2, 0xffe",
+            "0020b58c  mod.w       \t$t0, $t0, $t1",
+            "0014958c  and         \t$t0, $t0, $a1",
+            "0015198c  or          \t$t0, $t0, $a2"
+          ]
         }
       ],
       "notes": "Data-dependent. Sample uses max/2. Min 5 cycles at small/even divisors; max 22 cycles at divisor=1 (unsigned) or max/1. Measured with unroll=100000; unroll=1000 was biased low by about 0.2 cycles.",
@@ -94,7 +105,17 @@
             "core_cycles": 24
           },
           "chain_latency": 2,
-          "notes": "Fixed divisor=2, dividend=max, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain."
+          "notes": "Fixed divisor=2, dividend=max, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain.",
+          "machine_code": [
+            "0380080c  li.w        \t$t0, 0x2",
+            "14ffffed  lu12i.w     \t$t1, 524287",
+            "03bffdad  ori         \t$t1, $t1, 0xfff",
+            "03800405  li.w        \t$a1, 0x1",
+            "03800806  li.w        \t$a2, 0x2",
+            "0020b1ac  mod.w       \t$t0, $t1, $t0",
+            "0014958c  and         \t$t0, $t0, $a1",
+            "0015198c  or          \t$t0, $t0, $a2"
+          ]
         }
       ],
       "notes": "Data-dependent. Sample uses max/2. Min 5 cycles at small/even divisors; max 22 cycles at divisor=1 (unsigned) or max/1. Measured with unroll=100000; unroll=1000 was biased low by about 0.2 cycles.",

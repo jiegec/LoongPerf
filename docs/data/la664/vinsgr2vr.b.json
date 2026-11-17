@@ -62,7 +62,13 @@
             "instructions_retired": 2,
             "core_cycles": 1
           },
-          "notes": "Dependent chain."
+          "notes": "Dependent chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "03800405  li.w        \t$a1, 0x1",
+            "72eb80a0  vinsgr2vr.b \t$vr0, $a1, 0x0"
+          ]
         }
       ],
       "notes": "Register dependency latency."

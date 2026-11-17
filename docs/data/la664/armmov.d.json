@@ -63,7 +63,12 @@
             "instructions_retired": 1,
             "core_cycles": 2
           },
-          "notes": "rd -> rd chain."
+          "notes": "rd -> rd chain.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "005ce460  armmtflag   \t$zero, 0x39",
+            "003ff99e  armmov.d    \t$t0, 0xe"
+          ]
         }
       ],
       "notes": "rd -> rd chain. Raw slope-method measurement was 2.00; the nominal value is 2 cycle(s)."
@@ -91,7 +96,13 @@
             "core_cycles": 4
           },
           "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
-          "chain_latency": 1
+          "chain_latency": 1,
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "005ce460  armmtflag   \t$zero, 0x39",
+            "003ff99e  armmov.d    \t$t0, 0xe",
+            "005ce44c  armmfflag   \t$t0, 0x39"
+          ]
         }
       ],
       "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted. Raw slope-method measurement was 3.01; the nominal value is 3 cycle(s)."

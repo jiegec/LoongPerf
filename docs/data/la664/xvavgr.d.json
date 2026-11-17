@@ -63,7 +63,16 @@
             "instructions_retired": 1,
             "core_cycles": 2
           },
-          "notes": "xj -> result chain."
+          "notes": "xj -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0081  xvreplgr2vr.b\t$xr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0082  xvreplgr2vr.b\t$xr2, $a0",
+            "74698400  xvavgr.d    \t$xr0, $xr0, $xr1"
+          ]
         }
       ],
       "notes": "xj -> result chain."
@@ -90,7 +99,16 @@
             "instructions_retired": 1,
             "core_cycles": 2
           },
-          "notes": "xk -> result chain."
+          "notes": "xk -> result chain.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0081  xvreplgr2vr.b\t$xr1, $a0",
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0082  xvreplgr2vr.b\t$xr2, $a0",
+            "74698020  xvavgr.d    \t$xr0, $xr1, $xr0"
+          ]
         }
       ],
       "notes": "xk -> result chain."

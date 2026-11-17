@@ -63,7 +63,12 @@
             "core_cycles": 7
           },
           "chain_latency": 1,
-          "notes": "Re-measured on 2026-11-17 with the slope method at --unroll 1000 --unroll2 4000: the round trip reads 7.03 cycles, and xvreplgr2vr.d is 1 cycle, so xvpickve2gr.du is 6 cycles."
+          "notes": "Re-measured on 2026-11-17 with the slope method at --unroll 1000 --unroll2 4000: the round trip reads 7.03 cycles, and xvreplgr2vr.d is 1 cycle, so xvpickve2gr.du is 6 cycles.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
+            "76f3e004  xvpickve2gr.du\t$a0, $xr0, 0x0"
+          ]
         }
       ],
       "notes": "xvpickve2gr.du latency is 6 cycles, the same as the signed variants. It is measured as a round trip through xvreplgr2vr.d (7.03 cycles) minus that move's 1-cycle latency."

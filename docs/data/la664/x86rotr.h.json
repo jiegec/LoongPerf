@@ -64,7 +64,14 @@
             "instructions_retired": 1,
             "core_cycles": 2
           },
-          "notes": "rd -> rd chain: the destination is also a source."
+          "notes": "rd -> rd chain: the destination is also a source.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "02c0080d  li.d        \t$t1, 2",
+            "02c00c0e  li.d        \t$t2, 3",
+            "005c0420  x86mtflag   \t$zero, 0x1",
+            "003fb581  x86rotr.h   \t$t0, $t1"
+          ]
         }
       ],
       "notes": "rd -> rd chain: the destination is also a source."
@@ -91,7 +98,15 @@
             "instructions_retired": 2,
             "core_cycles": 4.01
           },
-          "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved."
+          "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved.",
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "02c0080d  li.d        \t$t1, 2",
+            "02c00c0e  li.d        \t$t2, 3",
+            "005c0420  x86mtflag   \t$zero, 0x1",
+            "003fb1a1  x86rotr.h   \t$t1, $t0",
+            "003fb581  x86rotr.h   \t$t0, $t1"
+          ]
         }
       ],
       "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved.",
@@ -120,7 +135,15 @@
             "core_cycles": 4
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted.",
-          "chain_latency": 1
+          "chain_latency": 1,
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "02c0080d  li.d        \t$t1, 2",
+            "02c00c0e  li.d        \t$t2, 3",
+            "005c0420  x86mtflag   \t$zero, 0x1",
+            "003fb581  x86rotr.h   \t$t0, $t1",
+            "005c040c  x86mfflag   \t$t0, 0x1"
+          ]
         }
       ],
       "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted."
@@ -148,7 +171,14 @@
             "core_cycles": 4
           },
           "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted.",
-          "chain_latency": 1
+          "chain_latency": 1,
+          "machine_code": [
+            "02c0040c  li.d        \t$t0, 1",
+            "02c0080d  li.d        \t$t1, 2",
+            "005c0420  x86mtflag   \t$zero, 0x1",
+            "003fb581  x86rotr.h   \t$t0, $t1",
+            "005c040d  x86mfflag   \t$t1, 0x1"
+          ]
         }
       ],
       "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."

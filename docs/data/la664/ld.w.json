@@ -63,7 +63,16 @@
             "core_cycles": 5
           },
           "chain_latency": 1,
-          "notes": "Load result updates the base pointer by +8/-8; chain_latency subtracts the add.d."
+          "notes": "Load result updates the base pointer by +8/-8; chain_latency subtracts the add.d.",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  li.w        \t$a0, 0x8",
+            "29800284  st.w        \t$a0, $t8, 0",
+            "02bfe004  li.w        \t$a0, -8",
+            "29802284  st.w        \t$a0, $t8, 8",
+            "28800284  ld.w        \t$a0, $t8, 0",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "Load result updates the base pointer by +8/-8; chain_latency subtracts the add.d."

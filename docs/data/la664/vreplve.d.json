@@ -63,7 +63,13 @@
             "instructions_retired": 2,
             "core_cycles": 1
           },
-          "notes": "Dependent chain."
+          "notes": "Dependent chain.",
+          "machine_code": [
+            "00150004  move        \t$a0, $zero",
+            "03800406  li.w        \t$a2, 0x1",
+            "729f00c0  vreplgr2vr.b\t$vr0, $a2",
+            "71239000  vreplve.d   \t$vr0, $vr0, $a0"
+          ]
         }
       ],
       "notes": "Register dependency latency."

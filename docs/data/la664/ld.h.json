@@ -63,7 +63,16 @@
             "core_cycles": 5
           },
           "chain_latency": 1,
-          "notes": "L1D hit, load-to-ALU latency 4 cycles. Base pointer updated by +8/-8; chain_latency subtracts add.d. Measured with unroll=100000."
+          "notes": "L1D hit, load-to-ALU latency 4 cycles. Base pointer updated by +8/-8; chain_latency subtracts add.d. Measured with unroll=100000.",
+          "machine_code": [
+            "02f00074  addi.d      \t$t8, $sp, -1024",
+            "03802004  li.w        \t$a0, 0x8",
+            "29400284  st.h        \t$a0, $t8, 0",
+            "02bfe004  li.w        \t$a0, -8",
+            "29402284  st.h        \t$a0, $t8, 8",
+            "28400284  ld.h        \t$a0, $t8, 0",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "L1D hit, load-to-ALU latency 4 cycles. Base pointer updated by +8/-8; chain_latency subtracts add.d. Measured with unroll=100000."

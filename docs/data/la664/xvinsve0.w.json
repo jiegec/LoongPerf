@@ -62,7 +62,13 @@
             "instructions_retired": 1,
             "core_cycles": 1
           },
-          "notes": "xd -> xd chain: the preserved lanes make xd a real source."
+          "notes": "xd -> xd chain: the preserved lanes make xd a real source.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+            "769f0081  xvreplgr2vr.b\t$xr1, $a0",
+            "76ffc420  xvinsve0.w  \t$xr0, $xr1, 0x1"
+          ]
         }
       ],
       "notes": "xd -> xd chain: the preserved lanes make xd a real source."
@@ -89,7 +95,14 @@
             "instructions_retired": 2,
             "core_cycles": 2
           },
-          "notes": "xj -> xd chain: two alternating copies traverse both register paths, so the measured cycles are halved."
+          "notes": "xj -> xd chain: two alternating copies traverse both register paths, so the measured cycles are halved.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+            "769f0081  xvreplgr2vr.b\t$xr1, $a0",
+            "76ffc420  xvinsve0.w  \t$xr0, $xr1, 0x1",
+            "76ffc401  xvinsve0.w  \t$xr1, $xr0, 0x1"
+          ]
         }
       ],
       "notes": "xj -> xd chain: two alternating copies traverse both register paths, so the measured cycles are halved.",

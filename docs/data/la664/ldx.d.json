@@ -64,7 +64,19 @@
             "core_cycles": 4.99
           },
           "chain_latency": 1,
-          "notes": "rj -> rd chain with the index fixed at 0; add.d subtracted."
+          "notes": "rj -> rd chain with the index fixed at 0; add.d subtracted.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0016  li.w        \t$fp, -64",
+            "0014da94  and         \t$t8, $t8, $fp",
+            "03802016  li.w        \t$fp, 0x8",
+            "29c00296  st.d        \t$fp, $t8, 0",
+            "02bfe016  li.w        \t$fp, -8",
+            "29c02296  st.d        \t$fp, $t8, 8",
+            "00150015  move        \t$r21, $zero",
+            "380c5684  ldx.d       \t$a0, $t8, $r21",
+            "00109294  add.d       \t$t8, $t8, $a0"
+          ]
         }
       ],
       "notes": "rj -> rd chain with the index fixed at 0; add.d subtracted."
@@ -92,7 +104,17 @@
             "core_cycles": 5.99
           },
           "chain_latency": 1,
-          "notes": "rk -> rd chain with the index loop-carried and masked; andi subtracted."
+          "notes": "rk -> rd chain with the index loop-carried and masked; andi subtracted.",
+          "machine_code": [
+            "02e00074  addi.d      \t$t8, $sp, -2048",
+            "02bf0016  li.w        \t$fp, -64",
+            "0014da94  and         \t$t8, $t8, $fp",
+            "03802016  li.w        \t$fp, 0x8",
+            "29c00296  st.d        \t$fp, $t8, 0",
+            "00150004  move        \t$a0, $zero",
+            "380c1284  ldx.d       \t$a0, $t8, $a0",
+            "03401c84  andi        \t$a0, $a0, 0x7"
+          ]
         }
       ],
       "notes": "rk -> rd chain with the index loop-carried and masked; andi subtracted."

@@ -56,7 +56,18 @@
             "core_cycles": 11.05
           },
           "chain_latency": 8.06,
-          "notes": "11.05 cycles minus 8.06 (7.06 GPR-store -> FPR-load forwarding + 1 add.d) = 2.99 cycles, reported as 3."
+          "notes": "11.05 cycles minus 8.06 (7.06 GPR-store -> FPR-load forwarding + 1 add.d) = 2.99 cycles, reported as 3.",
+          "machine_code": [
+            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+            "0114a880  movgr2fr.d  \t$fa0, $a0",
+            "03800405  li.w        \t$a1, 0x1",
+            "02f0006c  addi.d      \t$t0, $sp, -1024",
+            "29c00184  st.d        \t$a0, $t0, 0",
+            "0114bc04  movfrh2gr.s \t$a0, $fa0",
+            "00109484  add.d       \t$a0, $a0, $a1",
+            "29c00184  st.d        \t$a0, $t0, 0",
+            "2b800180  fld.d       \t$fa0, $t0, 0"
+          ]
         }
       ],
       "notes": "High-half FPR->GPR read latency is 3 cycles, same as movfr2gr.s. This instruction retires as 1 uop."

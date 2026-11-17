@@ -56,7 +56,12 @@
             "core_cycles": 6
           },
           "chain_latency": 4,
-          "notes": "Round trip 6.05 cycles. vpickve2gr.b is 4 cycles, so vreplgr2vr.b is 2.05 cycles."
+          "notes": "Round trip 6.05 cycles. vpickve2gr.b is 4 cycles, so vreplgr2vr.b is 2.05 cycles.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "729f0080  vreplgr2vr.b\t$vr0, $a0",
+            "72ef8004  vpickve2gr.b\t$a0, $vr0, 0x0"
+          ]
         }
       ],
       "notes": "Round trip 6.05 cycles. vpickve2gr.b is 4 cycles, so vreplgr2vr.b is 2.05 cycles. Nominal values: round-trip core cycles rounded to the nearest integer."

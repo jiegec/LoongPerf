@@ -55,7 +55,14 @@
             "core_cycles": 7
           },
           "chain_latency": 4,
-          "notes": "The chain closes through movcf2gr (3 cycles) and xvreplgr2vr.d (1 cycle), so 4 cycles of closure are subtracted. Measured with the slope method (--unroll 1000 --unroll2 4000) on 2026-11-17."
+          "notes": "The chain closes through movcf2gr (3 cycles) and xvreplgr2vr.d (1 cycle), so 4 cycles of closure are subtracted. Measured with the slope method (--unroll 1000 --unroll2 4000) on 2026-11-17.",
+          "machine_code": [
+            "03800404  li.w        \t$a0, 0x1",
+            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
+            "769ca400  xvsetanyeqz.h\t$fcc0, $xr0",
+            "0114dc04  movcf2gr    \t$a0, $fcc0",
+            "769f0c80  xvreplgr2vr.d\t$xr0, $a0"
+          ]
         }
       ],
       "notes": "xvsetanyeqz.h reads the whole vector and produces FCC in 3 cycles; the move back to a vector register is what makes the chain measurable."
