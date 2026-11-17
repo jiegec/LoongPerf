@@ -1,0 +1,66 @@
+{
+  "instruction": {
+    "name": "xvld",
+    "extension": "LASX",
+    "form": "xvld xd, rj, imm",
+    "description": "Read whole vector from memory address `addr + offset`, save the data into `dst`. Address misalignment does not raise an exception. Note that you can use this intrinsic to load floating point vectors, even though the return type represents integer vectors."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvld $xr0, $r20, 0; xvld $xr1, $r20, 32; xvld $xr2, $r20, 64; xvld $xr3, $r20, 96; xvld $xr4, $r20, 128; xvld $xr5, $r20, 160; xvld $xr6, $r20, 192; xvld $xr7, $r20, 224",
+      "init": "addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.01
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4' --asm 'xvld $xr0, $r20, 0; xvld $xr1, $r20, 32; xvld $xr2, $r20, 64; xvld $xr3, $r20, 96; xvld $xr4, $r20, 128; xvld $xr5, $r20, 160; xvld $xr6, $r20, 192; xvld $xr7, $r20, 224'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.01 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

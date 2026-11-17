@@ -1,0 +1,85 @@
+{
+  "instruction": {
+    "name": "vext2xv.d.w",
+    "extension": "LASX",
+    "form": "vext2xv.d.w, xd, xj",
+    "description": "Sign-extend the lowest 4 32-bit elements of `a` to 64-bit elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 3.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vext2xv.d.w $xr0, $xr0",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 3.05
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4' --asm 'vext2xv.d.w $xr0, $xr0'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vext2xv.d.w $xr0, $xr8; vext2xv.d.w $xr1, $xr9; vext2xv.d.w $xr2, $xr10; vext2xv.d.w $xr3, $xr11; vext2xv.d.w $xr4, $xr12; vext2xv.d.w $xr5, $xr13; vext2xv.d.w $xr6, $xr14; vext2xv.d.w $xr7, $xr15",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4' --asm 'vext2xv.d.w $xr0, $xr8; vext2xv.d.w $xr1, $xr9; vext2xv.d.w $xr2, $xr10; vext2xv.d.w $xr3, $xr11; vext2xv.d.w $xr4, $xr12; vext2xv.d.w $xr5, $xr13; vext2xv.d.w $xr6, $xr14; vext2xv.d.w $xr7, $xr15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ]
+}

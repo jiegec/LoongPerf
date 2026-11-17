@@ -1,0 +1,86 @@
+{
+  "instruction": {
+    "name": "vreplgr2vr.d",
+    "extension": "LSX",
+    "form": "vreplgr2vr.d vd, rj",
+    "description": "Broadcast the low 64 bits of `val` to all lanes of `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.17,
+      "experiments": [
+        {
+          "name": "round trip through the reverse move",
+          "role": "measurement",
+          "asm": "vreplgr2vr.d $vr0, $r4; vpickve2gr.d $r4, $vr0, 0",
+          "init": "li.d $r4, 1",
+          "chain_latency": 4.0,
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 5.17
+          },
+          "measurement": {
+            "unroll": 10000,
+            "iters": 1000,
+            "reps": 7
+          },
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1' --asm 'vreplgr2vr.d $vr0, $r4; vpickve2gr.d $r4, $vr0, 0'"
+        }
+      ],
+      "notes": "4 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r5; vreplgr2vr.d $vr2, $r6; vreplgr2vr.d $vr3, $r7; vreplgr2vr.d $vr4, $r8; vreplgr2vr.d $vr5, $r9; vreplgr2vr.d $vr6, $r10; vreplgr2vr.d $vr7, $r11",
+      "init": "li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.01
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r5; vreplgr2vr.d $vr2, $r6; vreplgr2vr.d $vr3, $r7; vreplgr2vr.d $vr4, $r8; vreplgr2vr.d $vr5, $r9; vreplgr2vr.d $vr6, $r10; vreplgr2vr.d $vr7, $r11'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.01 cycles."
+    }
+  ]
+}

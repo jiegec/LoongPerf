@@ -1,0 +1,93 @@
+{
+  "instruction": {
+    "name": "xvpickve2gr.w",
+    "extension": "LASX",
+    "form": "xvpickve2gr.w rd, xj, imm",
+    "description": "Pick the 32-bit element at lane `idx` from `a`, sign-extend it to the GPR width, and store it in `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "extracted value"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "lane index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 6.16,
+      "experiments": [
+        {
+          "name": "round trip through the reverse move",
+          "role": "measurement",
+          "asm": "xvreplgr2vr.w $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0",
+          "init": "li.d $r4, 1",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 7.16
+          },
+          "measurement": {
+            "unroll": 10000,
+            "iters": 1000,
+            "reps": 7
+          },
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1' --asm 'xvreplgr2vr.w $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0'"
+        }
+      ],
+      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvpickve2gr.w $r12, $xr8, 0; xvpickve2gr.w $r13, $xr9, 0; xvpickve2gr.w $r14, $xr10, 0; xvpickve2gr.w $r15, $xr11, 0; xvpickve2gr.w $r16, $xr12, 0; xvpickve2gr.w $r17, $xr13, 0; xvpickve2gr.w $r18, $xr14, 0; xvpickve2gr.w $r19, $xr15, 0",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 2; xvreplgr2vr.b $xr9, $r4; li.d $r4, 3; xvreplgr2vr.b $xr10, $r4; li.d $r4, 4; xvreplgr2vr.b $xr11, $r4; li.d $r4, 5; xvreplgr2vr.b $xr12, $r4; li.d $r4, 6; xvreplgr2vr.b $xr13, $r4; li.d $r4, 7; xvreplgr2vr.b $xr14, $r4; li.d $r4, 8; xvreplgr2vr.b $xr15, $r4",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 8.07
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 2; xvreplgr2vr.b $xr9, $r4; li.d $r4, 3; xvreplgr2vr.b $xr10, $r4; li.d $r4, 4; xvreplgr2vr.b $xr11, $r4; li.d $r4, 5; xvreplgr2vr.b $xr12, $r4; li.d $r4, 6; xvreplgr2vr.b $xr13, $r4; li.d $r4, 7; xvreplgr2vr.b $xr14, $r4; li.d $r4, 8; xvreplgr2vr.b $xr15, $r4' --asm 'xvpickve2gr.w $r12, $xr8, 0; xvpickve2gr.w $r13, $xr9, 0; xvpickve2gr.w $r14, $xr10, 0; xvpickve2gr.w $r15, $xr11, 0; xvpickve2gr.w $r16, $xr12, 0; xvpickve2gr.w $r17, $xr13, 0; xvpickve2gr.w $r18, $xr14, 0; xvpickve2gr.w $r19, $xr15, 0'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.07 cycles."
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "instruction": {
+    "name": "xvssrani.h.w",
+    "extension": "LASX",
+    "form": "xvssrani.h.w xd, xj, imm",
+    "description": "Arithmetic right shift the signed 32-bit elements in `a` and `b` by `imm`, saturate the result to signed 16-bit, write the 16-bit result into the lower half of each 128-bit lane of `dst`, and zero the upper half."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "xvssrani.h.w $xr0, $xr0, 1",
+          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.09
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4' --asm 'xvssrani.h.w $xr0, $xr0, 1'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvssrani.h.w $xr0, $xr8, 1; xvssrani.h.w $xr1, $xr9, 1; xvssrani.h.w $xr2, $xr10, 1; xvssrani.h.w $xr3, $xr11, 1; xvssrani.h.w $xr4, $xr12, 1; xvssrani.h.w $xr5, $xr13, 1; xvssrani.h.w $xr6, $xr14, 1; xvssrani.h.w $xr7, $xr15, 1",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4",
+      "result": {
+        "instructions_retired": 16.0,
+        "core_cycles": 8.06
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4' --asm 'xvssrani.h.w $xr0, $xr8, 1; xvssrani.h.w $xr1, $xr9, 1; xvssrani.h.w $xr2, $xr10, 1; xvssrani.h.w $xr3, $xr11, 1; xvssrani.h.w $xr4, $xr12, 1; xvssrani.h.w $xr5, $xr13, 1; xvssrani.h.w $xr6, $xr14, 1; xvssrani.h.w $xr7, $xr15, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.06 cycles."
+    }
+  ]
+}
