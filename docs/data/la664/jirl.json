@@ -67,16 +67,16 @@
       "command": "./bench --unroll 1 --iters 1000 --warmup 10 --reps 20 --asm 'la.local $r4, 1f; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; 1:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4'",
       "result": {
         "instructions_retired": 16.0,
-        "core_cycles": 8.78
+        "core_cycles": 8.79
       },
-      "baseline_cycles": 1.96,
+      "baseline_cycles": 1.31,
       "throughput": {
         "lanes": 8,
-        "cpi": 0.8524999999999999,
-        "ipc": 1.1730205278592376
+        "cpi": 0.9349999999999998,
+        "ipc": 1.0695187165775404
       },
-      "notes": "8 JIRLs plus 8 pcaddi/addi target-setup instructions take 8.78 cycles. The same setup without JIRLs takes 1.96 cycles, so marginal JIRL throughput is (8.78-1.96)/8 = 0.8525 CPI."
+      "notes": "8 JIRLs plus 8 pcaddi/addi target-setup instructions take 8.79 cycles. The same setup without JIRLs takes 1.31 cycles, so marginal JIRL throughput is (8.79-1.31)/8 = 0.935 CPI. Eight static JIRLs fit in the BTB; increasing the number of static JIRLs raises the measured CPI (16 JIRLs gave about 1.115 CPI)."
     }
   ],
-  "notes": "Taken indirect branch throughput. Latency is not defined. The measurement sequence includes target-setup instructions; baseline_cycles is subtracted."
+  "notes": "Taken indirect branch throughput. Latency is not defined. Measured with 8 static JIRLs to stay within BTB capacity."
 }
