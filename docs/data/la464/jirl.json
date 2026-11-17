@@ -42,46 +42,29 @@
   "latencies": [],
   "throughput": [
     {
-      "name": "8 taken JIRLs to the next instruction",
-      "asm": "la.local $r4, 1f; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; 1:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4",
-      "init": "",
-      "machine_code": [
-        "1a000004  pcalau12i   \t$a0, 0",
-        "02c00084  addi.d      \t$a0, $a0, 0",
-        "02c01085  addi.d      \t$a1, $a0, 4",
-        "02c02086  addi.d      \t$a2, $a0, 8",
-        "02c03087  addi.d      \t$a3, $a0, 12",
-        "02c04088  addi.d      \t$a4, $a0, 16",
-        "02c05089  addi.d      \t$a5, $a0, 20",
-        "02c0608a  addi.d      \t$a6, $a0, 24",
-        "02c0708b  addi.d      \t$a7, $a0, 28",
-        "4c000480  jirl        \t$zero, $a0, 4",
-        "4c0004a0  jirl        \t$zero, $a1, 4",
-        "4c0004c0  jirl        \t$zero, $a2, 4",
-        "4c0004e0  jirl        \t$zero, $a3, 4",
-        "4c000500  jirl        \t$zero, $a4, 4",
-        "4c000520  jirl        \t$zero, $a5, 4",
-        "4c000540  jirl        \t$zero, $a6, 4",
-        "4c000560  jirl        \t$zero, $a7, 4"
-      ],
+      "name": "8 JIRLs x 1000 loop iterations",
+      "asm": "la.local $r4, .Lloop; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; .Lloop:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4; addi.d $r12, $r12, -1; bnez $r12, .Lloop",
+      "init": "li.d $r12, 1000",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 18.72
+        "instructions_retired": 10008.0,
+        "core_cycles": 25016.97
       },
       "measurement": {
         "unroll": 1,
         "iters": 1000,
-        "reps": 20
+        "reps": 10
       },
-      "command": "./bench --unroll 1 --iters 1000 --warmup 10 --reps 20 --core 0 --asm 'la.local $r4, 1f; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; 1:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4'",
+      "command": "./bench --unroll 1 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r12, 1000' --asm 'la.local $r4, .Lloop; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; .Lloop:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4; addi.d $r12, $r12, -1; bnez $r12, .Lloop'",
       "throughput": {
-        "lanes": 8,
-        "cpi": 2.0938,
-        "ipc": 0.4776
+        "lanes": 8000,
+        "cpi": 3.0,
+        "ipc": 0.3333
       },
-      "baseline_cycles": 1.97,
-      "notes": "8 JIRLs plus 8 pcaddi/addi address-setup instructions take 18.72 cycles. The same setup without JIRLs takes 1.97 cycles, so marginal JIRL throughput is (18.72-1.97)/8 = 2.094 CPI. Eight static JIRLs are used to stay within BTB capacity."
+      "baseline_cycles": 1013.01,
+      "notes": "Eight static JIRLs are reused in a 1000-iteration loop, avoiding BTB capacity pressure. The loop without JIRLs takes 1013.01 cycles; the JIRL loop takes 25016.97 cycles, so marginal throughput is (25016.97-1013.01)/8000 = 3.0005 CPI. lanes is the total number of JIRLs executed per benchmark sequence (8 x 1000).",
+      "loops": 1000,
+      "loop_instructions": 10
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "No destination data dependency; latency is not defined. Throughput is measured with looped JIRLs to avoid BTB pressure."
 }
