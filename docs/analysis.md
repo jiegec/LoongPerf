@@ -315,14 +315,16 @@ on the vector loads and differ by one cycle on the integer paths.
 | --- | --- | --- |
 | integer load to an ALU consumer | 4 | 5 |
 | integer load feeding the next address directly | 3 | 4 |
-| floating-point load to a GPR consumer | 5 | 5 (`fld.d`), 6 (`fld.s`) |
+| floating-point load to a GPR consumer | 5 | 5 |
 | `vld`, `xvld`, `vldx`, `xvldx`, `vldrepl.*` | 5 | 5 |
 
 LA464 needs one cycle more than LA664 on both integer paths. Watch the stored
-number: the LA464 entries record the 4-cycle address chase for a plain load and
-mention the 5-cycle ALU path only in the notes, while the LA664 entries record the
-ALU path. LA464's `ld.d` and `ldptr.d` currently carry two identical entries for
-that reason.
+number: the LA464 entries record the load latency itself (4 cycles, the bare
+pointer chase for `ld.d`/`ldptr.d`, the ALU chain with that extra cycle taken out
+for the loads that cannot be chased), while the LA664 entries record the ALU
+path. A chain that passes the loaded value through an ALU operation reads one
+cycle more than that operation on both cores, and the extra cycle belongs to the
+chain, not to the load, so no entry stores it as a separate case.
 
 Width does not matter on LA664, a byte load costs what a double load costs. The
 3-cycle bypass is measured with a bare pointer chase that feeds the loaded value
@@ -408,39 +410,27 @@ simply the load latency, and only the ALU path pays the extra cycle.
 
 ### Indexed and bound-checked loads
 
-| operand path | LA664 | LA464 |
-| --- | --- | --- |
-| `ldx.*`, `ldgt.*` base | 4 | 5 |
-| `ldx.*`, `ldgt.*`, `ldle.*` index or bound, fed straight back | 4 | 4 |
-| `ldle.*` bound | 4 | 5 |
-| `fldx.*`, `fldgt.*` base / index | 5 / 5 | 6 / 5 |
-| `fldle.*` base / bound | 5 / 5 | 6 / 6 |
-
 | path | LA664 | LA464 |
 | --- | --- | --- |
 | `ldx.*`, `ldgt.*`, `ldle.*`, base or index/bound operand | 4 | 4 |
 | `fldx.*`, `fldgt.*`, `fldle.*`, base or index/bound operand | 5 | 5 |
 
-`ldle.*` is the exception on LA464: the instruction loads when `rj <= rk`, so the
-loaded value cannot be used as the next bound directly (it would fail the check),
-and the measured bound path carries an `add.d` and reads 5. On LA664 the check can
-be kept passing with a large bound, so the direct chain works and reads 4.
+Every one of these instructions records a single latency: the index and bound
+operands are part of the address the instruction already needs, so they cost what
+a plain load of the same class costs on both cores.
 
-There is no address bypass for a floating-point value: it has to pass through
-`movfr2gr` before it can be used, so every such chain contains that move, which is
-why the floating-point index and bound paths sit one cycle above the integer ones
-on both cores. Chains that leave the `movfr2gr` out (or subtract only part of it)
-produce a fictitious extra class, which is how the folded-together numbers in the
-first version of this page came about.
+What looks like an extra cycle in the older data is the measurement chain: a
+chain that puts an ALU operation between the load and the next address (an `andi`
+to mask an index, an `xori` to keep a bound in range, or the `add.d` that
+`ldle.*` needs because the loaded value would otherwise fail the `rj <= rk`
+check) reads one cycle more than that operation, because the address generator
+charges for an ALU-produced address. The load itself is unchanged.
 
-LA464 was measured per source operand and reads exactly the same value as a plain
-load: **4** for the integer forms and **5** for the floating-point forms, for both
-the base and the index or bound operand. Every chain that needs a helper to turn
-the loaded value back into an address (`add.d`, or `andi`/`xori` to keep an index
-or a bound in range) reads one cycle more than that helper, and that cycle is the
-address-generator premium. The `ldle.*`/`fldle.*` bound cannot be chased directly
-because the `rj <= rk` check has to keep passing, so its chain always contains an
-`add.d`, but the load is still 5.
+There is no address bypass for a floating-point value either: it has to pass
+through `movfr2gr` before it can be used, so every such chain contains that move
+on top of the load's 5 cycles. Chains that leave the `movfr2gr` out, or subtract
+only part of it, produce a fictitious extra class, which is how the folded-together
+numbers in the first version of this page came about.
 
 The insert, broadcast and gather instructions are cheap and were re-measured
 after the two-cycle calibration of the cross-domain moves:

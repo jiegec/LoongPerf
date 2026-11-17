@@ -65,126 +65,7 @@
           "chain_latency": 0
         }
       ],
-      "notes": "L1D-hit load. The bare pointer chase ldptr.d $r4, $r4, 0 measures 3.97 cycles, so the load latency is 4; adding add.d reads 5.97, one cycle more than the add itself, which is the ALU consumer path (5).",
-      "cycles_min": 4,
-      "cycles_max": 5,
-      "cases": [
-        {
-          "name": "load result feeding the next address",
-          "cycles": 4.0,
-          "experiment": {
-            "name": "bare pointer chase",
-            "role": "measurement",
-            "asm": "ldptr.d $r4, $r4, 0",
-            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0' --asm 'ldptr.d $r4, $r4, 0'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 7
-            },
-            "result": {
-              "instructions_retired": 1.0,
-              "core_cycles": 3.97
-            },
-            "chain_latency": 0
-          }
-        },
-        {
-          "name": "load result consumed by an ALU operation",
-          "cycles": 5.0,
-          "experiment": {
-            "name": "ALU-path chain",
-            "role": "measurement",
-            "asm": "ldptr.d $r4, $r4, 0; add.d $r4, $r4, $r13",
-            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0' --asm 'ldptr.d $r4, $r4, 0; add.d $r4, $r4, $r13'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 7
-            },
-            "result": {
-              "instructions_retired": 2.0,
-              "core_cycles": 5.97
-            },
-            "chain_latency": 1.0
-          }
-        }
-      ]
-    },
-    {
-      "from_operands": [
-        2
-      ],
-      "to_operand": 1,
-      "cycles": 4.0,
-      "experiments": [
-        {
-          "name": "bare pointer chase",
-          "role": "measurement",
-          "asm": "ldptr.d $r4, $r4, 0",
-          "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0",
-          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0' --asm 'ldptr.d $r4, $r4, 0'",
-          "measurement": {
-            "unroll": 800,
-            "iters": 40,
-            "reps": 7
-          },
-          "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 3.97
-          },
-          "chain_latency": 0
-        }
-      ],
-      "notes": "L1D-hit load. The bare pointer chase ldptr.d $r4, $r4, 0 measures 3.97 cycles, so the load latency is 4; adding add.d reads 5.97, one cycle more than the add itself, which is the ALU consumer path (5).",
-      "cycles_min": 4,
-      "cycles_max": 5,
-      "cases": [
-        {
-          "name": "load result feeding the next address",
-          "cycles": 4.0,
-          "experiment": {
-            "name": "bare pointer chase",
-            "role": "measurement",
-            "asm": "ldptr.d $r4, $r4, 0",
-            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0' --asm 'ldptr.d $r4, $r4, 0'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 7
-            },
-            "result": {
-              "instructions_retired": 1.0,
-              "core_cycles": 3.97
-            },
-            "chain_latency": 0
-          }
-        },
-        {
-          "name": "load result consumed by an ALU operation",
-          "cycles": 5.0,
-          "experiment": {
-            "name": "ALU-path chain",
-            "role": "measurement",
-            "asm": "ldptr.d $r4, $r4, 0; add.d $r4, $r4, $r13",
-            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0' --asm 'ldptr.d $r4, $r4, 0; add.d $r4, $r4, $r13'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 7
-            },
-            "result": {
-              "instructions_retired": 2.0,
-              "core_cycles": 5.97
-            },
-            "chain_latency": 1.0
-          }
-        }
-      ]
+      "notes": "L1D-hit load. The bare pointer chase ldptr.d $r4, $r4, 0 measures 3.97 cycles, so the load latency is 4; adding add.d reads 5.97, one cycle more than the add itself, which is the ALU consumer path (5)."
     }
   ],
   "throughput": [
@@ -218,5 +99,6 @@
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }
-  ]
+  ],
+  "notes": "4 cycles, the same for every width and for both the base and the index or bound operand. The load result is available four cycles after the address, and a chain that passes it through an ALU operation before using it as the next address reads one cycle more than that operation, which is what the address generator charges for an ALU-produced address rather than load latency."
 }

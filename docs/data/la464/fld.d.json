@@ -66,49 +66,7 @@
           "notes": "The stored experiment is the direct address chase (4 cycles). The second case puts add.d in the address path and measures 5, the general load latency. A third check, fld.d -> fadd.d -> movfr2gr.d -> address, gives the same 4 cycles for the data path, so the extra cycle belongs to the address path, not to the data path."
         }
       ],
-      "notes": "5 cycles from the base operand rj to the destination. The loop closes through movfr2gr (2 cycles) and, because the loaded value has to be turned back into an address, through an add.d (1 cycle); the chain also carries one further cycle that the address generator pays whenever the address comes from an ALU operation rather than straight from the register file, so 4 cycles are subtracted. The load itself is 5, the same as fld.d/fld.s and one cycle above the integer loads.",
-      "cases": [
-        {
-          "name": "load result feeds the next address directly",
-          "cycles": 5.0,
-          "experiment": {
-            "asm": "fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0",
-            "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 2.0,
-              "core_cycles": 6.96
-            },
-            "chain_latency": 1.96
-          }
-        },
-        {
-          "name": "load result passes through add.d before the next address",
-          "cycles": 5.0,
-          "experiment": {
-            "asm": "fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5",
-            "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 3.0,
-              "core_cycles": 8.93
-            },
-            "chain_latency": 3.93
-          }
-        }
-      ],
-      "cycles_min": 5.0,
-      "cycles_max": 5.0
+      "notes": "5 cycles from the base operand rj to the destination. The loop closes through movfr2gr (2 cycles) and, because the loaded value has to be turned back into an address, through an add.d (1 cycle); the chain also carries one further cycle that the address generator pays whenever the address comes from an ALU operation rather than straight from the register file, so 4 cycles are subtracted. The load itself is 5, the same as fld.d/fld.s and one cycle above the integer loads."
     }
   ],
   "throughput": [
@@ -143,5 +101,5 @@
       "notes": "8 independent instructions take 4.00 cycles."
     }
   ],
-  "notes": "L1D-hit floating-point load, 5 cycles from the base address register to the loaded value. The loop closes through movfr2gr (2 cycles) and, on the paths that need an ALU operation to turn the value back into an address, through an add.d or fadd.d as well; those chains carry one cycle more than their helper instructions, which is what the address generator charges for an ALU-produced address. fld.s and fld.d read the same chain, so the width does not matter, and 5 is one cycle above the integer loads and the same as the vector loads."
+  "notes": "5 cycles, the same for single and double precision and for both the base and the index or bound operand. The value cannot become an address directly, so the measurement chain always contains movfr2gr (2 cycles), and chains that need an add.d, an andi or an fadd.d as well read one cycle more than those helpers; that cycle is the address-generator premium, not load latency."
 }
