@@ -318,7 +318,8 @@ the load-to-AGU bypass:
 
 | load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
 | --- | --- | --- |
-| `ld.b`, `ld.h`, `ld.w`, `ld.d`, `ldptr.*`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / 3 | 5 / 4 |
+| `ld.d`, `ldptr.d` | 4 / 3 | 5 / 4 |
+| `ld.b`, `ld.h`, `ld.w`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / not measured | 5 / not measured |
 | `fld.s`, `fld.d` | 4 / not reachable | 5 / 4 |
 | `vld`, `xvld` | 4 / not reachable | 5 / not measured |
 
@@ -327,12 +328,19 @@ costs, and an integer, floating-point or vector load all take the same time. The
 recorded `cycles` value is the ALU path.
 
 The 3-cycle bypass is measured with a bare pointer chase that feeds the loaded
-value straight back as the address, `ld.d $r4, $r4, 0`, which measures 3.00
-cycles per iteration; adding `add.d $r4, $r4, $r0` gives 5.00, that is the 4-cycle
-ALU path plus one. A vector load has no such path: its result lands in a vector
-register and cannot be an address, so `vld`/`xvld` only have a value-to-consumer
-latency, and the 4 cycles recorded for them are measured through a
-store-then-reload chain (`vld` → `vst` → `ld.d` → `add.d`, where the
+value straight back as the address, `ld.d $r4, $r4, 0`, which measures 3.04
+cycles per iteration; adding `add.d $r4, $r4, $r5` gives 5.04, that is the 4-cycle
+ALU path plus one. Both paths are recorded as cases on `ld.d` and `ldptr.d`.
+
+The narrower loads have no such measurement, and the chase does not work for
+them: the loaded value has to be a usable address, and only a 64-bit load
+produces one. `ld.b` of a stack address would truncate to a few bits, and
+rebuilding the address would need an `add.d`, which is exactly the ALU path
+being separated out. Their `cycles` value is the ALU path only.
+
+A vector load has no bypass path either: its result lands in a vector register
+and cannot be an address, so `vld`/`xvld` only have a value-to-consumer latency,
+and the 4 cycles recorded for them are measured through a store-then-reload chain (`vld` → `vst` → `ld.d` → `add.d`, where the
 store-to-load forwarding costs 10.04 cycles and is subtracted).
 
 LA464 needs one cycle more on both paths, 5 to an ALU consumer and 4 through the
@@ -440,7 +448,7 @@ Load latency does not depend on the data, only on the path:
 | load | LA664 | LA464 |
 | --- | --- | --- |
 | plain `ld.*`, `vld`, `xvld`, `fld.*` to a consumer | 4 | 5 |
-| integer load feeding the next address | 3 | 4 |
+| `ld.d`, `ldptr.d` feeding the next address | 3 | 4 |
 | `ldx.*`, `ldgt.*`, `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 4 / 5 | 5, split unmeasured |
 | integer `ldle.*` bound fed back as the next bound | 4 | not measured |
 

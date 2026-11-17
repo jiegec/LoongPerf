@@ -97,9 +97,52 @@
           ]
         }
       ],
-      "notes": "L1D hit. Load-to-ALU latency is 4 cycles; the load-to-AGU address bypass path is 3 cycles. The calibration experiment uses a bare self-referential pointer chase for the 3-cycle path; the measurement experiment adds add.d to force the ALU-consumer path.",
+      "notes": "L1D hit. Two paths: 3 cycles when the loaded value becomes the next address (the load-to-AGU bypass, measured with a bare self-referential pointer chase) and 4 cycles to an ALU consumer, measured by forcing add.d into the chain. The recorded `cycles` is the ALU path.",
       "cycles_min": 3,
-      "cycles_max": 4
+      "cycles_max": 4,
+      "cases": [
+        {
+          "name": "result feeds the next address (load-to-AGU bypass)",
+          "cycles": 3,
+          "notes": "bare self-referential pointer chase: the loaded value is the next address, so no ALU operation sits in the chain",
+          "experiment": {
+            "name": "load-to-AGU bypass",
+            "asm": "ld.d $r4, $r4, 0",
+            "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
+            "command": "./bench --method slope --unroll 100000 --unroll2 200000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
+            "measurement": {
+              "unroll": 100000,
+              "iters": 100,
+              "reps": 7
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 3.04
+            }
+          }
+        },
+        {
+          "name": "result to an ALU consumer",
+          "cycles": 4,
+          "notes": "the same chase with add.d forced into the dependency, so the value goes through the ALU pipeline; chain_latency 1 subtracts the add.d",
+          "experiment": {
+            "name": "ALU consumer",
+            "asm": "ld.d $r4, $r4, 0; add.d $r4, $r4, $r5",
+            "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
+            "command": "./bench --method slope --unroll 100000 --unroll2 200000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r5'",
+            "measurement": {
+              "unroll": 100000,
+              "iters": 100,
+              "reps": 7
+            },
+            "result": {
+              "instructions_retired": 2,
+              "core_cycles": 5.04
+            },
+            "chain_latency": 1
+          }
+        }
+      ]
     }
   ],
   "throughput": [
