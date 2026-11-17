@@ -276,6 +276,75 @@ vfrecip.d, xvfrecip.d       8       10          11             —           23 
 vfrecip.s, xvfrecip.s      11       15          17             25          27          29
 ```
 
+## Load latency
+
+Loads are not data-dependent, but their latency still depends on two things:
+which operand closes the chain (the base address, or the index and the bound)
+and what consumes the result (an ALU operation, or the next address). The data
+records one entry per source operand, and the notes name the bypass path.
+
+### Plain loads
+
+On LA664 every plain load takes 4 cycles to an ALU consumer and 3 cycles when
+the result feeds the next address, the load-to-AGU bypass:
+
+| load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
+| --- | --- | --- |
+| `ld.b`, `ld.h`, `ld.w`, `ld.d`, `ldptr.*`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / 3 | 5 / 4 |
+| `fld.s` | 4 / 3 | 5 / 4 |
+| `fld.d` | 4 / 3 | 4 / 3 |
+| `vld`, `xvld` | 4 / 3 | 5 / 4 |
+
+Width does not matter on LA664, a byte load costs exactly what a double load
+costs, and an integer, floating-point or vector load all take the same time. The
+recorded `cycles` value is the ALU path.
+
+LA464 needs one cycle more on both paths: 5 to an ALU consumer and 4 through the
+bypass, which is the main load-latency difference between the two cores. The one
+disagreement inside LA464 is `fld.d`, recorded as 4 while `fld.s` is 5; a double
+load should not be faster than a single one, so that entry needs re-measuring.
+
+### Indexed and bound-checked loads
+
+The indexed and bound-checked forms have more than one real path, because the
+index or the bound takes part in the address calculation. On LA664:
+
+| path | cycles |
+| --- | --- |
+| base operand (`rj`) to an ALU consumer | 4 |
+| base operand used as the next address (bypass) | 3 |
+| index operand (`rk`) | 5 |
+| bound operand (`rk`) to an ALU consumer | 5 |
+| bound operand fed straight back as the next bound | 4 |
+
+The extra cycle on the index and bound paths is the second address-generation
+pass. That the bound has two values depending on its consumer is easy to see in
+`ldle.d`: feeding the loaded value back as the bound for the next load measures
+3.99 cycles, while putting an `add.d` or `xori` between the load and the next
+bound measures 5. A floating-point bound check always needs the integer ALU to
+move the value out of the register file, which is why `fldle.*` and `fldgt.*`
+both record 5 on the bound path and only the integer `ldle.*` shows the 4-cycle
+bypass.
+
+The recorded `cycles` for these instructions is the ALU path, so
+`ldx.*`/`ldgt.*`/`fldx.*`/`fldgt.*`/`fldle.*` read 4 for the base operand and 5
+for the index or bound, while the integer `ldle.*` records 4 twice because its
+measured bound chain is the bypass one.
+
+LA464 records the indexed and bound forms with one combined `from_operands:
+[2, 3]` entry of 5 cycles, so its per-source split has not been measured and the
+two cores cannot be compared operand by operand yet. Since LA464 pays one extra
+cycle on the base path, its index and bound paths are probably 6, but that is a
+prediction and not a measurement.
+
+### What does not change the latency
+
+All of these numbers are L1D hits with a hot, 64-byte-aligned buffer. A vector
+access that crosses a cache line is counted as two operations by the load
+counter `0xa8` (see the [Methodology](methodology.md) page), but the latency
+data was taken with aligned buffers, so unaligned latency is unmeasured rather
+than measured-and-equal.
+
 ## Summary
 
 | instruction | range (cycles) | long-path cost |
@@ -308,6 +377,15 @@ vfrecip.s, xvfrecip.s      11       15          17             25          27   
 | `frecip.d` | 8-24 | same |
 | `vfrecip.s` | 11-29 | 15 + 2 digit times |
 | `vfrecip.d` | 8-24 | identical to `frecip.d` |
+
+Load latency does not depend on the data, only on the path:
+
+| load | LA664 | LA464 |
+| --- | --- | --- |
+| plain `ld.*`, `fld.*`, `vld`, `xvld` to an ALU consumer | 4 | 5 |
+| plain load feeding the next address | 3 | 4 |
+| `ldx.*`, `ldgt.*`, `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 4 / 5 | 5, split unmeasured |
+| integer `ldle.*` bound fed back as the next bound | 4 | 5, split unmeasured |
 
 The floating-point classes are a fixed set that covers every possible operand,
 so the JSON lists them as an exhaustive `cases` array, and no formula is needed
