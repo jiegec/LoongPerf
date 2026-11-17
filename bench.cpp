@@ -40,11 +40,13 @@ struct Options {
   bool verbose = false;
   std::string asm_text;
   std::string init_text;
+  std::vector<uint64_t> counters;
 };
 
 struct Counts {
   uint64_t cycles = 0;
   uint64_t instructions = 0;
+  std::vector<uint64_t> counters;
 };
 
 [[noreturn]] void die(const std::string &msg) {
@@ -76,6 +78,8 @@ void usage(const char *argv0) {
       << "  --iters N          Function calls per measurement (default: 10000)\n"
       << "  --reps N           Take the minimum over N measurements (default: 5)\n"
       << "  --core N           Pin to CPU N; -1 disables pinning (default: 0)\n"
+      << "  --counter CONFIG   Extra raw PMU counter config (repeatable, max 2)\n"
+      << "                     e.g. 0xfb = LSX uops, 0xfa = LASX uops\n"
       << "  --verbose          Print measurement details\n"
       << "\n"
       << "Example:\n"
@@ -107,6 +111,8 @@ Options parse_args(int argc, char **argv) {
       opt.reps = parse_u64("--reps", need_value("--reps"));
     } else if (arg == "--core") {
       opt.core = static_cast<int>(parse_u64("--core", need_value("--core")));
+    } else if (arg == "--counter") {
+      opt.counters.push_back(parse_u64("--counter", need_value("--counter")));
     } else if (arg == "--verbose") {
       opt.verbose = true;
     } else if (arg == "--help") {
@@ -125,6 +131,8 @@ Options parse_args(int argc, char **argv) {
     die("--iters must be greater than zero");
   if (opt.reps == 0)
     die("--reps must be greater than zero");
+  if (opt.counters.size() > 2)
+    die("--counter may be given at most twice (4 PMU counters total)");
   return opt;
 }
 
@@ -253,10 +261,11 @@ int perf_event_open_wrapper(struct perf_event_attr *attr, pid_t pid, int cpu,
                                   flags));
 }
 
-int open_perf_counter(uint64_t config, int group_fd) {
+int open_perf_counter(uint64_t config, int group_fd,
+                      uint32_t type = PERF_TYPE_HARDWARE) {
   struct perf_event_attr attr;
   std::memset(&attr, 0, sizeof(attr));
-  attr.type = PERF_TYPE_HARDWARE;
+  attr.type = type;
   attr.size = sizeof(attr);
   attr.config = config;
   attr.disabled = (group_fd == -1) ? 1 : 0;
@@ -277,15 +286,22 @@ int open_perf_counter(uint64_t config, int group_fd) {
 struct PerfCounters {
   int insn_fd = -1;
   int cycle_fd = -1;
+  std::vector<int> counter_fds;
 
-  PerfCounters() {
-    // Make instructions the group leader so that both counters are enabled
+  explicit PerfCounters(const std::vector<uint64_t> &counters) {
+    // Make instructions the group leader so that all counters are enabled
     // and disabled for exactly the same interval.
     insn_fd = open_perf_counter(PERF_COUNT_HW_INSTRUCTIONS, -1);
     cycle_fd = open_perf_counter(PERF_COUNT_HW_CPU_CYCLES, insn_fd);
+    for (uint64_t config : counters)
+      counter_fds.push_back(
+          open_perf_counter(config, insn_fd, PERF_TYPE_RAW));
   }
 
   ~PerfCounters() {
+    for (int fd : counter_fds)
+      if (fd >= 0)
+        close(fd);
     if (cycle_fd >= 0)
       close(cycle_fd);
     if (insn_fd >= 0)
@@ -312,6 +328,13 @@ struct PerfCounters {
     if (read(cycle_fd, &c.cycles, sizeof(c.cycles)) != sizeof(c.cycles))
       die(std::string("reading cycle counter failed: ") +
           std::strerror(errno));
+    c.counters.resize(counter_fds.size());
+    for (size_t i = 0; i < counter_fds.size(); ++i) {
+      if (read(counter_fds[i], &c.counters[i], sizeof(c.counters[i])) !=
+          sizeof(c.counters[i]))
+        die(std::string("reading custom counter failed: ") +
+            std::strerror(errno));
+    }
     return c;
   }
 };
@@ -369,11 +392,13 @@ int main(int argc, char **argv) {
     body();
   }
 
-  PerfCounters perf;
+  PerfCounters perf(opt.counters);
   uint64_t best_cycles = UINT64_MAX;
   uint64_t best_insns = 0;
   uint64_t best_overhead_cycles = 0;
   uint64_t best_overhead_insns = 0;
+  std::vector<uint64_t> best_counters(opt.counters.size(), 0);
+  std::vector<uint64_t> best_overhead_counters(opt.counters.size(), 0);
 
   for (uint64_t rep = 0; rep < opt.reps; ++rep) {
     Counts overhead = measure(empty, opt.iterations, perf);
@@ -386,12 +411,20 @@ int main(int argc, char **argv) {
 
     uint64_t body_cycles = measured.cycles - overhead.cycles;
     uint64_t body_insns = measured.instructions - overhead.instructions;
+    std::vector<uint64_t> body_counters(opt.counters.size(), 0);
+    for (size_t i = 0; i < opt.counters.size(); ++i) {
+      body_counters[i] = measured.counters[i] >= overhead.counters[i]
+                             ? measured.counters[i] - overhead.counters[i]
+                             : 0;
+    }
 
     if (body_cycles < best_cycles) {
       best_cycles = body_cycles;
       best_insns = body_insns;
       best_overhead_cycles = overhead.cycles;
       best_overhead_insns = overhead.instructions;
+      best_counters = body_counters;
+      best_overhead_counters = overhead.counters;
     }
   }
 
@@ -413,10 +446,17 @@ int main(int argc, char **argv) {
     std::cout << "reps: " << opt.reps << "\n";
     std::cout << "empty baseline: " << best_overhead_insns
               << " instructions, " << best_overhead_cycles << " cycles\n";
+    for (size_t i = 0; i < opt.counters.size(); ++i)
+      std::cout << "counter 0x" << std::hex << opt.counters[i] << std::dec
+                << " empty baseline: " << best_overhead_counters[i] << "\n";
   }
 
   std::printf("instructions retired: %.2f\n", insns_per_sequence);
   std::printf("cycles: %.2f\n", cycles_per_sequence);
+  for (size_t i = 0; i < opt.counters.size(); ++i)
+    std::printf("counter 0x%llx: %.2f\n",
+                static_cast<unsigned long long>(opt.counters[i]),
+                static_cast<double>(best_counters[i]) / divisor);
 
   dlclose(handle);
   std::string cleanup = "rm -rf " + dir;
