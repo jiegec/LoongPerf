@@ -39,7 +39,35 @@
     "core": 0,
     "date": "2026-11-17"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 6,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "xvreplgr2vr.w $xr0, $r4; xvpickve2gr.wu $r4, $xr0, 0",
+          "init": "li.d $r4, 1",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 7.0
+          },
+          "measurement": {
+            "unroll": 10000,
+            "iters": 1000,
+            "reps": 7
+          },
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1' --asm 'xvreplgr2vr.w $xr0, $r4; xvpickve2gr.wu $r4, $xr0, 0'"
+        }
+      ],
+      "notes": "vj -> rd. Chain: xvreplgr2vr.w then xvpickve2gr.wu; the 1-cycle latency of the replication helper is subtracted (calibrated with vpickve2gr.b/h and xvpickve2gr.d/w). Three independent runs, spread 6.98-7.00 raw cycles."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
