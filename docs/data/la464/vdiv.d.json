@@ -1,0 +1,112 @@
+{
+  "instruction": {
+    "name": "vdiv.d",
+    "extension": "LSX",
+    "form": "vdiv.d vd, vj, vk",
+    "description": "Divide each signed 64-bit element in `a` by the corresponding element in `b`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "dividend"
+    },
+    {
+      "index": 3,
+      "name": "vk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "divisor"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 11.23,
+      "experiments": [
+        {
+          "name": "dependent chain with element-0 reset helper",
+          "role": "measurement",
+          "asm": "vdiv.d $vr0, $vr0, $vr2; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4",
+          "init": "li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr2, $r4; li.d $r5, 1; li.d $r6, 0",
+          "chain_latency": 7.0,
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 18.23
+          },
+          "measurement": {
+            "unroll": 4000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 4000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr2, $r4; li.d $r5, 1; li.d $r6, 0' --asm 'vdiv.d $vr0, $vr0, $vr2; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'"
+        },
+        {
+          "name": "vadd.b reset-helper baseline",
+          "role": "calibration",
+          "asm": "vadd.b $vr0, $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4",
+          "init": "li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr2, $r4; li.d $r5, 1; li.d $r6, 0",
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 8.1
+          },
+          "measurement": {
+            "unroll": 4000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 4000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr2, $r4; li.d $r5, 1; li.d $r6, 0' --asm 'vadd.b $vr0, $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'",
+          "notes": "Calibration experiment (not used for the reported latency)."
+        }
+      ],
+      "notes": "7 cycles of helper latency are subtracted. Unroll 4000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vdiv.d $vr0, $vr8, $vr16; vdiv.d $vr1, $vr9, $vr17; vdiv.d $vr2, $vr10, $vr18; vdiv.d $vr3, $vr11, $vr19; vdiv.d $vr4, $vr12, $vr20; vdiv.d $vr5, $vr13, $vr21; vdiv.d $vr6, $vr14, $vr22; vdiv.d $vr7, $vr15, $vr23",
+      "init": "li.d $r4, 1; vreplgr2vr.d $vr8, $r4; li.d $r4, 1; vreplgr2vr.d $vr16, $r4; li.d $r4, 1; vreplgr2vr.d $vr9, $r4; li.d $r4, 1; vreplgr2vr.d $vr17, $r4; li.d $r4, 1; vreplgr2vr.d $vr10, $r4; li.d $r4, 1; vreplgr2vr.d $vr18, $r4; li.d $r4, 1; vreplgr2vr.d $vr11, $r4; li.d $r4, 1; vreplgr2vr.d $vr19, $r4; li.d $r4, 1; vreplgr2vr.d $vr12, $r4; li.d $r4, 1; vreplgr2vr.d $vr20, $r4; li.d $r4, 1; vreplgr2vr.d $vr13, $r4; li.d $r4, 1; vreplgr2vr.d $vr21, $r4; li.d $r4, 1; vreplgr2vr.d $vr14, $r4; li.d $r4, 1; vreplgr2vr.d $vr22, $r4; li.d $r4, 1; vreplgr2vr.d $vr15, $r4; li.d $r4, 1; vreplgr2vr.d $vr23, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 48.13
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; vreplgr2vr.d $vr8, $r4; li.d $r4, 1; vreplgr2vr.d $vr16, $r4; li.d $r4, 1; vreplgr2vr.d $vr9, $r4; li.d $r4, 1; vreplgr2vr.d $vr17, $r4; li.d $r4, 1; vreplgr2vr.d $vr10, $r4; li.d $r4, 1; vreplgr2vr.d $vr18, $r4; li.d $r4, 1; vreplgr2vr.d $vr11, $r4; li.d $r4, 1; vreplgr2vr.d $vr19, $r4; li.d $r4, 1; vreplgr2vr.d $vr12, $r4; li.d $r4, 1; vreplgr2vr.d $vr20, $r4; li.d $r4, 1; vreplgr2vr.d $vr13, $r4; li.d $r4, 1; vreplgr2vr.d $vr21, $r4; li.d $r4, 1; vreplgr2vr.d $vr14, $r4; li.d $r4, 1; vreplgr2vr.d $vr22, $r4; li.d $r4, 1; vreplgr2vr.d $vr15, $r4; li.d $r4, 1; vreplgr2vr.d $vr23, $r4' --asm 'vdiv.d $vr0, $vr8, $vr16; vdiv.d $vr1, $vr9, $vr17; vdiv.d $vr2, $vr10, $vr18; vdiv.d $vr3, $vr11, $vr19; vdiv.d $vr4, $vr12, $vr20; vdiv.d $vr5, $vr13, $vr21; vdiv.d $vr6, $vr14, $vr22; vdiv.d $vr7, $vr15, $vr23'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 6.0,
+        "ipc": 0.1667
+      },
+      "notes": "8 independent instructions take 48.13 cycles."
+    }
+  ]
+}

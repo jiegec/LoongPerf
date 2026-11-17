@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "vsra.b",
+    "extension": "LSX",
+    "form": "vsra.b, vd, vj, vk",
+    "description": "Arithmetic right shift each signed 8-bit element in `a` by the corresponding element of `b` modulo 8, store the result in `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "vk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vsra.b $vr0, $vr0, $vr2",
+          "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr2, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.02
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr2, $r4' --asm 'vsra.b $vr0, $vr0, $vr2'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vsra.b $vr0, $vr8, $vr16; vsra.b $vr1, $vr9, $vr17; vsra.b $vr2, $vr10, $vr18; vsra.b $vr3, $vr11, $vr19; vsra.b $vr4, $vr12, $vr20; vsra.b $vr5, $vr13, $vr21; vsra.b $vr6, $vr14, $vr22; vsra.b $vr7, $vr15, $vr23",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4' --asm 'vsra.b $vr0, $vr8, $vr16; vsra.b $vr1, $vr9, $vr17; vsra.b $vr2, $vr10, $vr18; vsra.b $vr3, $vr11, $vr19; vsra.b $vr4, $vr12, $vr20; vsra.b $vr5, $vr13, $vr21; vsra.b $vr6, $vr14, $vr22; vsra.b $vr7, $vr15, $vr23'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}

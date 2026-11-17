@@ -1,0 +1,85 @@
+{
+  "instruction": {
+    "name": "xvftint.l.d",
+    "extension": "LASX",
+    "form": "xvftint.l.d, xd, xj",
+    "description": "Convert double-precision floating point elements in `a` to signed 64-bit integer, using current rounding mode specified in `fscr`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "xvftint.l.d $xr0, $xr0",
+          "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.07
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4' --asm 'xvftint.l.d $xr0, $xr0'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvftint.l.d $xr0, $xr8; xvftint.l.d $xr1, $xr9; xvftint.l.d $xr2, $xr10; xvftint.l.d $xr3, $xr11; xvftint.l.d $xr4, $xr12; xvftint.l.d $xr5, $xr13; xvftint.l.d $xr6, $xr14; xvftint.l.d $xr7, $xr15",
+      "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4' --asm 'xvftint.l.d $xr0, $xr8; xvftint.l.d $xr1, $xr9; xvftint.l.d $xr2, $xr10; xvftint.l.d $xr3, $xr11; xvftint.l.d $xr4, $xr12; xvftint.l.d $xr5, $xr13; xvftint.l.d $xr6, $xr14; xvftint.l.d $xr7, $xr15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ]
+}

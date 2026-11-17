@@ -1,0 +1,73 @@
+{
+  "instruction": {
+    "name": "xvstelm.w",
+    "extension": "LASX",
+    "form": "xvstelm.w xd, rj, imm, imm",
+    "description": "Store element `lane` of `data` to memory address `addr + offset`. Address misalignment does not raise an exception. The `offset` operand is a byte offset; the encoded instruction stores it as a scaled immediate for wider elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "offset"
+    },
+    {
+      "index": 4,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "lane"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvstelm.w $xr0, $r20, 0, 0; xvstelm.w $xr1, $r20, 4, 0; xvstelm.w $xr2, $r20, 8, 0; xvstelm.w $xr3, $r20, 12, 0; xvstelm.w $xr4, $r20, 16, 0; xvstelm.w $xr5, $r20, 20, 0; xvstelm.w $xr6, $r20, 24, 0; xvstelm.w $xr7, $r20, 28, 0",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.13
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, -64; and $r20, $r20, $r4' --asm 'xvstelm.w $xr0, $r20, 0, 0; xvstelm.w $xr1, $r20, 4, 0; xvstelm.w $xr2, $r20, 8, 0; xvstelm.w $xr3, $r20, 12, 0; xvstelm.w $xr4, $r20, 16, 0; xvstelm.w $xr5, $r20, 20, 0; xvstelm.w $xr6, $r20, 24, 0; xvstelm.w $xr7, $r20, 28, 0'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.13 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

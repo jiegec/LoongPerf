@@ -1,0 +1,37 @@
+{
+  "instruction": {
+    "name": "xvfrsqrte.s",
+    "extension": "LASX",
+    "form": "xvfrsqrte.s, xd, xj",
+    "description": "Compute estimated reciprocal of square root of single precision floating point elements in `a`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "notes": "Not supported on LA464 (SIGILL in the user-space benchmark)."
+}

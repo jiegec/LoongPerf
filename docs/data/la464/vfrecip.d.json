@@ -1,0 +1,103 @@
+{
+  "instruction": {
+    "name": "vfrecip.d",
+    "extension": "LSX",
+    "form": "vfrecip.d vd, vj",
+    "description": "Vector floating-point recip."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 10.26,
+      "experiments": [
+        {
+          "name": "dependent vector chain with reset helper",
+          "role": "measurement",
+          "asm": "vfrecip.d $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4",
+          "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408",
+          "chain_latency": 7.07,
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 17.33
+          },
+          "measurement": {
+            "unroll": 4000,
+            "iters": 2500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 4000 --iters 2500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'vfrecip.d $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'"
+        },
+        {
+          "name": "vadd.b reset-helper baseline",
+          "role": "calibration",
+          "asm": "vadd.b $vr0, $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4",
+          "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408",
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 8.27
+          },
+          "measurement": {
+            "unroll": 4000,
+            "iters": 2500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 4000 --iters 2500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'vadd.b $vr0, $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'",
+          "notes": "Calibration experiment (not used for the reported latency)."
+        }
+      ],
+      "notes": "7.07 cycles of helper latency are subtracted. Unroll 4000, iters 2500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vfrecip.d $vr0, $vr8; vfrecip.d $vr1, $vr9; vfrecip.d $vr2, $vr10; vfrecip.d $vr3, $vr11; vfrecip.d $vr4, $vr12; vfrecip.d $vr5, $vr13; vfrecip.d $vr6, $vr14; vfrecip.d $vr7, $vr15",
+      "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 44.2
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4' --asm 'vfrecip.d $vr0, $vr8; vfrecip.d $vr1, $vr9; vfrecip.d $vr2, $vr10; vfrecip.d $vr3, $vr11; vfrecip.d $vr4, $vr12; vfrecip.d $vr5, $vr13; vfrecip.d $vr6, $vr14; vfrecip.d $vr7, $vr15'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 5.5,
+        "ipc": 0.1818
+      },
+      "notes": "8 independent instructions take 44.20 cycles."
+    }
+  ]
+}

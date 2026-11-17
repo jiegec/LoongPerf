@@ -1,0 +1,92 @@
+{
+  "instruction": {
+    "name": "vsubi.du",
+    "extension": "LSX",
+    "form": "vsubi.du, vd, vj, imm",
+    "description": "Subtract the zero-extended `imm` from each 64-bit element in `a`, save the result in `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vsubi.du $vr0, $vr0, 1",
+          "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.01
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4' --asm 'vsubi.du $vr0, $vr0, 1'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vsubi.du $vr0, $vr8, 1; vsubi.du $vr1, $vr9, 1; vsubi.du $vr2, $vr10, 1; vsubi.du $vr3, $vr11, 1; vsubi.du $vr4, $vr12, 1; vsubi.du $vr5, $vr13, 1; vsubi.du $vr6, $vr14, 1; vsubi.du $vr7, $vr15, 1",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4' --asm 'vsubi.du $vr0, $vr8, 1; vsubi.du $vr1, $vr9, 1; vsubi.du $vr2, $vr10, 1; vsubi.du $vr3, $vr11, 1; vsubi.du $vr4, $vr12, 1; vsubi.du $vr5, $vr13, 1; vsubi.du $vr6, $vr14, 1; vsubi.du $vr7, $vr15, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}
