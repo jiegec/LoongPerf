@@ -294,13 +294,26 @@ def render_instruction(uarch: str, data: dict) -> str:
 
     out += ["<h2>Latency</h2>"]
     out += [table_html(
-        ["From", "To", "Latency (cycles)", "Depends on the operands"],
+        ["From", "To", "Latency (cycles)", "Case cycles"],
         [[esc(operand_ref(data, item["from_operands"])),
           esc(operand_ref(data, [item["to_operand"]])),
           esc(fmt_range(item, "cycles")),
           esc(cases_summary(item))]
          for item in data.get("latencies", [])],
     )]
+
+    case_rows = []
+    for item in data.get("latencies", []):
+        for case in item.get("cases", []):
+            case_rows.append([
+                esc(operand_ref(data, item["from_operands"])),
+                esc(operand_ref(data, [item["to_operand"]])),
+                esc(case["name"]),
+                esc(fmt(case["cycles"])),
+            ])
+    if case_rows:
+        out += ["<h3>Latency cases</h3>"]
+        out += [table_html(["From", "To", "Case", "Cycles"], case_rows)]
 
     if data.get("throughput"):
         rows = []
@@ -338,6 +351,7 @@ def render_instruction(uarch: str, data: dict) -> str:
                 rows.append([esc(case["name"]), esc(fmt(case["cycles"])),
                              f'<code>{esc(setup)}</code>' if setup else "",
                              commands])
+            out += ["<h3>Case measurements</h3>"]
             out += [table_html(["Case", "Cycles", "Operand setup", "Command"], rows)]
         if item.get("notes"):
             out += [para(item["notes"])]
