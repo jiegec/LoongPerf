@@ -32,7 +32,36 @@
     "core": 0,
     "date": "2026-11-16"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 3.0,
+      "experiments": [
+        {
+          "name": "high-unroll memory-assisted chain",
+          "role": "measurement",
+          "asm": "movfrh2gr.s $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movfrh2gr.s $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0'",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 11.05
+          },
+          "chain_latency": 8.06,
+          "notes": "11.05 cycles minus 8.06 (7.06 GPR-store -> FPR-load forwarding + 1 add.d) = 2.99 cycles, reported as 3."
+        }
+      ],
+      "notes": "High-half FPR->GPR read latency is 3 cycles, same as movfr2gr.s. This instruction retires as 1 uop."
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
@@ -61,5 +90,5 @@
       "notes": "8 independent instructions take 8.00 cycles."
     }
   ],
-  "notes": "High-half FPR->GPR latency is about 3 cycles, same as movfr2gr.s. Round trip with movgr2frh.w is 4.99 cycles (~5). Throughput is 1 CPI for 1-20 independent lanes."
+  "notes": "High-half FPR->GPR move. Retires as 1 uop; read latency is 3 cycles, same as movfr2gr.s. Round trip with movgr2frh.w is 5 cycles."
 }
