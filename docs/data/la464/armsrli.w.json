@@ -1,0 +1,129 @@
+{
+  "instruction": {
+    "name": "armsrli.w",
+    "extension": "LBT",
+    "form": "armsrli.w rd, imm, cond",
+    "description": "ARM-style logical shift right by immediate on 32-bit values."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "accumulator and destination"
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "shift amount"
+    },
+    {
+      "index": 3,
+      "name": "cond",
+      "kind": "immediate",
+      "access": "read",
+      "description": "ARM condition field"
+    },
+    {
+      "index": 4,
+      "name": "ARMFLAGS",
+      "kind": "flags",
+      "access": "write",
+      "bits": 4,
+      "description": "ARM flags",
+      "implicit": true
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 100000,
+    "iters": 100,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armsrli.w $r12, 1, 14",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "chain_latency": 0.0,
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.94
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 1.93-1.96 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
+    },
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 4,
+      "cycles": 3.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "armsrli.w $r12, 1, 14; armmfflag $r12, 0x39",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "chain_latency": 1.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.1
+          },
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 20
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14; armmfflag $r12, 0x39'"
+        }
+      ],
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.04-4.12 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "armsrli.w $r12, 1, 14; armsrli.w $r13, 1, 14; armsrli.w $r14, 1, 14; armsrli.w $r15, 1, 14; armsrli.w $r16, 1, 14; armsrli.w $r17, 1, 14; armsrli.w $r18, 1, 14; armsrli.w $r19, 1, 14",
+      "init": "armmtflag $r0, 0x39",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 16.63
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'armmtflag $r0, 0x39' --asm 'armsrli.w $r12, 1, 14; armsrli.w $r13, 1, 14; armsrli.w $r14, 1, 14; armsrli.w $r15, 1, 14; armsrli.w $r16, 1, 14; armsrli.w $r17, 1, 14; armsrli.w $r18, 1, 14; armsrli.w $r19, 1, 14'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.0787,
+        "ipc": 0.4811
+      },
+      "notes": "Slope method, 8 independent lanes; 16.63 cycles per 8 instructions.",
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000,
+        "reps": 5
+      }
+    }
+  ]
+}
