@@ -1,0 +1,54 @@
+{
+  "instruction": {
+    "name": "xvrepli.b",
+    "extension": "LASX",
+    "form": "xvrepli.b xd, imm",
+    "description": "Load an immediate into all b elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "immediate"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvldi $xr0, 1; xvldi $xr1, 1; xvldi $xr2, 1; xvldi $xr3, 1; xvldi $xr4, 1; xvldi $xr5, 1; xvldi $xr6, 1; xvldi $xr7, 1",
+      "init": "nop",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 20 --init 'nop' --asm 'xvldi $xr0, 1; xvldi $xr1, 1; xvldi $xr2, 1; xvldi $xr3, 1; xvldi $xr4, 1; xvldi $xr5, 1; xvldi $xr6, 1; xvldi $xr7, 1'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.3
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.2875,
+        "ipc": 3.4783
+      },
+      "notes": "8 independent instructions take 2.30 cycles."
+    }
+  ],
+  "notes": "LASX vector instruction measured on LA664."
+}
