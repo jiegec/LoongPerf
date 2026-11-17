@@ -70,7 +70,8 @@
       ],
       "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
       "cycles_min": 7,
-      "cycles_max": 23
+      "cycles_max": 23,
+      "comment": "Min 7 cycles at divisor=0x80000000; max 23 cycles at divisor=0x1; dividend=0xffffffff."
     },
     {
       "from_operands": [
@@ -101,7 +102,8 @@
       ],
       "notes": "Data-dependent. Min/max measured over a range of divisors with a 10000-division dependency chain; the experiment below is one sample.",
       "cycles_min": 7,
-      "cycles_max": 23
+      "cycles_max": 23,
+      "comment": "Min 7 cycles at divisor=0xffffffff; max 23 cycles at divisor=0x1; dividend=0xffffffff."
     }
   ],
   "throughput": [
@@ -133,7 +135,9 @@
         "ipc_min": 0.08,
         "ipc_max": 0.2222
       },
-      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes."
+      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.",
+      "comment": "Min CPI 4.499 at divisor=0xffffffff; max CPI 12.501 at divisor=0x1; dividend=0xffffffff."
     }
-  ]
+  ],
+  "comment": "Latency: 100 outer iterations x 100 divisions; each block is <op>; and; add.d, and the measured cycles/division include the 2-cycle and+add chain, so 2 is subtracted. Throughput: 8 independent lanes with the same dividend/divisor pair."
 }
