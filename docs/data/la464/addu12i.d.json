@@ -1,0 +1,92 @@
+{
+  "instruction": {
+    "name": "addu12i.d",
+    "extension": "LBT",
+    "form": "addu12i.d rd, rj, imm",
+    "description": "add unsigned 12-bit immediate"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": ""
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "addu12i.d $r12, $r12, 1",
+          "init": "addi.d $r12, $r0, 1",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r12, $r0, 1' --asm 'addu12i.d $r12, $r12, 1'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "addu12i.d $r12, $r4, 1; addu12i.d $r13, $r5, 1; addu12i.d $r14, $r6, 1; addu12i.d $r15, $r7, 1; addu12i.d $r16, $r8, 1; addu12i.d $r17, $r9, 1; addu12i.d $r18, $r10, 1; addu12i.d $r19, $r11, 1",
+      "init": "addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16' --asm 'addu12i.d $r12, $r4, 1; addu12i.d $r13, $r5, 1; addu12i.d $r14, $r6, 1; addu12i.d $r15, $r7, 1; addu12i.d $r16, $r8, 1; addu12i.d $r17, $r9, 1; addu12i.d $r18, $r10, 1; addu12i.d $r19, $r11, 1'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "8 independent instructions take 2.00 cycles."
+    }
+  ]
+}

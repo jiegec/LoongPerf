@@ -1,0 +1,122 @@
+{
+  "instruction": {
+    "name": "armmfflag",
+    "form": "armmfflag rd, mask",
+    "description": "Read selected ARM flags from ARMFLAGS, as determined by mask, and pack them into rd.",
+    "extension": "LBT"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "packed flag result"
+    },
+    {
+      "index": 2,
+      "name": "mask",
+      "kind": "immediate",
+      "access": "read",
+      "description": "flag-selection mask (0xf selects N, Z, C, V)"
+    },
+    {
+      "index": 3,
+      "name": "ARMFLAGS",
+      "kind": "flags",
+      "access": "read",
+      "implicit": true,
+      "suppressed": true,
+      "description": "ARM flags"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "ARMFLAGS -> rd",
+          "role": "measurement",
+          "asm": "armmtflag $r12, 0xf; armmfflag $r12, 0xf",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0xf",
+          "chain_instructions": [
+            "armmtflag $r12, 0xf"
+          ],
+          "chain_latency": 3.0,
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.03
+          },
+          "measurement": {
+            "unroll": 10000,
+            "iters": 1000
+          },
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0xf' --asm 'armmtflag $r12, 0xf; armmfflag $r12, 0xf'"
+        },
+        {
+          "name": "extra armmfflag calibration",
+          "role": "calibration",
+          "asm": "armmtflag $r12, 0xf; armmfflag $r12, 0xf; armmfflag $r12, 0xf",
+          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0xf",
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 5.01
+          },
+          "measurement": {
+            "unroll": 6666,
+            "iters": 1501
+          },
+          "command": "./bench --unroll 6666 --iters 1501 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0xf' --asm 'armmtflag $r12, 0xf; armmfflag $r12, 0xf; armmfflag $r12, 0xf'",
+          "notes": "Calibration experiment (not used for the reported latency)."
+        }
+      ],
+      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "armmfflag $r12, 0xf; armmfflag $r13, 0xf; armmfflag $r14, 0xf; armmfflag $r15, 0xf; armmfflag $r16, 0xf; armmfflag $r17, 0xf; armmfflag $r18, 0xf; armmfflag $r19, 0xf",
+      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0xf",
+      "machine_code": [
+        "005c3c4c  armmfflag $t0, 0xf",
+        "005c3c4d  armmfflag $t1, 0xf",
+        "005c3c4e  armmfflag $t2, 0xf",
+        "005c3c4f  armmfflag $t3, 0xf",
+        "005c3c50  armmfflag $t4, 0xf",
+        "005c3c51  armmfflag $t5, 0xf",
+        "005c3c52  armmfflag $t6, 0xf",
+        "005c3c53  armmfflag $t7, 0xf"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.31
+      },
+      "measurement": {
+        "unroll": 10000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0xf' --asm 'armmfflag $r12, 0xf; armmfflag $r13, 0xf; armmfflag $r14, 0xf; armmfflag $r15, 0xf; armmfflag $r16, 0xf; armmfflag $r17, 0xf; armmfflag $r18, 0xf; armmfflag $r19, 0xf'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.31 cycles."
+    }
+  ]
+}

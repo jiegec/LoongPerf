@@ -1,0 +1,94 @@
+{
+  "instruction": {
+    "name": "rotr.h",
+    "extension": "LBT",
+    "form": "rotr.h rd, rj, rk",
+    "description": "x86 rotate right"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": ""
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "rotr.h $r12, $r12, $r13",
+          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.01
+          },
+          "measurement": {
+            "unroll": 20000,
+            "iters": 500,
+            "reps": 7
+          },
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2' --asm 'rotr.h $r12, $r12, $r13'"
+        }
+      ],
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "rotr.h $r12, $r4, $r4; rotr.h $r13, $r5, $r5; rotr.h $r14, $r6, $r6; rotr.h $r15, $r7, $r7; rotr.h $r16, $r8, $r8; rotr.h $r17, $r9, $r9; rotr.h $r18, $r10, $r10; rotr.h $r19, $r11, $r11",
+      "init": "addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.97
+      },
+      "measurement": {
+        "unroll": 1000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 9; addi.d $r5, $r0, 10; addi.d $r6, $r0, 11; addi.d $r7, $r0, 12; addi.d $r8, $r0, 13; addi.d $r9, $r0, 14; addi.d $r10, $r0, 15; addi.d $r11, $r0, 16' --asm 'rotr.h $r12, $r4, $r4; rotr.h $r13, $r5, $r5; rotr.h $r14, $r6, $r6; rotr.h $r15, $r7, $r7; rotr.h $r16, $r8, $r8; rotr.h $r17, $r9, $r9; rotr.h $r18, $r10, $r10; rotr.h $r19, $r11, $r11'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 7.97 cycles."
+    }
+  ]
+}
