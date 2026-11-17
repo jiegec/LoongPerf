@@ -41,6 +41,11 @@ struct Options {
   std::string asm_text;
   std::string init_text;
   std::vector<uint64_t> counters;
+  // slope: measure two body sizes and use the difference; no baseline at all
+  // raw: report a single body measurement unchanged
+  std::string method = "slope";
+  // Second unroll factor for the slope method (0 means 2 * unroll).
+  uint64_t unroll2 = 0;
 };
 
 struct Counts {
@@ -78,13 +83,19 @@ void usage(const char *argv0) {
       << "  --iters N          Function calls per measurement (default: 10000)\n"
       << "  --reps N           Take the minimum over N measurements (default: 5)\n"
       << "  --core N           Pin to CPU N; -1 disables pinning (default: 0)\n"
+      << "  --method NAME      slope (default) or raw\n"
+      << "                     slope measures two body sizes and differences them,\n"
+      << "                     which cancels all per-call and per-measurement cost\n"
+      << "                     raw reports one body measurement unchanged\n"
+      << "  --unroll2 N        Second unroll factor for --method slope\n"
+      << "                     (default: 2 * --unroll)\n"
       << "  --counter CONFIG   Extra raw PMU counter config (repeatable, max 2)\n"
       << "                     e.g. 0xfb = LSX uops, 0xfa = LASX uops\n"
       << "  --verbose          Print measurement details\n"
       << "\n"
       << "Example:\n"
-      << "  " << argv0 << " --unroll 100 --warmup 10 "
-         "--asm \"vfmadd.s $vr0, $vr0, $vr2, $vr3\"\n";
+      << "  " << argv0 << " --unroll 1000 --unroll2 4000 --asm "
+         "\"fadd.d $f0, $f0, $f1\"\n";
 }
 
 Options parse_args(int argc, char **argv) {
@@ -111,6 +122,10 @@ Options parse_args(int argc, char **argv) {
       opt.reps = parse_u64("--reps", need_value("--reps"));
     } else if (arg == "--core") {
       opt.core = static_cast<int>(parse_u64("--core", need_value("--core")));
+    } else if (arg == "--unroll2") {
+      opt.unroll2 = parse_u64("--unroll2", need_value("--unroll2"));
+    } else if (arg == "--method") {
+      opt.method = need_value("--method");
     } else if (arg == "--counter") {
       opt.counters.push_back(parse_u64("--counter", need_value("--counter")));
     } else if (arg == "--verbose") {
@@ -131,6 +146,12 @@ Options parse_args(int argc, char **argv) {
     die("--iters must be greater than zero");
   if (opt.reps == 0)
     die("--reps must be greater than zero");
+  if (opt.method != "slope" && opt.method != "raw")
+    die("--method must be either slope or raw");
+  if (opt.method == "raw" && opt.unroll2 != 0)
+    die("--unroll2 is only meaningful with --method slope");
+  if (opt.method == "slope" && opt.unroll2 != 0 && opt.unroll2 <= opt.unroll)
+    die("--unroll2 must be greater than --unroll");
   if (opt.counters.size() > 2)
     die("--counter may be given at most twice (4 PMU counters total)");
   return opt;
@@ -238,7 +259,6 @@ std::string generate_assembly(const std::vector<std::string> &insns,
   };
 
   emit_func("bench_body", true);
-  emit_func("bench_empty", false);
   out << "    .section .note.GNU-stack,\"\",@progbits\n";
   return out.str();
 }
@@ -362,106 +382,136 @@ int main(int argc, char **argv) {
   bind_to_cpu(opt.core);
 
   const std::string dir = make_temp_dir();
-  const std::string src_path = dir + "/bench.S";
-  const std::string so_path = dir + "/bench.so";
-  const std::string log_path = dir + "/build.log";
 
-  write_file(src_path, generate_assembly(insns, init_insns, opt.unroll));
+  using BenchFn = void (*)();
+  struct Loaded {
+    void *handle = nullptr;
+    BenchFn body = nullptr;
+  };
 
-  std::string cmd = "gcc -shared -nostdlib -fPIC -o " + so_path + " " +
-                    src_path + " >" + log_path + " 2>&1";
-  int rc = std::system(cmd.c_str());
-  if (rc != 0) {
-    std::cerr << "bench: failed to assemble the input instructions\n\n"
-              << read_file(log_path);
-    std::exit(EXIT_FAILURE);
-  }
+  auto build = [&](const char *name, uint64_t unroll) -> Loaded {
+    const std::string src = dir + "/" + name + ".S";
+    const std::string so = dir + "/" + name + ".so";
+    const std::string log = dir + "/" + name + ".log";
+    write_file(src, generate_assembly(insns, init_insns, unroll));
+    std::string cmd =
+        "gcc -shared -nostdlib -fPIC -o " + so + " " + src + " >" + log + " 2>&1";
+    if (std::system(cmd.c_str()) != 0) {
+      std::cerr << "bench: failed to assemble the input instructions\n\n"
+                << read_file(log);
+      std::exit(EXIT_FAILURE);
+    }
+    void *handle = dlopen(so.c_str(), RTLD_NOW | RTLD_LOCAL);
+    if (!handle)
+      die(std::string("dlopen failed: ") + dlerror());
+    Loaded l;
+    l.handle = handle;
+    l.body = reinterpret_cast<BenchFn>(dlsym(handle, "bench_body"));
+    if (!l.body)
+      die(std::string("dlsym failed: ") + dlerror());
+    return l;
+  };
 
-  void *handle = dlopen(so_path.c_str(), RTLD_NOW | RTLD_LOCAL);
-  if (!handle)
-    die(std::string("dlopen failed: ") + dlerror());
+  const bool use_slope = (opt.method == "slope");
+  const uint64_t unroll_a = opt.unroll;
+  const uint64_t unroll_b =
+      use_slope ? (opt.unroll2 != 0 ? opt.unroll2 : opt.unroll * 2) : 0;
 
-  auto body = reinterpret_cast<BenchFn>(dlsym(handle, "bench_body"));
-  auto empty = reinterpret_cast<BenchFn>(dlsym(handle, "bench_empty"));
-  if (!body || !empty)
-    die(std::string("dlsym failed: ") + dlerror());
+  Loaded a = build("bench_a", unroll_a);
+  Loaded b;
+  if (use_slope)
+    b = build("bench_b", unroll_b);
 
   // Touch the code and warm up caches/branch predictors before measuring.
   for (uint64_t i = 0; i < opt.warmup; ++i) {
-    empty();
-    body();
+    a.body();
+    if (use_slope)
+      b.body();
   }
 
   PerfCounters perf(opt.counters);
+  const size_t ncounters = opt.counters.size();
+
+  // Number of sequences spanned by one difference (slope) or one measurement
+  // (raw). All reported values are normalised by this span.
+  const double span = static_cast<double>(opt.iterations) *
+                      static_cast<double>(use_slope ? (unroll_b - unroll_a)
+                                                    : unroll_a);
+
   uint64_t best_cycles = UINT64_MAX;
   uint64_t best_insns = 0;
-  uint64_t best_overhead_cycles = 0;
-  uint64_t best_overhead_insns = 0;
-  std::vector<uint64_t> best_counters(opt.counters.size(), 0);
-  std::vector<uint64_t> best_overhead_counters(opt.counters.size(), 0);
+  std::vector<uint64_t> best_counters(ncounters, 0);
+  uint64_t diag_cycles_a = 0, diag_cycles_b = 0;
 
   for (uint64_t rep = 0; rep < opt.reps; ++rep) {
-    Counts overhead = measure(empty, opt.iterations, perf);
-    Counts measured = measure(body, opt.iterations, perf);
+    Counts ma = measure(a.body, opt.iterations, perf);
+    Counts mb;
+    if (use_slope)
+      mb = measure(b.body, opt.iterations, perf);
 
-    if (measured.cycles < overhead.cycles)
-      die("cycle counter underflow; perf counters look unreliable");
-    if (measured.instructions < overhead.instructions)
-      die("instruction counter underflow; perf counters look unreliable");
-
-    uint64_t body_cycles = measured.cycles - overhead.cycles;
-    uint64_t body_insns = measured.instructions - overhead.instructions;
-    std::vector<uint64_t> body_counters(opt.counters.size(), 0);
-    for (size_t i = 0; i < opt.counters.size(); ++i) {
-      body_counters[i] = measured.counters[i] >= overhead.counters[i]
-                             ? measured.counters[i] - overhead.counters[i]
-                             : 0;
+    uint64_t dcycles, dinsns;
+    std::vector<uint64_t> dcounters(ncounters, 0);
+    if (use_slope) {
+      if (mb.cycles < ma.cycles)
+        die("slope counter underflow; perf counters look unreliable");
+      if (mb.instructions < ma.instructions)
+        die("slope instruction counter underflow; perf counters look "
+            "unreliable");
+      dcycles = mb.cycles - ma.cycles;
+      dinsns = mb.instructions - ma.instructions;
+      for (size_t i = 0; i < ncounters; ++i)
+        dcounters[i] = mb.counters[i] >= ma.counters[i]
+                           ? mb.counters[i] - ma.counters[i]
+                           : 0;
+    } else {
+      dcycles = ma.cycles;
+      dinsns = ma.instructions;
+      dcounters = ma.counters;
     }
 
-    if (body_cycles < best_cycles) {
-      best_cycles = body_cycles;
-      best_insns = body_insns;
-      best_overhead_cycles = overhead.cycles;
-      best_overhead_insns = overhead.instructions;
-      best_counters = body_counters;
-      best_overhead_counters = overhead.counters;
+    if (dcycles < best_cycles) {
+      best_cycles = dcycles;
+      best_insns = dinsns;
+      best_counters = dcounters;
+      diag_cycles_a = ma.cycles;
+      diag_cycles_b = use_slope ? mb.cycles : 0;
     }
   }
-
-  const double divisor =
-      static_cast<double>(opt.iterations) * static_cast<double>(opt.unroll);
-  const double cycles_per_sequence =
-      static_cast<double>(best_cycles) / divisor;
-  const double insns_per_sequence =
-      static_cast<double>(best_insns) / divisor;
 
   if (opt.verbose) {
     std::cout << "asm: " << opt.asm_text << "\n";
     if (!opt.init_text.empty())
       std::cout << "init: " << opt.init_text << "\n";
+    std::cout << "method: " << opt.method << "\n";
     std::cout << "instructions per unrolled copy: " << insns.size() << "\n";
-    std::cout << "unroll: " << opt.unroll << "\n";
+    std::cout << "unroll: " << unroll_a;
+    if (use_slope)
+      std::cout << " and " << unroll_b;
+    std::cout << "\n";
     std::cout << "warmup: " << opt.warmup << "\n";
     std::cout << "iterations: " << opt.iterations << "\n";
     std::cout << "reps: " << opt.reps << "\n";
-    std::cout << "empty baseline: " << best_overhead_insns
-              << " instructions, " << best_overhead_cycles << " cycles\n";
-    for (size_t i = 0; i < opt.counters.size(); ++i)
-      std::cout << "counter 0x" << std::hex << opt.counters[i] << std::dec
-                << " empty baseline: " << best_overhead_counters[i] << "\n";
+    std::cout << "raw counter cycles: " << diag_cycles_a;
+    if (use_slope)
+      std::cout << " (unroll " << unroll_a << ") and " << diag_cycles_b
+                << " (unroll " << unroll_b << ")";
+    std::cout << "\n";
   }
 
-  std::printf("instructions retired: %.2f\n", insns_per_sequence);
-  std::printf("cycles: %.2f\n", cycles_per_sequence);
-  for (size_t i = 0; i < opt.counters.size(); ++i)
+  std::printf("instructions retired: %.2f",
+              static_cast<double>(best_insns) / span);
+  std::printf("\ncycles: %.2f", static_cast<double>(best_cycles) / span);
+  std::printf("\n");
+  for (size_t i = 0; i < ncounters; ++i)
     std::printf("counter 0x%llx: %.2f\n",
                 static_cast<unsigned long long>(opt.counters[i]),
-                static_cast<double>(best_counters[i]) / divisor);
+                static_cast<double>(best_counters[i]) / span);
 
-  dlclose(handle);
+  dlclose(a.handle);
+  if (use_slope)
+    dlclose(b.handle);
   std::string cleanup = "rm -rf " + dir;
-  if (std::system(cleanup.c_str()) != 0) {
+  if (std::system(cleanup.c_str()) != 0)
     std::cerr << "bench: warning: could not remove " << dir << "\n";
-  }
   return 0;
 }

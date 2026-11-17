@@ -8,9 +8,43 @@ Measurements are produced with `./bench`, a small nanoBench-style tool for
 LoongArch.
 
 `./bench` assembles the given instruction sequence, unrolls it, warms it up,
-and executes it in a tight loop. It uses `perf_event_open(2)` to count retired
-uops and core cycles, and subtracts the overhead of an empty function measured
-with the same loop.
+and executes it in a tight loop, counting retired uops and core cycles with
+`perf_event_open(2)`.
+
+## Removing measurement overhead
+
+Every measurement pays a fixed cost that does not belong to the instructions
+under test: the call itself, the register-save prologue and epilogue, the
+caller's loop branch, and the `perf_event_open` enable/disable and counter
+reads. Subtracting a separately measured empty function is **not** a valid way
+to remove this cost, because the empty function cannot overlap its prologue
+with any work while a real body can, so the empty baseline always overstates
+the real per-call cost.
+
+`./bench` therefore defaults to the **slope method**: it compiles the same
+sequence twice with different unroll factors and differences the two
+measurements.
+
+```text
+C(k) = O + k * c          O = all per-call and per-measurement cost
+c    = (C(k2) - C(k1)) / (k2 - k1)
+```
+
+`O` cancels exactly, because both measurements execute the same number of
+calls and the same number of perf enable/disable cycles. `--unroll N` sets the
+smaller body and `--unroll2 N2` the larger one (default `2N`). The reported
+value is normalised by `iters * (N2 - N)`.
+
+This matters most at small unroll factors. For a single dependent `add.d`
+(1 cycle) the raw body measurement reads 0.89 at `--unroll 100` while the slope
+method reads 0.98; for a `fadd.d` chain (3 cycles) the raw value is 2.23 at
+`--unroll 100` and the slope method gives 3.00.
+
+`--method raw` reports a single body measurement unchanged. It includes the
+per-call overhead and is only useful as an upper bound or for comparing runs
+made with identical settings. Earlier data in this repository was collected
+with the old empty-function subtraction, so its recorded command lines do not
+show `--method`; the values have since been normalised to nominal integers.
 
 Latency is measured with dependency chains: the instruction under test is
 followed by chain instructions whose latency is known, and the chain latency
