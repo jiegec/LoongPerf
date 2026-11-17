@@ -313,9 +313,9 @@ records one entry per source operand, and the notes name the bypass path.
 ### Plain loads
 
 On LA664 an integer load takes 4 cycles to an ALU consumer, 3 when the result
-feeds the next address (the load-to-AGU bypass), and a floating-point load takes
-5, one cycle more, because the destination is an FPR and the latency is measured
-by moving the value back to a GPR:
+feeds the next address (the load-to-AGU bypass), and the floating-point and
+vector loads take 5, one cycle more, because their destination register file has
+no bypass path into the address generator:
 
 | load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
 | --- | --- | --- |
@@ -331,7 +331,11 @@ recorded `cycles` value is the ALU path.
 The 3-cycle bypass is measured with a bare pointer chase that feeds the loaded
 value straight back as the address, `ld.d $r4, $r4, 0`, which measures 3.04
 cycles per iteration; adding `add.d $r4, $r4, $r5` gives 5.04, that is the 4-cycle
-ALU path plus one. Both paths are recorded as cases on `ld.d` and `ldptr.d`.
+ALU path plus one. Both paths are recorded as cases on `ld.d` and `ldptr.d`. The
+vector loads are measured with a pick-based chase instead,
+`vld $vr0, $r20, 0; vpickve2gr.d $r4, $vr0, 0; add.d $r20, $r20, $r4`, which
+measures 9 cycles for LSX and 11 for LASX; with `vpickve2gr.d` at 3 and
+`xvpickve2gr.d` at 5 and one cycle for the `add.d`, both loads come out at 5.
 
 The narrower loads have no such measurement, and the chase does not work for
 them: the loaded value has to be a usable address, and only a 64-bit load
@@ -447,8 +451,9 @@ Load latency does not depend on the data, only on the path:
 
 | load | LA664 | LA464 |
 | --- | --- | --- |
-| plain `ld.*`, `vld`, `xvld` to a consumer | 4 | 5 |
+| plain `ld.*` to a consumer | 4 | 5 |
 | plain `fld.*` to a GPR consumer | 5 | 5 |
+| plain `vld`, `xvld` to a vector consumer | 5 | 5 |
 | `ld.d`, `ldptr.d` feeding the next address | 3 | 4 |
 | `ldx.*`, `ldgt.*`, `ldle.*` base or index/bound | 4 | 5 / 4 (ALU / address path) |
 | `fldx.*`, `fldgt.*`, `fldle.*` base or index/bound | 5 | 5 / 4 |

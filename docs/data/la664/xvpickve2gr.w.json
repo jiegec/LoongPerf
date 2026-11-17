@@ -45,33 +45,27 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 6,
+      "cycles": 5,
       "experiments": [
         {
-          "name": "round trip through the reverse move",
+          "name": "register round trip",
           "role": "measurement",
           "asm": "xvreplgr2vr.w $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0",
           "init": "li.d $r4, 1",
+          "command": "./bench --method slope --unroll 4000 --unroll2 8000 --iters 50 --warmup 10 --reps 5 --init 'li.d $r4, 1' --asm 'xvreplgr2vr.w $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0'",
           "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 7
+            "unroll": 4000,
+            "iters": 50,
+            "reps": 5
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1' --asm 'xvreplgr2vr.w $xr0, $r4; xvpickve2gr.w $r4, $xr0, 0'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 7
+            "core_cycles": 7.0
           },
-          "chain_latency": 1,
-          "notes": "Round trip 7.05 cycles. xvreplgr2vr.w is 1 cycle, so xvpickve2gr.w is 6.05 cycles.",
-          "machine_code": [
-            "03800404  li.w        \t$a0, 0x1",
-            "769f0880  xvreplgr2vr.w\t$xr0, $a0",
-            "76efc004  xvpickve2gr.w\t$a0, $xr0, 0x0"
-          ]
+          "chain_latency": 2
         }
       ],
-      "notes": "Round trip 7.05 cycles. xvreplgr2vr.w is 1 cycle, so xvpickve2gr.w is 6.05 cycles. Nominal values: round-trip core cycles rounded to the nearest integer."
+      "notes": "5 cycles for this direction. The two directions cannot be separated by chaining, so the split follows the microarchitecture: an FPR or vector load cannot bypass, and the vector float reset helper measures pick + 2 + repl = 7 for LSX and 9 for LASX, which fixes the pick at 3 and 5. The stored experiment is the round trip."
     }
   ],
   "throughput": [
