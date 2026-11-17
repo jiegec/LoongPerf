@@ -1,0 +1,65 @@
+{
+  "instruction": {
+    "name": "movgr2fcsr",
+    "extension": "Base",
+    "form": "movgr2fcsr fcsr, rj",
+    "description": "Move rj into the selected FCSR."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fcsr",
+      "kind": "other",
+      "access": "write",
+      "bits": 64,
+      "description": "fcsr"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "rj"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "movgr2fcsr $fcsr0, $r4; movgr2fcsr $fcsr1, $r5; movgr2fcsr $fcsr2, $r6; movgr2fcsr $fcsr3, $r7; movgr2fcsr $fcsr0, $r8; movgr2fcsr $fcsr1, $r9; movgr2fcsr $fcsr2, $r10; movgr2fcsr $fcsr3, $r11",
+      "init": "li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
+      "machine_code": [
+        "0114c080  movgr2fcsr  \t$fcsr0, $a0",
+        "0114c0a1  movgr2fcsr  \t$fcsr1, $a1",
+        "0114c0c2  movgr2fcsr  \t$fcsr2, $a2",
+        "0114c0e3  movgr2fcsr  \t$fcsr3, $a3",
+        "0114c100  movgr2fcsr  \t$fcsr0, $a4",
+        "0114c121  movgr2fcsr  \t$fcsr1, $a5",
+        "0114c142  movgr2fcsr  \t$fcsr2, $a6",
+        "0114c163  movgr2fcsr  \t$fcsr3, $a7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2fcsr $fcsr0, $r4; movgr2fcsr $fcsr1, $r5; movgr2fcsr $fcsr2, $r6; movgr2fcsr $fcsr3, $r7; movgr2fcsr $fcsr0, $r8; movgr2fcsr $fcsr1, $r9; movgr2fcsr $fcsr2, $r10; movgr2fcsr $fcsr3, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 120.06
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 15.0075,
+        "ipc": 0.06663334999167082
+      },
+      "notes": "8 independent instructions take 120.06 cycles."
+    }
+  ],
+  "notes": "Round trip with movfcsr2gr is 22.03 cycles; individual latency is not separable."
+}

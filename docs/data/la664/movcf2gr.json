@@ -1,0 +1,65 @@
+{
+  "instruction": {
+    "name": "movcf2gr",
+    "extension": "Base",
+    "form": "movcf2gr rd, cj",
+    "description": "Move condition code cj into rd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "rd"
+    },
+    {
+      "index": 2,
+      "name": "cj",
+      "kind": "other",
+      "access": "read",
+      "bits": 64,
+      "description": "cj"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "movcf2gr $r12, $fcc0; movcf2gr $r13, $fcc1; movcf2gr $r14, $fcc2; movcf2gr $r15, $fcc3; movcf2gr $r16, $fcc4; movcf2gr $r17, $fcc5; movcf2gr $r18, $fcc6; movcf2gr $r19, $fcc7",
+      "init": "li.d $r4, 0; movgr2cf $fcc0, $r4; movgr2cf $fcc1, $r4; movgr2cf $fcc2, $r4; movgr2cf $fcc3, $r4; movgr2cf $fcc4, $r4; movgr2cf $fcc5, $r4; movgr2cf $fcc6, $r4; movgr2cf $fcc7, $r4",
+      "machine_code": [
+        "0114dc0c  movcf2gr    \t$t0, $fcc0",
+        "0114dc2d  movcf2gr    \t$t1, $fcc1",
+        "0114dc4e  movcf2gr    \t$t2, $fcc2",
+        "0114dc6f  movcf2gr    \t$t3, $fcc3",
+        "0114dc90  movcf2gr    \t$t4, $fcc4",
+        "0114dcb1  movcf2gr    \t$t5, $fcc5",
+        "0114dcd2  movcf2gr    \t$t6, $fcc6",
+        "0114dcf3  movcf2gr    \t$t7, $fcc7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4; movgr2cf $fcc1, $r4; movgr2cf $fcc2, $r4; movgr2cf $fcc3, $r4; movgr2cf $fcc4, $r4; movgr2cf $fcc5, $r4; movgr2cf $fcc6, $r4; movgr2cf $fcc7, $r4' --asm 'movcf2gr $r12, $fcc0; movcf2gr $r13, $fcc1; movcf2gr $r14, $fcc2; movcf2gr $r15, $fcc3; movcf2gr $r16, $fcc4; movcf2gr $r17, $fcc5; movcf2gr $r18, $fcc6; movcf2gr $r19, $fcc7'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.00 cycles."
+    }
+  ],
+  "notes": "Round trip with movgr2cf is 4.00 cycles; individual latency is not separable."
+}

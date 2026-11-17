@@ -1,0 +1,65 @@
+{
+  "instruction": {
+    "name": "movgr2fr.d",
+    "extension": "Base",
+    "form": "movgr2fr.d fd, rj",
+    "description": "Move the 64 bits of rj into fd."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "fd"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "rj"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r5; movgr2fr.d $f2, $r6; movgr2fr.d $f3, $r7; movgr2fr.d $f4, $r8; movgr2fr.d $f5, $r9; movgr2fr.d $f6, $r10; movgr2fr.d $f7, $r11",
+      "init": "li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
+      "machine_code": [
+        "0114a880  movgr2fr.d  \t$fa0, $a0",
+        "0114a8a1  movgr2fr.d  \t$fa1, $a1",
+        "0114a8c2  movgr2fr.d  \t$fa2, $a2",
+        "0114a8e3  movgr2fr.d  \t$fa3, $a3",
+        "0114a904  movgr2fr.d  \t$fa4, $a4",
+        "0114a925  movgr2fr.d  \t$fa5, $a5",
+        "0114a946  movgr2fr.d  \t$fa6, $a6",
+        "0114a967  movgr2fr.d  \t$fa7, $a7"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r5; movgr2fr.d $f2, $r6; movgr2fr.d $f3, $r7; movgr2fr.d $f4, $r8; movgr2fr.d $f5, $r9; movgr2fr.d $f6, $r10; movgr2fr.d $f7, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "8 independent instructions take 8.00 cycles."
+    }
+  ],
+  "notes": "Round trip with movfr2gr.d is 4.00 cycles; individual latency is not separable."
+}

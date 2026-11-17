@@ -1,0 +1,138 @@
+{
+  "instruction": {
+    "name": "fsel",
+    "extension": "Base",
+    "form": "fsel fd, fj, fk, ca",
+    "description": "Floating-point select based on a condition code."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "fd",
+      "kind": "fpr",
+      "access": "write",
+      "bits": 64,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "fj",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "selected when ca is true"
+    },
+    {
+      "index": 3,
+      "name": "fk",
+      "kind": "fpr",
+      "access": "read",
+      "bits": 64,
+      "description": "selected when ca is false"
+    },
+    {
+      "index": 4,
+      "name": "ca",
+      "kind": "other",
+      "access": "read",
+      "description": "condition code register"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fsel $f0, $f0, $f1, $fcc0",
+          "init": "li.d $r4, 1; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "0d000400  fsel        \t$fa0, $fa0, $fa1, $fcc0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 1; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fsel $f0, $f0, $f1, $fcc0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain; condition code selects the chained source."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "fsel $f0, $f1, $f0, $fcc0",
+          "init": "li.d $r4, 0; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100
+          },
+          "machine_code": [
+            "0d000020  fsel        \t$fa0, $fa1, $fa0, $fcc0"
+          ],
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fsel $f0, $f1, $f0, $fcc0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "notes": "Consecutive unrolled copies form an $f0 dependency chain."
+        }
+      ],
+      "notes": "Measured with a 100000-instruction unrolled chain; condition code selects the chained source."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "fsel $f0, $f8, $f16, $fcc0; fsel $f1, $f9, $f17, $fcc0; fsel $f2, $f10, $f18, $fcc0; fsel $f3, $f11, $f19, $fcc0; fsel $f4, $f12, $f20, $fcc0; fsel $f5, $f13, $f21, $fcc0; fsel $f6, $f14, $f22, $fcc0; fsel $f7, $f15, $f23, $fcc0",
+      "init": "li.d $r4, 0; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4; movgr2fr.d $f16, $r4; movgr2fr.d $f17, $r4; movgr2fr.d $f18, $r4; movgr2fr.d $f19, $r4; movgr2fr.d $f20, $r4; movgr2fr.d $f21, $r4; movgr2fr.d $f22, $r4; movgr2fr.d $f23, $r4",
+      "machine_code": [
+        "0d004100  fsel        \t$fa0, $ft0, $ft8, $fcc0",
+        "0d004521  fsel        \t$fa1, $ft1, $ft9, $fcc0",
+        "0d004942  fsel        \t$fa2, $ft2, $ft10, $fcc0",
+        "0d004d63  fsel        \t$fa3, $ft3, $ft11, $fcc0",
+        "0d005184  fsel        \t$fa4, $ft4, $ft12, $fcc0",
+        "0d0055a5  fsel        \t$fa5, $ft5, $ft13, $fcc0",
+        "0d0059c6  fsel        \t$fa6, $ft6, $ft14, $fcc0",
+        "0d005de7  fsel        \t$fa7, $ft7, $ft15, $fcc0"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4; movgr2fr.d $f16, $r4; movgr2fr.d $f17, $r4; movgr2fr.d $f18, $r4; movgr2fr.d $f19, $r4; movgr2fr.d $f20, $r4; movgr2fr.d $f21, $r4; movgr2fr.d $f22, $r4; movgr2fr.d $f23, $r4' --asm 'fsel $f0, $f8, $f16, $fcc0; fsel $f1, $f9, $f17, $fcc0; fsel $f2, $f10, $f18, $fcc0; fsel $f3, $f11, $f19, $fcc0; fsel $f4, $f12, $f20, $fcc0; fsel $f5, $f13, $f21, $fcc0; fsel $f6, $f14, $f22, $fcc0; fsel $f7, $f15, $f23, $fcc0'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 independent instructions take 4.00 cycles."
+    }
+  ]
+}
