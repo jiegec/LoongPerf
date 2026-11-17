@@ -55,14 +55,14 @@
           "chain_latency": 1.0,
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 6.0
+            "core_cycles": 5.99
           },
           "measurement": {
-            "unroll": 32768,
-            "iters": 306,
+            "unroll": 10000,
+            "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r5'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r5'"
         },
         {
           "name": "load-to-AGU bypass calibration",
@@ -74,15 +74,15 @@
             "core_cycles": 4.0
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153,
+            "unroll": 20000,
+            "iters": 500,
             "reps": 7
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
           "notes": "Calibration experiment (not used for the reported latency)."
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 32768, iters 306."
+      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000."
     }
   ],
   "throughput": [

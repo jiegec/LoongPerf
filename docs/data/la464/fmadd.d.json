@@ -63,16 +63,16 @@
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "core_cycles": 4.99
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f0, $f1, $f2'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f0, $f1, $f2'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
     },
     {
       "from_operands": [
@@ -88,16 +88,16 @@
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "core_cycles": 4.99
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f0, $f2'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f0, $f2'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
     },
     {
       "from_operands": [
@@ -113,16 +113,16 @@
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4",
           "result": {
             "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "core_cycles": 4.99
           },
           "measurement": {
-            "unroll": 65536,
-            "iters": 153
+            "unroll": 20000,
+            "iters": 500
           },
-          "command": "./bench --unroll 65536 --iters 153 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f2, $f0'"
+          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f2, $r4' --asm 'fmadd.d $f0, $f1, $f2, $f0'"
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 65536, iters 153."
+      "notes": "measured with a dependent chain. Unroll 20000, iters 500."
     }
   ],
   "throughput": [

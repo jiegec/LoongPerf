@@ -51,14 +51,14 @@
             "core_cycles": 22.0
           },
           "measurement": {
-            "unroll": 32768,
-            "iters": 306,
+            "unroll": 10000,
+            "iters": 1000,
             "reps": 7
           },
-          "command": "./bench --unroll 32768 --iters 306 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0' --asm 'movgr2cf $fcc0, $r4; movcf2gr $r4, $fcc0'"
+          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0' --asm 'movgr2cf $fcc0, $r4; movcf2gr $r4, $fcc0'"
         }
       ],
-      "notes": "movcf2gr+movgr2cf round trip is 22 cycles; fcmp+movcf2gr+movgr2fr is 11 cycles with fcmp=1 and movgr2fr=1, giving movcf2gr=9 and movgr2cf=13. Unroll 32768, iters 306."
+      "notes": "movcf2gr+movgr2cf round trip is 22 cycles; fcmp+movcf2gr+movgr2fr is 11 cycles with fcmp=1 and movgr2fr=1, giving movcf2gr=9 and movgr2cf=13. Unroll 10000, iters 1000."
     }
   ],
   "throughput": [
@@ -87,7 +87,7 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2cf $fcc0, $r4; movgr2cf $fcc1, $r5; movgr2cf $fcc2, $r6; movgr2cf $fcc3, $r7; movgr2cf $fcc4, $r8; movgr2cf $fcc5, $r9; movgr2cf $fcc6, $r10; movgr2cf $fcc7, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 15.0013,
+        "cpi": 15.0,
         "ipc": 0.0667
       },
       "notes": "8 independent instructions take 120.01 cycles."

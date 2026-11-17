@@ -47,7 +47,7 @@
       ],
       "to_operand": 1,
       "cycles_divisor": 2,
-      "cycles": 15.81,
+      "cycles": 15.0,
       "experiments": [
         {
           "name": "two-atomic dependency cycle",
@@ -56,16 +56,16 @@
           "init": "addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0",
           "result": {
             "instructions_retired": 4.0,
-            "core_cycles": 31.63
+            "core_cycles": 30.02
           },
           "measurement": {
-            "unroll": 32768,
-            "iters": 100
+            "unroll": 1000,
+            "iters": 1000
           },
-          "command": "./bench --unroll 32768 --iters 100 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0' --asm 'ammax_db.wu $r12, $r13, $r20; ammax_db.wu $r13, $r12, $r20'"
+          "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0' --asm 'ammax_db.wu $r12, $r13, $r20; ammax_db.wu $r13, $r12, $r20'"
         }
       ],
-      "notes": "the chain contains two alternating atomics, so the reported value is raw cycles / 2. Unroll 32768, iters 100."
+      "notes": "the chain contains two alternating atomics, so the reported value is raw cycles / 2. Unroll 1000, iters 1000."
     }
   ],
   "throughput": [
@@ -94,8 +94,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0' --asm 'ammax_db.wu $r12, $r4, $r21; ammax_db.wu $r13, $r5, $r23; ammax_db.wu $r14, $r6, $r24; ammax_db.wu $r15, $r7, $r25; ammax_db.wu $r16, $r8, $r26; ammax_db.wu $r17, $r9, $r27; ammax_db.wu $r18, $r10, $r28; ammax_db.wu $r19, $r11, $r29'",
       "throughput": {
         "lanes": 8,
-        "cpi": 15.015,
-        "ipc": 0.0666
+        "cpi": 15.0,
+        "ipc": 0.0667
       }
     }
   ]

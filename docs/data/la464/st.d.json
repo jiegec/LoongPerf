@@ -66,8 +66,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'st.d $r4, $r20, 0; st.d $r5, $r20, 8; st.d $r6, $r20, 16; st.d $r7, $r20, 24; st.d $r8, $r20, 32; st.d $r9, $r20, 40; st.d $r10, $r20, 48; st.d $r11, $r20, 56'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.9975,
-        "ipc": 1.0025
+        "cpi": 1.0,
+        "ipc": 1.0
       },
       "notes": "8 independent instructions take 7.98 cycles."
     }

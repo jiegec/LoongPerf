@@ -50,7 +50,7 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'dbar 0; dbar 0; dbar 0; dbar 0; dbar 0; dbar 0; dbar 0; dbar 0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 12.0113,
+        "cpi": 12.0,
         "ipc": 0.0833
       },
       "notes": "8 independent instructions take 96.09 cycles."
