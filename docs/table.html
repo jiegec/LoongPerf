@@ -665,11 +665,11 @@
     const thead = $("thead");
     let top = "<tr>" +
       '<th rowspan="2" scope="col" data-sort="extension" tabindex="0" aria-sort="' +
-      ariaSort("extension") + '">Extension</th>' +
+      ariaSort("extension") + '">' + sortLabel("extension", "Extension") + "</th>" +
       '<th rowspan="2" scope="col" data-sort="name" tabindex="0" aria-sort="' +
-      ariaSort("name") + '">Instruction</th>' +
+      ariaSort("name") + '">' + sortLabel("name", "Instruction") + "</th>" +
       '<th rowspan="2" scope="col" data-sort="form" tabindex="0" aria-sort="' +
-      ariaSort("form") + '">Form</th>';
+      ariaSort("form") + '">' + sortLabel("form", "Form") + "</th>";
     let bottom = "<tr>";
     for (const uarch of selected) {
       top += '<th colspan="3" scope="colgroup" class="uarch-head">' + esc(uarch.toUpperCase()) + "</th>";
