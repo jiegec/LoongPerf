@@ -75,7 +75,7 @@
           ]
         }
       ],
-      "notes": "xj -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
+      "notes": "xj -> result chain. Data-dependent: latency = 5 + 6*1 + 16*quotient_bits/64 = 11 + 1*floor(bits/4) for a 64-bit element. Min 8 with a zero dividend, max 27 at a full 64-bit unsigned quotient. LSX and LASX are identical for every element width although LASX carries twice the lanes, so the lanes (and both 128-bit halves) are refined in parallel and only the element width sets the per-bit rate. Measured with divisor 1, where the quotient equals the dividend, so the chain holds its operand constant and needs no helper. The remainder comes from the same divider.",
       "cycles_min": 8,
       "cycles_max": 27
     },
@@ -113,7 +113,7 @@
           ]
         }
       ],
-      "notes": "xk -> result chain. The measured operand pair is a sample; the range comes from the operand sweep recorded for this instruction.",
+      "notes": "xj -> result chain. Data-dependent: latency = 5 + 6*1 + 16*quotient_bits/64 = 11 + 1*floor(bits/4) for a 64-bit element. Min 8 with a zero dividend, max 27 at a full 64-bit unsigned quotient. LSX and LASX are identical for every element width although LASX carries twice the lanes, so the lanes (and both 128-bit halves) are refined in parallel and only the element width sets the per-bit rate. Measured with divisor 1, where the quotient equals the dividend, so the chain holds its operand constant and needs no helper. The remainder comes from the same divider.",
       "cycles_min": 8,
       "cycles_max": 27
     }

@@ -250,3 +250,85 @@ retired instructions happen in the kernel. `bench` excludes kernel events, so
 `cpucfg` reports `instructions retired: 0.00`. The validator therefore uses a
 retired multiplier of zero for `cpucfg`; its latency and throughput are still
 meaningful from the cycle counter.
+
+## Integer divide latency that depends on the operands
+
+Every integer divide and remainder instruction on LA664 has a data-dependent
+latency, and the data in `docs/data` records the measured minimum and maximum
+instead of a single number. Both extremes follow from a model that only needs
+the width of the element and the number of significant quotient bits, so the
+ranges below were derived rather than found by brute-force search.
+
+A chain that holds its operand constant is enough to verify the model: with a
+divisor of 1 the quotient equals the dividend, so `div.d $r4, $r4, $r5` feeds
+exactly the same value back into the next iteration and stays in the same
+latency class. No helper instruction and no operand sweep are needed; setting
+`--init` to a different dividend walks the ladder one rung at a time.
+
+### Scalar divider
+
+The scalar divider retires two quotient bits per cycle:
+
+```text
+latency = 7 + floor(quotient_bits / 2)
+```
+
+so `div.w` tops out at 22 cycles (23 for `div.wu` with a full 32-bit quotient)
+and `div.d` at 38 (39 for `div.du`). The minimum is 5 with a zero dividend and
+a divisor of 2 or more; a divisor of 1 costs one extra cycle because the
+quotient equals the dividend and is therefore never zero.
+
+```text
+div.d, dividend = 2^n - 1, divisor = 1
+  n=1   7    n=9  11    n=17 15    n=33 23    n=49 31
+  n=4   9    n=13 13    n=25 19    n=41 27    n=57 35
+  n=8  11    n=15 14    n=31 22    n=48 31    n=63 38
+```
+
+Powers of two are much faster than their bit count suggests, because the
+quotient is narrow: `0x10 / 1` takes 7 cycles while `0xf / 1` takes 9, and a
+dividend with an even number of trailing zeros collapses further (the divider
+normalises two bits per step).
+
+### Vector divider
+
+The vector divider is much wider per quotient bit but has a larger fixed cost,
+which is why the LASX range is *narrower* than the scalar one even though the
+vector instruction divides four times as many bits:
+
+```text
+latency = 5 + 6 * (64 / width) + 16 * quotient_bits / width
+```
+
+`width` is the element width in bits. This reduces to
+
+| elements | multiplier of `floor(bits/4)` | minimum | maximum (signed / unsigned) |
+| --- | --- | --- | --- |
+| `.d` (64-bit) | 11 + 1 × | 8 | 26 / 27 |
+| `.w` (32-bit) | 17 + 2 × | 11 | 31 / 33 |
+| `.h` (16-bit) | 29 + 4 × | 17 | 41 / 45 |
+| `.b` (8-bit) | 53 + 8 × | 29 | 61 / 69 |
+
+The minimum is always the zero-dividend case and does not depend on the divisor.
+A full-width quotient always costs 16 cycles of refinement on top of the base,
+whatever the element width, so an 8-bit vector divide is almost three times
+slower than a 64-bit one: `xvdiv.bu` takes 69 cycles against 39 for `div.du`.
+
+Two properties of the unit are visible in the measurements:
+
+* The lanes are processed in parallel, not one after another. LSX and LASX are
+  identical for every element width although LASX carries twice as many lanes,
+  and the low and high 128-bit halves are not serialised either:
+
+  ```text
+  quotient        LSX vdiv      LASX xvdiv
+  0x7fffffffffffffff  25.93        25.99     (.d)
+  0x7fffffff          30.99        30.98     (.w)
+  0x7fff              40.99        40.93     (.h)
+  0x7f                60.97        60.97     (.b)
+  ```
+
+* Only the element width sets the per-bit rate: the divider behaves like one
+  256-bit datapath that retires 16 quotient bits per cycle in aggregate
+  (4 bits per lane for `.d`, 2 for `.w`, 1 for `.h` and one bit every other
+  cycle for `.b`).
