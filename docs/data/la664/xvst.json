@@ -1,0 +1,62 @@
+{
+  "instruction": {
+    "name": "xvst",
+    "extension": "LASX",
+    "form": "xvst xd, rj, imm",
+    "description": "Write whole vector data in `data` to memory address `addr + offset`. Address misalignment does not raise an exception."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvst $xr0, $r20, 0; xvst $xr1, $r20, 32; xvst $xr2, $r20, 64; xvst $xr3, $r20, 96; xvst $xr4, $r20, 128; xvst $xr5, $r20, 160; xvst $xr6, $r20, 192; xvst $xr7, $r20, 224",
+      "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024' --asm 'xvst $xr0, $r20, 0; xvst $xr1, $r20, 32; xvst $xr2, $r20, 64; xvst $xr3, $r20, 96; xvst $xr4, $r20, 128; xvst $xr5, $r20, 160; xvst $xr6, $r20, 192; xvst $xr7, $r20, 224'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 13.74
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.7175,
+        "ipc": 0.5822
+      },
+      "notes": "8 independent memory operations take 13.74 cycles."
+    }
+  ],
+  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+}

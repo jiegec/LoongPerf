@@ -1,0 +1,63 @@
+{
+  "instruction": {
+    "name": "xvldx",
+    "extension": "LASX",
+    "form": "xvldx xd, rj, rk",
+    "description": "Read whole vector from memory address `addr + offset`, save the data into `dst`. Address misalignment does not raise an exception. Note that you can use this intrinsic to load floating point vectors, even though the return type represents integer vectors."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvldx $xr0, $r20, $r4; xvldx $xr1, $r20, $r5; xvldx $xr2, $r20, $r6; xvldx $xr3, $r20, $r7; xvldx $xr4, $r20, $r8; xvldx $xr5, $r20, $r9; xvldx $xr6, $r20, $r10; xvldx $xr7, $r20, $r11",
+      "init": "addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 32; li.d $r6, 64; li.d $r7, 96; li.d $r8, 128; li.d $r9, 160; li.d $r10, 192; li.d $r11, 224",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 32; li.d $r6, 64; li.d $r7, 96; li.d $r8, 128; li.d $r9, 160; li.d $r10, 192; li.d $r11, 224' --asm 'xvldx $xr0, $r20, $r4; xvldx $xr1, $r20, $r5; xvldx $xr2, $r20, $r6; xvldx $xr3, $r20, $r7; xvldx $xr4, $r20, $r8; xvldx $xr5, $r20, $r9; xvldx $xr6, $r20, $r10; xvldx $xr7, $r20, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.37
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5463,
+        "ipc": 1.8307
+      },
+      "notes": "8 independent memory operations take 4.37 cycles."
+    }
+  ],
+  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+}

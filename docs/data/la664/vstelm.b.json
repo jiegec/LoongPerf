@@ -1,0 +1,69 @@
+{
+  "instruction": {
+    "name": "vstelm.b",
+    "extension": "LSX",
+    "form": "vstelm.b vd, rj, imm, imm",
+    "description": "Store element `lane` of `data` to memory address `addr + offset`. Address misalignment does not raise an exception. The `offset` operand is a byte offset; the encoded instruction stores it as a scaled immediate for wider elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "offset"
+    },
+    {
+      "index": 4,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "lane"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vstelm.b $vr0, $r20, 0, 0; vstelm.b $vr1, $r20, 1, 0; vstelm.b $vr2, $r20, 2, 0; vstelm.b $vr3, $r20, 3, 0; vstelm.b $vr4, $r20, 4, 0; vstelm.b $vr5, $r20, 5, 0; vstelm.b $vr6, $r20, 6, 0; vstelm.b $vr7, $r20, 7, 0",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr1, $r4; li.d $r4, 3; vreplgr2vr.b $vr2, $r4; li.d $r4, 4; vreplgr2vr.b $vr3, $r4; li.d $r4, 5; vreplgr2vr.b $vr4, $r4; li.d $r4, 6; vreplgr2vr.b $vr5, $r4; li.d $r4, 7; vreplgr2vr.b $vr6, $r4; li.d $r4, 8; vreplgr2vr.b $vr7, $r4; addi.d $r20, $sp, -1024",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr1, $r4; li.d $r4, 3; vreplgr2vr.b $vr2, $r4; li.d $r4, 4; vreplgr2vr.b $vr3, $r4; li.d $r4, 5; vreplgr2vr.b $vr4, $r4; li.d $r4, 6; vreplgr2vr.b $vr5, $r4; li.d $r4, 7; vreplgr2vr.b $vr6, $r4; li.d $r4, 8; vreplgr2vr.b $vr7, $r4; addi.d $r20, $sp, -1024' --asm 'vstelm.b $vr0, $r20, 0, 0; vstelm.b $vr1, $r20, 1, 0; vstelm.b $vr2, $r20, 2, 0; vstelm.b $vr3, $r20, 3, 0; vstelm.b $vr4, $r20, 4, 0; vstelm.b $vr5, $r20, 5, 0; vstelm.b $vr6, $r20, 6, 0; vstelm.b $vr7, $r20, 7, 0'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 5.13
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.6412,
+        "ipc": 1.5595
+      },
+      "notes": "8 independent memory operations take 5.13 cycles."
+    }
+  ],
+  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+}

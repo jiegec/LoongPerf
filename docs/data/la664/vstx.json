@@ -1,0 +1,63 @@
+{
+  "instruction": {
+    "name": "vstx",
+    "extension": "LSX",
+    "form": "vstx vd, rj, rk",
+    "description": "Write whole vector data in `data` to memory address `addr + offset`. Address misalignment does not raise an exception."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "rk",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "index"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vstx $vr0, $r20, $r4; vstx $vr1, $r20, $r5; vstx $vr2, $r20, $r6; vstx $vr3, $r20, $r7; vstx $vr4, $r20, $r8; vstx $vr5, $r20, $r9; vstx $vr6, $r20, $r10; vstx $vr7, $r20, $r11",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr1, $r4; li.d $r4, 3; vreplgr2vr.b $vr2, $r4; li.d $r4, 4; vreplgr2vr.b $vr3, $r4; li.d $r4, 5; vreplgr2vr.b $vr4, $r4; li.d $r4, 6; vreplgr2vr.b $vr5, $r4; li.d $r4, 7; vreplgr2vr.b $vr6, $r4; li.d $r4, 8; vreplgr2vr.b $vr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr1, $r4; li.d $r4, 3; vreplgr2vr.b $vr2, $r4; li.d $r4, 4; vreplgr2vr.b $vr3, $r4; li.d $r4, 5; vreplgr2vr.b $vr4, $r4; li.d $r4, 6; vreplgr2vr.b $vr5, $r4; li.d $r4, 7; vreplgr2vr.b $vr6, $r4; li.d $r4, 8; vreplgr2vr.b $vr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112' --asm 'vstx $vr0, $r20, $r4; vstx $vr1, $r20, $r5; vstx $vr2, $r20, $r6; vstx $vr3, $r20, $r7; vstx $vr4, $r20, $r8; vstx $vr5, $r20, $r9; vstx $vr6, $r20, $r10; vstx $vr7, $r20, $r11'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 5.33
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.6663,
+        "ipc": 1.5009
+      },
+      "notes": "8 independent memory operations take 5.33 cycles."
+    }
+  ],
+  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+}

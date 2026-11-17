@@ -1,0 +1,62 @@
+{
+  "instruction": {
+    "name": "vldrepl.b",
+    "extension": "LSX",
+    "form": "vldrepl.b vd, rj, imm",
+    "description": "Read 8-bit data from memory address `addr + offset`, replicate the data to all vector lanes and save into `dst`. Address misalignment does not raise an exception. The `offset` operand is a byte offset, matching the assembly immediate; the encoded instruction stores it as a scaled immediate for wider elements."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vldrepl.b $vr0, $r20, 0; vldrepl.b $vr1, $r20, 1; vldrepl.b $vr2, $r20, 2; vldrepl.b $vr3, $r20, 3; vldrepl.b $vr4, $r20, 4; vldrepl.b $vr5, $r20, 5; vldrepl.b $vr6, $r20, 6; vldrepl.b $vr7, $r20, 7",
+      "init": "addi.d $r20, $sp, -1024",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024' --asm 'vldrepl.b $vr0, $r20, 0; vldrepl.b $vr1, $r20, 1; vldrepl.b $vr2, $r20, 2; vldrepl.b $vr3, $r20, 3; vldrepl.b $vr4, $r20, 4; vldrepl.b $vr5, $r20, 5; vldrepl.b $vr6, $r20, 6; vldrepl.b $vr7, $r20, 7'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.35
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5437,
+        "ipc": 1.8391
+      },
+      "notes": "8 independent memory operations take 4.35 cycles."
+    }
+  ],
+  "notes": "Vector memory operation. Throughput measured with a hot 1KB stack buffer; latency not measured because it depends on cache/coherence state and needs a separate dependency chain."
+}
