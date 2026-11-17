@@ -221,6 +221,7 @@
   </div>
   <div class="table-scroll">
     <table id="table">
+      <colgroup id="colgroup"></colgroup>
       <thead id="thead"></thead>
       <tbody id="tbody"></tbody>
     </table>
@@ -717,6 +718,26 @@
     }
   }
 
+  function stabilizeTableLayout() {
+    const table = $("table");
+    const colgroup = $("colgroup");
+    const columns = 3 + selectedUarches().length * 3;
+    const openRows = [...$("tbody").querySelectorAll("tr.details.open")];
+    const displays = openRows.map((row) => row.style.display);
+    openRows.forEach((row) => { row.style.display = "none"; });
+    table.style.tableLayout = "auto";
+    table.style.width = "100%";
+    colgroup.innerHTML = "";
+    const bodyRow = [...$("tbody").querySelectorAll("tr.instr")]
+      .find((row) => row.cells.length === columns);
+    if (bodyRow) {
+      const widths = [...bodyRow.cells].map((cell) => cell.getBoundingClientRect().width);
+      colgroup.innerHTML = widths.map((width) => '<col style="width:' + width + 'px">').join("");
+      table.style.tableLayout = "fixed";
+    }
+    openRows.forEach((row, index) => { row.style.display = displays[index] || ""; });
+  }
+
   function updateTableOverflow() {
     if (!tableScroller) return;
     const overflow = $("table").getBoundingClientRect().width > tableScroller.clientWidth + 1;
@@ -1069,6 +1090,7 @@
     }
     updateUrl(selected, extensions);
     saveSettings();
+    stabilizeTableLayout();
     updateTableOverflow();
     buildStickyHeader();
     updateStickyHeader();
@@ -1197,6 +1219,7 @@
 
   window.addEventListener("resize", () => {
     updateStickyHeaderHeight();
+    stabilizeTableLayout();
     updateTableOverflow();
     buildStickyHeader();
     updateStickyHeader();
