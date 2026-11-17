@@ -305,152 +305,98 @@ vfrecip.s, xvfrecip.s      11       15          17             25          27   
 
 ## Load latency
 
-Loads are not data-dependent, but their latency still depends on two things:
-which operand closes the chain (the base address, or the index and the bound)
-and what consumes the result (an ALU operation, or the next address). The data
-records one entry per source operand, and the notes name the bypass path.
+Loads are not data-dependent, but their latency depends on the operand that closes
+the chain and on what consumes the result. The two cores agree on the widths and
+on the vector loads and differ by one cycle on the integer paths.
 
 ### Plain loads
 
-On LA664 an integer load takes 4 cycles to an ALU consumer, 3 when the result
-feeds the next address (the load-to-AGU bypass), and the floating-point and
-vector loads take 5, one cycle more, because their destination register file has
-no bypass path into the address generator:
-
-| load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
+| path | LA664 | LA464 |
 | --- | --- | --- |
-| `ld.d`, `ldptr.d` | 4 / 3 | 5 / 4 |
-| `ld.b`, `ld.h`, `ld.w`, `ld.bu`, `ld.hu`, `ld.wu`, `ldptr.w` | 4 / not measured | 5 / not measured |
-| `fld.s`, `fld.d` | 5 / not reachable | 5 / not reachable |
-| `vld`, `xvld` | 4 / not reachable | 5 / not reachable |
+| integer load to an ALU consumer | 4 | 5 |
+| integer load feeding the next address directly | 3 | 4 |
+| floating-point load to a GPR consumer | 5 | 5 (`fld.d`), 6 (`fld.s`) |
+| `vld`, `xvld`, `vldx`, `xvldx`, `vldrepl.*` | 5 | 5 |
 
-Width does not matter on LA664: a byte load costs exactly what a double load
-costs, and an integer, floating-point or vector load all take the same time. The
-recorded `cycles` value is the ALU path.
+LA464 needs one cycle more than LA664 on both integer paths. Watch the stored
+number: the LA464 entries record the 4-cycle address chase for a plain load and
+mention the 5-cycle ALU path only in the notes, while the LA664 entries record the
+ALU path. LA464's `ld.d` and `ldptr.d` currently carry two identical entries for
+that reason.
 
-The 3-cycle bypass is measured with a bare pointer chase that feeds the loaded
-value straight back as the address, `ld.d $r4, $r4, 0`, which measures 3.04
-cycles per iteration; adding `add.d $r4, $r4, $r5` gives 5.04, that is the 4-cycle
-ALU path plus one. Both paths are recorded as cases on `ld.d` and `ldptr.d`. The
-vector loads are measured with a pick-based chase instead,
+Width does not matter on LA664, a byte load costs what a double load costs. The
+3-cycle bypass is measured with a bare pointer chase that feeds the loaded value
+straight back as the address, `ld.d $r4, $r4, 0`, which measures 3.04 cycles per
+iteration; adding `add.d $r4, $r4, $r5` gives 5.04, that is the 4-cycle ALU path
+plus one. Both paths are recorded as cases on `ld.d` and `ldptr.d`.
+
+The floating-point and vector loads cost 5 because their destination register
+file has no bypass path into the address generator. The float loads are measured
+through `movfr2gr`, which is 2 cycles, so the chain
+`fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` measures 6.98 and the load is 5. `fld.s`
+cannot even be chased directly, because a 32-bit result has to be recombined with
+the base, so its stored chain always contains an `add.d`; it measures 5 as well.
+
+The vector loads are measured with a pick-based chase,
 `vld $vr0, $r20, 0; vpickve2gr.d $r4, $vr0, 0; add.d $r20, $r20, $r4`, which
 measures 9 cycles for LSX and 11 for LASX; with `vpickve2gr.d` at 3 and
 `xvpickve2gr.d` at 5 and one cycle for the `add.d`, both loads come out at 5.
 
-The narrower loads have no such measurement, and the chase does not work for
-them: the loaded value has to be a usable address, and only a 64-bit load
-produces one. `ld.b` of a stack address would truncate to a few bits, and
-rebuilding the address would need an `add.d`, which is exactly the ALU path
-being separated out. Their `cycles` value is the ALU path only.
-
-Vector inserts, broadcasts and element gathers have their own small numbers:
-`vinsgr2vr.*` and `xvinsgr2vr.*` cost 3 cycles from the GPR, `vreplgr2vr.w/d` and
-`xvreplgr2vr.w/d` cost 2 while the narrow `vreplgr2vr.b/h` and
-`xvreplgr2vr.b/h` cost 3, and `vreplve.*`/`xvreplve.*` cost 1 from the vector
-operand and 3 from the index register. All of them are measured as round trips
-against the matching pick, whose own latency is fixed by the load chains above.
-
-A vector load has no bypass path either: its result lands in a vector register
-and cannot be an address, so `vld`/`xvld` only have a value-to-consumer latency,
-and the 4 cycles recorded for them are measured through a store-then-reload chain (`vld` → `vst` → `ld.d` → `add.d`, where the
-store-to-load forwarding costs 10.04 cycles and is subtracted).
-
-LA464 needs one cycle more on both paths, 4 for the load itself and 5 to an ALU
-consumer, which is the main load-latency difference between the two cores. The
-4-cycle figure was re-measured on the machine: `ld.d $r4, $r4, 0` reads
-3.94-3.98 over several sessions, and the ALU chain that used to be stored with a
-stale raw value is 5.94-5.97.
-
-Floating-point loads have to be measured with a move in the path, because a value
-in an FPR cannot become an address or a GPR operand directly. The chain
-`fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` measures 6.98 cycles, and since an FPR
-load cannot take any bypass path the load itself must be 5 cycles and the move
-2; that in turn fixes `movgr2fr.d` at 2, because their round trip measures 4.
-Every cross-domain move on LA664 is therefore 2 cycles per direction, with
-`movgr2frh.w` at 3 (its round trip measures 5).
-
-This is also why the float loads carry one more cycle than the integer ones: 5
-to a GPR consumer, against 4 for an integer load, and 6 against 5 on the index
-and bound paths. `fld.s` cannot even be chased directly, because a 32-bit result
-has to be recombined with the base, so its stored chain always contains an
-`add.d`; it measures 5 as well.
-
-LA464 was re-derived the same way and lands on the same numbers: the pointer
-chase `fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` measures 6.95-6.98 cycles, so the
-load is 5 with a 2-cycle move, and inserting an `add.d` in the address path gives
-8.93-8.98, so 6. That differs from the integer loads, which are 5 and 4 on
-LA464, by exactly the one cycle the move adds. The earlier LA464 record of 4
-was computed with a 3-cycle `movfr2gr`, and the difference was being attributed
-to an address bypass that does not exist for an FPR destination.
-
-The vector loads were re-derived on both cores the same way. On LA464 the chain
-`vld $vr0, $r20, 0; vpickve2gr.d $r4, $vr0, 0; add.d $r20, $r20, $r4` measures
-9.96 cycles and `xvld` with `xvpickve2gr` measures 11.98; with the picks at 3 and
-5 cycles and the `add.d` at one, and one further cycle for the cross-domain pick
-of a freshly loaded vector register, both loads come out at 5. LA464 therefore
-records 5 for `vld`/`vldx`/`vldrepl.*`/`xvld`/`xvldx`/`xvldrepl.*`.
-
-The plain integer loads on LA464 are 4 cycles, not 5: the bare pointer chase
-`ld.d $r4, $r4, 0` measures 3.94-3.98, and the ALU chain `ld.d $r4, $r4, 0;
-add.d $r4, $r4, $r13` measures 5.94-5.97, of which one cycle is the `add.d` and
-one more is what the ALU consumer path costs. The narrow loads read the same
-5.9x in that chain, so the width does not change the latency and their recorded
-`cycles` is the 4-cycle load latency, with the 5-cycle ALU path recorded in the
-notes. There is no separate pointer-chasing optimization on LA464: the chase is
-simply the load latency, and only the ALU path pays the extra cycle.
-
 ### Indexed and bound-checked loads
 
-An indexed or bound-checked load has the same latency as a plain load of the same
-class, because the index or bound is part of the address that the instruction
-already needs:
+| operand path | LA664 | LA464 |
+| --- | --- | --- |
+| `ldx.*`, `ldgt.*` base | 4 | 5 |
+| `ldx.*`, `ldgt.*`, `ldle.*` index or bound, fed straight back | 4 | 4 |
+| `ldle.*` bound | 4 | 5 |
+| `fldx.*`, `fldgt.*` base / index | 5 / 5 | 6 / 5 |
+| `fldle.*` base / bound | 5 / 5 | 6 / 6 |
 
-| path | LA664 |
-| --- | --- |
-| `ldx.*`, `ldgt.*`, `ldle.*`, base or index/bound operand | 4 |
-| `fldx.*`, `fldgt.*`, `fldle.*`, base or index/bound operand | 5 |
+The base path follows the load-to-ALU latency of the core, so LA464 is one cycle
+higher there as well: 4 and 5 for the integer forms, 5 and 6 for the floating-point
+ones. The integer index and bound paths are 4 on both cores, because a value used
+as an index does not get the early forwarding that makes the `ld.d` base chase 3
+cycles and pays the second address-generation pass instead. The floating-point
+forms read 5 on both cores, one cycle more than the integer ones.
 
-The index and bound paths are not slower than the base path. What looks like an
-extra cycle in the older data was the measurement chain: a chain that puts an ALU
-operation between the load and the next address (an `andi` to mask an index, an
-`xori` to keep a bound in range) measures one cycle more, because that operation
-has to execute before the address is ready. The load itself is unchanged, so the
-extra cycle belongs to the chain and is not recorded as a latency class.
+`ldle.*` is the exception on LA464: the instruction loads when `rj <= rk`, so the
+loaded value cannot be used as the next bound directly (it would fail the check),
+and the measured bound path carries an `add.d` and reads 5. On LA664 the check can
+be kept passing with a large bound, so the direct chain works and reads 4.
 
-Only `ld.d` and `ldptr.d` have a second, faster path. Their result can be used as
-the next address directly, which gives 3 cycles instead of 4; a value used as an
-*index* does not get that early forwarding, which is why `ldx.*` measures 4 on the
-index path as well.
+There is no address bypass for a floating-point value: it has to pass through
+`movfr2gr` before it can be used, so every such chain contains that move, which is
+why the floating-point index and bound paths sit one cycle above the integer ones
+on both cores. Chains that leave the `movfr2gr` out (or subtract only part of it)
+produce a fictitious extra class, which is how the folded-together numbers in the
+first version of this page came about.
 
-LA464 was measured per source operand and reads one cycle above LA664 on every
-path: **5** cycles when the loaded value feeds the address or the range check
-directly, and **6** when an ALU operation sits between the load and the next
-use, with the floating-point forms one cycle higher again because of the
-`movfr2gr` move in the chain. The base operand of `ldx.*`/`ldgt.*`/`ldle.*`/`fldx.*`/`fldgt.*`/
-`fldle.*` reads 5 (4 for the `*`-chased `.d` forms), the index operand of
-`ldx.*`/`fldx.*` reads 4 (5 with `andi` in the path), the bound of `ldgt.*` and
-`fldgt.*` reads 4, and the bound of `ldle.*`/`fldle.*` reads 5 only because the
-`rj <= rk` check forces an `add.d` into every chain -- the direct form is not
-constructible there. So the LA464 numbers are the same shape as the plain-load
-ladder (4 on the bypass, 5 through the ALU), while LA664 charges one extra cycle
-on the index and bound operands.
+### Vector register traffic
 
-One LA464 trap is worth recording: `ldgt.*`/`ldle.*` raise a bounds-check
-exception instead of writing zero when the range check fails, and this kernel
-does not emulate it, so a failing check kills the process with `SIGSEGV` at the
-load address (`si_addr` = `rj`, which can be a mapped address). Every chain has
-to keep the check passing, which is why the `ldle.*` bound recipes add the
-loaded value back to the base. `ldgt` loads when `rj > rk` and `ldle` when
-`rj <= rk`; otherwise the two instructions behave identically, including the
-per-operand latencies.
+The insert, broadcast and gather instructions are cheap and were re-measured
+after the two-cycle calibration of the cross-domain moves:
+
+| instruction | LA664 | LA464 |
+| --- | --- | --- |
+| `vinsgr2vr.*`, `xvinsgr2vr.*` | 3 | 3 |
+| `vreplgr2vr.w/d`, `xvreplgr2vr.w/d` | 2 | 2 |
+| `vreplgr2vr.b/h`, `xvreplgr2vr.b/h` | 3 | 3 |
+| `vreplve.*`, `xvreplve.*` from the vector operand | 1 | 3 |
+| `vreplve.*`, `xvreplve.*` from the index register | 3 | — |
+| `vpickve2gr.b/h`, `vpickve2gr.w/d` | 3 | 3 |
+| `xvpickve2gr.*` | 5 | 5 |
+
+The gathers need a word of caution: LA664 gives 1 cycle when the destination
+vector feeds itself, and LA464 measures 3 for the same chain, so the two cores do
+not agree there yet and LA464 may be measuring a different path.
 
 ### What does not change the latency
 
 All of these numbers are L1D hits with a hot, 64-byte-aligned buffer. A vector
-access that crosses a cache line is counted as two operations by the load
-counter `0xa8` (see the [Methodology](methodology.md) page), but the latency
-data was taken with aligned buffers, so unaligned latency is unmeasured rather
-than measured-and-equal.
+access that crosses a cache line is counted as two operations by the load counter
+`0xa8` (see the [Methodology](methodology.md) page), but the latency data was
+taken with aligned buffers, so unaligned latency is unmeasured rather than
+measured-and-equal.
 
 ## Summary
 
@@ -494,11 +440,12 @@ Load latency does not depend on the data, only on the path:
 | load | LA664 | LA464 |
 | --- | --- | --- |
 | plain `ld.*` to a consumer | 4 | 5 |
-| plain `fld.*` to a GPR consumer | 5 | 5 |
-| plain `vld`, `xvld` to a vector consumer | 5 | 5 |
 | `ld.d`, `ldptr.d` feeding the next address | 3 | 4 |
-| `ldx.*`, `ldgt.*`, `ldle.*` base or index/bound | 4 | 5 / 4 (ALU / address path) |
-| `fldx.*`, `fldgt.*`, `fldle.*` base or index/bound | 5 | 5 / 4 |
+| plain `fld.*` to a GPR consumer | 5 | 5 (`fld.d`) / 6 (`fld.s`) |
+| plain `vld`, `xvld`, `vldx`, `xvldx`, `vldrepl.*` | 5 | 5 |
+| `ldx.*`, `ldgt.*`, `ldle.*` base / index or bound | 4 / 4 | 5 / 4 |
+| `fldx.*`, `fldgt.*` base / index | 5 / 5 | 6 / 5 |
+| `fldle.*` base / bound | 5 / 5 | 6 / 6 |
 
 The floating-point classes are a fixed set that covers every possible operand,
 so the JSON lists them as an exhaustive `cases` array, and no formula is needed
