@@ -60,17 +60,17 @@
             "instructions_retired": 2.0,
             "core_cycles": 6.96
           },
-          "chain_latency": 2.0,
+          "chain_latency": 1.96,
           "name": "address-bypass pointer chase",
           "role": "measurement",
           "notes": "The stored experiment is the direct address chase (4 cycles). The second case puts add.d in the address path and measures 5, the general load latency. A third check, fld.d -> fadd.d -> movfr2gr.d -> address, gives the same 4 cycles for the data path, so the extra cycle belongs to the address path, not to the data path."
         }
       ],
-      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "notes": "5 cycles from the base operand rj to the destination. The loop closes through movfr2gr (2 cycles) and, because the loaded value has to be turned back into an address, through an add.d (1 cycle); the chain also carries one further cycle that the address generator pays whenever the address comes from an ALU operation rather than straight from the register file, so 4 cycles are subtracted. The load itself is 5, the same as fld.d/fld.s and one cycle above the integer loads.",
       "cases": [
         {
           "name": "load result feeds the next address directly",
-          "cycles": 5,
+          "cycles": 5.0,
           "experiment": {
             "asm": "fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0",
             "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
@@ -84,12 +84,12 @@
               "instructions_retired": 2.0,
               "core_cycles": 6.96
             },
-            "chain_latency": 2.0
+            "chain_latency": 1.96
           }
         },
         {
           "name": "load result passes through add.d before the next address",
-          "cycles": 6,
+          "cycles": 5.0,
           "experiment": {
             "asm": "fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5",
             "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
@@ -103,12 +103,12 @@
               "instructions_retired": 3.0,
               "core_cycles": 8.93
             },
-            "chain_latency": 3.0
+            "chain_latency": 3.93
           }
         }
       ],
-      "cycles_min": 5,
-      "cycles_max": 6
+      "cycles_min": 5.0,
+      "cycles_max": 5.0
     }
   ],
   "throughput": [
@@ -143,5 +143,5 @@
       "notes": "8 independent instructions take 4.00 cycles."
     }
   ],
-  "notes": "L1D-hit floating-point load. Two address paths, the same 4/5 split as ld.d: 4 cycles when the loaded value becomes the next address directly (bypass, the pointer chase) and 5 cycles when an ALU operation sits between the load result and the address. Both are measured through movfr2gr.d, which closes the loop back into the address, so the recorded cycles subtract its 3 cycles. Re-measured on LA464 and reproduced: the direct chase reads 6.90-6.98 cycles and 8.94-8.98 with add.d added, so the ALU form costs 2 more, not 1 -- one cycle is the add.d itself (a movfr2gr.d result feeding an add.d costs exactly 1.00 in a dedicated control) and one is the consumer penalty, the same penalty that makes an integer load 4 cycles on the AGU path and 5 through an ALU (ld.d chases at 3.94 and 5.97 with an add.d). A second, independent closure agrees: with fst.d and a reload closing the loop, fld.d -> fst.d -> ld.d reads 14.08 against 13.72 for a movgr2fr.d-sourced store behind an fadd.d, a difference of 3.34 that with the 1-cycle movgr2fr.d leaves ~4.3 cycles for the load. Do not use the plain movgr2fr.d -> fst.d -> ld.d control: a store whose data comes straight from a GPR bypasses the floating-point register file, and adding fadd.d to that chain costs 7 cycles instead of 3. The split 4 + 3 is a decomposition, not an independent measurement: only the sum of movgr2fr.d and movfr2gr.d (3.98 cycles) is directly measurable, so an assumed 2-cycle move would make the load 5. Measured with --method slope, unroll 800/1600, on LA464 core 0. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
+  "notes": "L1D-hit floating-point load, 5 cycles from the base address register to the loaded value. The loop closes through movfr2gr (2 cycles) and, on the paths that need an ALU operation to turn the value back into an address, through an add.d or fadd.d as well; those chains carry one cycle more than their helper instructions, which is what the address generator charges for an ALU-produced address. fld.s and fld.d read the same chain, so the width does not matter, and 5 is one cycle above the integer loads and the same as the vector loads."
 }

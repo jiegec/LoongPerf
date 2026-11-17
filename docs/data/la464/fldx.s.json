@@ -46,13 +46,13 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 6.0,
-      "cycles_min": 5,
-      "cycles_max": 6,
+      "cycles": 5.0,
+      "cycles_min": 5.0,
+      "cycles_max": 5.0,
       "cases": [
         {
           "name": "base operand through an ALU operation",
-          "cycles": 6,
+          "cycles": 5.0,
           "experiment": {
             "asm": "fldx.s $f0, $r4, $r0; movfr2gr.s $r4, $f0; add.d $r4, $r4, $r20",
             "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0",
@@ -66,12 +66,12 @@
               "instructions_retired": 3.0,
               "core_cycles": 8.93
             },
-            "chain_latency": 3.0
+            "chain_latency": 3.93
           }
         },
         {
           "name": "index operand path (reference)",
-          "cycles": 5,
+          "cycles": 5.0,
           "experiment": {
             "asm": "fldx.s $f0, $r20, $r4; movfr2gr.s $r4, $f0",
             "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
@@ -85,7 +85,7 @@
               "instructions_retired": 2.0,
               "core_cycles": 6.97
             },
-            "chain_latency": 2.0
+            "chain_latency": 1.97
           }
         }
       ],
@@ -103,12 +103,12 @@
             "instructions_retired": 3.0,
             "core_cycles": 8.93
           },
-          "chain_latency": 3.0,
+          "chain_latency": 3.93,
           "name": "base operand path",
           "role": "measurement"
         }
       ],
-      "notes": "Latency from the base operand rj to the destination. The loaded value is turned back into an address with add.d (or add.d plus movfr2gr for the floating-point loads), and those helper cycles are subtracted."
+      "notes": "5 cycles from the base operand rj to the destination. The loop closes through movfr2gr (2 cycles) and, because the loaded value has to be turned back into an address, through an add.d (1 cycle); the chain also carries one further cycle that the address generator pays whenever the address comes from an ALU operation rather than straight from the register file, so 4 cycles are subtracted. The load itself is 5, the same as fld.d/fld.s and one cycle above the integer loads."
     },
     {
       "from_operands": [
@@ -116,12 +116,12 @@
       ],
       "to_operand": 1,
       "cycles": 5.0,
-      "cycles_min": 5,
-      "cycles_max": 6,
+      "cycles_min": 5.0,
+      "cycles_max": 5.0,
       "cases": [
         {
           "name": "index/bound operand feeding the address directly",
-          "cycles": 5,
+          "cycles": 5.0,
           "experiment": {
             "asm": "fldx.s $f0, $r20, $r4; movfr2gr.s $r4, $f0",
             "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
@@ -135,12 +135,12 @@
               "instructions_retired": 2.0,
               "core_cycles": 6.97
             },
-            "chain_latency": 2.0
+            "chain_latency": 1.97
           }
         },
         {
           "name": "index/bound operand through an ALU operation",
-          "cycles": 6,
+          "cycles": 5.0,
           "experiment": {
             "asm": "fldx.s $f0, $r20, $r4; movfr2gr.s $r4, $f0; andi $r4, $r4, 7",
             "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, 0; st.w $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
@@ -154,7 +154,7 @@
               "instructions_retired": 3.0,
               "core_cycles": 8.98
             },
-            "chain_latency": 3.0
+            "chain_latency": 3.98
           }
         }
       ],
@@ -172,12 +172,12 @@
             "instructions_retired": 2.0,
             "core_cycles": 6.97
           },
-          "chain_latency": 2.0,
+          "chain_latency": 1.97,
           "name": "index/bound operand path",
           "role": "measurement"
         }
       ],
-      "notes": "Latency from the index or bound operand rk to the destination. The loaded value is the operand itself, so no ALU step is needed; a second case puts andi/xori in the path, which adds one cycle."
+      "notes": "5 cycles from the index or bound operand rk to the destination. Where the loaded value can feed the address or the range check directly the chain is just the load plus movfr2gr (2 cycles); when an andi or add.d is in the path the chain carries one more cycle than that helper, which is the ALU-address premium rather than load latency."
     }
   ],
   "throughput": [
@@ -212,5 +212,5 @@
       "notes": "8 independent instructions take 7.98 cycles."
     }
   ],
-  "notes": "Latency measured per source operand on LA464: base operand rj -> destination 5 cycles, index/bound operand rk -> destination 4 cycles when the loaded value feeds the address generation directly, and one cycle more when an ALU operation sits in the path. The 64-byte-aligned buffer holds 8 and 0 so the chase stays inside one cache line. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
+  "notes": "Latency measured per source operand on LA464: 5 cycles from the base operand rj and 5 cycles from the index or bound operand rk. The chains close through movfr2gr (2 cycles) and, where the value has to be combined with the base or kept above the bound, through an add.d or andi as well; the extra cycle those chains show beyond the helper is the ALU-address premium, not load latency. The 64-byte-aligned buffer holds 8 and 0 so the chase stays inside one cache line."
 }

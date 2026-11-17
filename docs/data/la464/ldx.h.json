@@ -46,13 +46,13 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 4.0,
       "cycles_min": 4.0,
-      "cycles_max": 5.0,
+      "cycles_max": 4.0,
       "cases": [
         {
           "name": "base operand through an ALU operation",
-          "cycles": 5.0,
+          "cycles": 4.0,
           "experiment": {
             "asm": "ldx.h $r4, $r4, $r0; add.d $r4, $r4, $r20",
             "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, 0; st.h $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0",
@@ -66,7 +66,7 @@
               "instructions_retired": 2.0,
               "core_cycles": 5.97
             },
-            "chain_latency": 1.0
+            "chain_latency": 1.97
           }
         },
         {
@@ -103,12 +103,12 @@
             "instructions_retired": 2.0,
             "core_cycles": 5.97
           },
-          "chain_latency": 1.0,
+          "chain_latency": 1.97,
           "name": "base operand path",
           "role": "measurement"
         }
       ],
-      "notes": "Latency from the base operand rj to the destination. The loaded value is turned back into an address with add.d (or add.d plus movfr2gr for the floating-point loads), and those helper cycles are subtracted."
+      "notes": "4 cycles from the base operand rj to the destination, the same latency as a plain load of the same width. The chain has to turn the loaded value back into an address with an add.d, and it also carries one further cycle that the address generator charges for an ALU-produced address, so 2 cycles are subtracted. That extra cycle belongs to the chain, not to the load."
     },
     {
       "from_operands": [
@@ -117,7 +117,7 @@
       "to_operand": 1,
       "cycles": 4.0,
       "cycles_min": 4.0,
-      "cycles_max": 5.0,
+      "cycles_max": 4.0,
       "cases": [
         {
           "name": "index/bound operand feeding the address directly",
@@ -140,7 +140,7 @@
         },
         {
           "name": "index/bound operand through an ALU operation",
-          "cycles": 5.0,
+          "cycles": 4.0,
           "experiment": {
             "asm": "ldx.h $r4, $r20, $r4; andi $r4, $r4, 7",
             "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, 0; st.h $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
@@ -154,7 +154,7 @@
               "instructions_retired": 2.0,
               "core_cycles": 5.98
             },
-            "chain_latency": 1.0
+            "chain_latency": 1.98
           }
         }
       ],
@@ -177,7 +177,7 @@
           "role": "measurement"
         }
       ],
-      "notes": "Latency from the index or bound operand rk to the destination. The loaded value is the operand itself, so no ALU step is needed; a second case puts andi/xori in the path, which adds one cycle."
+      "notes": "4 cycles from the index or bound operand rk to the destination. When the loaded value can feed the address or the range check directly the chain is just the load; when an andi or xori is in the path it reads one cycle more than the helper itself, which is the address-generator premium rather than load latency."
     }
   ],
   "throughput": [
@@ -212,5 +212,5 @@
       "notes": "8 independent instructions take 7.98 cycles."
     }
   ],
-  "notes": "Latency measured per source operand on LA464: base operand rj -> destination 5 cycles, index/bound operand rk -> destination 4 cycles when the loaded value feeds the address generation directly, and one cycle more when an ALU operation sits in the path. The 64-byte-aligned buffer holds 8 and 0 so the chase stays inside one cache line."
+  "notes": "Latency measured per source operand on LA464: 4 cycles from the base operand rj and 4 cycles from the index or bound operand rk, the same as a plain load. Chains that pass the loaded value through an ALU operation before the next address read one cycle more than that operation, which belongs to the chain. The 64-byte-aligned buffer holds 8 and 0 so the chase stays inside one cache line."
 }
