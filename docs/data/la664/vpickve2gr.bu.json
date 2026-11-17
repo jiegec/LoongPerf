@@ -59,7 +59,7 @@
           },
           "command": "./bench --method slope --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1' --asm 'vreplgr2vr.b $vr0, $r4; vpickve2gr.bu $r4, $vr0, 0'",
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 4.0,
             "core_cycles": 6.0
           },
           "chain_latency": 2,
