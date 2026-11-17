@@ -1,0 +1,63 @@
+{
+  "instruction": {
+    "name": "bcnez",
+    "extension": "Base",
+    "form": "bcnez cj, offs",
+    "description": "Branch if condition code is non-zero (measured not taken)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "cj",
+      "kind": "other",
+      "access": "read",
+      "description": "condition code"
+    },
+    {
+      "index": 2,
+      "name": "offs",
+      "kind": "immediate",
+      "access": "read",
+      "description": "branch offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0",
+      "init": "li.d $r4, 0; movgr2cf $fcc0, $r4",
+      "machine_code": [
+        "48000100  bcnez       \t$fcc0, 0\t# 0x0",
+        "48000100  bcnez       \t$fcc0, 0\t# 0x4",
+        "48000100  bcnez       \t$fcc0, 0\t# 0x8",
+        "48000100  bcnez       \t$fcc0, 0\t# 0xc",
+        "48000100  bcnez       \t$fcc0, 0\t# 0x10",
+        "48000100  bcnez       \t$fcc0, 0\t# 0x14",
+        "48000100  bcnez       \t$fcc0, 0\t# 0x18",
+        "48000100  bcnez       \t$fcc0, 0\t# 0x1c"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 not-taken conditional branches take 4.00 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}

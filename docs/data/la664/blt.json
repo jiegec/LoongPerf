@@ -1,0 +1,72 @@
+{
+  "instruction": {
+    "name": "blt",
+    "extension": "Base",
+    "form": "blt rj, rd, offs",
+    "description": "Branch if signed rj < rd (measured not taken)."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "first value"
+    },
+    {
+      "index": 2,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "second value"
+    },
+    {
+      "index": 3,
+      "name": "offs",
+      "kind": "immediate",
+      "access": "read",
+      "description": "branch offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-16"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0",
+      "init": "addi.d $r4, $r0, 2; addi.d $r5, $r0, 1",
+      "machine_code": [
+        "60000085  blt         \t$a0, $a1, 0\t# 0x0",
+        "60000085  blt         \t$a0, $a1, 0\t# 0x4",
+        "60000085  blt         \t$a0, $a1, 0\t# 0x8",
+        "60000085  blt         \t$a0, $a1, 0\t# 0xc",
+        "60000085  blt         \t$a0, $a1, 0\t# 0x10",
+        "60000085  blt         \t$a0, $a1, 0\t# 0x14",
+        "60000085  blt         \t$a0, $a1, 0\t# 0x18",
+        "60000085  blt         \t$a0, $a1, 0\t# 0x1c"
+      ],
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 2; addi.d $r5, $r0, 1' --asm 'blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0; blt $r4, $r5, 0'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 4.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.5,
+        "ipc": 2.0
+      },
+      "notes": "8 not-taken conditional branches take 4.00 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}
