@@ -56,7 +56,7 @@
           "chain_latency": 1.0,
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 22.98
+            "core_cycles": 22.97
           },
           "measurement": {
             "unroll": 800,
@@ -69,7 +69,66 @@
       ],
       "notes": "Data-dependent (rj-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
       "cycles_min": 5.0,
-      "cycles_max": 22.0
+      "cycles_max": 22.0,
+      "cases": [
+        {
+          "name": "zero dividend, divisor 2 or more",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 0; li.d $r5, 2; li.d $r6, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; li.d $r5, 2; li.d $r6, 0' --asm 'mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.97
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "one-digit quotient",
+          "cycles": 7.0,
+          "experiment": {
+            "asm": "mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 3; li.d $r5, 2; li.d $r6, 2",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 3; li.d $r5, 2; li.d $r6, 2' --asm 'mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 7.98
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "full-width quotient with a non-zero remainder",
+          "cycles": 22.0,
+          "experiment": {
+            "asm": "mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 2147483647; li.d $r5, 3; li.d $r6, 2147483646",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2147483647; li.d $r5, 3; li.d $r6, 2147483646' --asm 'mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 22.97
+            },
+            "chain_latency": 1.0
+          }
+        }
+      ]
     },
     {
       "from_operands": [
@@ -81,25 +140,84 @@
         {
           "name": "dependent chain with add.d restore",
           "role": "measurement",
-          "asm": "mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6",
-          "init": "li.d $r4, 2147483647; li.d $r5, 3; li.d $r6, 2147483646",
+          "asm": "mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6",
+          "init": "li.d $r4, 3; li.d $r5, 2147483647; li.d $r6, 2",
           "chain_latency": 1.0,
           "result": {
             "instructions_retired": 2.0,
-            "core_cycles": 22.98
+            "core_cycles": 22.94
           },
           "measurement": {
             "unroll": 800,
             "iters": 40,
             "reps": 3
           },
-          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2147483647; li.d $r5, 3; li.d $r6, 2147483646' --asm 'mod.w $r4, $r4, $r5; add.d $r4, $r4, $r6'",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 3; li.d $r5, 2147483647; li.d $r6, 2' --asm 'mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6'",
           "notes": "Dividend 0x7fffffff, divisor 3: a wide quotient with a non-zero remainder. The result is restored to the dividend by adding back (dividend - remainder), so 1 cycle of add.d is subtracted."
         }
       ],
       "notes": "Data-dependent (rk-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
       "cycles_min": 5.0,
-      "cycles_max": 22.0
+      "cycles_max": 22.0,
+      "cases": [
+        {
+          "name": "zero dividend, divisor 2 or more",
+          "cycles": 5.0,
+          "experiment": {
+            "asm": "mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 2; li.d $r5, 0; li.d $r6, 2",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2; li.d $r5, 0; li.d $r6, 2' --asm 'mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.97
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "one-digit quotient",
+          "cycles": 7.0,
+          "experiment": {
+            "asm": "mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 2; li.d $r5, 3; li.d $r6, 1",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 2; li.d $r5, 3; li.d $r6, 1' --asm 'mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 7.98
+            },
+            "chain_latency": 1.0
+          }
+        },
+        {
+          "name": "full-width quotient with a non-zero remainder",
+          "cycles": 22.0,
+          "experiment": {
+            "asm": "mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6",
+            "init": "li.d $r4, 3; li.d $r5, 2147483647; li.d $r6, 2",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 3; li.d $r5, 2147483647; li.d $r6, 2' --asm 'mod.w $r4, $r5, $r4; add.d $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 22.94
+            },
+            "chain_latency": 1.0
+          }
+        }
+      ]
     }
   ],
   "throughput": [
@@ -138,5 +256,5 @@
       "notes": "Data-dependent throughput. CPI 3.5 at dividend=0, divisor=2; CPI 12 at dividend=2147483647, divisor=1. Measured with 8 independent lanes."
     }
   ],
-  "notes": "Latency model: 5 cycles with a zero dividend or quotient, otherwise 7 + floor(quotient_bits/2) for the 32-bit form, up to 22 cycles. The remainder path exits early when the remainder is zero, so the divisor-1 recipes used for the divide do not reach the long path here. On LA464 the 32-bit forms also require properly sign-extended operands in their 64-bit registers: a register holding 0x00000000ffffffff instead of 0xffffffffffffffff divides as a tiny value, returns 0 and takes the fast path."
+  "notes": "Latency model: 5 cycles with a zero dividend or quotient, otherwise 7 + floor(quotient_bits/2). The remainder path exits early when the remainder is zero, so the divisor-1 recipes used for the divides do not reach the long path here: the full-width case uses a divisor that leaves a non-zero remainder. On LA464 the 32-bit forms also require properly sign-extended operands in their 64-bit registers; a register holding 0x00000000ffffffff instead of 0xffffffffffffffff divides as a tiny value and returns 0. Each case closes its loop with add.d, restoring either the dividend (rj path) or the divisor (rk path) from the remainder, so 1 cycle of helper latency is subtracted."
 }
