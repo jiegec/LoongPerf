@@ -284,7 +284,9 @@ latency = 7 + floor(quotient_bits / 2)
 so `div.w` tops out at 22 cycles (23 for `div.wu` with a full 32-bit quotient)
 and `div.d` at 38 (39 for `div.du`). The minimum is 5 with a zero dividend and
 a divisor of 2 or more; a divisor of 1 costs one extra cycle because the
-quotient equals the dividend and is therefore never zero.
+quotient equals the dividend and is therefore never zero. LA464 and LA664 are
+identical here: both measure 5-22, 5-23, 5-38 and 5-39, so the two cores share
+the same scalar divider.
 
 ```text
 div.d, dividend = 2^n - 1, divisor = 1
@@ -324,9 +326,10 @@ slower than a 64-bit one: `xvdiv.bu` takes 69 cycles against 39 for `div.du`.
 
 Two properties of the unit are visible in the measurements:
 
-* The lanes are processed in parallel, not one after another. LSX and LASX are
-  identical for every element width although LASX carries twice as many lanes,
-  and the low and high 128-bit halves are not serialised either:
+* The lanes are processed in parallel, not one after another. On LA664 the LSX
+  and LASX forms are identical for every element width although LASX carries
+  twice as many lanes, and the low and high 128-bit halves are not serialised
+  either.
 
   ```text
   quotient        LSX vdiv      LASX xvdiv
@@ -345,7 +348,12 @@ Like the scalar divider, the vector unit divides magnitudes only, and it skips
 trailing zero digits: `2^40 / 1` (a 41-bit quotient) still measures 11 cycles
 because the 40 trailing zeros cost nothing.
 
-## Floating-point divide, square root and reciprocal latency
+One difference between the two cores: on LA464 the 128-bit form needs one extra
+cycle for 64-bit elements, so `vdiv.d` spans 9-27 cycles while `xvdiv.d` spans
+8-26, whereas LA664 measures 8-26 for both widths. The 32-bit and narrower
+forms are identical on both microarchitectures.
+
+## Floating-point divide latency
 
 Floating-point division has a small set of latency classes rather than a ladder,
 because the divider stops as soon as the remainder is zero. A subnormal operand
@@ -358,6 +366,9 @@ early and is cheaper than a normal inexact quotient.
 | `fdiv.d`, `frecip.d` | 8 | 9 | 10 | 11 | 23 | 24 |
 | `vfdiv.s`, `xvfdiv.s`, `vfrecip.s`, `xvfrecip.s` | 11 | 13 | 15 | 17 | 27 | 29 |
 | `vfdiv.d`, `xvfdiv.d` | 8 | 9 | 10 | 11 | 23 | 24 |
+
+LA464 and LA664 agree on every entry, so the floating-point divider itself did
+not change between the cores.
 
 An exact quotient is one that terminates in binary, for example `1.0/2.0`,
 `1.5/1.0` or `3.0/4.0`. Everything is built from a single "digit time" of four
@@ -413,3 +424,40 @@ makes easy:
 
 Do not reuse the operand bits of an integer as a floating-point constant:
 `li.d $r4, 1; movgr2fr.d $f0, $r4` loads the smallest subnormal, not `1.0`.
+
+The square root, reciprocal and reciprocal square root follow the same three
+class structure. Measured on LA464 with the two-copy chain described above:
+
+| instruction | special (0, Inf, NaN) | exact / power of two | general on LA464 | general on LA664 |
+| --- | --- | --- | --- | --- |
+| `fsqrt.s` | 8 | 10 | 22 | 23 |
+| `fsqrt.d` | 8 | 10 | 36 | 37 |
+| `frecip.s` | 8 | 10 | 17 | 17 |
+| `frecip.d` | 8 | 10 | 24 | 24 |
+| `frsqrt.s` | 11 | 15 | 33 | 34 |
+| `frsqrt.d` | 11 | 15 | 54 | 55 |
+
+The `fsqrt`/`frsqrt` pipelines are exactly one cycle longer on LA664 per datapath
+pass: one cycle for the scalar and 64-bit vector operations (36 -> 37, 54 -> 55)
+and two cycles for the 32-bit vector forms that make two passes (39 -> 41,
+61 -> 63). `frecip` is unchanged.
+
+The general case is again an iteration count: `fdiv` and `frecip` refine 13
+quotient bits of the 52-bit mantissa in groups of four (`10 + 13 = 23`), `fsqrt`
+runs twice as many iterations (26, giving 36), and `frsqrt` three times (39,
+giving 54). The same relation shows up in single precision, where the mantissa
+is 23 bits and six iterations replace thirteen.
+
+For vectors the 64-bit lanes reproduce the scalar numbers exactly and run in
+parallel — one slow lane costs the same as eight, so `vfdiv.d`, `vfsqrt.d` and
+`vfrsqrt.d` match `fdiv.d`, `fsqrt.d` and `frsqrt.d`. The 32-bit lanes instead
+make two passes over the 64-bit datapath, which gives the empirical rule
+
+```text
+latency(32-bit vector) = 2 * latency(32-bit scalar) - 5
+```
+
+for every class: `vfdiv.s` 2*16-5 = 27, `vfrecip.s` 2*17-5 = 29, `vfsqrt.s`
+2*22-5 = 39 and `vfrsqrt.s` 2*33-5 = 61. The five saved cycles are the setup and
+rounding steps that the two passes share.
+
