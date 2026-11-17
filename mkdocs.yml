@@ -1,11 +1,14 @@
 site_name: LoongPerf
 site_description: LoongArch instruction-level performance data
-site_url: https://jia.je/loongperf
+site_url: https://jia.je/LoongPerf
 repo_url: https://github.com/jiegec/LoongPerf
 repo_name: jiegec/LoongPerf
+copyright: Copyright &copy; 2026 Jiajie Chen
 
 theme:
   name: material
+  icon:
+    repo: fontawesome/brands/github
   features:
     - navigation.tabs
     - navigation.tabs.sticky

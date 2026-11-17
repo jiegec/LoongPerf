@@ -1,0 +1,92 @@
+{
+  "instruction": {
+    "name": "vaddwev.w.hu.h",
+    "extension": "LSX",
+    "form": "vaddwev.w.hu.h, vd, vj, vk",
+    "description": "Add the even-positioned unsigned 16-bit elements in `a` and the corresponding signed 16-bit elements in `b`, extending both to 32-bit, and save the 32-bit result in `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "first source"
+    },
+    {
+      "index": 3,
+      "name": "vk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "second source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vaddwev.w.hu.h $vr0, $vr0, $vr2",
+          "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 1; vreplgr2vr.b $vr2, $r4' --asm 'vaddwev.w.hu.h $vr0, $vr0, $vr2'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "Dependent vector-register chain with small positive integer element values."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vaddwev.w.hu.h $vr0, $vr8, $vr16; vaddwev.w.hu.h $vr1, $vr9, $vr17; vaddwev.w.hu.h $vr2, $vr10, $vr18; vaddwev.w.hu.h $vr3, $vr11, $vr19; vaddwev.w.hu.h $vr4, $vr12, $vr20; vaddwev.w.hu.h $vr5, $vr13, $vr21; vaddwev.w.hu.h $vr6, $vr14, $vr22; vaddwev.w.hu.h $vr7, $vr15, $vr23",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 1; vreplgr2vr.b $vr16, $r4; li.d $r4, 1; vreplgr2vr.b $vr17, $r4; li.d $r4, 1; vreplgr2vr.b $vr18, $r4; li.d $r4, 1; vreplgr2vr.b $vr19, $r4; li.d $r4, 1; vreplgr2vr.b $vr20, $r4; li.d $r4, 1; vreplgr2vr.b $vr21, $r4; li.d $r4, 1; vreplgr2vr.b $vr22, $r4; li.d $r4, 1; vreplgr2vr.b $vr23, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 1; vreplgr2vr.b $vr16, $r4; li.d $r4, 1; vreplgr2vr.b $vr17, $r4; li.d $r4, 1; vreplgr2vr.b $vr18, $r4; li.d $r4, 1; vreplgr2vr.b $vr19, $r4; li.d $r4, 1; vreplgr2vr.b $vr20, $r4; li.d $r4, 1; vreplgr2vr.b $vr21, $r4; li.d $r4, 1; vreplgr2vr.b $vr22, $r4; li.d $r4, 1; vreplgr2vr.b $vr23, $r4' --asm 'vaddwev.w.hu.h $vr0, $vr8, $vr16; vaddwev.w.hu.h $vr1, $vr9, $vr17; vaddwev.w.hu.h $vr2, $vr10, $vr18; vaddwev.w.hu.h $vr3, $vr11, $vr19; vaddwev.w.hu.h $vr4, $vr12, $vr20; vaddwev.w.hu.h $vr5, $vr13, $vr21; vaddwev.w.hu.h $vr6, $vr14, $vr22; vaddwev.w.hu.h $vr7, $vr15, $vr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ],
+  "notes": "LSX widening/narrowing integer instruction. Measured on LA664 with positive integer operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}
