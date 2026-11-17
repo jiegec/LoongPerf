@@ -318,18 +318,30 @@ the result feeds the next address, the load-to-AGU bypass:
 | load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
 | --- | --- | --- |
 | `ld.b`, `ld.h`, `ld.w`, `ld.d`, `ldptr.*`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / 3 | 5 / 4 |
-| `fld.s` | 4 / 3 | 5 / 4 |
-| `fld.d` | 4 / 3 | 4 / 3 |
 | `vld`, `xvld` | 4 / 3 | 5 / 4 |
+| `fld.s`, `fld.d` | 4 / not reachable | 5 / 4 |
 
-Width does not matter on LA664, a byte load costs exactly what a double load
+Width does not matter on LA664: a byte load costs exactly what a double load
 costs, and an integer, floating-point or vector load all take the same time. The
 recorded `cycles` value is the ALU path.
 
-LA464 needs one cycle more on both paths: 5 to an ALU consumer and 4 through the
-bypass, which is the main load-latency difference between the two cores. The one
-disagreement inside LA464 is `fld.d`, recorded as 4 while `fld.s` is 5; a double
-load should not be faster than a single one, so that entry needs re-measuring.
+LA464 needs one cycle more on both paths, 5 to an ALU consumer and 4 through the
+bypass, which is the main load-latency difference between the two cores.
+
+Floating-point loads need a caveat, because a value in an FPR cannot become an
+address directly: the chain has to pass through `movfr2gr`, so a float load is
+measured with that move in the path. On LA464 the resulting chain is still the
+fast one, `fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` measures 4, and inserting an
+`add.d` in the address path measures 5, exactly like the integer loads. `fld.s`
+is different: a 32-bit result has to be recombined with the base before it can
+be used, so the chain necessarily contains an `add.d` and always reports the
+5-cycle ALU path. The 4 and 5 recorded for `fld.d` and `fld.s` are therefore two
+different paths on the same core and not a contradiction.
+
+On LA664 both `fld.s` and `fld.d` measure 4. For `fld.d` the chain is the
+`movfr2gr` chase, so 4 is what a GPR consumer sees, matching the integer ALU
+path; the pure 3-cycle address bypass is unreachable for a floating-point load
+because the move is part of every such chain.
 
 ### Indexed and bound-checked loads
 
@@ -413,10 +425,10 @@ Load latency does not depend on the data, only on the path:
 
 | load | LA664 | LA464 |
 | --- | --- | --- |
-| plain `ld.*`, `fld.*`, `vld`, `xvld` to an ALU consumer | 4 | 5 |
+| plain `ld.*`, `vld`, `xvld`, `fld.*` to an ALU consumer | 4 | 5 |
 | plain load feeding the next address | 3 | 4 |
 | `ldx.*`, `ldgt.*`, `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 4 / 5 | 5, split unmeasured |
-| integer `ldle.*` bound fed back as the next bound | 4 | 5, split unmeasured |
+| integer `ldle.*` bound fed back as the next bound | 4 | not measured |
 
 The floating-point classes are a fixed set that covers every possible operand,
 so the JSON lists them as an exhaustive `cases` array, and no formula is needed
