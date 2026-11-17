@@ -1,0 +1,107 @@
+{
+  "instruction": {
+    "name": "xvfrecip.s",
+    "extension": "LASX",
+    "form": "xvfrecip.s xd, xj",
+    "description": "Vector floating-point recip."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 14.98,
+      "cycles_min": 10.98,
+      "cycles_max": 29.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain with reset helper",
+          "role": "measurement",
+          "asm": "xvfrecip.s $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4",
+          "init": "li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216' --asm 'xvfrecip.s $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4'",
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 24.07
+          },
+          "chain_latency": 9.09,
+          "notes": "vpickve2gr extracts element 0, and/or forces it back to the test value, vreplgr2vr replicates it; the vadd.b baseline is subtracted."
+        },
+        {
+          "name": "vadd.b reset-helper baseline",
+          "role": "calibration",
+          "asm": "xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4",
+          "init": "li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.w $r5, 1; li.w $r6, 1065353216' --asm 'xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.w $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.w $xr0, $r4'",
+          "result": {
+            "instructions_retired": 6.0,
+            "core_cycles": 10.09
+          },
+          "notes": "Same helper chain with vadd.b replacing the variable-latency operation."
+        }
+      ],
+      "notes": "Data-dependent. Latency range measured over 11 operand values with the element-0 reset helper. Min 10.98 at inf, max 29.00 at maxsub. Sample uses 1."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvfrecip.s $xr0, $xr8; xvfrecip.s $xr1, $xr9; xvfrecip.s $xr2, $xr10; xvfrecip.s $xr3, $xr11; xvfrecip.s $xr4, $xr12; xvfrecip.s $xr5, $xr13; xvfrecip.s $xr6, $xr14; xvfrecip.s $xr7, $xr15",
+      "init": "li.w $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1065353216; xvreplgr2vr.w $xr15, $r4' --asm 'xvfrecip.s $xr0, $xr8; xvfrecip.s $xr1, $xr9; xvfrecip.s $xr2, $xr10; xvfrecip.s $xr3, $xr11; xvfrecip.s $xr4, $xr12; xvfrecip.s $xr5, $xr13; xvfrecip.s $xr6, $xr14; xvfrecip.s $xr7, $xr15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 51.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 6.4988,
+        "ipc": 0.1539,
+        "cpi_min": 4.499,
+        "cpi_max": 13.499,
+        "ipc_min": 0.0741,
+        "ipc_max": 0.2223
+      },
+      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 13.50 at maxsub. Sample uses 1."
+    }
+  ],
+  "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."
+}

@@ -1,6 +1,8 @@
 site_name: LoongPerf
 site_description: LoongArch instruction-level performance data
 site_url: https://jia.je/loongperf
+repo_url: https://github.com/jiegec/LoongPerf
+repo_name: jiegec/LoongPerf
 
 theme:
   name: material

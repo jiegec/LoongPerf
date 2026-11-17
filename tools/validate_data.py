@@ -27,6 +27,10 @@ RETIRED_MULTIPLIER = {
     "rdtimeh.w": 2,
     "rdtime.d": 2,
     "movgr2frh.w": 2,
+    "vpickve2gr.w": 2,
+    "vpickve2gr.d": 2,
+    "xvpickve2gr.w": 2,
+    "xvpickve2gr.d": 2,
     "llacq.w": 2,
     "llacq.d": 2,
     "sc.q": 2,
@@ -85,13 +89,30 @@ def check_command(path: Path, data: dict, experiment: dict) -> None:
         error(path, f"command has --init but experiment has no init: {command!r}")
 
 
+def instruction_multiplier(mnemonic: str, line: str) -> int:
+    if mnemonic == "cpucfg":
+        return 0
+    if mnemonic in {"rdtimel.w", "rdtimeh.w", "rdtime.d"}:
+        return 1 if ", $r0" in line else 2
+    if mnemonic.startswith("am"):
+        return 2
+    return RETIRED_MULTIPLIER.get(mnemonic, 1)
+
+
+def expected_instruction_count(asm: str) -> int:
+    total = 0
+    for part in re.split(r"[;\n]", asm):
+        line = part.strip()
+        if not line or line.startswith("#") or line.startswith("."):
+            continue
+        if line.endswith(":"):
+            continue
+        total += instruction_multiplier(line.split()[0], line)
+    return total
+
+
 def check_result_count(path: Path, data: dict, experiment: dict) -> None:
-    name = data["instruction"]["name"]
-    if name in {"rdtimel.w", "rdtimeh.w", "rdtime.d"}:
-        multiplier = 1 if ", $r0" in experiment["asm"] else 2
-    else:
-        multiplier = 2 if name.startswith("am") else RETIRED_MULTIPLIER.get(name, 1)
-    expected = asm_instruction_count(experiment["asm"]) * multiplier
+    expected = expected_instruction_count(experiment["asm"])
     actual = experiment["result"]["instructions_retired"]
     if not close(actual, expected):
         error(path, f"instructions_retired {actual} != expected {expected} for {experiment.get('name', '<unnamed>')}")
