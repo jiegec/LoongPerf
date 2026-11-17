@@ -312,21 +312,35 @@ records one entry per source operand, and the notes name the bypass path.
 
 ### Plain loads
 
-On LA664 every plain load takes 4 cycles to an ALU consumer and 3 cycles when
-the result feeds the next address, the load-to-AGU bypass:
+On LA664 an integer or floating-point plain load takes 4 cycles to an ALU
+consumer, and an integer load takes 3 when the result feeds the next address,
+the load-to-AGU bypass:
 
 | load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
 | --- | --- | --- |
 | `ld.b`, `ld.h`, `ld.w`, `ld.d`, `ldptr.*`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / 3 | 5 / 4 |
-| `vld`, `xvld` | 4 / 3 | 5 / 4 |
 | `fld.s`, `fld.d` | 4 / not reachable | 5 / 4 |
+| `vld`, `xvld` | 4 / not reachable | 5 / not measured |
 
 Width does not matter on LA664: a byte load costs exactly what a double load
 costs, and an integer, floating-point or vector load all take the same time. The
 recorded `cycles` value is the ALU path.
 
+The 3-cycle bypass is measured with a bare pointer chase that feeds the loaded
+value straight back as the address, `ld.d $r4, $r4, 0`, which measures 3.00
+cycles per iteration; adding `add.d $r4, $r4, $r0` gives 5.00, that is the 4-cycle
+ALU path plus one. A vector load has no such path: its result lands in a vector
+register and cannot be an address, so `vld`/`xvld` only have a value-to-consumer
+latency, and the 4 cycles recorded for them are measured through a
+store-then-reload chain (`vld` → `vst` → `ld.d` → `add.d`, where the
+store-to-load forwarding costs 10.04 cycles and is subtracted).
+
 LA464 needs one cycle more on both paths, 5 to an ALU consumer and 4 through the
-bypass, which is the main load-latency difference between the two cores.
+bypass, which is the main load-latency difference between the two cores. The
+4-cycle bypass comes from the recorded notes; the stored calibration experiment
+for it still reports 5, the same staleness the LA664 entries had before the
+pointer chase was re-measured at 3.00, so the LA464 value should be re-checked on
+that machine.
 
 Floating-point loads need a caveat, because a value in an FPR cannot become an
 address directly: the chain has to pass through `movfr2gr`, so a float load is
@@ -425,8 +439,8 @@ Load latency does not depend on the data, only on the path:
 
 | load | LA664 | LA464 |
 | --- | --- | --- |
-| plain `ld.*`, `vld`, `xvld`, `fld.*` to an ALU consumer | 4 | 5 |
-| plain load feeding the next address | 3 | 4 |
+| plain `ld.*`, `vld`, `xvld`, `fld.*` to a consumer | 4 | 5 |
+| integer load feeding the next address | 3 | 4 |
 | `ldx.*`, `ldgt.*`, `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 4 / 5 | 5, split unmeasured |
 | integer `ldle.*` bound fed back as the next bound | 4 | not measured |
 

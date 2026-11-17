@@ -83,10 +83,10 @@
             "iters": 100,
             "reps": 7
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
+          "command": "./bench --method slope --unroll 100000 --unroll2 200000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
           "result": {
             "instructions_retired": 1,
-            "core_cycles": 4.0
+            "core_cycles": 3.0
           },
           "notes": "Bare pointer chase: the word at address A contains A, so each load result is exactly the next load address. This exercises the load-to-AGU address bypass path (3 cycles), not the general load-to-ALU path (4 cycles).",
           "machine_code": [
