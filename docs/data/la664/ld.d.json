@@ -83,7 +83,9 @@
           "notes": "Bare pointer chase: the word at address A contains A, so each load result is exactly the next load address. This exercises the load-to-AGU address bypass path (3 cycles), not the general load-to-ALU path (4 cycles)."
         }
       ],
-      "notes": "L1D hit. Load-to-ALU latency is 4 cycles; the load-to-AGU address bypass path is 3 cycles. The calibration experiment uses a bare self-referential pointer chase for the 3-cycle path; the measurement experiment adds add.d to force the ALU-consumer path."
+      "notes": "L1D hit. Load-to-ALU latency is 4 cycles; the load-to-AGU address bypass path is 3 cycles. The calibration experiment uses a bare self-referential pointer chase for the 3-cycle path; the measurement experiment adds add.d to force the ALU-consumer path.",
+      "cycles_min": 3,
+      "cycles_max": 4
     }
   ],
   "throughput": [

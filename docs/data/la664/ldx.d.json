@@ -85,7 +85,9 @@
           "notes": "Bare indexed pointer chase: base is r0, index is r4, and the word at A contains A. This exercises the load-to-AGU address bypass path (4 cycles); the ALU-consumer path is 5 cycles."
         }
       ],
-      "notes": "L1D hit. Indexed load-to-ALU latency is 5 cycles; the load-to-AGU address bypass path is 4 cycles."
+      "notes": "L1D hit. Indexed load-to-ALU latency is 5 cycles; the load-to-AGU address bypass path is 4 cycles.",
+      "cycles_min": 4,
+      "cycles_max": 5
     }
   ],
   "throughput": [
