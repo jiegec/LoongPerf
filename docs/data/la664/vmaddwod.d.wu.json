@@ -1,0 +1,92 @@
+{
+  "instruction": {
+    "name": "vmaddwod.d.wu",
+    "extension": "LSX",
+    "form": "vmaddwod.d.wu vd, vj, vk",
+    "description": "Multiply the odd-positioned unsigned 32-bit elements in `b` and the corresponding unsigned 32-bit elements in `c`, extending both to 64-bit, and add the product to the 64-bit elements in `a`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "read-write",
+      "bits": 128,
+      "description": "accumulator/destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "first multiplier"
+    },
+    {
+      "index": 3,
+      "name": "vk",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "second multiplier"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2,
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "accumulator dependency chain",
+          "role": "measurement",
+          "asm": "vmaddwod.d.wu $vr0, $vr0, $vr2",
+          "init": "li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr2, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr0, $r4; li.d $r4, 2; vreplgr2vr.b $vr2, $r4' --asm 'vmaddwod.d.wu $vr0, $vr0, $vr2'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 4.0
+          },
+          "notes": "Destination is also the accumulator; this measures the accumulator-to-result path."
+        }
+      ],
+      "notes": "Accumulator-to-result latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vmaddwod.d.wu $vr0, $vr8, $vr16; vmaddwod.d.wu $vr1, $vr9, $vr17; vmaddwod.d.wu $vr2, $vr10, $vr18; vmaddwod.d.wu $vr3, $vr11, $vr19; vmaddwod.d.wu $vr4, $vr12, $vr20; vmaddwod.d.wu $vr5, $vr13, $vr21; vmaddwod.d.wu $vr6, $vr14, $vr22; vmaddwod.d.wu $vr7, $vr15, $vr23",
+      "init": "li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr15, $r4; li.d $r4, 2; vreplgr2vr.b $vr16, $r4; li.d $r4, 2; vreplgr2vr.b $vr17, $r4; li.d $r4, 2; vreplgr2vr.b $vr18, $r4; li.d $r4, 2; vreplgr2vr.b $vr19, $r4; li.d $r4, 2; vreplgr2vr.b $vr20, $r4; li.d $r4, 2; vreplgr2vr.b $vr21, $r4; li.d $r4, 2; vreplgr2vr.b $vr22, $r4; li.d $r4, 2; vreplgr2vr.b $vr23, $r4' --asm 'vmaddwod.d.wu $vr0, $vr8, $vr16; vmaddwod.d.wu $vr1, $vr9, $vr17; vmaddwod.d.wu $vr2, $vr10, $vr18; vmaddwod.d.wu $vr3, $vr11, $vr19; vmaddwod.d.wu $vr4, $vr12, $vr20; vmaddwod.d.wu $vr5, $vr13, $vr21; vmaddwod.d.wu $vr6, $vr14, $vr22; vmaddwod.d.wu $vr7, $vr15, $vr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles."
+    }
+  ],
+  "notes": "LSX multiply-add/subtract vector instruction. Latency uses the accumulator chain; throughput uses 8 independent lanes."
+}
