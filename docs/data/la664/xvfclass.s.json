@@ -1,0 +1,83 @@
+{
+  "instruction": {
+    "name": "xvfclass.s",
+    "extension": "LASX",
+    "form": "xvfclass.s, xd, xj",
+    "description": "Classify each single precision floating point element in `a` according to IEEE 754 `class(x)`, writing the 10-bit classification result into the corresponding element of `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "xd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 256,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "xj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 256,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "xvfclass.s $xr0, $xr0",
+          "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4' --asm 'xvfclass.s $xr0, $xr0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "Vector registers initialised with normal 1.0/2.0 values, not byte-replicated integers. Measured with unroll=100000."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "xvfclass.s $xr0, $xr8; xvfclass.s $xr1, $xr9; xvfclass.s $xr2, $xr10; xvfclass.s $xr3, $xr11; xvfclass.s $xr4, $xr12; xvfclass.s $xr5, $xr13; xvfclass.s $xr6, $xr14; xvfclass.s $xr7, $xr15",
+      "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4' --asm 'xvfclass.s $xr0, $xr8; xvfclass.s $xr1, $xr9; xvfclass.s $xr2, $xr10; xvfclass.s $xr3, $xr11; xvfclass.s $xr4, $xr12; xvfclass.s $xr5, $xr13; xvfclass.s $xr6, $xr14; xvfclass.s $xr7, $xr15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 1.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.2487,
+        "ipc": 4.0201
+      },
+      "notes": "8 independent instructions take 1.99 cycles. Sources are normal float values."
+    }
+  ],
+  "notes": "LASX vector floating-point instruction. Measured on LA664 with normal float operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}

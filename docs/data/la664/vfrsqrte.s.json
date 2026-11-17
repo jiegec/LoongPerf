@@ -1,0 +1,83 @@
+{
+  "instruction": {
+    "name": "vfrsqrte.s",
+    "extension": "LSX",
+    "form": "vfrsqrte.s, vd, vj",
+    "description": "Compute estimated reciprocal of square root of single precision floating point elements in `a`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 5.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vfrsqrte.s $vr0, $vr0",
+          "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4' --asm 'vfrsqrte.s $vr0, $vr0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 5.0
+          },
+          "notes": "Vector registers initialised with normal 1.0/2.0 values, not byte-replicated integers. Measured with unroll=100000."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vfrsqrte.s $vr0, $vr8; vfrsqrte.s $vr1, $vr9; vfrsqrte.s $vr2, $vr10; vfrsqrte.s $vr3, $vr11; vfrsqrte.s $vr4, $vr12; vfrsqrte.s $vr5, $vr13; vfrsqrte.s $vr6, $vr14; vfrsqrte.s $vr7, $vr15",
+      "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4' --asm 'vfrsqrte.s $vr0, $vr8; vfrsqrte.s $vr1, $vr9; vfrsqrte.s $vr2, $vr10; vfrsqrte.s $vr3, $vr11; vfrsqrte.s $vr4, $vr12; vfrsqrte.s $vr5, $vr13; vfrsqrte.s $vr6, $vr14; vfrsqrte.s $vr7, $vr15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 3.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.4988,
+        "ipc": 2.005
+      },
+      "notes": "8 independent instructions take 3.99 cycles. Sources are normal float values."
+    }
+  ],
+  "notes": "LSX vector floating-point instruction. Measured on LA664 with normal float operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}

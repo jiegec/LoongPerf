@@ -1,0 +1,83 @@
+{
+  "instruction": {
+    "name": "vfclass.d",
+    "extension": "LSX",
+    "form": "vfclass.d, vd, vj",
+    "description": "Classify each double precision floating point element in `a` according to IEEE 754 `class(x)`, writing the 10-bit classification result into the corresponding element of `dst`."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "vd",
+      "kind": "vector",
+      "access": "write",
+      "bits": 128,
+      "description": "destination"
+    },
+    {
+      "index": 2,
+      "name": "vj",
+      "kind": "vector",
+      "access": "read",
+      "bits": 128,
+      "description": "source"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 2.0,
+      "experiments": [
+        {
+          "name": "dependent vector chain",
+          "role": "measurement",
+          "asm": "vfclass.d $vr0, $vr0",
+          "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4",
+          "measurement": {
+            "unroll": 100000,
+            "iters": 100,
+            "reps": 7
+          },
+          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4' --asm 'vfclass.d $vr0, $vr0'",
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 2.0
+          },
+          "notes": "Vector registers initialised with normal 1.0/2.0 values, not byte-replicated integers. Measured with unroll=100000."
+        }
+      ],
+      "notes": "Register-to-register latency."
+    }
+  ],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "vfclass.d $vr0, $vr8; vfclass.d $vr1, $vr9; vfclass.d $vr2, $vr10; vfclass.d $vr3, $vr11; vfclass.d $vr4, $vr12; vfclass.d $vr5, $vr13; vfclass.d $vr6, $vr14; vfclass.d $vr7, $vr15",
+      "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4",
+      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4' --asm 'vfclass.d $vr0, $vr8; vfclass.d $vr1, $vr9; vfclass.d $vr2, $vr10; vfclass.d $vr3, $vr11; vfclass.d $vr4, $vr12; vfclass.d $vr5, $vr13; vfclass.d $vr6, $vr14; vfclass.d $vr7, $vr15'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 1.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.2487,
+        "ipc": 4.0201
+      },
+      "notes": "8 independent instructions take 1.99 cycles. Sources are normal float values."
+    }
+  ],
+  "notes": "LSX vector floating-point instruction. Measured on LA664 with normal float operands; latency uses a dependent chain (unroll=100000), throughput uses 8 independent lanes (unroll=1000)."
+}
