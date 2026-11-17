@@ -47,10 +47,14 @@
       "throughput": {
         "lanes": 8,
         "cpi": 17.125,
-        "ipc": 0.058394160583941604
+        "ipc": 0.058394160583941604,
+        "cpi_min": 17.1,
+        "cpi_max": 20.7,
+        "ipc_min": 0.0483,
+        "ipc_max": 0.0585
       },
-      "notes": "8 instruction barriers take 136.77 cycles."
+      "notes": "8 instruction barriers take 137.00 cycles in the sample, but the cost is not stable: repeated runs on different cores and with different barrier counts give roughly 17.1-20.7 CPI. The variation is consistent with ibar waiting on pipeline/uncore state rather than a fixed core-cycle count, so the range is recorded instead of a single integer."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only."
+  "notes": "No destination data dependency; latency is not defined. Throughput is variable: observed range about 17.1-20.7 CPI depending on core/frequency/system state."
 }

@@ -66,7 +66,9 @@
           "notes": "L1D hit, load-to-ALU latency 4 cycles. The unsigned result is explicitly sign-extended with slli/srai so the base pointer can alternate +8/-8; chain_latency subtracts 2 shift cycles and 1 add. Measured with unroll=100000."
         }
       ],
-      "notes": "L1D hit, load-to-ALU latency 4 cycles. The unsigned result is explicitly sign-extended with slli/srai so the base pointer can alternate +8/-8; chain_latency subtracts 2 shift cycles and 1 add. Measured with unroll=100000."
+      "notes": "L1D-hit load-to-ALU latency is nominally 4 cycles. Re-measured with an ext.w/add.w extension chain: raw 6.06-6.10 cycles, extension-chain baseline 2.19 cycles, giving about 3.9-4.1 cycles. The unsigned extension path adds about 0.1 cycle of uncertainty, so the value is not exactly 4.00 in every measurement.",
+      "cycles_min": 3.9,
+      "cycles_max": 4.1
     }
   ],
   "throughput": [
@@ -97,5 +99,5 @@
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }
   ],
-  "notes": "L1D-hit load-to-ALU latency 4 cycles. Throughput is 0.5 CPI."
+  "notes": "L1D-hit load-to-ALU latency is nominally 4 cycles. The unsigned extension used to close the address chain introduces about ±0.1 cycle uncertainty; measured range 3.9-4.1."
 }
