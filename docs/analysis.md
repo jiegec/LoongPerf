@@ -323,6 +323,11 @@ the extra cycle of the ALU path lands: LA464's ALU path is one cycle slower than
 its address path, while on LA664 the same one-cycle gap exists between the 3-cycle
 chase and the 4-cycle ALU path.
 
+Watch the stored number when comparing the two cores: the LA464 entries record
+the load latency itself (4 cycles, with the extra ALU cycle taken out of the chain
+for the loads that cannot be chased), while the LA664 entries record the ALU path
+and keep the 3-cycle chase as a separate case.
+
 ### How the numbers are measured
 
 An integer load is chased by feeding the loaded value back as the next address,

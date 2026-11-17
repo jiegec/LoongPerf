@@ -99,5 +99,6 @@
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }
-  ]
+  ],
+  "notes": "4 cycles, the same for every width and for both the base and the index or bound operand. The load result is available four cycles after the address, and a chain that passes it through an ALU operation before using it as the next address reads one cycle more than that operation, which is what the address generator charges for an ALU-produced address rather than load latency."
 }

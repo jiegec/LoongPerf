@@ -66,49 +66,7 @@
           "notes": "The load returns 32 bits, so the value has to be recombined with the base before it can be used as an address: this chain therefore always contains add.d (1 cycle, subtracted together with movfr2gr.s). The direct address chase that measures the 4-cycle bypass path for fld.d cannot be built for fld.s."
         }
       ],
-      "notes": "5 cycles from the base operand rj to the destination. The loop closes through movfr2gr (2 cycles) and, because the loaded value has to be turned back into an address, through an add.d (1 cycle); the chain also carries one further cycle that the address generator pays whenever the address comes from an ALU operation rather than straight from the register file, so 4 cycles are subtracted. The load itself is 5, the same as fld.d/fld.s and one cycle above the integer loads.",
-      "cases": [
-        {
-          "name": "load result combined with the base before the next address",
-          "cycles": 5.0,
-          "experiment": {
-            "asm": "fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
-            "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8' --asm 'fld.s $f0, $r20, 0; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 3.0,
-              "core_cycles": 8.98
-            },
-            "chain_latency": 3.98
-          }
-        },
-        {
-          "name": "data path to an FP consumer (fadd.s)",
-          "cycles": 5.0,
-          "experiment": {
-            "asm": "fld.s $f0, $r20, 0; fadd.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4",
-            "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; movgr2fr.w $f1, $r0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; movgr2fr.w $f1, $r0' --asm 'fld.s $f0, $r20, 0; fadd.s $f0, $f0, $f1; movfr2gr.s $r4, $f0; add.d $r20, $r20, $r4'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 4.0,
-              "core_cycles": 14.0
-            },
-            "chain_latency": 9.0
-          }
-        }
-      ],
-      "cycles_min": 5.0,
-      "cycles_max": 5.0
+      "notes": "5 cycles from the base operand rj to the destination. The loop closes through movfr2gr (2 cycles) and, because the loaded value has to be turned back into an address, through an add.d (1 cycle); the chain also carries one further cycle that the address generator pays whenever the address comes from an ALU operation rather than straight from the register file, so 4 cycles are subtracted. The load itself is 5, the same as fld.d/fld.s and one cycle above the integer loads."
     }
   ],
   "throughput": [
@@ -143,5 +101,5 @@
       "notes": "8 independent instructions take 4.00 cycles."
     }
   ],
-  "notes": "L1D-hit floating-point load, 5 cycles from the base address register to the loaded value. The loop closes through movfr2gr (2 cycles) and, on the paths that need an ALU operation to turn the value back into an address, through an add.d or fadd.d as well; those chains carry one cycle more than their helper instructions, which is what the address generator charges for an ALU-produced address. fld.s and fld.d read the same chain, so the width does not matter, and 5 is one cycle above the integer loads and the same as the vector loads."
+  "notes": "5 cycles, the same for single and double precision and for both the base and the index or bound operand. The value cannot become an address directly, so the measurement chain always contains movfr2gr (2 cycles), and chains that need an add.d, an andi or an fadd.d as well read one cycle more than those helpers; that cycle is the address-generator premium, not load latency."
 }

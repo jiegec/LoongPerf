@@ -47,48 +47,6 @@
       ],
       "to_operand": 1,
       "cycles": 4.0,
-      "cycles_min": 4.0,
-      "cycles_max": 4.0,
-      "cases": [
-        {
-          "name": "base operand through an ALU operation",
-          "cycles": 4.0,
-          "experiment": {
-            "asm": "ldgt.b $r4, $r4, $r0; add.d $r4, $r4, $r20",
-            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; addi.d $r4, $r20, 0' --asm 'ldgt.b $r4, $r4, $r0; add.d $r4, $r4, $r20'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 2.0,
-              "core_cycles": 5.98
-            },
-            "chain_latency": 1.98
-          }
-        },
-        {
-          "name": "index operand path (reference)",
-          "cycles": 4.0,
-          "experiment": {
-            "asm": "ldgt.b $r4, $r20, $r4",
-            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0' --asm 'ldgt.b $r4, $r20, $r4'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 1.0,
-              "core_cycles": 3.95
-            },
-            "chain_latency": 0.0
-          }
-        }
-      ],
       "experiments": [
         {
           "asm": "ldgt.b $r4, $r4, $r0; add.d $r4, $r4, $r20",
@@ -116,48 +74,6 @@
       ],
       "to_operand": 1,
       "cycles": 4.0,
-      "cycles_min": 4.0,
-      "cycles_max": 4.0,
-      "cases": [
-        {
-          "name": "index/bound operand feeding the address directly",
-          "cycles": 4.0,
-          "experiment": {
-            "asm": "ldgt.b $r4, $r20, $r4",
-            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0' --asm 'ldgt.b $r4, $r20, $r4'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 1.0,
-              "core_cycles": 3.95
-            },
-            "chain_latency": 0.0
-          }
-        },
-        {
-          "name": "index/bound operand through an ALU operation",
-          "cycles": 4.0,
-          "experiment": {
-            "asm": "ldgt.b $r4, $r20, $r4; andi $r4, $r4, 7",
-            "init": "addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0",
-            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 5 --init 'addi.d $r20, $sp, -1024; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r5, 0; li.d $r4, 0' --asm 'ldgt.b $r4, $r20, $r4; andi $r4, $r4, 7'",
-            "measurement": {
-              "unroll": 800,
-              "iters": 40,
-              "reps": 5
-            },
-            "result": {
-              "instructions_retired": 2.0,
-              "core_cycles": 5.97
-            },
-            "chain_latency": 1.97
-          }
-        }
-      ],
       "experiments": [
         {
           "asm": "ldgt.b $r4, $r20, $r4",
@@ -212,5 +128,5 @@
       "notes": "8 independent lanes: 7.98 core cycles per 8 instructions, CPI 1. Slope method (--unroll 1000, --unroll2 2000)."
     }
   ],
-  "notes": "Latency measured per source operand on LA464: 4 cycles from the base operand rj and 4 cycles from the index or bound operand rk, the same as a plain load. Chains that pass the loaded value through an ALU operation before the next address read one cycle more than that operation, which belongs to the chain. The 64-byte-aligned buffer holds 8 and 0 so the chase stays inside one cache line."
+  "notes": "4 cycles, the same for every width and for both the base and the index or bound operand. The load result is available four cycles after the address, and a chain that passes it through an ALU operation before using it as the next address reads one cycle more than that operation, which is what the address generator charges for an ALU-produced address rather than load latency."
 }
