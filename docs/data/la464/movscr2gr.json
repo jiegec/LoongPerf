@@ -1,0 +1,68 @@
+{
+  "instruction": {
+    "name": "movscr2gr",
+    "form": "movscr2gr rd, scrj",
+    "description": "Copy the value in the scratch register selected by scrj (0-3) to rd.",
+    "extension": "LBT"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "write",
+      "bits": 64,
+      "description": "destination GPR"
+    },
+    {
+      "index": 2,
+      "name": "scrj",
+      "kind": "other",
+      "access": "read",
+      "description": "scratch register number (0-3)"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 1000,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 5,
+    "core": 0,
+    "date": "2026-11-17"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "movscr2gr $r12, $scr0; movscr2gr $r13, $scr0; movscr2gr $r14, $scr0; movscr2gr $r15, $scr0; movscr2gr $r16, $scr0; movscr2gr $r17, $scr0; movscr2gr $r18, $scr0; movscr2gr $r19, $scr0",
+      "init": "movgr2scr $scr0, $r0; movgr2scr $scr1, $r0; movgr2scr $scr2, $r0; movgr2scr $scr3, $r0",
+      "machine_code": [
+        "00000c0c  movscr2gr $t0, $scr0",
+        "00000c0d  movscr2gr $t1, $scr0",
+        "00000c0e  movscr2gr $t2, $scr0",
+        "00000c0f  movscr2gr $t3, $scr0",
+        "00000c10  movscr2gr $t4, $scr0",
+        "00000c11  movscr2gr $t5, $scr0",
+        "00000c12  movscr2gr $t6, $scr0",
+        "00000c13  movscr2gr $t7, $scr0"
+      ],
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.35
+      },
+      "measurement": {
+        "unroll": 10000,
+        "iters": 1000
+      },
+      "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'movgr2scr $scr0, $r0; movgr2scr $scr1, $r0; movgr2scr $scr2, $r0; movgr2scr $scr3, $r0' --asm 'movscr2gr $r12, $scr0; movscr2gr $r13, $scr0; movscr2gr $r14, $scr0; movscr2gr $r15, $scr0; movscr2gr $r16, $scr0; movscr2gr $r17, $scr0; movscr2gr $r18, $scr0; movscr2gr $r19, $scr0'",
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.9187,
+        "ipc": 1.0885
+      },
+      "notes": "8 independent instructions take 7.35 cycles."
+    }
+  ],
+  "notes": "No destination data dependency; latency is not defined. Throughput only."
+}
