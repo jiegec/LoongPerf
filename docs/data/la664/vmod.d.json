@@ -161,11 +161,45 @@
       "cases": [
         {
           "name": "no active lane or zero dividend",
-          "cycles": 8
+          "cycles": 8,
+          "experiment": {
+            "name": "no active lane or zero dividend",
+            "asm": "vmod.d $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6",
+            "init": "li.d $r4, 0; vreplgr2vr.d $vr1, $r4; li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 0; vreplgr2vr.d $vr1, $r4; li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4' --asm 'vmod.d $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3,
+              "core_cycles": 9.98
+            },
+            "chain_latency": 1.99,
+            "notes": "divisor-path chain with an and+or reset helper, chain_latency 1.99 measured through the same chain with vand.v in place of the divide"
+          }
         },
         {
           "name": "full-width quotient, all lanes active",
-          "cycles": 27
+          "cycles": 27,
+          "experiment": {
+            "name": "full-width quotient, all lanes active",
+            "asm": "vmod.d $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6",
+            "init": "li.d $r4, 9223372036854775807; vreplgr2vr.d $vr1, $r4; li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r4, 9223372036854775807; vreplgr2vr.d $vr1, $r4; li.d $r4, 1; vreplgr2vr.d $vr0, $r4; li.d $r4, 1; vreplgr2vr.d $vr6, $r4; li.d $r4, 0; vreplgr2vr.d $vr2, $r4' --asm 'vmod.d $vr0, $vr1, $vr0; vand.v $vr0, $vr0, $vr2; vor.v $vr0, $vr0, $vr6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3,
+              "core_cycles": 28.98
+            },
+            "chain_latency": 1.99,
+            "notes": "divisor-path chain with an and+or reset helper, chain_latency 1.99 measured through the same chain with vand.v in place of the divide"
+          }
         }
       ]
     }

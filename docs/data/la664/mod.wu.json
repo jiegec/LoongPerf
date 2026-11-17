@@ -186,15 +186,66 @@
       "cases": [
         {
           "name": "zero dividend, divisor 2 or more",
-          "cycles": 5
+          "cycles": 5,
+          "experiment": {
+            "name": "zero dividend, divisor 2 or more",
+            "asm": "mod.wu $r4, $r5, $r4; and $r4, $r4, $r0; or $r4, $r4, $r6",
+            "init": "li.d $r5, 0; li.d $r4, 2; li.d $r6, 2",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r5, 0; li.d $r4, 2; li.d $r6, 2' --asm 'mod.wu $r4, $r5, $r4; and $r4, $r4, $r0; or $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3,
+              "core_cycles": 6.97
+            },
+            "chain_latency": 1.99,
+            "notes": "divisor-path chain with a reset helper (and+or), chain_latency 1.99 measured through the same chain with or in place of the divide"
+          }
         },
         {
           "name": "one-digit quotient",
-          "cycles": 7
+          "cycles": 7,
+          "experiment": {
+            "name": "one-digit quotient",
+            "asm": "mod.wu $r4, $r5, $r4; and $r4, $r4, $r0; or $r4, $r4, $r6",
+            "init": "li.d $r5, 1; li.d $r4, 1; li.d $r6, 1",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r5, 1; li.d $r4, 1; li.d $r6, 1' --asm 'mod.wu $r4, $r5, $r4; and $r4, $r4, $r0; or $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3,
+              "core_cycles": 8.97
+            },
+            "chain_latency": 2.0,
+            "notes": "divisor-path chain with a reset helper (and+or), chain_latency 2.0 measured through the same chain with or in place of the divide"
+          }
         },
         {
           "name": "full-width quotient (32 bits)",
-          "cycles": 23
+          "cycles": 23,
+          "experiment": {
+            "name": "full-width quotient (32 bits)",
+            "asm": "mod.wu $r4, $r5, $r4; and $r4, $r4, $r0; or $r4, $r4, $r6",
+            "init": "li.d $r5, 4294967295; li.d $r4, 1; li.d $r6, 1",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 3 --init 'li.d $r5, 4294967295; li.d $r4, 1; li.d $r6, 1' --asm 'mod.wu $r4, $r5, $r4; and $r4, $r4, $r0; or $r4, $r4, $r6'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 3
+            },
+            "result": {
+              "instructions_retired": 3,
+              "core_cycles": 24.95
+            },
+            "chain_latency": 2.0,
+            "notes": "divisor-path chain with a reset helper (and+or), chain_latency 2.0 measured through the same chain with or in place of the divide"
+          }
         }
       ]
     }
