@@ -75,6 +75,9 @@
     .pager { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--muted); }
     .pager button { padding: 6px 12px; }
     .pager button:disabled { opacity: 0.45; cursor: default; }
+    .page-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .page-links button { min-width: 34px; padding: 5px 8px; font-size: 13px; }
+    .page-links button.current { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
     .error { padding: 14px; border: 1px solid #d1242f; background: #ffebe9; color: #82071e; border-radius: 8px; }
     .sigill { color: #cf222e; font-weight: 600; }
     .note { margin-top: 12px; color: var(--muted); font-size: 13px; }
@@ -120,6 +123,7 @@
     <span id="page-info"></span>
     <button id="next-page" type="button">Next</button>
   </div>
+  <div id="page-links" class="page-links" aria-label="Page navigation"></div>
 </div>
 
 <script>
@@ -489,6 +493,20 @@
     $("page-info").textContent = "Page " + page + " of " + totalPages;
     $("prev-page").disabled = page <= 1;
     $("next-page").disabled = page >= totalPages;
+    const pageLinks = $("page-links");
+    pageLinks.innerHTML = "";
+    for (let p = 1; p <= totalPages; p += 1) {
+      const link = document.createElement("button");
+      link.type = "button";
+      link.textContent = String(p);
+      link.title = "Go to page " + p;
+      if (p === page) {
+        link.className = "current";
+        link.setAttribute("aria-current", "page");
+      }
+      link.addEventListener("click", () => { page = p; render(); });
+      pageLinks.appendChild(link);
+    }
     updateUrl(selected, extensions);
   }
 
