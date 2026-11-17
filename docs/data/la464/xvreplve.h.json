@@ -43,35 +43,29 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 3.0,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "round trip through xvpickve2gr",
           "role": "measurement",
-          "asm": "xvreplve.h $xr0, $xr0, $r5",
-          "init": "li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4",
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 1
-          },
+          "asm": "xvreplve.h $xr0, $xr0, $r4; xvpickve2gr.d $r4, $xr0, 0",
+          "init": "li.d $r4, 0; xvld $xr0, $sp, -512",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'li.d $r4, 0; xvld $xr0, $sp, -512' --asm 'xvreplve.h $xr0, $xr0, $r4; xvpickve2gr.d $r4, $xr0, 0'",
           "measurement": {
-            "unroll": 20000,
-            "iters": 100
+            "unroll": 800,
+            "iters": 40,
+            "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; xvreplgr2vr.d $xr0, $r4; xvreplgr2vr.d $xr1, $r4; xvreplgr2vr.d $xr2, $r4' --asm 'xvreplve.h $xr0, $xr0, $r5'",
-          "machine_code": [
-            "140a0c04  lu12i.w     \t$a0, 20576",
-            "039c2084  ori         \t$a0, $a0, 1800",
-            "16406084  lu32i.d     \t$a0, 131844",
-            "03004084  lu52i.d     \t$a0, $a0, 16",
-            "769f0c80  xvreplgr2vr.d\t$xr0, $a0",
-            "769f0c81  xvreplgr2vr.d\t$xr1, $a0",
-            "769f0c82  xvreplgr2vr.d\t$xr2, $a0",
-            "75229400  xvreplve.h  \t$xr0, $xr0, $a1"
-          ]
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 7.97
+          },
+          "chain_latency": 5.0
         }
       ],
-      "notes": "xj -> xd; consecutive unrolled copies form a chain. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "Latency from the index register to the vector destination, measured as a round trip through xvpickve2gr.d (7.97 cycles) with the 5-cycle pick subtracted, which leaves 3. A chain that only depends on vd measures 1 cycle because the self-dependency is renamed away.",
+      "cycles_min": 3,
+      "cycles_max": 3
     }
   ],
   "throughput": [

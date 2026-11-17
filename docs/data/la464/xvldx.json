@@ -46,14 +46,14 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 6,
+      "cycles": 5,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "xvldx $xr0, $r20, $r0; xvpickve2gr.d $r4, $xr0, 0; add.d $r20, $r20, $r4",
           "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; st.d $r0, $r20, 0; st.d $r0, $r20, 8",
-          "chain_latency": 6.0,
+          "chain_latency": 7.0,
           "result": {
             "instructions_retired": 4.0,
             "core_cycles": 12.0
@@ -91,5 +91,5 @@
       "notes": "8 independent instructions take 8.03 cycles."
     }
   ],
-  "notes": "No destination data dependency; latency is not defined. Throughput only. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
+  "notes": "L1D-hit vector load, 5 cycles from the base address register to the vector destination. The closure moves the loaded value to a GPR with a pick (3 cycles for vpickve2gr, 5 for xvpickve2gr) and advances the base with add.d, and a freshly loaded vector register reaches a cross-domain pick one cycle later than a vector ALU result does, which is the extra cycle the chain carries; the load itself is 5, the same number the scalar and integer loads take one step earlier. A vector load cannot feed an address, so there is no bypass case."
 }

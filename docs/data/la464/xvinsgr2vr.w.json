@@ -45,32 +45,29 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 3.0,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "round trip through xvpickve2gr",
           "role": "measurement",
-          "asm": "xvinsgr2vr.w $xr0, $r5, 0",
-          "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r5, 1",
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 1
-          },
+          "asm": "xvinsgr2vr.w $xr0, $r5, 0; xvpickve2gr.w $r5, $xr0, 0",
+          "init": "li.d $r5, 7",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'li.d $r5, 7' --asm 'xvinsgr2vr.w $xr0, $r5, 0; xvpickve2gr.w $r5, $xr0, 0'",
           "measurement": {
-            "unroll": 20000,
-            "iters": 500,
+            "unroll": 800,
+            "iters": 40,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r5, 1' --asm 'xvinsgr2vr.w $xr0, $r5, 0'",
-          "machine_code": [
-            "03800404  ori         \t$a0, $zero, 1",
-            "769f0080  xvreplgr2vr.b\t$xr0, $a0",
-            "03800405  ori         \t$a1, $zero, 1",
-            "76ebc0a0  xvinsgr2vr.w\t$xr0, $a1, 0"
-          ]
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 7.96
+          },
+          "chain_latency": 5.0
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "Latency from the GPR source to the vector lane. A chain that only depends on vd measures 1 cycle because the self-dependency is renamed away, so this is measured as a round trip through xvpickve2gr (7.96 cycles) with the 5-cycle pick subtracted, which leaves 3.",
+      "cycles_min": 3,
+      "cycles_max": 3
     }
   ],
   "throughput": [

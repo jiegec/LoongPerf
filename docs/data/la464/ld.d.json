@@ -45,60 +45,146 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5,
+      "cycles": 4.0,
       "experiments": [
         {
-          "name": "high-unroll ALU-consumer chain",
+          "name": "bare pointer chase",
           "role": "measurement",
-          "asm": "ld.d $r4, $r4, 0; add.d $r4, $r4, $r5",
-          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
-          "chain_latency": 1,
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 6
-          },
-          "measurement": {
-            "unroll": 10000,
-            "iters": 1000,
-            "reps": 7
-          },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r5'",
-          "machine_code": [
-            "02f0206d  addi.d      \t$t1, $sp, -1016",
-            "29c001ad  st.d        \t$t1, $t1, 0",
-            "02c001a4  addi.d      \t$a0, $t1, 0",
-            "00150005  move        \t$a1, $zero",
-            "28c00084  ld.d        \t$a0, $a0, 0",
-            "00109484  add.d       \t$a0, $a0, $a1"
-          ]
-        },
-        {
-          "name": "load-to-AGU bypass calibration",
-          "role": "calibration",
           "asm": "ld.d $r4, $r4, 0",
-          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 5.0
-          },
+          "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0' --asm 'ld.d $r4, $r4, 0'",
           "measurement": {
-            "unroll": 20000,
-            "iters": 500,
+            "unroll": 800,
+            "iters": 40,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
-          "notes": "Calibration experiment (not used for the reported latency).",
-          "machine_code": [
-            "02f0206d  addi.d      \t$t1, $sp, -1016",
-            "29c001ad  st.d        \t$t1, $t1, 0",
-            "02c001a4  addi.d      \t$a0, $t1, 0",
-            "28c00084  ld.d        \t$a0, $a0, 0"
-          ]
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 3.98
+          },
+          "chain_latency": 0
         }
       ],
-      "notes": "L1D-hit load latency: 4 cycles through the load-to-AGU address bypass, 5 cycles through the ALU-consumer path. The measurement experiment adds add.d to force the ALU path; the calibration experiment is the bare pointer chase.",
+      "notes": "L1D-hit load. The bare pointer chase ld.d $r4, $r4, 0 measures 3.98 cycles, so the load latency is 4; adding add.d reads 5.97, one cycle more than the add itself, which is the ALU consumer path (5).",
       "cycles_min": 4,
-      "cycles_max": 5
+      "cycles_max": 5,
+      "cases": [
+        {
+          "name": "load result feeding the next address",
+          "cycles": 4.0,
+          "experiment": {
+            "name": "bare pointer chase",
+            "role": "measurement",
+            "asm": "ld.d $r4, $r4, 0",
+            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0' --asm 'ld.d $r4, $r4, 0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 7
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 3.98
+            },
+            "chain_latency": 0
+          }
+        },
+        {
+          "name": "load result consumed by an ALU operation",
+          "cycles": 5.0,
+          "experiment": {
+            "name": "ALU-path chain",
+            "role": "measurement",
+            "asm": "ld.d $r4, $r4, 0; add.d $r4, $r4, $r13",
+            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r13'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 7
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.97
+            },
+            "chain_latency": 1.0
+          }
+        }
+      ]
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "experiments": [
+        {
+          "name": "bare pointer chase",
+          "role": "measurement",
+          "asm": "ld.d $r4, $r4, 0",
+          "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0' --asm 'ld.d $r4, $r4, 0'",
+          "measurement": {
+            "unroll": 800,
+            "iters": 40,
+            "reps": 7
+          },
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 3.98
+          },
+          "chain_latency": 0
+        }
+      ],
+      "notes": "L1D-hit load. The bare pointer chase ld.d $r4, $r4, 0 measures 3.98 cycles, so the load latency is 4; adding add.d reads 5.97, one cycle more than the add itself, which is the ALU consumer path (5).",
+      "cycles_min": 4,
+      "cycles_max": 5,
+      "cases": [
+        {
+          "name": "load result feeding the next address",
+          "cycles": 4.0,
+          "experiment": {
+            "name": "bare pointer chase",
+            "role": "measurement",
+            "asm": "ld.d $r4, $r4, 0",
+            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0' --asm 'ld.d $r4, $r4, 0'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 7
+            },
+            "result": {
+              "instructions_retired": 1.0,
+              "core_cycles": 3.98
+            },
+            "chain_latency": 0
+          }
+        },
+        {
+          "name": "load result consumed by an ALU operation",
+          "cycles": 5.0,
+          "experiment": {
+            "name": "ALU-path chain",
+            "role": "measurement",
+            "asm": "ld.d $r4, $r4, 0; add.d $r4, $r4, $r13",
+            "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0",
+            "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; st.d $r20, $r20, 0; addi.d $r4, $r20, 0; li.d $r13, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r13'",
+            "measurement": {
+              "unroll": 800,
+              "iters": 40,
+              "reps": 7
+            },
+            "result": {
+              "instructions_retired": 2.0,
+              "core_cycles": 5.97
+            },
+            "chain_latency": 1.0
+          }
+        }
+      ]
     }
   ],
   "throughput": [

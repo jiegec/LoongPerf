@@ -45,36 +45,27 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5,
+      "cycles": 4.0,
       "experiments": [
         {
-          "name": "high-unroll load-to-ALU chain",
+          "name": "ALU-path chain",
           "role": "measurement",
           "asm": "ld.b $r4, $r20, 0; add.d $r20, $r20, $r4",
-          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, -8; st.b $r4, $r20, 8",
-          "chain_latency": 1,
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 6
-          },
+          "init": "addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r13, 0",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1088; li.d $r22, -64; and $r20, $r20, $r22; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, 0; st.b $r4, $r20, 8; li.d $r13, 0' --asm 'ld.b $r4, $r20, 0; add.d $r20, $r20, $r4'",
           "measurement": {
-            "unroll": 10000,
-            "iters": 1000,
+            "unroll": 800,
+            "iters": 40,
             "reps": 7
           },
-          "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 7 --core 0 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.b $r4, $r20, 0; li.d $r4, -8; st.b $r4, $r20, 8' --asm 'ld.b $r4, $r20, 0; add.d $r20, $r20, $r4'",
-          "machine_code": [
-            "02f00074  addi.d      \t$t8, $sp, -1024",
-            "03802004  ori         \t$a0, $zero, 8",
-            "29000284  st.b        \t$a0, $t8, 0",
-            "02bfe004  addi.w      \t$a0, $zero, -8",
-            "29002284  st.b        \t$a0, $t8, 8",
-            "28000284  ld.b        \t$a0, $t8, 0",
-            "00109294  add.d       \t$t8, $t8, $a0"
-          ]
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 5.92
+          },
+          "chain_latency": 1.92
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 4.99; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "The chain ld.b + add.d measures 5.92 cycles. One cycle is the add.d and one more is what the ALU consumer path pays over the address path, so 2 are subtracted and the load latency is 4, the same as the bare ld.d pointer chase (3.94-3.98). A 8-bit load cannot be chased directly because its result is not a complete address, and the width does not change the latency: every width reads the same chain. The ALU path itself is 5. The buffer holds 8 and 0 so the chase stays inside one cache line."
     }
   ],
   "throughput": [

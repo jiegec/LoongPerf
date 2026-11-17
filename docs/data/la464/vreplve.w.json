@@ -46,32 +46,29 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 3.0,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "round trip through vpickve2gr",
           "role": "measurement",
-          "asm": "vreplve.w $vr0, $vr0, $r4",
-          "init": "li.d $r4, 0; li.d $r6, 1; vreplgr2vr.b $vr0, $r6",
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 1
-          },
+          "asm": "vreplve.w $vr0, $vr0, $r4; vpickve2gr.w $r4, $vr0, 0",
+          "init": "li.d $r5, 7; li.d $r4, 0; vld $vr0, $sp, -512",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'li.d $r5, 7; li.d $r4, 0; vld $vr0, $sp, -512' --asm 'vreplve.w $vr0, $vr0, $r4; vpickve2gr.w $r4, $vr0, 0'",
           "measurement": {
-            "unroll": 20000,
-            "iters": 500,
+            "unroll": 800,
+            "iters": 40,
             "reps": 7
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 0; li.d $r6, 1; vreplgr2vr.b $vr0, $r6' --asm 'vreplve.w $vr0, $vr0, $r4'",
-          "machine_code": [
-            "00150004  move        \t$a0, $zero",
-            "03800406  ori         \t$a2, $zero, 1",
-            "729f00c0  vreplgr2vr.b\t$vr0, $a2",
-            "71231000  vreplve.w   \t$vr0, $vr0, $a0"
-          ]
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 5.98
+          },
+          "chain_latency": 3.0
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "Latency from the inserted or index register to the vector destination. A chain that depends only on vd (vreplve.w $vr0, … writing $vr0 which it also reads) measures 1 cycle because the self-dependency is handled by renaming, so the latency is measured as a round trip through vpickve2gr.w (5.98 cycles) with the 3-cycle pick subtracted, which leaves 3.",
+      "cycles_min": 3,
+      "cycles_max": 3
     }
   ],
   "throughput": [

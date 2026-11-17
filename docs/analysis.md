@@ -320,9 +320,9 @@ no bypass path into the address generator:
 | load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
 | --- | --- | --- |
 | `ld.d`, `ldptr.d` | 4 / 3 | 5 / 4 |
-| `ld.b`, `ld.h`, `ld.w`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / not measured | 5 / not measured |
+| `ld.b`, `ld.h`, `ld.w`, `ld.bu`, `ld.hu`, `ld.wu`, `ldptr.w` | 4 / not measured | 5 / not measured |
 | `fld.s`, `fld.d` | 5 / not reachable | 5 / not reachable |
-| `vld`, `xvld` | 4 / not reachable | 6 / not reachable |
+| `vld`, `xvld` | 4 / not reachable | 5 / not reachable |
 
 Width does not matter on LA664: a byte load costs exactly what a double load
 costs, and an integer, floating-point or vector load all take the same time. The
@@ -355,12 +355,11 @@ and cannot be an address, so `vld`/`xvld` only have a value-to-consumer latency,
 and the 4 cycles recorded for them are measured through a store-then-reload chain (`vld` → `vst` → `ld.d` → `add.d`, where the
 store-to-load forwarding costs 10.04 cycles and is subtracted).
 
-LA464 needs one cycle more on both paths, 5 to an ALU consumer and 4 through the
-bypass, which is the main load-latency difference between the two cores. The
-4-cycle bypass comes from the recorded notes; the stored calibration experiment
-for it still reports 5, the same staleness the LA664 entries had before the
-pointer chase was re-measured at 3.00, so the LA464 value should be re-checked on
-that machine.
+LA464 needs one cycle more on both paths, 4 for the load itself and 5 to an ALU
+consumer, which is the main load-latency difference between the two cores. The
+4-cycle figure was re-measured on the machine: `ld.d $r4, $r4, 0` reads
+3.94-3.98 over several sessions, and the ALU chain that used to be stored with a
+stale raw value is 5.94-5.97.
 
 Floating-point loads have to be measured with a move in the path, because a value
 in an FPR cannot become an address or a GPR operand directly. The chain
@@ -384,10 +383,21 @@ LA464, by exactly the one cycle the move adds. The earlier LA464 record of 4
 was computed with a 3-cycle `movfr2gr`, and the difference was being attributed
 to an address bypass that does not exist for an FPR destination.
 
-The same recalibration moves the LA464 vector loads: `vld` and `xvld` were
-recorded as 5 through a `vpickve2gr` chain, and with the pick at 3 cycles
-(`xvpickve2gr` at 5, `vreplgr2vr` at 2) both read 6. The LA464 vector loads are
-therefore one cycle above LA664's, like every other load on that core.
+The vector loads were re-derived on both cores the same way. On LA464 the chain
+`vld $vr0, $r20, 0; vpickve2gr.d $r4, $vr0, 0; add.d $r20, $r20, $r4` measures
+9.96 cycles and `xvld` with `xvpickve2gr` measures 11.98; with the picks at 3 and
+5 cycles and the `add.d` at one, and one further cycle for the cross-domain pick
+of a freshly loaded vector register, both loads come out at 5. LA464 therefore
+records 5 for `vld`/`vldx`/`vldrepl.*`/`xvld`/`xvldx`/`xvldrepl.*`.
+
+The plain integer loads on LA464 are 4 cycles, not 5: the bare pointer chase
+`ld.d $r4, $r4, 0` measures 3.94-3.98, and the ALU chain `ld.d $r4, $r4, 0;
+add.d $r4, $r4, $r13` measures 5.94-5.97, of which one cycle is the `add.d` and
+one more is what the ALU consumer path costs. The narrow loads read the same
+5.9x in that chain, so the width does not change the latency and their recorded
+`cycles` is the 4-cycle load latency, with the 5-cycle ALU path recorded in the
+notes. There is no separate pointer-chasing optimization on LA464: the chase is
+simply the load latency, and only the ALU path pays the extra cycle.
 
 ### Indexed and bound-checked loads
 

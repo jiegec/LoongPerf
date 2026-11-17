@@ -309,6 +309,15 @@ The vector register files follow the same pattern with `vpickve2gr` at 3,
 `xvpickve2gr` at 5, and `vreplgr2vr` at 2 (3 for the byte and half-word
 broadcast, whose pick round trip is 6 instead of 5).
 
+The insert/extract instructions need the same care. `vinsgr2vr.b $vr0, $r5, 0`
+and `vreplve.b $vr0, $vr0, $r4` both write the register they read, so a chain that
+depends only on the vector destination measures 1 cycle: the self-dependency is
+renamed away and the real latency never shows up. Closing the loop through a pick
+instead (`vinsgr2vr.b $vr0, $r5, 0; vpickve2gr.b $r5, $vr0, 0` = 5.97, minus the
+3-cycle pick) gives 3 cycles on LA464 for every width of `vinsgr2vr`,
+`vreplve` and `xvreplve`, and the same recipe gives 3 for `xvinsgr2vr` through
+`xvpickve2gr` (7.95 - 5).
+
 Do not trust a single closure for these moves. On LA464 a chain that ends in
 `movfr2gr` and one that ends in `fst` disagree by four cycles, because a store
 whose data comes straight from a GPR bypasses the floating-point register file:
