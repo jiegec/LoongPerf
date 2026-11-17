@@ -80,6 +80,29 @@ the distinction clear: `amadd.w` retires as two uops, but contributes one load
 and one store. `llacq.w` contributes one load, and `sc.q` contributes one
 store, even though each is a two-uop instruction.
 
+### Useful raw counters on LA464
+
+The LA464 (Loongson-3C5000) PMU uses a different raw event map. The LA664
+configs `0xfb`, `0xfa`, and `0xfc` read zero on LA464; use these instead:
+
+| Config | Meaning |
+| --- | --- |
+| `0x01` | Retired uops (same meaning as on LA664) |
+| `0x30` | Scalar floating-point uops |
+| `0x25` | Vector instructions (LSX and LASX combined, one per instruction) |
+| `0x31` | Vector uops (LSX and LASX combined) |
+| `0xa8` | Load operations (same meaning as on LA664) |
+| `0xb0` | Store operations (same meaning as on LA664) |
+
+On LA464, `0x25` counts each LSX/LASX instruction once, while `0x31` counts
+the vector uops. For example, `vadd.b` gives `0x25 = 1` and `0x31 = 1`, but a
+two-uop conversion such as `vfcvt.h.s` or `xvfcvt.h.s` gives `0x25 = 1` and
+`0x31 = 2`. A scan of configs `0x00`-`0xff` did not find separate LSX and
+LASX uop counters on LA464, so `0x31` is the combined vector-uop counter.
+
+Scalar floating-point examples for `0x30`: `fadd.d = 1`, `fdiv.d = 1`,
+`movgr2frh.w = 1`, and `fsel = 2`. Integer instructions count as zero.
+
 ## Multi-uop instructions
 
 `0x01` counts retired uops, so a multi-uop instruction has a counter value
