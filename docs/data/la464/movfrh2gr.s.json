@@ -32,7 +32,54 @@
     "core": 0,
     "date": "2026-11-17"
   },
-  "latencies": [],
+  "latencies": [
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 3.0,
+      "experiments": [
+        {
+          "name": "dependent chain",
+          "role": "measurement",
+          "asm": "movfrh2gr.s $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8",
+          "chain_latency": 10.37,
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 13.12
+          },
+          "measurement": {
+            "unroll": 6666,
+            "iters": 300,
+            "reps": 9
+          },
+          "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 9 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8' --asm 'movfrh2gr.s $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0'"
+        },
+        {
+          "name": "closure calibration with movfr2gr.s",
+          "role": "calibration",
+          "asm": "movfr2gr.s $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0",
+          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8",
+          "result": {
+            "instructions_retired": 4.0,
+            "core_cycles": 13.37
+          },
+          "measurement": {
+            "unroll": 6666,
+            "iters": 300,
+            "reps": 9
+          },
+          "command": "./bench --unroll 6666 --iters 300 --warmup 10 --reps 9 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 8' --asm 'movfr2gr.s $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0'",
+          "notes": "Same chain with movfr2gr.s (3 cycles) in place of movfrh2gr.s, so the store/fld.d closure is 10.37 cycles."
+        }
+      ],
+      "notes": "fj -> rd. The chain closes through st.d/fld.d; its 10.37-cycle cost is calibrated by replacing the move with movfr2gr.s (3 cycles). Raw spread 13.09-13.19 cycles. Measured on 2026-11-17 on LA464, core 0. Raw value was 2.75 cycles; the recorded nominal value is the nearest whole cycle, matching the repository convention.",
+      "cycles_min": 2.6,
+      "cycles_max": 3.1
+    }
+  ],
   "throughput": [
     {
       "name": "8 independent lanes",
