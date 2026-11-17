@@ -4,15 +4,20 @@ from __future__ import annotations
 
 import html
 import json
+import subprocess
 from pathlib import Path
 
 DATA_DIR: Path
 AGGREGATE_PATH: Path
+PROJECT_DIR: Path
+
+REPO_URL = "https://github.com/jiegec/LoongPerf"
 
 
 def define_env(env):
-    global DATA_DIR, AGGREGATE_PATH
+    global DATA_DIR, AGGREGATE_PATH, PROJECT_DIR
     project_dir = Path(env.project_dir).resolve()
+    PROJECT_DIR = project_dir
     DATA_DIR = project_dir / "docs" / "data"
     site_dir = Path(env.conf.get("site_dir", "site"))
     if not site_dir.is_absolute():
@@ -213,9 +218,52 @@ def write_aggregate() -> None:
         ))
     AGGREGATE_PATH.parent.mkdir(parents=True, exist_ok=True)
     AGGREGATE_PATH.write_text(
-        json.dumps({"instructions": entries}, separators=(",", ":"), ensure_ascii=False) + "\n",
+        json.dumps(
+            {"metadata": data_metadata(), "instructions": entries},
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ) + "\n",
         encoding="utf-8",
     )
+
+
+def data_metadata() -> dict:
+    """Return provenance for the measurement data shown by table.html."""
+    commit = last_data_commit()
+    metadata = {"repo": REPO_URL}
+    if commit:
+        metadata["updated"] = commit["date"]
+        metadata["commit"] = commit
+    return metadata
+
+
+def last_data_commit() -> dict | None:
+    """Find the most recent commit that touched docs/data."""
+    project_dir = globals().get("PROJECT_DIR") or DATA_DIR.parents[1]
+    try:
+        result = subprocess.run(
+            [
+                "git", "-C", str(project_dir), "log", "-1",
+                "--format=%H%x00%h%x00%cI", "--", "docs/data",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        return None
+    if result.returncode != 0:
+        return None
+    parts = result.stdout.strip().split("\0")
+    if len(parts) != 3:
+        return None
+    sha, short, date = parts
+    return {
+        "sha": sha,
+        "short": short,
+        "date": date,
+        "url": f"{REPO_URL}/commit/{sha}",
+    }
 
 
 def table_entry(uarch: str, source: str, data: dict) -> dict:
