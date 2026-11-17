@@ -119,7 +119,7 @@
           }
         },
         {
-          "name": "full-width quotient (31 bits)",
+          "name": "full-width quotient (32 bits)",
           "cycles": 23,
           "experiment": {
             "name": "full-width quotient (32 bits)",
@@ -187,7 +187,7 @@
           "cycles": 7
         },
         {
-          "name": "full-width quotient (31 bits)",
+          "name": "full-width quotient (32 bits)",
           "cycles": 23
         }
       ]

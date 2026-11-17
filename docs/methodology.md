@@ -35,10 +35,12 @@ calls and the same number of perf enable/disable cycles. `--unroll N` sets the
 smaller body and `--unroll2 N2` the larger one (default `2N`). The reported
 value is normalised by `iters * (N2 - N)`.
 
-This matters most at small unroll factors. For a single dependent `add.d`
-(1 cycle) the raw body measurement reads 0.89 at `--unroll 100` while the slope
-method reads 0.98; for a `fadd.d` chain (3 cycles) the raw value is 2.23 at
-`--unroll 100` and the slope method gives 3.00.
+This matters most at small unroll factors. A `fadd.d` chain measures 2.23
+cycles per instruction in a single raw body at `--unroll 100` and 3.00 with the
+slope method, which is the real latency. For a one-cycle `add.d` the effect is
+invisible at the `--iters` we use, because a thousand calls amortise the per-call
+cost; what it does show is the older empty-function subtraction, which reported
+0.89 to 0.98 for the same instruction and is the reason that method was dropped.
 
 `--method raw` reports a single body measurement unchanged. It includes the
 per-call overhead and is only useful as an upper bound or for comparing runs
@@ -85,9 +87,9 @@ counter 0xfb: 1.00
 counter 0xa8: 0.00
 ```
 
-Counts are normalised per execution of the unrolled sequence and have the
-empty-function baseline subtracted, the same way as `instructions retired` and
-`cycles`.
+Counts are normalised per execution of the unrolled sequence, and the per-call
+cost is removed by the slope method in the same way as for `instructions retired`
+and `cycles`.
 
 ### Common raw counters (LA464 and LA664)
 
@@ -186,16 +188,20 @@ LA664.
 
 ### LA664
 
-In the current LA664 data set, 112 of 1270 instructions with throughput data
+In the current LA664 data set, 293 of 1991 instructions with throughput data
 are two-uop instructions:
 
 | Category | Count |
 | --- | ---: |
+| Narrowing shifts and widening/narrowing (`vsr*`, `vssr*`, `vsllwil*`) | 154 |
 | Atomic `am*` | 52 |
 | `vfcvt` / `vffint` / `vftint` conversions, LSX and LASX | 48 |
-| `vpickve2gr.b/h/w/d`, `xvpickve2gr.w/d` | 6 |
-| `llacq.d`, `llacq.w`, `sc.q` | 3 |
-| `vreplgr2vr.b/h` | 2 |
+| `vpickve2gr` / `xvpickve2gr` | 12 |
+| `vreplve` / `xvreplve` | 8 |
+| `vinsgr2vr` / `xvinsgr2vr` | 6 |
+| `vreplgr2vr.b/h` / `xvreplgr2vr.b/h` | 4 |
+| `llacq.*`, `sc.q` | 3 |
+| `rdtime*` | 3 |
 | `movgr2frh.w` | 1 |
 
 For these instructions the throughput experiment also records the relevant
@@ -261,7 +267,11 @@ this section is only about how to measure such an instruction.
 
 The goal is always to isolate a single latency class. A chain whose operand
 stays inside one class measures that class exactly, and a `cases` array in the
-JSON records the classes that were found.
+JSON records the classes that were found, together with the operand setup and
+command that provoke each one. Where those classes cover every possible operand
+(the floating-point units) they are exhaustive; where they do not (the integer
+dividers, whose latency is a continuous ladder) the notes also carry the formula
+for everything in between.
 
 The problem with such an instruction is that a dependency chain is only usable
 if the chain keeps its operand in the same latency class. Three techniques cover
@@ -281,8 +291,11 @@ well, which is why a chain seeded with `1.0` measures the exact class.
 *Reset through a helper.* When neither works (subnormal or overflowing operands
 have no fixed point and no cycle), break the dependency in the integer domain:
 `movfr2gr.d $r6, $f0; and $r6, $r6, $r0; or $r6, $r6, $r8; movgr2fr.d $f0, $r6`
-restores a constant bit pattern for two cycles of real work. Vector forms use
-`xvpickve2gr.*` plus `xvreplgr2vr.*`.
+restores a constant bit pattern for two cycles of real work. The vector forms
+use `vpickve2gr.*` with `vreplgr2vr.*` for LSX registers and `xvpickve2gr.*` with
+`xvreplgr2vr.*` for LASX ones. Their calibrated costs differ a lot, 5.95 cycles
+for the GPR version, 6.97 for LSX and 8.99 for LASX, because the divider-to-
+integer bypass is not free, so calibrate each one separately.
 
 The helper *must* be calibrated, never assumed. Measure the same helper with the
 instruction replaced by a cheap known operation (`fadd.d`, `vadd.b`) and subtract
