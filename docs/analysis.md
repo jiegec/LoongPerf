@@ -367,36 +367,32 @@ because the move is part of every such chain.
 
 ### Indexed and bound-checked loads
 
-The indexed and bound-checked forms have more than one real path, because the
-index or the bound takes part in the address calculation. On LA664:
+The indexed and bound-checked forms have two paths, because the index or the
+bound takes part in the address calculation:
 
-| path | cycles |
-| --- | --- |
-| base operand (`rj`) to an ALU consumer | 4 |
-| base operand used as the next address (bypass) | 3 |
-| index operand (`rk`) | 5 |
-| bound operand (`rk`) to an ALU consumer | 5 |
-| bound operand fed straight back as the next bound | 4 |
+| path | LA664 | LA464 |
+| --- | --- | --- |
+| base operand (`rj`) to an ALU consumer | 4 | 5 |
+| index or bound consumed by an ALU operation | 5 | 5, split unmeasured |
+| index or bound fed straight back to the address generator | 4 | not measured |
 
-The extra cycle on the index and bound paths is the second address-generation
-pass. That the bound has two values depending on its consumer is easy to see in
-`ldle.d`: feeding the loaded value back as the bound for the next load measures
-3.99 cycles, while putting an `add.d` or `xori` between the load and the next
-bound measures 5. A floating-point bound check always needs the integer ALU to
-move the value out of the register file, which is why `fldle.*` and `fldgt.*`
-both record 5 on the bound path and only the integer `ldle.*` shows the 4-cycle
-bypass.
+This holds for every element width and for both register files: `ldx.b` through
+`ldx.du`, `ldgt.*`, `ldle.*`, `fldx.*`, `fldgt.*` and `fldle.*` all measure 5 when
+an ALU operation sits between the load and the next address or bound, and 4 when
+the value goes straight back. Both paths are recorded as cases on those
+instructions.
 
-The recorded `cycles` for these instructions is the ALU path, so
-`ldx.*`/`ldgt.*`/`fldx.*`/`fldgt.*`/`fldle.*` read 4 for the base operand and 5
-for the index or bound, while the integer `ldle.*` records 4 twice because its
-measured bound chain is the bypass one.
+The earlier data said `ldle.*` was 4 on both paths while `ldgt.*` was 4 and 5,
+which looked like a difference between the two instructions. It was a chain
+artifact: the `ldle` chains had no ALU operation between the load and the next
+bound, so they measured the 4-cycle address path, while the `ldgt` chains kept an
+`xori` and measured the 5-cycle ALU path. With the same chain the two
+instructions are identical, which is what the cases now record.
 
-LA464 records the indexed and bound forms with one combined `from_operands:
-[2, 3]` entry of 5 cycles, so its per-source split has not been measured and the
-two cores cannot be compared operand by operand yet. Since LA464 pays one extra
-cycle on the base path, its index and bound paths are probably 6, but that is a
-prediction and not a measurement.
+Notice that 4, not 3, is the cost of feeding a *value* to the address generator
+here. The 3-cycle path of `ld.d` is the base register becoming the next address
+directly, which needs the loaded value to be a complete 64-bit address; a value
+used as an index still pays the second address-generation pass.
 
 ### What does not change the latency
 

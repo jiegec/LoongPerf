@@ -86,7 +86,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -117,7 +117,52 @@
           ]
         }
       ],
-      "notes": "rk -> rd chain: the bound toggles 0/1 through xori and always stays below the address; xori subtracted."
+      "notes": "ldgt bound/index path. Two classes: 5 cycles when the loaded value is consumed by an ALU operation and 4 when it is fed straight back as the next bound or index, i.e. through the address generator. Both are recorded as cases.",
+      "cases": [
+        {
+          "name": "result to an ALU consumer",
+          "cycles": 5,
+          "notes": "the stored chain keeps an ALU operation between the load and the next bound; chain_latency 1",
+          "experiment": {
+            "name": "ALU consumer",
+            "asm": "ldgt.w $r4, $r20, $r4; xori $r4, $r4, 1",
+            "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 0; st.d $r22, $r20, 0; li.d $r4, 0",
+            "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 0; st.d $r22, $r20, 0; li.d $r4, 0' --asm 'ldgt.w $r4, $r20, $r4; xori $r4, $r4, 1'",
+            "measurement": {
+              "unroll": 20000,
+              "iters": 100,
+              "reps": 10
+            },
+            "result": {
+              "instructions_retired": 2,
+              "core_cycles": 6.0
+            },
+            "chain_latency": 1
+          }
+        },
+        {
+          "name": "result fed straight back as the next bound or index",
+          "cycles": 4,
+          "notes": "same chain without the ALU operation, so the value reaches the address generator directly; chain_latency 0",
+          "experiment": {
+            "name": "address path",
+            "asm": "ldgt.w $r4, $r20, $r4",
+            "init": "addi.d $r20, $sp, -2048; li.d $r21, -64; and $r20, $r20, $r21; st.d $r0, $r20, 0; li.d $r4, 0",
+            "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r20, $sp, -2048; li.d $r21, -64; and $r20, $r20, $r21; st.d $r0, $r20, 0; li.d $r4, 0' --asm 'ldgt.w $r4, $r20, $r4'",
+            "measurement": {
+              "unroll": 20000,
+              "iters": 100,
+              "reps": 10
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 4.0
+            }
+          }
+        }
+      ],
+      "cycles_min": 4,
+      "cycles_max": 5
     }
   ],
   "throughput": [

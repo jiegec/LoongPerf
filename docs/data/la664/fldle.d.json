@@ -88,7 +88,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -122,7 +122,53 @@
           ]
         }
       ],
-      "notes": "rk -> fd chain with the bound loop-carried; the movfr2gr.d (3) + xori (1) closure is subtracted."
+      "notes": "fldle bound/index path. Two classes: 5 cycles when the loaded value is consumed by an ALU operation and 4 when it is fed straight back as the next bound or index, i.e. through the address generator. Both are recorded as cases.",
+      "cases": [
+        {
+          "name": "result to an ALU consumer",
+          "cycles": 5,
+          "notes": "the stored chain keeps an ALU operation between the load and the next bound; chain_latency 4",
+          "experiment": {
+            "name": "ALU consumer",
+            "asm": "fldle.d $f0, $r20, $r4; movfr2gr.d $r4, $f0; xori $r4, $r4, 1",
+            "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 9223372036854775807; st.d $r22, $r20, 0; li.d $r4, 9223372036854775807",
+            "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 9223372036854775807; st.d $r22, $r20, 0; li.d $r4, 9223372036854775807' --asm 'fldle.d $f0, $r20, $r4; movfr2gr.d $r4, $f0; xori $r4, $r4, 1'",
+            "measurement": {
+              "unroll": 20000,
+              "iters": 100,
+              "reps": 10
+            },
+            "result": {
+              "instructions_retired": 3,
+              "core_cycles": 9.0
+            },
+            "chain_latency": 4
+          }
+        },
+        {
+          "name": "result fed straight back as the next bound or index",
+          "cycles": 4,
+          "notes": "same chain without the ALU operation, so the value reaches the address generator directly; chain_latency 3",
+          "experiment": {
+            "name": "address path",
+            "asm": "fldle.d $f0, $r20, $r4; movfr2gr.d $r4, $f0",
+            "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 9223372036854775807; st.d $r22, $r20, 0; li.d $r4, 9223372036854775807",
+            "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 9223372036854775807; st.d $r22, $r20, 0; li.d $r4, 9223372036854775807' --asm 'fldle.d $f0, $r20, $r4; movfr2gr.d $r4, $f0'",
+            "measurement": {
+              "unroll": 20000,
+              "iters": 100,
+              "reps": 10
+            },
+            "result": {
+              "instructions_retired": 2,
+              "core_cycles": 7.0
+            },
+            "chain_latency": 3
+          }
+        }
+      ],
+      "cycles_min": 4,
+      "cycles_max": 5
     }
   ],
   "throughput": [

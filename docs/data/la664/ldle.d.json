@@ -88,41 +88,72 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 5,
       "experiments": [
         {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "ldle.d $r4, $r20, $r4",
+          "name": "bound path to an ALU consumer",
+          "asm": "ldle.d $r4, $r20, $r4; xori $r4, $r4, 1",
           "init": "addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807' --asm 'ldle.d $r4, $r20, $r4; xori $r4, $r4, 1'",
           "measurement": {
-            "unroll": 100000,
+            "unroll": 20000,
             "iters": 100,
-            "reps": 20
+            "reps": 10
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807' --asm 'ldle.d $r4, $r20, $r4'",
           "result": {
-            "instructions_retired": 1,
-            "core_cycles": 4
+            "instructions_retired": 2,
+            "core_cycles": 6.0
           },
-          "chain_latency": 0,
-          "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check.",
-          "machine_code": [
-            "02e00074  addi.d      \t$t8, $sp, -2048",
-            "02bf0004  li.w        \t$a0, -64",
-            "00149294  and         \t$t8, $t8, $a0",
-            "02bffc05  li.w        \t$a1, -1",
-            "031ffca5  lu52i.d     \t$a1, $a1, 2047",
-            "29c00285  st.d        \t$a1, $t8, 0",
-            "02bffc0c  li.w        \t$t0, -1",
-            "031ffd8c  lu52i.d     \t$t0, $t0, 2047",
-            "02bffc04  li.w        \t$a0, -1",
-            "031ffc84  lu52i.d     \t$a0, $a0, 2047",
-            "387b9284  ldle.d      \t$a0, $t8, $a0"
-          ]
+          "chain_latency": 1,
+          "role": "measurement"
         }
       ],
-      "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check. Raw slope-method measurement was 4.02; the value is 4 cycle(s) and any earlier range was a rounding artifact."
+      "notes": "ldle bound/index path. Two classes: 5 cycles when the loaded value is consumed by an ALU operation and 4 when it is fed straight back as the next bound or index, i.e. through the address generator. Both are recorded as cases.",
+      "cases": [
+        {
+          "name": "result to an ALU consumer",
+          "cycles": 5,
+          "notes": "the stored chain keeps an ALU operation between the load and the next bound; chain_latency 1",
+          "experiment": {
+            "name": "ALU consumer",
+            "asm": "ldle.d $r4, $r20, $r4; xori $r4, $r4, 1",
+            "init": "addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807",
+            "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807' --asm 'ldle.d $r4, $r20, $r4; xori $r4, $r4, 1'",
+            "measurement": {
+              "unroll": 20000,
+              "iters": 100,
+              "reps": 10
+            },
+            "result": {
+              "instructions_retired": 2,
+              "core_cycles": 6.0
+            },
+            "chain_latency": 1
+          }
+        },
+        {
+          "name": "result fed straight back as the next bound or index",
+          "cycles": 4,
+          "notes": "same chain without the ALU operation, so the value reaches the address generator directly; chain_latency 0",
+          "experiment": {
+            "name": "address path",
+            "asm": "ldle.d $r4, $r20, $r4",
+            "init": "addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807",
+            "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807' --asm 'ldle.d $r4, $r20, $r4'",
+            "measurement": {
+              "unroll": 20000,
+              "iters": 100,
+              "reps": 10
+            },
+            "result": {
+              "instructions_retired": 1,
+              "core_cycles": 4.0
+            }
+          }
+        }
+      ],
+      "cycles_min": 4,
+      "cycles_max": 5
     }
   ],
   "throughput": [
