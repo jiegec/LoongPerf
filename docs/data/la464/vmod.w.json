@@ -44,27 +44,27 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 32,
-      "cycles_min": 10,
-      "cycles_max": 32,
+      "cycles": 33.0,
+      "cycles_min": 11,
+      "cycles_max": 33,
       "experiments": [
         {
           "name": "reset-chain measurement",
           "role": "measurement",
           "asm": "vmod.w $vr0, $vr0, $vr2; vpickve2gr.w $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4",
-          "init": "li.d $r4, 1073741823; vreplgr2vr.w $vr0, $r4; li.d $r4, 3; vreplgr2vr.w $vr2, $r4; li.d $r5, -1073741824; li.d $r6, 1073741823",
+          "init": "li.d $r4, 9223372034707292159; vreplgr2vr.w $vr0, $r4; li.d $r4, 12884901891; vreplgr2vr.w $vr2, $r4; li.d $r5, -9223372030412324863; li.d $r6, 9223372030412324862",
           "result": {
-            "instructions_retired": 6,
-            "core_cycles": 39.99
+            "instructions_retired": 6.0,
+            "core_cycles": 40.0
           },
           "measurement": {
-            "unroll": 4000,
+            "unroll": 1000,
             "iters": 300,
             "reps": 7
           },
-          "command": "./bench --unroll 4000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 1073741823; vreplgr2vr.w $vr0, $r4; li.d $r4, 3; vreplgr2vr.w $vr2, $r4; li.d $r5, -1073741824; li.d $r6, 1073741823' --asm 'vmod.w $vr0, $vr0, $vr2; vpickve2gr.w $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4'",
+          "command": "./bench --unroll 1000 --iters 300 --warmup 10 --reps 7 --core 0 --init 'li.d $r4, 9223372034707292159; vreplgr2vr.w $vr0, $r4; li.d $r4, 12884901891; vreplgr2vr.w $vr2, $r4; li.d $r5, -9223372030412324863; li.d $r6, 9223372030412324862' --asm 'vmod.w $vr0, $vr0, $vr2; vpickve2gr.w $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.w $vr0, $r4'",
           "notes": "Element-0 reset chain; the closure latency is cancelled by the calibration experiment.",
-          "chain_latency": 7.99,
+          "chain_latency": 7.0,
           "machine_code": [
             "147fffe4  lu12i.w     \t$a0, 262143",
             "03bffc84  ori         \t$a0, $a0, 4095",
@@ -144,5 +144,5 @@
       "notes": "Data-dependent. CPI ranges 6 to 17 over the same operand pairs; the stored experiment uses 1073741823/3."
     }
   ],
-  "notes": "Vector variable-latency divide/modulo. Latency 10-32 cycles and throughput CPI 6-17 are data-dependent. 32-bit lanes are not divided fully in parallel: with one slow lane the latency is 22 (vdiv.w) / 21 (xvdiv.w), and as soon as two or more lanes need many quotient bits the divider costs roughly one extra pass, giving ~32 (vdiv.w) / ~31 (xvdiv.w); the number of slow lanes beyond two does not change it further (8 slow lanes measure 31). The recorded cycles_max reflects that multi-slow-lane case. 64-bit lanes, by contrast, are fully parallel and only the slowest lane matters."
+  "notes": "Latency model: the vector divider retires 4 quotient bits per cycle on every element width and the slowest lane dominates. lat = 11 when the quotient is 0, 17 when it fits in four bits, otherwise 17 + 2 * floor(bits(quotient)/4); for w elements the quotient is at most 32 bits, so the maximum is 33. The remainder path costs one extra cycle in the general case and keeps the same extremes pattern, reaching 33. Measured with a calibrated reset chain (closure 7 cycles) on the maximum-latency operand pair; 1000-unroll slope method."
 }

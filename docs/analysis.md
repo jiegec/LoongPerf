@@ -118,10 +118,9 @@ the saving saturates once 64 bits of dividend are active, and the extra lanes
 beyond that are free. This is also why a vector whose bytes are only partly
 non-zero can measure well below the recorded maximum.
 
-One difference between the two cores: on LA464 the 128-bit form needs one extra
-cycle for 64-bit elements, so `vdiv.d` spans 9-27 cycles while `xvdiv.d` spans
-8-26, whereas LA664 measures 8-26 for both widths. The 32-bit and narrower
-forms are identical on both microarchitectures.
+LA464 matches these numbers for every element width and, like LA664, gives the
+same range for the LSX and LASX forms (8-26, 11-31, 17-41 and 29-61 for `.d`,
+`.w`, `.h` and `.b`), so both cores share the same vector integer divider.
 
 ## Floating-point division, square root and reciprocal
 
@@ -260,8 +259,6 @@ vfrecip.s, xvfrecip.s      11       15          17             25          27   
 ## Cross-core comparison
 
 The separate LA464 campaign reports the same class structure and the same
-numbers for division (`9`, `15`, `17` and `24` cycles appear there too), so the
-floating-point divider did not change between the cores. The only known
-difference is in the 128-bit integer divide of 64-bit elements, where LA464
-needs one extra cycle (`vdiv.d` 9-27 against `xvdiv.d` 8-26) while LA664 measures
-8-26 for both widths.
+numbers for division (`9`, `15`, `17` and `24` cycles appear there too), and the
+integer divider matches as well, so LA464 and LA664 appear to share both units.
+The two cores differ in their LSU and vector width, not in the dividers.
