@@ -43,32 +43,59 @@
   "latencies": [
     {
       "from_operands": [
-        2,
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 3.99,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "ldgt.h $r4, $r20, $r21; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.h $r22, $r20, 0; li.d $r22, -8; st.h $r22, $r20, 8; li.d $r21, 0",
+          "measurement": {
+            "unroll": 250,
+            "iters": 1000,
+            "reps": 20
+          },
+          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.h $r22, $r20, 0; li.d $r22, -8; st.h $r22, $r20, 8; li.d $r21, 0' --asm 'ldgt.h $r4, $r20, $r21; add.d $r20, $r20, $r4'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.99
+          },
+          "chain_latency": 1.0,
+          "notes": "rj -> rd chain, the bound stays 0 so the check passes; add.d subtracted."
+        }
+      ],
+      "notes": "rj -> rd chain, the bound stays 0 so the check passes; add.d subtracted."
+    },
+    {
+      "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4.98,
       "experiments": [
         {
-          "name": "high-unroll load-to-ALU chain",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "ldgt.h $r4, $r20, $r0; add.d $r20, $r20, $r4",
-          "init": "addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8",
+          "asm": "ldgt.h $r4, $r20, $r4; xori $r4, $r4, 1",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 0; st.d $r22, $r20, 0; li.d $r4, 0",
           "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 7
+            "unroll": 250,
+            "iters": 1000,
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8' --asm 'ldgt.h $r4, $r20, $r0; add.d $r20, $r20, $r4'",
+          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 0; st.d $r22, $r20, 0; li.d $r4, 0' --asm 'ldgt.h $r4, $r20, $r4; xori $r4, $r4, 1'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 5.0
+            "instructions_retired": 2.0,
+            "core_cycles": 5.98
           },
           "chain_latency": 1.0,
-          "notes": "L1D hit, bound-checked load-to-ALU latency 4 cycles. Address A > 0, bound 0, so the condition is true; chain_latency subtracts add.d. Measured with unroll=100000."
+          "notes": "rk -> rd chain: the bound toggles 0/1 through xori and always stays below the address; xori subtracted."
         }
       ],
-      "notes": "L1D hit, bound-checked load-to-ALU latency 4 cycles. Address A > 0, bound 0, so the condition is true; chain_latency subtracts add.d. Measured with unroll=100000."
+      "notes": "rk -> rd chain: the bound toggles 0/1 through xori and always stays below the address; xori subtracted."
     }
   ],
   "throughput": [
@@ -99,5 +126,5 @@
       "notes": "8 bound-checked memory operations take 8.00 cycles."
     }
   ],
-  "notes": "L1D-hit load-to-ALU latency 4 cycles. Throughput is 1 CPI."
+  "notes": "L1D-hit bound-checked load; the address path and the bound path are recorded separately."
 }

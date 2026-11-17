@@ -43,51 +43,59 @@
   "latencies": [
     {
       "from_operands": [
-        2,
+        2
+      ],
+      "to_operand": 1,
+      "cycles": 3.99,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "ldx.d $r4, $r20, $r21; add.d $r20, $r20, $r4",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.d $r22, $r20, 0; li.d $r22, -8; st.d $r22, $r20, 8; li.d $r21, 0",
+          "measurement": {
+            "unroll": 250,
+            "iters": 1000,
+            "reps": 20
+          },
+          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.d $r22, $r20, 0; li.d $r22, -8; st.d $r22, $r20, 8; li.d $r21, 0' --asm 'ldx.d $r4, $r20, $r21; add.d $r20, $r20, $r4'",
+          "result": {
+            "instructions_retired": 2.0,
+            "core_cycles": 4.99
+          },
+          "chain_latency": 1.0,
+          "notes": "rj -> rd chain with the index fixed at 0; add.d subtracted."
+        }
+      ],
+      "notes": "rj -> rd chain with the index fixed at 0; add.d subtracted."
+    },
+    {
+      "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 4.99,
       "experiments": [
         {
-          "name": "high-unroll ALU-consumer chain",
+          "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "ldx.d $r4, $r0, $r4; add.d $r4, $r4, $r5",
-          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
+          "asm": "ldx.d $r4, $r20, $r4; andi $r4, $r4, 7",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.d $r22, $r20, 0; li.d $r4, 0",
           "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 7
+            "unroll": 250,
+            "iters": 1000,
+            "reps": 20
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'ldx.d $r4, $r0, $r4; add.d $r4, $r4, $r5'",
+          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.d $r22, $r20, 0; li.d $r4, 0' --asm 'ldx.d $r4, $r20, $r4; andi $r4, $r4, 7'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 6.0
+            "instructions_retired": 2.0,
+            "core_cycles": 5.99
           },
           "chain_latency": 1.0,
-          "notes": "L1D hit, indexed load-to-ALU latency 5 cycles. The indexed address path adds 1 cycle: bare load-to-AGU pointer chase is 4 cycles. Measured with unroll=100000."
-        },
-        {
-          "name": "load-to-AGU bypass calibration",
-          "role": "calibration",
-          "asm": "ldx.d $r4, $r0, $r4",
-          "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
-          "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 7
-          },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ldx.d $r4, $r0, $r4'",
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 4.0
-          },
-          "notes": "Bare indexed pointer chase: base is r0, index is r4, and the word at A contains A. This exercises the load-to-AGU address bypass path (4 cycles); the ALU-consumer path is 5 cycles."
+          "notes": "rk -> rd chain with the index loop-carried and masked; andi subtracted."
         }
       ],
-      "notes": "L1D hit. Indexed load-to-ALU latency is 5 cycles; the load-to-AGU address bypass path is 4 cycles.",
-      "cycles_min": 4,
-      "cycles_max": 5
+      "notes": "rk -> rd chain with the index loop-carried and masked; andi subtracted."
     }
   ],
   "throughput": [
@@ -118,5 +126,5 @@
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }
   ],
-  "notes": "L1D-hit load-to-ALU latency 5 cycles; load-to-AGU address path is 4 cycles. Throughput is 0.5 CPI."
+  "notes": "L1D-hit indexed load: base path 4 cycles, index path 5 cycles."
 }
