@@ -55,12 +55,12 @@
         "lanes": 8,
         "cpi": 1.0,
         "ipc": 1.0,
-        "cpi_min": 0.984,
+        "cpi_min": 1.0,
         "cpi_max": 1.0,
         "ipc_min": 1.0,
-        "ipc_max": 1.0163
+        "ipc_max": 1.0
       },
-      "notes": "Not-taken branches saturate at 1.0 CPI. The marginal cost measured against a loop-only baseline (1.007 cycles/iteration, just addi.d + bnez) keeps improving with more static branches because one branch rides the loop branch slot: 0.875 at 8 static branches, 0.937 at 16, 0.969 at 32 and 0.984 at 64, converging to 1.0. The range records the N=64 marginal and the asymptote."
+      "notes": "Not-taken branches run at 1.0 CPI. The marginal cost measured against a loop-only baseline improves with the number of static branches because one branch rides the loop branch slot (0.437 at 8 static branches for integer compares, converging to 0.5; 0.874 converging to 1.0 for FCC compares), so the saturated rate is recorded."
     },
     {
       "name": "8 taken branches",
