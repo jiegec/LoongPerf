@@ -2,7 +2,7 @@
   "instruction": {
     "name": "alsl.d",
     "extension": "Base",
-    "form": "alsl.d rd, rj, rk, sa2",
+    "form": "alsl.d rd, rj, rk, imm",
     "description": "Add rk to rj shifted left by an immediate (doubleword operation)."
   },
   "operands": [
@@ -32,7 +32,7 @@
     },
     {
       "index": 4,
-      "name": "sa2",
+      "name": "imm",
       "kind": "immediate",
       "access": "read",
       "description": "shift amount"
