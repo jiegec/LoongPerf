@@ -63,8 +63,8 @@ These configs have the same meaning on both microarchitectures:
 | Config | Meaning |
 | --- | --- |
 | `0x01` | Retired uops (`PERF_COUNT_HW_INSTRUCTIONS`) |
-| `0xa8` | Load operations (not uops; wide LASX loads may count 2) |
-| `0xb0` | Store operations (not uops; wide LASX stores may count 2) |
+| `0xa8` | Load operations (not uops) |
+| `0xb0` | Store operations (not uops) |
 
 `0x01` is a uop count, not an architectural instruction count. In particular,
 an instruction such as `vpickve2gr.w` retires as two uops and shows up as
@@ -74,9 +74,7 @@ instructions statically and compare them with `0x01`.
 `0xa8` and `0xb0` are memory-operation counters, not uop counters. Atomics make
 the distinction clear: `amadd.w` retires as two uops, but contributes one load
 and one store. `llacq.w` contributes one load, and `sc.q` contributes one
-store, even though each is a two-uop instruction. A 256-bit LASX access can
-retire as two load/store operations depending on alignment and cache-line
-crossing; do not assume `xvld`/`xvst` always contributes exactly one.
+store, even though each is a two-uop instruction.
 
 ### LA664-specific raw counters
 
@@ -120,6 +118,11 @@ loads/stores do not count: `movgr2fr.d`, `movfr2gr.d`, `movfrh2gr.s`,
 `movcf2gr`, `movgr2cf`, `movfcsr2gr`, `movgr2fcsr`, `fld.d`, and `fst.d`
 all read zero. The exceptions are `movgr2frh.w = 1` and `movcf2fr = 1`,
 while `movfr2cf = 0`. Integer instructions count as zero.
+
+On LA464, a 256-bit LASX access can retire as two load/store operations
+depending on alignment and cache-line crossing; do not assume `xvld`/`xvst`
+always contributes exactly one. This split behavior was observed on LA464 and
+has not been verified on LA664.
 
 ## Multi-uop instructions
 
