@@ -371,49 +371,32 @@ making its float loads equal to its integer loads.
 
 ### Indexed and bound-checked loads
 
-The indexed and bound-checked forms have two paths, because the index or the
-bound takes part in the address calculation:
+An indexed or bound-checked load has the same latency as a plain load of the same
+class, because the index or bound is part of the address that the instruction
+already needs:
 
-| path | LA664 | LA464 |
-| --- | --- | --- |
-| base operand (`rj`) to an ALU consumer | 4 (integer), 5 (float) | 5 |
-| index or bound consumed by an ALU operation | 5 (integer), 6 (float) | 5, split unmeasured |
-| index or bound fed straight back to the address generator | 4 (integer), 5 (float) | not measured |
+| path | LA664 |
+| --- | --- |
+| `ldx.*`, `ldgt.*`, `ldle.*`, base or index/bound operand | 4 |
+| `fldx.*`, `fldgt.*`, `fldle.*`, base or index/bound operand | 5 |
 
-This holds for every element width: `ldx.b` through `ldx.du`, `ldgt.*` and
-`ldle.*` measure 5 when an ALU operation sits between the load and the next
-address or bound, and 4 when the value goes straight back. The floating-point
-forms `fldx.*`, `fldgt.*` and `fldle.*` are one cycle higher, 6 and 5, because the
-value has to cross from the FPR to a GPR before it can be used. Both paths are recorded as cases on those
-instructions.
+The index and bound paths are not slower than the base path. What looks like an
+extra cycle in the older data was the measurement chain: a chain that puts an ALU
+operation between the load and the next address (an `andi` to mask an index, an
+`xori` to keep a bound in range) measures one cycle more, because that operation
+has to execute before the address is ready. The load itself is unchanged, so the
+extra cycle belongs to the chain and is not recorded as a latency class.
 
-The earlier data said `ldle.*` was 4 on both paths while `ldgt.*` was 4 and 5,
-which looked like a difference between the two instructions. It was a chain
-artifact: the `ldle` chains had no ALU operation between the load and the next
-bound, so they measured the 4-cycle address path, while the `ldgt` chains kept an
-`xori` and measured the 5-cycle ALU path. With the same chain the two
-instructions are identical, which is what the cases now record.
+Only `ld.d` and `ldptr.d` have a second, faster path. Their result can be used as
+the next address directly, which gives 3 cycles instead of 4; a value used as an
+*index* does not get that early forwarding, which is why `ldx.*` measures 4 on the
+index path as well.
 
-LA464 was measured per source operand and shows a simpler rule than LA664:
-every operand reads **4** cycles when the loaded value feeds the address or the
-range check directly, and **5** when an ALU operation sits between the load and
-the next use. The base operand of `ldx.*`/`ldgt.*`/`ldle.*`/`fldx.*`/`fldgt.*`/
-`fldle.*` reads 5 (4 for the `*`-chased `.d` forms), the index operand of
-`ldx.*`/`fldx.*` reads 4 (5 with `andi` in the path), the bound of `ldgt.*` and
-`fldgt.*` reads 4, and the bound of `ldle.*`/`fldle.*` reads 5 only because the
-`rj <= rk` check forces an `add.d` into every chain -- the direct form is not
-constructible there. So the LA464 numbers are the same shape as the plain-load
-ladder (4 on the bypass, 5 through the ALU), while LA664 charges one extra cycle
-on the index and bound operands.
-
-One LA464 trap is worth recording: `ldgt.*`/`ldle.*` raise a bounds-check
-exception instead of writing zero when the range check fails, and this kernel
-does not emulate it, so a failing check kills the process with `SIGSEGV` at the
-load address (`si_addr` = `rj`, which can be a mapped address). Every chain has
-to keep the check passing, which is why the `ldle.*` bound recipes add the
-loaded value back to the base. `ldgt` loads when `rj > rk` and `ldle` when
-`rj <= rk`; otherwise the two instructions behave identically, including the
-per-operand latencies.
+LA464 records the indexed and bound forms with one combined `from_operands:
+[2, 3]` entry, split into the 5-cycle ALU path and the 4-cycle address path in
+the newer measurements, so the two cores cannot be compared operand by operand
+yet. Since LA464 pays one extra cycle on the base path, its index and bound paths
+are probably 5, but that is a prediction and not a measurement.
 
 ### What does not change the latency
 
@@ -467,9 +450,8 @@ Load latency does not depend on the data, only on the path:
 | plain `ld.*`, `vld`, `xvld` to a consumer | 4 | 5 |
 | plain `fld.*` to a GPR consumer | 5 | 5 |
 | `ld.d`, `ldptr.d` feeding the next address | 3 | 4 |
-| `ldx.*`, `ldgt.*`, `ldle.*` base / index or bound | 4 / 5 | 5 / 4 |
-| `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 5 / 6 | 5 / 4 |
-| integer `ldle.*` bound fed back as the next bound | 4 | 5 (the `rj <= rk` check needs an `add.d` in the chain) |
+| `ldx.*`, `ldgt.*`, `ldle.*` base or index/bound | 4 | 5 / 4 (ALU / address path) |
+| `fldx.*`, `fldgt.*`, `fldle.*` base or index/bound | 5 | 5 / 4 |
 
 The floating-point classes are a fixed set that covers every possible operand,
 so the JSON lists them as an exhaustive `cases` array, and no formula is needed
