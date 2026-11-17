@@ -345,6 +345,23 @@ Like the scalar divider, the vector unit divides magnitudes only, and it skips
 trailing zero digits: `2^40 / 1` (a 41-bit quotient) still measures 11 cycles
 because the 40 trailing zeros cost nothing.
 
+It also skips idle lanes, so a vector that needs only a few divisions is much
+faster than the all-lanes-active worst case that the recorded ranges describe.
+With divisor 1 (a fixed point, so the chain needs no helper) and `n` active
+lanes:
+
+```text
+             1 lane   2 lanes  4 lanes  8 lanes  16 lanes
+vdiv.bu        34       39       49       69        69
+vdiv.hu        24       31       45       45        —
+vdiv.wu        22       33       33       —         —
+vdiv.du        27       26       —        —         —
+```
+
+the saving saturates once 64 bits of dividend are active, and the extra lanes
+beyond that are free. This is also why a vector whose bytes are only partly
+non-zero can measure well below the recorded maximum.
+
 ## Floating-point divide, square root and reciprocal latency
 
 Floating-point division has a small set of latency classes rather than a ladder,
