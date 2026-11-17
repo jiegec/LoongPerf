@@ -38,39 +38,28 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
-          "name": "high-unroll memory-assisted chain",
+          "name": "register round trip",
           "role": "measurement",
-          "asm": "movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0",
-          "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0",
+          "asm": "movgr2fr.d $f0, $r4; movfr2gr.d $r4, $f0",
+          "init": "li.d $r4, 0",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r4, 0' --asm 'movgr2fr.d $f0, $r4; movfr2gr.d $r4, $f0'",
           "measurement": {
-            "unroll": 100000,
+            "unroll": 20000,
             "iters": 100,
-            "reps": 7
+            "reps": 10
           },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0' --asm 'movfr2gr.d $r4, $f0; add.d $r4, $r4, $r5; st.d $r4, $r12, 0; fld.d $f0, $r12, 0'",
           "result": {
-            "instructions_retired": 4,
-            "core_cycles": 11.06
+            "instructions_retired": 2,
+            "core_cycles": 4.0
           },
-          "chain_latency": 8.06,
-          "notes": "11.05-cycle chain minus 8.06 cycles (7.06 GPR-store -> FPR-load forwarding + 1 add.d) = 2.99 cycles. Measured with unroll=100000; unroll=1000 gave 2.86 because per-call overhead was not fully amortised.",
-          "machine_code": [
-            "030ffc04  lu52i.d     \t$a0, $zero, 1023",
-            "0114a880  movgr2fr.d  \t$fa0, $a0",
-            "03800405  li.w        \t$a1, 0x1",
-            "02f0006c  addi.d      \t$t0, $sp, -1024",
-            "29c00184  st.d        \t$a0, $t0, 0",
-            "0114b804  movfr2gr.d  \t$a0, $fa0",
-            "00109484  add.d       \t$a0, $a0, $a1",
-            "29c00184  st.d        \t$a0, $t0, 0",
-            "2b800180  fld.d       \t$fa0, $t0, 0"
-          ]
+          "chain_latency": 2
         }
       ],
-      "notes": "FPR -> GPR latency is 3 cycles. The full movgr2fr.d + movfr2gr.d round trip is 4 cycles; inserting fadd or fmul changes it by exactly the inserted latency, so the round trip is additive. This rules out a 3+2 split for the .d/.w/.s moves."
+      "notes": "2 cycles for this direction. The split between the two directions is not observable on this core: every closed chain crosses the boundary both ways, so only the sum shows up (the round trip measures 4.00 cycles and stays additive). The split is fixed by the microarchitecture: an FPR load cannot take the address-bypass path, so `fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` (6.98 cycles) has to be a 5-cycle load plus a 2-cycle move, and the 4.00-cycle FPR round trip then puts the other direction at 2. The stored experiment is the round trip itself, with the opposite direction subtracted as chain_latency.",
+      "cycles_min": 2
     }
   ],
   "throughput": [

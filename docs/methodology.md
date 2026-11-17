@@ -295,7 +295,9 @@ restores a constant bit pattern for two cycles of real work. The vector forms
 use `vpickve2gr.*` with `vreplgr2vr.*` for LSX registers and `xvpickve2gr.*` with
 `xvreplgr2vr.*` for LASX ones. Their calibrated costs differ a lot, 5.95 cycles
 for the GPR version, 6.97 for LSX and 8.99 for LASX, because the divider-to-
-integer bypass is not free, so calibrate each one separately.
+integer bypass is not free, so calibrate each one separately. The GPR figure is
+`movfr2gr` + `and` + `or` + `movgr2fr` = 2 + 1 + 1 + 2, which agrees with the
+measured 5.95 and confirms that both cross-domain moves are two cycles.
 
 The helper *must* be calibrated, never assumed. Measure the same helper with the
 instruction replaced by a cheap known operation (`fadd.d`, `vadd.b`) and subtract

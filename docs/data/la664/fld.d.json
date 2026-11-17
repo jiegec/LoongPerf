@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4,
+      "cycles": 5,
       "experiments": [
         {
           "name": "high-unroll dependency chain",
@@ -62,7 +62,7 @@
             "instructions_retired": 2,
             "core_cycles": 7
           },
-          "chain_latency": 3,
+          "chain_latency": 2,
           "notes": "FPR load followed by movfr2gr to close the address chain; chain_latency subtracts the 3-cycle movfr2gr.",
           "machine_code": [
             "02f0206d  addi.d      \t$t1, $sp, -1016",
@@ -73,7 +73,9 @@
           ]
         }
       ],
-      "notes": "FPR load followed by movfr2gr to close the address chain; chain_latency subtracts the 3-cycle movfr2gr."
+      "notes": "L1D hit. Float load measured through movfr2gr, which is 2 cycles, so the recorded value is the load latency to a GPR consumer: 5 cycles for the base path and 6 for the index or bound path, which is one cycle more than the integer loads because the destination is an FPR.",
+      "cycles_min": 5,
+      "cycles_max": 5
     }
   ],
   "throughput": [

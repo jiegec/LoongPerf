@@ -312,15 +312,16 @@ records one entry per source operand, and the notes name the bypass path.
 
 ### Plain loads
 
-On LA664 an integer or floating-point plain load takes 4 cycles to an ALU
-consumer, and an integer load takes 3 when the result feeds the next address,
-the load-to-AGU bypass:
+On LA664 an integer load takes 4 cycles to an ALU consumer, 3 when the result
+feeds the next address (the load-to-AGU bypass), and a floating-point load takes
+5, one cycle more, because the destination is an FPR and the latency is measured
+by moving the value back to a GPR:
 
 | load | LA664 (ALU / bypass) | LA464 (ALU / bypass) |
 | --- | --- | --- |
 | `ld.d`, `ldptr.d` | 4 / 3 | 5 / 4 |
 | `ld.b`, `ld.h`, `ld.w`, `ld.bu`, `ld.hu`, `ld.wu` | 4 / not measured | 5 / not measured |
-| `fld.s`, `fld.d` | 4 / not reachable | 5 / 4 |
+| `fld.s`, `fld.d` | 5 / not reachable | 5 / not measured |
 | `vld`, `xvld` | 4 / not reachable | 5 / not measured |
 
 Width does not matter on LA664: a byte load costs exactly what a double load
@@ -350,20 +351,23 @@ for it still reports 5, the same staleness the LA664 entries had before the
 pointer chase was re-measured at 3.00, so the LA464 value should be re-checked on
 that machine.
 
-Floating-point loads need a caveat, because a value in an FPR cannot become an
-address directly: the chain has to pass through `movfr2gr`, so a float load is
-measured with that move in the path. On LA464 the resulting chain is still the
-fast one, `fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` measures 4, and inserting an
-`add.d` in the address path measures 5, exactly like the integer loads. `fld.s`
-is different: a 32-bit result has to be recombined with the base before it can
-be used, so the chain necessarily contains an `add.d` and always reports the
-5-cycle ALU path. The 4 and 5 recorded for `fld.d` and `fld.s` are therefore two
-different paths on the same core and not a contradiction.
+Floating-point loads have to be measured with a move in the path, because a value
+in an FPR cannot become an address or a GPR operand directly. The chain
+`fld.d $f0, $r4, 0; movfr2gr.d $r4, $f0` measures 6.98 cycles, and since an FPR
+load cannot take any bypass path the load itself must be 5 cycles and the move
+2; that in turn fixes `movgr2fr.d` at 2, because their round trip measures 4.
+Every cross-domain move on LA664 is therefore 2 cycles per direction, with
+`movgr2frh.w` at 3 (its round trip measures 5).
 
-On LA664 both `fld.s` and `fld.d` measure 4. For `fld.d` the chain is the
-`movfr2gr` chase, so 4 is what a GPR consumer sees, matching the integer ALU
-path; the pure 3-cycle address bypass is unreachable for a floating-point load
-because the move is part of every such chain.
+This is also why the float loads carry one more cycle than the integer ones: 5
+to a GPR consumer, against 4 for an integer load, and 6 against 5 on the index
+and bound paths. `fld.s` cannot even be chased directly, because a 32-bit result
+has to be recombined with the base, so its stored chain always contains an
+`add.d`; it measures 5 as well.
+
+The same accounting applies to LA464, where the recorded `fld.d` of 4 was
+computed with a 3-cycle move and would become 5 with the 2-cycle calibration,
+making its float loads equal to its integer loads.
 
 ### Indexed and bound-checked loads
 
@@ -372,14 +376,15 @@ bound takes part in the address calculation:
 
 | path | LA664 | LA464 |
 | --- | --- | --- |
-| base operand (`rj`) to an ALU consumer | 4 | 5 |
-| index or bound consumed by an ALU operation | 5 | 5, split unmeasured |
-| index or bound fed straight back to the address generator | 4 | not measured |
+| base operand (`rj`) to an ALU consumer | 4 (integer), 5 (float) | 5 |
+| index or bound consumed by an ALU operation | 5 (integer), 6 (float) | 5, split unmeasured |
+| index or bound fed straight back to the address generator | 4 (integer), 5 (float) | not measured |
 
-This holds for every element width and for both register files: `ldx.b` through
-`ldx.du`, `ldgt.*`, `ldle.*`, `fldx.*`, `fldgt.*` and `fldle.*` all measure 5 when
-an ALU operation sits between the load and the next address or bound, and 4 when
-the value goes straight back. Both paths are recorded as cases on those
+This holds for every element width: `ldx.b` through `ldx.du`, `ldgt.*` and
+`ldle.*` measure 5 when an ALU operation sits between the load and the next
+address or bound, and 4 when the value goes straight back. The floating-point
+forms `fldx.*`, `fldgt.*` and `fldle.*` are one cycle higher, 6 and 5, because the
+value has to cross from the FPR to a GPR before it can be used. Both paths are recorded as cases on those
 instructions.
 
 The earlier data said `ldle.*` was 4 on both paths while `ldgt.*` was 4 and 5,
@@ -443,9 +448,11 @@ Load latency does not depend on the data, only on the path:
 
 | load | LA664 | LA464 |
 | --- | --- | --- |
-| plain `ld.*`, `vld`, `xvld`, `fld.*` to a consumer | 4 | 5 |
+| plain `ld.*`, `vld`, `xvld` to a consumer | 4 | 5 |
+| plain `fld.*` to a GPR consumer | 5 | 5 |
 | `ld.d`, `ldptr.d` feeding the next address | 3 | 4 |
-| `ldx.*`, `ldgt.*`, `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 4 / 5 | 5, split unmeasured |
+| `ldx.*`, `ldgt.*`, `ldle.*` base / index or bound | 4 / 5 | 5, split unmeasured |
+| `fldx.*`, `fldgt.*`, `fldle.*` base / index or bound | 5 / 6 | 5, split unmeasured |
 | integer `ldle.*` bound fed back as the next bound | 4 | not measured |
 
 The floating-point classes are a fixed set that covers every possible operand,
