@@ -67,7 +67,7 @@
         "cpi_min": 0.438,
         "cpi_max": 0.5,
         "ipc_min": 2.0,
-        "ipc_max": 2.2857
+        "ipc_max": 2.2831
       },
       "notes": "Not-taken-branch throughput saturates at 0.5 CPI (2 per cycle): the marginal cost is 0.438 at 8 static branches, 0.469 at 16 and 0.484 at 32 in a loop, converging to 0.5. Smaller footprints overlap with the loop branch and read low."
     },
