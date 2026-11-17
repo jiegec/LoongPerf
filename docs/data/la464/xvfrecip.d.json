@@ -38,16 +38,16 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.0,
+      "cycles": 10,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "xvfrecip.d $xr0, $xr0; xvpickve2gr.d $r7, $xr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; xvreplgr2vr.d $xr0, $r7",
           "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r5, -1; li.d $r6, 0",
-          "chain_latency": 9.0,
+          "chain_latency": 9,
           "result": {
-            "instructions_retired": 6.0,
+            "instructions_retired": 6,
             "core_cycles": 18.99
           },
           "measurement": {
@@ -59,8 +59,8 @@
         }
       ],
       "notes": "Data-dependent latency. Chain: tested op, then xvpickve2gr.d+and+or+xvreplgr2vr.d to restore the input pattern; the 9-cycle closure is subtracted (calibrated with vadd.b/xvadd.b). Swept 26 operand values including 0, powers of two, max, minnorm, maxsub, minsub, Inf and NaN: latency 8-24 cycles, CPI 4.4887-12.5. The stored experiment uses 1.0. Measured on 2026-11-17 on LA464, core 0.",
-      "cycles_min": 8.0,
-      "cycles_max": 24.0
+      "cycles_min": 8,
+      "cycles_max": 24
     }
   ],
   "throughput": [
@@ -69,8 +69,8 @@
       "asm": "xvfrecip.d $xr0, $xr8; xvfrecip.d $xr1, $xr9; xvfrecip.d $xr2, $xr10; xvfrecip.d $xr3, $xr11; xvfrecip.d $xr4, $xr12; xvfrecip.d $xr5, $xr13; xvfrecip.d $xr6, $xr14; xvfrecip.d $xr7, $xr15",
       "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 44.0
+        "instructions_retired": 8,
+        "core_cycles": 44
       },
       "measurement": {
         "unroll": 1000,
@@ -89,6 +89,5 @@
       },
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 4.4887-12.5 over the same 26-value sweep; the stored experiment uses 1.0."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

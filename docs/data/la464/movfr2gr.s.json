@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "high-unroll memory-assisted chain",
@@ -47,7 +47,7 @@
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r5, 1; addi.d $r12, $sp, -1024; st.d $r4, $r12, 0",
           "chain_latency": 8.76,
           "result": {
-            "instructions_retired": 4.0,
+            "instructions_retired": 4,
             "core_cycles": 11.76
           },
           "measurement": {
@@ -77,7 +77,7 @@
         "0114b4f3  movfr2gr.s  \t$t7, $fa7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 7.97
       },
       "measurement": {
@@ -87,11 +87,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4' --asm 'movfr2gr.s $r12, $f0; movfr2gr.s $r13, $f1; movfr2gr.s $r14, $f2; movfr2gr.s $r15, $f3; movfr2gr.s $r16, $f4; movfr2gr.s $r17, $f5; movfr2gr.s $r18, $f6; movfr2gr.s $r19, $f7'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 7.97 cycles."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

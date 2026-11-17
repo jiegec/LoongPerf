@@ -44,19 +44,19 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 15.0,
-      "cycles_min": 11.0,
-      "cycles_max": 17.0,
+      "cycles": 15,
+      "cycles_min": 11,
+      "cycles_max": 17,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "xvfdiv.s $xr0, $xr0, $xr0; xvpickve2gr.w $r7, $xr0, 0; and $r7, $r7, $r5; or $r7, $r7, $r6; xvreplgr2vr.w $xr0, $r7",
           "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr0, $r4; li.d $r5, -9205357638345293825; li.d $r6, 0",
-          "chain_latency": 9.0,
+          "chain_latency": 9,
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 24.0
+            "instructions_retired": 6,
+            "core_cycles": 24
           },
           "measurement": {
             "unroll": 1000,
@@ -75,7 +75,7 @@
       "asm": "xvfdiv.s $xr0, $xr8, $xr16; xvfdiv.s $xr1, $xr9, $xr17; xvfdiv.s $xr2, $xr10, $xr18; xvfdiv.s $xr3, $xr11, $xr19; xvfdiv.s $xr4, $xr12, $xr20; xvfdiv.s $xr5, $xr13, $xr21; xvfdiv.s $xr6, $xr14, $xr22; xvfdiv.s $xr7, $xr15, $xr23",
       "init": "li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 47.95
       },
       "measurement": {
@@ -86,15 +86,15 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4' --asm 'xvfdiv.s $xr0, $xr8, $xr16; xvfdiv.s $xr1, $xr9, $xr17; xvfdiv.s $xr2, $xr10, $xr18; xvfdiv.s $xr3, $xr11, $xr19; xvfdiv.s $xr4, $xr12, $xr20; xvfdiv.s $xr5, $xr13, $xr21; xvfdiv.s $xr6, $xr14, $xr22; xvfdiv.s $xr7, $xr15, $xr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 5.9938,
-        "ipc": 0.1668,
-        "cpi_min": 6.0,
-        "cpi_max": 9.0,
+        "cpi": 6,
+        "ipc": 0.1667,
+        "cpi_min": 6,
+        "cpi_max": 9,
         "ipc_min": 0.1111,
         "ipc_max": 0.1667
       },
       "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 6-9 over the same 26-value sweep; the stored experiment uses 1.0."
     }
   ],
-  "notes": "Vector variable-latency floating-point divide/modulo. Latency 10-26 cycles and throughput CPI 6-14 are data-dependent. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Vector variable-latency floating-point divide/modulo. Latency 10-26 cycles and throughput CPI 6-14 are data-dependent."
 }

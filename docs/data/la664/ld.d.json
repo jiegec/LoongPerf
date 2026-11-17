@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "high-unroll ALU-consumer chain",
@@ -60,9 +60,9 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0' --asm 'ld.d $r4, $r4, 0; add.d $r4, $r4, $r5'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 5.0
+            "core_cycles": 5
           },
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "notes": "L1D hit, load-to-ALU latency 4 cycles. The load-to-load address bypass path is 3 cycles, which is why a bare pointer chase underestimates the general latency. Measured with unroll=100000.",
           "machine_code": [
             "02f0206d  addi.d      \t$t1, $sp, -1016",
@@ -86,7 +86,7 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0' --asm 'ld.d $r4, $r4, 0'",
           "result": {
             "instructions_retired": 1,
-            "core_cycles": 3.0
+            "core_cycles": 3
           },
           "notes": "Bare pointer chase: the word at address A contains A, so each load result is exactly the next load address. This exercises the load-to-AGU address bypass path (3 cycles), not the general load-to-ALU path (4 cycles).",
           "machine_code": [
@@ -119,13 +119,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024' --asm 'ld.d $r12, $r20, 0; ld.d $r13, $r20, 8; ld.d $r14, $r20, 16; ld.d $r15, $r20, 24; ld.d $r16, $r20, 32; ld.d $r17, $r20, 40; ld.d $r18, $r20, 48; ld.d $r19, $r20, 56'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }

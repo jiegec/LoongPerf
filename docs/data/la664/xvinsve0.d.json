@@ -45,7 +45,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependency chain",
@@ -59,8 +59,8 @@
           },
           "command": "./bench --method slope --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; xvreplgr2vr.b $xr1, $r4' --asm 'xvinsve0.d $xr0, $xr1, 1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "notes": "xd -> xd chain: the preserved lanes make xd a real source.",
           "machine_code": [
@@ -78,7 +78,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependency chain",
@@ -92,8 +92,8 @@
           },
           "command": "./bench --method slope --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; xvreplgr2vr.b $xr1, $r4' --asm 'xvinsve0.d $xr0, $xr1, 1; xvinsve0.d $xr1, $xr0, 1'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 2.0
+            "instructions_retired": 2,
+            "core_cycles": 2
           },
           "notes": "xj -> xd chain: two alternating copies traverse both register paths, so the measured cycles are halved.",
           "machine_code": [
@@ -116,16 +116,16 @@
       "init": "li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4; li.d $r4, 1; xvreplgr2vr.b $xr3, $r4; li.d $r4, 1; xvreplgr2vr.b $xr4, $r4; li.d $r4, 1; xvreplgr2vr.b $xr5, $r4; li.d $r4, 1; xvreplgr2vr.b $xr6, $r4; li.d $r4, 1; xvreplgr2vr.b $xr7, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfa --init 'li.d $r4, 1; xvreplgr2vr.b $xr8, $r4; li.d $r4, 1; xvreplgr2vr.b $xr9, $r4; li.d $r4, 1; xvreplgr2vr.b $xr10, $r4; li.d $r4, 1; xvreplgr2vr.b $xr11, $r4; li.d $r4, 1; xvreplgr2vr.b $xr12, $r4; li.d $r4, 1; xvreplgr2vr.b $xr13, $r4; li.d $r4, 1; xvreplgr2vr.b $xr14, $r4; li.d $r4, 1; xvreplgr2vr.b $xr15, $r4; li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4; li.d $r4, 1; xvreplgr2vr.b $xr3, $r4; li.d $r4, 1; xvreplgr2vr.b $xr4, $r4; li.d $r4, 1; xvreplgr2vr.b $xr5, $r4; li.d $r4, 1; xvreplgr2vr.b $xr6, $r4; li.d $r4, 1; xvreplgr2vr.b $xr7, $r4' --asm 'xvinsve0.d $xr0, $xr8, 1; xvinsve0.d $xr1, $xr9, 1; xvinsve0.d $xr2, $xr10, 1; xvinsve0.d $xr3, $xr11, 1; xvinsve0.d $xr4, $xr12, 1; xvinsve0.d $xr5, $xr13, 1; xvinsve0.d $xr6, $xr14, 1; xvinsve0.d $xr7, $xr15, 1'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 2.0,
+        "instructions_retired": 8,
+        "core_cycles": 2,
         "counters": {
-          "0xfa": 1.0
+          "0xfa": 1
         }
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4.0
+        "ipc": 4
       },
       "notes": "8 independent instructions take 1.99 cycles. Counter 0xfa normalised per instruction. The measured CPI 0.2487 is the nominal 0.25 within measurement noise; the value is reported as the nominal figure."
     }

@@ -46,16 +46,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armnot.w $r12, 14",
           "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 1.96
           },
           "measurement": {
@@ -73,16 +73,16 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armnot.w $r12, 14; armmfflag $r12, 0x39",
           "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.06
           },
           "measurement": {
@@ -102,13 +102,13 @@
       "asm": "armnot.w $r12, 14; armnot.w $r13, 14; armnot.w $r14, 14; armnot.w $r15, 14; armnot.w $r16, 14; armnot.w $r17, 14; armnot.w $r18, 14; armnot.w $r19, 14",
       "init": "armmtflag $r0, 0x39",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'armmtflag $r0, 0x39' --asm 'armnot.w $r12, 14; armnot.w $r13, 14; armnot.w $r14, 14; armnot.w $r15, 14; armnot.w $r16, 14; armnot.w $r17, 14; armnot.w $r18, 14; armnot.w $r19, 14'",
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "Slope method, 8 independent lanes; 16.00 cycles per 8 instructions.",

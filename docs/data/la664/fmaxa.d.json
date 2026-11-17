@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "dependent chain",
@@ -62,8 +62,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fmaxa.d $f0, $f0, $f1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
@@ -75,7 +75,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "dependent chain",
@@ -91,8 +91,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f1, $r4' --asm 'fmaxa.d $f0, $f1, $f0'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
@@ -117,13 +117,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fmaxa.d $f0, $f8, $f8; fmaxa.d $f1, $f9, $f9; fmaxa.d $f2, $f10, $f10; fmaxa.d $f3, $f11, $f11; fmaxa.d $f4, $f12, $f12; fmaxa.d $f5, $f13, $f13; fmaxa.d $f6, $f14, $f14; fmaxa.d $f7, $f15, $f15'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 2.0
+        "instructions_retired": 8,
+        "core_cycles": 2
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4.0
+        "ipc": 4
       },
       "notes": "8 independent instructions take 2.00 cycles."
     }

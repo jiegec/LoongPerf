@@ -46,7 +46,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "EFLAGS -> rd",
@@ -56,15 +56,15 @@
           "chain_instructions": [
             "x86mtflag $r12, 0x3f"
           ],
-          "chain_latency": 3.0,
+          "chain_latency": 3,
           "machine_code": [
             "005cfc2c  x86mtflag $t0, 0x3f",
             "005cfc0c  x86mfflag $t0, 0x3f"
           ],
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f' --asm 'x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "Total = L(x86mtflag) + L(x86mfflag) = 4.00; L(x86mtflag) = 3.00, so L(x86mfflag) = 1.00."
         },
@@ -80,8 +80,8 @@
           ],
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 0x3f' --asm 'x86mtflag $r12, 0x3f; x86mfflag $r12, 0x3f; x86mfflag $r12, 0x3f'",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 5.0
+            "instructions_retired": 3,
+            "core_cycles": 5
           },
           "notes": "Each additional x86mfflag contributes 1.00 cycle."
         }
@@ -106,13 +106,13 @@
       ],
       "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 0x3f' --asm 'x86mfflag $r12, 0x3f; x86mfflag $r13, 0x3f; x86mfflag $r14, 0x3f; x86mfflag $r15, 0x3f; x86mfflag $r16, 0x3f; x86mfflag $r17, 0x3f; x86mfflag $r18, 0x3f; x86mfflag $r19, 0x3f'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 8.01
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 instructions take 8.01 cycles: 1.00 cycle per instruction."
     }

@@ -38,7 +38,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.0,
+      "cycles": 10,
       "experiments": [
         {
           "name": "dependent chain",
@@ -46,7 +46,7 @@
           "asm": "frecip.d $f0, $f0",
           "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4",
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 9.99
           },
           "measurement": {
@@ -57,8 +57,8 @@
         }
       ],
       "notes": "Data-dependent latency: 8 cycles for 0/Inf/NaN; 10 for 1 and powers of two; 23 for general inputs and max; 24 for maxsub. Measured with an integer-bit reset chain; 5 cycles of helper latency are subtracted. The sample experiment uses 1.0.",
-      "cycles_min": 8.0,
-      "cycles_max": 24.0
+      "cycles_min": 8,
+      "cycles_max": 24
     }
   ],
   "throughput": [
@@ -77,7 +77,7 @@
         "011459e7  frecip.d    \t$fa7, $ft7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 44.16
       },
       "measurement": {

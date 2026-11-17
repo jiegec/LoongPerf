@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -53,8 +53,8 @@
           "asm": "slti $r12, $r12, 1",
           "init": "addi.d $r12, $r0, 1",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 20000,
@@ -82,8 +82,8 @@
         "02000573  slti        \t$t7, $a7, 1"
       ],
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 2.0
+        "instructions_retired": 8,
+        "core_cycles": 2
       },
       "measurement": {
         "unroll": 1000,
@@ -93,10 +93,9 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4.0
+        "ipc": 4
       },
       "notes": "8 independent instructions take 2.00 cycles."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

@@ -39,16 +39,16 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86dec.d $r12",
           "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "result": {
-            "instructions_retired": 1.0,
+            "instructions_retired": 1,
             "core_cycles": 1.94
           },
           "measurement": {
@@ -66,16 +66,16 @@
         1
       ],
       "to_operand": 2,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86dec.d $r12; x86mfflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 4.06
           },
           "measurement": {
@@ -95,8 +95,8 @@
       "asm": "x86dec.d $r12; x86dec.d $r13; x86dec.d $r14; x86dec.d $r15; x86dec.d $r16; x86dec.d $r17; x86dec.d $r18; x86dec.d $r19",
       "init": "x86mtflag $r0, 1",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "measurement": {
         "unroll": 1000,
@@ -106,7 +106,7 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'x86mtflag $r0, 1' --asm 'x86dec.d $r12; x86dec.d $r13; x86dec.d $r14; x86dec.d $r15; x86dec.d $r16; x86dec.d $r17; x86dec.d $r18; x86dec.d $r19'",
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "Slope method, 8 independent lanes."

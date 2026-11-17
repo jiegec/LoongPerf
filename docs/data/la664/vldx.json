@@ -46,39 +46,25 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
-          "asm": "vldx $vr0, $r20, $r0; vst $vr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4",
+          "asm": "vldx $vr0, $r20, 0; vst $vr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4",
           "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; addi.d $r23, $r20, 128; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, 0; st.d $r4, $r20, 8",
           "measurement": {
             "unroll": 250,
             "iters": 1000,
             "reps": 20
           },
-          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; addi.d $r23, $r20, 128; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, 0; st.d $r4, $r20, 8' --asm 'vldx $vr0, $r20, $r0; vst $vr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4'",
+          "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; addi.d $r23, $r20, 128; li.d $r4, 8; st.d $r4, $r20, 0; li.d $r4, 0; st.d $r4, $r20, 8' --asm 'vldx $vr0, $r20, 0; vst $vr0, $r23, 0; ld.d $r4, $r23, 0; add.d $r20, $r20, $r4'",
           "result": {
-            "instructions_retired": 4.0,
-            "core_cycles": 15.0
+            "instructions_retired": 4,
+            "core_cycles": 15.04
           },
-          "chain_latency": 11.0,
-          "notes": "rj -> result chain through a vector store and a GPR load: the 10.04-cycle store forwarding plus the add.d are subtracted, leaving the 4-cycle vector load.",
-          "machine_code": [
-            "02e00074  addi.d      \t$t8, $sp, -2048",
-            "02bf0016  li.w        \t$fp, -64",
-            "0014da94  and         \t$t8, $t8, $fp",
-            "02c20297  addi.d      \t$s0, $t8, 128",
-            "03802004  li.w        \t$a0, 0x8",
-            "29c00284  st.d        \t$a0, $t8, 0",
-            "00150004  move        \t$a0, $zero",
-            "29c02284  st.d        \t$a0, $t8, 8",
-            "38400280  vldx        \t$vr0, $t8, $zero",
-            "2c4002e0  vst         \t$vr0, $s0, 0",
-            "28c002e4  ld.d        \t$a0, $s0, 0",
-            "00109294  add.d       \t$t8, $t8, $a0"
-          ]
+          "chain_latency": 11.04,
+          "notes": "rj -> result chain through a vector store and a GPR load: the store-to-load forwarding (10.04 cycles) and the add.d (1 cycle) are subtracted, leaving the 4-cycle vector load."
         }
       ],
       "notes": "rj -> result chain through a vector store and a GPR load: the store-to-load forwarding (10.04 cycles) and the add.d (1 cycle) are subtracted, leaving the 4-cycle vector load."
@@ -91,13 +77,13 @@
       "init": "addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112; li.d $r4, -64; and $r20, $r20, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 16; li.d $r6, 32; li.d $r7, 48; li.d $r8, 64; li.d $r9, 80; li.d $r10, 96; li.d $r11, 112; li.d $r4, -64; and $r20, $r20, $r4' --asm 'vldx $vr0, $r20, $r4; vldx $vr1, $r20, $r5; vldx $vr2, $r20, $r6; vldx $vr3, $r20, $r7; vldx $vr4, $r20, $r8; vldx $vr5, $r20, $r9; vldx $vr6, $r20, $r10; vldx $vr7, $r20, $r11'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is 64-byte aligned; unaligned LASX loads/stores are substantially slower."
     }

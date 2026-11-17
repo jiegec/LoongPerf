@@ -54,7 +54,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "accumulator dependency chain",
@@ -62,8 +62,8 @@
           "asm": "xvfnmsub.d $xr0, $xr0, $xr2, $xr3",
           "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr2, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr3, $r4",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "measurement": {
             "unroll": 20000,
@@ -82,8 +82,8 @@
       "asm": "xvfnmsub.d $xr0, $xr8, $xr16, $xr24; xvfnmsub.d $xr1, $xr9, $xr17, $xr25; xvfnmsub.d $xr2, $xr10, $xr18, $xr26; xvfnmsub.d $xr3, $xr11, $xr19, $xr27; xvfnmsub.d $xr4, $xr12, $xr20, $xr28; xvfnmsub.d $xr5, $xr13, $xr21, $xr29; xvfnmsub.d $xr6, $xr14, $xr22, $xr30; xvfnmsub.d $xr7, $xr15, $xr23, $xr31",
       "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr16, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr17, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr18, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr19, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr20, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr21, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr22, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr23, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr24, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr25, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr26, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr27, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr28, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr29, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr30, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr31, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "measurement": {
         "unroll": 1000,
@@ -93,10 +93,9 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

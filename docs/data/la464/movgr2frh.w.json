@@ -49,7 +49,7 @@
         "0114ad67  movgr2frh.w \t$fa7, $a7"
       ],
       "result": {
-        "instructions_retired": 16.0,
+        "instructions_retired": 16,
         "core_cycles": 7.98
       },
       "measurement": {
@@ -59,8 +59,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2frh.w $f0, $r4; movgr2frh.w $f1, $r5; movgr2frh.w $f2, $r6; movgr2frh.w $f3, $r7; movgr2frh.w $f4, $r8; movgr2frh.w $f5, $r9; movgr2frh.w $f6, $r10; movgr2frh.w $f7, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 7.98 cycles."
     }

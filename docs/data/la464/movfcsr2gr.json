@@ -49,7 +49,7 @@
         "0114c873  movfcsr2gr  \t$t7, $fcsr3"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 55.96
       },
       "measurement": {
@@ -59,7 +59,7 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0; movgr2fcsr $fcsr0, $r4; movgr2fcsr $fcsr1, $r4; movgr2fcsr $fcsr2, $r4; movgr2fcsr $fcsr3, $r4' --asm 'movfcsr2gr $r12, $fcsr0; movfcsr2gr $r13, $fcsr1; movfcsr2gr $r14, $fcsr2; movfcsr2gr $r15, $fcsr3; movfcsr2gr $r16, $fcsr0; movfcsr2gr $r17, $fcsr1; movfcsr2gr $r18, $fcsr2; movfcsr2gr $r19, $fcsr3'",
       "throughput": {
         "lanes": 8,
-        "cpi": 7.0,
+        "cpi": 7,
         "ipc": 0.1429
       },
       "notes": "8 independent instructions take 55.96 cycles."

@@ -35,17 +35,17 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
           "role": "measurement",
           "asm": "vseteqz.v $fcc0, $vr0; movcf2gr $r6, $fcc0; vreplgr2vr.w $vr0, $r6",
           "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4",
-          "chain_latency": 10.0,
+          "chain_latency": 10,
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 11.0
+            "instructions_retired": 3,
+            "core_cycles": 11
           },
           "measurement": {
             "unroll": 20000,
@@ -63,8 +63,8 @@
       "asm": "vseteqz.v $fcc0, $vr8; vseteqz.v $fcc1, $vr9; vseteqz.v $fcc2, $vr10; vseteqz.v $fcc3, $vr11; vseteqz.v $fcc4, $vr12; vseteqz.v $fcc5, $vr13; vseteqz.v $fcc6, $vr14; vseteqz.v $fcc7, $vr15",
       "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "measurement": {
         "unroll": 1000,
@@ -74,10 +74,9 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "Throughput measured with 8 independent lanes."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

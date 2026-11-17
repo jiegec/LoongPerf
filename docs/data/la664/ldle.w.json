@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,10 +60,10 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r4, 8; st.w $r4, $r20, 0; li.d $r4, -8; st.w $r4, $r20, 8; li.d $r21, 9223372036854775807; li.d $r5, 0' --asm 'ldle.w $r4, $r20, $r21; add.d $r20, $r20, $r4'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 5.0
+            "instructions_retired": 2,
+            "core_cycles": 5
           },
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "notes": "rj -> rd chain: the address register is updated from the loaded value; the add.d is subtracted. The bound is held at max signed so the check always passes.",
           "machine_code": [
             "02e00074  addi.d      \t$t8, $sp, -2048",
@@ -88,7 +88,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -102,10 +102,10 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r4, -64; and $r20, $r20, $r4; li.d $r5, 9223372036854775807; st.d $r5, $r20, 0; li.d $r12, 9223372036854775807; li.d $r4, 9223372036854775807' --asm 'ldle.w $r4, $r20, $r4'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 4.0
+            "instructions_retired": 1,
+            "core_cycles": 4
           },
-          "chain_latency": 0.0,
+          "chain_latency": 0,
           "notes": "rk -> rd chain: the bound register is tied to rd. The word at the address holds max signed, so each iteration re-derives a bound that still passes the check.",
           "machine_code": [
             "02e00074  addi.d      \t$t8, $sp, -2048",
@@ -142,13 +142,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, 1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8' --asm 'ldle.w $r12, $r21, $r30; ldle.w $r13, $r23, $r30; ldle.w $r14, $r24, $r30; ldle.w $r15, $r25, $r30; ldle.w $r16, $r26, $r30; ldle.w $r17, $r27, $r30; ldle.w $r18, $r28, $r30; ldle.w $r19, $r29, $r30'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 bound-checked memory operations take 8.00 cycles."
     }

@@ -38,9 +38,9 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.0,
-      "cycles_min": 8.0,
-      "cycles_max": 24.0,
+      "cycles": 10,
+      "cycles_min": 8,
+      "cycles_max": 24,
       "experiments": [
         {
           "name": "dependent vector chain with reset helper",
@@ -54,7 +54,7 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'vfrecip.d $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'",
           "result": {
-            "instructions_retired": 6.0,
+            "instructions_retired": 6,
             "core_cycles": 17.07
           },
           "chain_latency": 7.07,
@@ -83,8 +83,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'vadd.b $vr0, $vr0, $vr0; vpickve2gr.d $r4, $vr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; vreplgr2vr.d $vr0, $r4'",
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 10.0
+            "instructions_retired": 6,
+            "core_cycles": 10
           },
           "notes": "Same helper chain with vadd.b replacing the variable-latency operation.",
           "machine_code": [
@@ -110,7 +110,7 @@
       "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4' --asm 'vfrecip.d $vr0, $vr8; vfrecip.d $vr1, $vr9; vfrecip.d $vr2, $vr10; vfrecip.d $vr3, $vr11; vfrecip.d $vr4, $vr12; vfrecip.d $vr5, $vr13; vfrecip.d $vr6, $vr14; vfrecip.d $vr7, $vr15'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 31.99
       },
       "throughput": {
@@ -125,5 +125,5 @@
       "notes": "Throughput range over 11 operand values: min CPI 3.00 at 0, max CPI 11.00 at maxsub. Sample uses 1."
     }
   ],
-  "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."
 }

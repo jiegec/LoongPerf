@@ -30,7 +30,7 @@
       "asm": "x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1",
       "init": "x86mttop 0",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 2.04
       },
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'x86mttop 0' --asm 'x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1; x86mttop 1'",

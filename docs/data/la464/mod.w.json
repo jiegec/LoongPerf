@@ -46,17 +46,17 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 22.0,
+      "cycles": 22,
       "experiments": [
         {
           "name": "fixed-operand chain with add.d reset",
           "role": "measurement",
           "asm": "mod.w $r12, $r12, $r13; add.d $r12, $r12, $r5",
           "init": "li.d $r12, 2147483647; li.d $r13, 1; li.d $r5, 2147483647",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 23.0
+            "instructions_retired": 2,
+            "core_cycles": 23
           },
           "measurement": {
             "unroll": 2000,
@@ -66,25 +66,25 @@
         }
       ],
       "notes": "Data-dependent (rj-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
-      "cycles_min": 5.0,
-      "cycles_max": 22.0
+      "cycles_min": 5,
+      "cycles_max": 22
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 22.0,
+      "cycles": 22,
       "experiments": [
         {
           "name": "fixed-operand chain with add.d reset",
           "role": "measurement",
           "asm": "mod.w $r12, $r13, $r12; add.d $r12, $r12, $r5",
           "init": "li.d $r12, 1; li.d $r13, 2147483647; li.d $r5, 1",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 23.0
+            "instructions_retired": 2,
+            "core_cycles": 23
           },
           "measurement": {
             "unroll": 2000,
@@ -94,8 +94,8 @@
         }
       ],
       "notes": "Data-dependent (rk-chained). Measured over 400 dividend/divisor pairs. Min 5 cycles at dividend=0, divisor=2; max 22 at dividend=0x7fffffff, divisor=1. The sample experiment uses the max-latency pair; add.d helper latency (1 cycle) is subtracted.",
-      "cycles_min": 5.0,
-      "cycles_max": 22.0
+      "cycles_min": 5,
+      "cycles_max": 22
     }
   ],
   "throughput": [
@@ -114,7 +114,7 @@
         "0020f173  mod.w       \t$t7, $a7, $s5"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 27.96
       },
       "measurement": {
@@ -127,7 +127,7 @@
         "cpi": 3.5,
         "ipc": 0.2857,
         "cpi_min": 3.5,
-        "cpi_max": 12.0,
+        "cpi_max": 12,
         "ipc_min": 0.0833,
         "ipc_max": 0.2857
       },

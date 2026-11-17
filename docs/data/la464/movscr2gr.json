@@ -48,7 +48,7 @@
         "00000c13  movscr2gr $t7, $scr0"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 7.35
       },
       "measurement": {

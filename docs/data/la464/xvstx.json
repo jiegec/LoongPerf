@@ -47,7 +47,7 @@
       "asm": "xvstx $xr0, $r20, $r4; xvstx $xr1, $r20, $r5; xvstx $xr2, $r20, $r6; xvstx $xr3, $r20, $r7; xvstx $xr4, $r20, $r8; xvstx $xr5, $r20, $r9; xvstx $xr6, $r20, $r10; xvstx $xr7, $r20, $r11",
       "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 32; li.d $r6, 64; li.d $r7, 96; li.d $r8, 128; li.d $r9, 160; li.d $r10, 192; li.d $r11, 224; li.d $r4, -64; and $r20, $r20, $r4",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 8.09
       },
       "measurement": {
@@ -57,8 +57,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 2; xvreplgr2vr.b $xr1, $r4; li.d $r4, 3; xvreplgr2vr.b $xr2, $r4; li.d $r4, 4; xvreplgr2vr.b $xr3, $r4; li.d $r4, 5; xvreplgr2vr.b $xr4, $r4; li.d $r4, 6; xvreplgr2vr.b $xr5, $r4; li.d $r4, 7; xvreplgr2vr.b $xr6, $r4; li.d $r4, 8; xvreplgr2vr.b $xr7, $r4; addi.d $r20, $sp, -1024; li.d $r4, 0; li.d $r5, 32; li.d $r6, 64; li.d $r7, 96; li.d $r8, 128; li.d $r9, 160; li.d $r10, 192; li.d $r11, 224; li.d $r4, -64; and $r20, $r20, $r4' --asm 'xvstx $xr0, $r20, $r4; xvstx $xr1, $r20, $r5; xvstx $xr2, $r20, $r6; xvstx $xr3, $r20, $r7; xvstx $xr4, $r20, $r8; xvstx $xr5, $r20, $r9; xvstx $xr6, $r20, $r10; xvstx $xr7, $r20, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.09 cycles."
     }

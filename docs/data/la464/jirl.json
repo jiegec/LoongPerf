@@ -46,7 +46,7 @@
       "asm": "la.local $r4, .Lloop; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; .Lloop:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4; addi.d $r12, $r12, -1; bnez $r12, .Lloop",
       "init": "li.d $r12, 1000",
       "result": {
-        "instructions_retired": 10008.0,
+        "instructions_retired": 10008,
         "core_cycles": 25016.97
       },
       "measurement": {
@@ -57,7 +57,7 @@
       "command": "./bench --unroll 1 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r12, 1000' --asm 'la.local $r4, .Lloop; addi.d $r5, $r4, 4; addi.d $r6, $r4, 8; addi.d $r7, $r4, 12; addi.d $r8, $r4, 16; addi.d $r9, $r4, 20; addi.d $r10, $r4, 24; addi.d $r11, $r4, 28; .Lloop:; jirl $r0, $r4, 4; jirl $r0, $r5, 4; jirl $r0, $r6, 4; jirl $r0, $r7, 4; jirl $r0, $r8, 4; jirl $r0, $r9, 4; jirl $r0, $r10, 4; jirl $r0, $r11, 4; addi.d $r12, $r12, -1; bnez $r12, .Lloop'",
       "throughput": {
         "lanes": 8000,
-        "cpi": 3.0,
+        "cpi": 3,
         "ipc": 0.3333
       },
       "baseline_cycles": 1013.01,

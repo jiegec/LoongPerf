@@ -47,7 +47,7 @@
       ],
       "to_operand": 1,
       "cycles_divisor": 2,
-      "cycles": 15.0,
+      "cycles": 15,
       "experiments": [
         {
           "name": "two-atomic dependency cycle",
@@ -55,8 +55,8 @@
           "asm": "amor_db.d $r12, $r13, $r20; amor_db.d $r13, $r12, $r20",
           "init": "addi.d $r20, $sp, -1024; st.d $r0, $r20, 0; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0",
           "result": {
-            "instructions_retired": 4.0,
-            "core_cycles": 30.0
+            "instructions_retired": 4,
+            "core_cycles": 30
           },
           "measurement": {
             "unroll": 1000,
@@ -84,7 +84,7 @@
         "386cafb3  amor_db.d   \t$t7, $a7, $s6"
       ],
       "result": {
-        "instructions_retired": 16.0,
+        "instructions_retired": 16,
         "core_cycles": 120.11
       },
       "measurement": {
@@ -94,10 +94,9 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 0; addi.d $r14, $r0, 0; addi.d $r15, $r0, 0; addi.d $r16, $r0, 0; addi.d $r17, $r0, 0; addi.d $r18, $r0, 0; addi.d $r19, $r0, 0' --asm 'amor_db.d $r12, $r4, $r21; amor_db.d $r13, $r5, $r23; amor_db.d $r14, $r6, $r24; amor_db.d $r15, $r7, $r25; amor_db.d $r16, $r8, $r26; amor_db.d $r17, $r9, $r27; amor_db.d $r18, $r10, $r28; amor_db.d $r19, $r11, $r29'",
       "throughput": {
         "lanes": 8,
-        "cpi": 15.0,
+        "cpi": 15,
         "ipc": 0.0667
       }
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

@@ -54,7 +54,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "dependent chain",
@@ -70,8 +70,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f2, $r4' --asm 'fmsub.s $f0, $f0, $f1, $f2'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
@@ -83,7 +83,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "dependent chain",
@@ -99,8 +99,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f2, $r4' --asm 'fmsub.s $f0, $f1, $f0, $f2'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
@@ -112,7 +112,7 @@
         4
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "dependent chain",
@@ -128,8 +128,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f0, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f1, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f2, $r4' --asm 'fmsub.s $f0, $f1, $f2, $f0'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "notes": "Consecutive unrolled copies form an $f0 dependency chain."
         }
@@ -154,13 +154,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f16, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f17, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f18, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f19, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f20, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f21, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f22, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f23, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f24, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f25, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f26, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f27, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f28, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f29, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f30, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f31, $r4' --asm 'fmsub.s $f0, $f8, $f16, $f24; fmsub.s $f1, $f9, $f17, $f25; fmsub.s $f2, $f10, $f18, $f26; fmsub.s $f3, $f11, $f19, $f27; fmsub.s $f4, $f12, $f20, $f28; fmsub.s $f5, $f13, $f21, $f29; fmsub.s $f6, $f14, $f22, $f30; fmsub.s $f7, $f15, $f23, $f31'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }

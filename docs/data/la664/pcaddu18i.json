@@ -49,7 +49,7 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --asm 'pcaddu18i $r12, 1; pcaddu18i $r13, 1; pcaddu18i $r14, 1; pcaddu18i $r15, 1; pcaddu18i $r16, 1; pcaddu18i $r17, 1; pcaddu18i $r18, 1; pcaddu18i $r19, 1'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 3.33
       },
       "throughput": {

@@ -47,7 +47,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "dependent vector chain",
@@ -55,8 +55,8 @@
           "asm": "vfcmp.ceq.s $vr0, $vr0, $vr2",
           "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr0, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr2, $r4",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "measurement": {
             "unroll": 20000,
@@ -75,8 +75,8 @@
       "asm": "vfcmp.ceq.s $vr0, $vr8, $vr16; vfcmp.ceq.s $vr1, $vr9, $vr17; vfcmp.ceq.s $vr2, $vr10, $vr18; vfcmp.ceq.s $vr3, $vr11, $vr19; vfcmp.ceq.s $vr4, $vr12, $vr20; vfcmp.ceq.s $vr5, $vr13, $vr21; vfcmp.ceq.s $vr6, $vr14, $vr22; vfcmp.ceq.s $vr7, $vr15, $vr23",
       "init": "li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr16, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr17, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr18, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr19, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr20, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr21, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr22, $r4; li.d $r4, 1073741824; vreplgr2vr.w $vr23, $r4",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "measurement": {
         "unroll": 1000,
@@ -86,10 +86,9 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 4.00 cycles."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

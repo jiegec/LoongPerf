@@ -53,7 +53,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -69,8 +69,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'bytepick.w $r12, $r12, $r13, 2'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "notes": "rd == rj; consecutive unrolled copies form a $r12 dependency chain."
         }
@@ -82,7 +82,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -98,8 +98,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'bytepick.w $r12, $r13, $r12, 2'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "notes": "rd == rk; consecutive unrolled copies form a $r12 dependency chain."
         }
@@ -124,13 +124,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'bytepick.w $r12, $r4, $r20, 2; bytepick.w $r13, $r5, $r21, 2; bytepick.w $r14, $r6, $r23, 2; bytepick.w $r15, $r7, $r24, 2; bytepick.w $r16, $r8, $r25, 2; bytepick.w $r17, $r9, $r26, 2; bytepick.w $r18, $r10, $r27, 2; bytepick.w $r19, $r11, $r28, 2'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 2.0
+        "instructions_retired": 8,
+        "core_cycles": 2
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4.0
+        "ipc": 4
       },
       "notes": "8 independent instructions take 2.00 cycles."
     }

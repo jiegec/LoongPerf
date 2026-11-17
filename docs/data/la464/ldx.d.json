@@ -47,16 +47,16 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "high-unroll ALU-consumer chain",
           "role": "measurement",
           "asm": "ldx.d $r4, $r0, $r4; add.d $r4, $r4, $r5",
           "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0; li.d $r5, 0",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "result": {
-            "instructions_retired": 2.0,
+            "instructions_retired": 2,
             "core_cycles": 5.99
           },
           "measurement": {
@@ -72,8 +72,8 @@
           "asm": "ldx.d $r4, $r0, $r4",
           "init": "addi.d $r13, $sp, -1016; st.d $r13, $r13, 0; addi.d $r4, $r13, 0",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 4.0
+            "instructions_retired": 1,
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 20000,
@@ -85,8 +85,8 @@
         }
       ],
       "notes": "L1D-hit indexed-load latency: 4 cycles through the load-to-AGU address bypass, 5 cycles through the ALU-consumer path. The measurement experiment adds add.d to force the ALU path; the calibration experiment is the bare index chase.",
-      "cycles_min": 4.0,
-      "cycles_max": 5.0
+      "cycles_min": 4,
+      "cycles_max": 5
     }
   ],
   "throughput": [
@@ -105,7 +105,7 @@
         "380c2e93  ldx.d       \t$t7, $t8, $a7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 7.98
       },
       "measurement": {
@@ -115,8 +115,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56' --asm 'ldx.d $r12, $r20, $r4; ldx.d $r13, $r20, $r5; ldx.d $r14, $r20, $r6; ldx.d $r15, $r20, $r7; ldx.d $r16, $r20, $r8; ldx.d $r17, $r20, $r9; ldx.d $r18, $r20, $r10; ldx.d $r19, $r20, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 7.98 cycles."
     }

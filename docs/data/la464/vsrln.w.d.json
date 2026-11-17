@@ -43,7 +43,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "dependent chain",
@@ -51,8 +51,8 @@
           "asm": "vsrln.w.d $vr0, $vr0, $vr1",
           "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 2.0
+            "instructions_retired": 2,
+            "core_cycles": 2
           },
           "measurement": {
             "unroll": 20000,
@@ -70,7 +70,7 @@
       "asm": "vsrln.w.d $vr0, $vr8, $vr16; vsrln.w.d $vr1, $vr9, $vr17; vsrln.w.d $vr2, $vr10, $vr18; vsrln.w.d $vr3, $vr11, $vr19; vsrln.w.d $vr4, $vr12, $vr20; vsrln.w.d $vr5, $vr13, $vr21; vsrln.w.d $vr6, $vr14, $vr22; vsrln.w.d $vr7, $vr15, $vr23",
       "init": "li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4",
       "result": {
-        "instructions_retired": 16.0,
+        "instructions_retired": 16,
         "core_cycles": 8.06
       },
       "measurement": {
@@ -80,11 +80,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x0102030405060708; vreplgr2vr.d $vr0, $r4; vreplgr2vr.d $vr1, $r4; vreplgr2vr.d $vr2, $r4' --asm 'vsrln.w.d $vr0, $vr8, $vr16; vsrln.w.d $vr1, $vr9, $vr17; vsrln.w.d $vr2, $vr10, $vr18; vsrln.w.d $vr3, $vr11, $vr19; vsrln.w.d $vr4, $vr12, $vr20; vsrln.w.d $vr5, $vr13, $vr21; vsrln.w.d $vr6, $vr14, $vr22; vsrln.w.d $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "Throughput measured with 8 independent lanes."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

@@ -99,12 +99,12 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56' --asm 'll.w $r12, $r20, 0; ll.w $r13, $r20, 8; ll.w $r14, $r20, 16; ll.w $r15, $r20, 24; ll.w $r16, $r20, 32; ll.w $r17, $r20, 40; ll.w $r18, $r20, 48; ll.w $r19, $r20, 56'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 72.0
+        "instructions_retired": 8,
+        "core_cycles": 72
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 9.0,
+        "cpi": 9,
         "ipc": 0.1111111111111111
       },
       "notes": "8 atomic memory operations take 72.00 cycles."

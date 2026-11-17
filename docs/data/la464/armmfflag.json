@@ -46,7 +46,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "ARMFLAGS -> rd",
@@ -56,10 +56,10 @@
           "chain_instructions": [
             "armmtflag $r12, 0xf"
           ],
-          "chain_latency": 3.0,
+          "chain_latency": 3,
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "measurement": {
             "unroll": 10000,
@@ -73,8 +73,8 @@
           "asm": "armmtflag $r12, 0xf; armmfflag $r12, 0xf; armmfflag $r12, 0xf",
           "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0xf",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 1.0
+            "instructions_retired": 3,
+            "core_cycles": 1
           },
           "measurement": {
             "unroll": 6666,
@@ -103,7 +103,7 @@
         "005c3c53  armmfflag $t7, 0xf"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 8.31
       },
       "measurement": {
@@ -113,11 +113,10 @@
       "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0xf' --asm 'armmfflag $r12, 0xf; armmfflag $r13, 0xf; armmfflag $r14, 0xf; armmfflag $r15, 0xf; armmfflag $r16, 0xf; armmfflag $r17, 0xf; armmfflag $r18, 0xf; armmfflag $r19, 0xf'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.31 cycles."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

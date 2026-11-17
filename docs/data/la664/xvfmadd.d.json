@@ -54,7 +54,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -68,8 +68,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4' --asm 'xvfmadd.d $xr0, $xr0, $xr2, $xr3'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "notes": "vj -> vd chain.",
           "machine_code": [
@@ -92,7 +92,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -106,8 +106,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4' --asm 'xvfmadd.d $xr0, $xr1, $xr0, $xr3'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "notes": "vk -> vd chain.",
           "machine_code": [
@@ -130,7 +130,7 @@
         4
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -144,8 +144,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3f800000; xvreplgr2vr.w $xr0, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr1, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr2, $r4; li.d $r4, 0x3f800000; xvreplgr2vr.w $xr3, $r4' --asm 'xvfmadd.d $xr0, $xr1, $xr2, $xr0'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 5.0
+            "instructions_retired": 1,
+            "core_cycles": 5
           },
           "notes": "va -> vd chain.",
           "machine_code": [
@@ -171,16 +171,16 @@
       "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr16, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr17, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr18, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr19, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr20, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr21, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr22, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr23, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr24, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr25, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr26, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr27, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr28, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr29, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr30, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr31, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr16, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr17, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr18, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr19, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr20, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr21, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr22, $r4; li.d $r4, 4611686018427387904; xvreplgr2vr.d $xr23, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr24, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr25, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr26, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr27, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr28, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr29, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr30, $r4; li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr31, $r4' --asm 'xvfmadd.d $xr0, $xr8, $xr16, $xr24; xvfmadd.d $xr1, $xr9, $xr17, $xr25; xvfmadd.d $xr2, $xr10, $xr18, $xr26; xvfmadd.d $xr3, $xr11, $xr19, $xr27; xvfmadd.d $xr4, $xr12, $xr20, $xr28; xvfmadd.d $xr5, $xr13, $xr21, $xr29; xvfmadd.d $xr6, $xr14, $xr22, $xr30; xvfmadd.d $xr7, $xr15, $xr23, $xr31'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent instructions take 3.98 cycles. The measured CPI 0.4975 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure."
     }
   ],
-  "notes": "LBT-free LASX/LSX fused multiply-add. vd is write-only: it is not read as an accumulator (a vd -> vd chain runs at about 0.5 cycles). The vj, vk, and va paths each cost 5 cycles. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LBT-free LASX/LSX fused multiply-add. vd is write-only: it is not read as an accumulator (a vd -> vd chain runs at about 0.5 cycles). The vj, vk, and va paths each cost 5 cycles."
 }

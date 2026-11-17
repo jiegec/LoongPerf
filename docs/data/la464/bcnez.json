@@ -47,8 +47,8 @@
         "48000100  bcnez       \t$fcc0, 0\t# 0x1c"
       ],
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "measurement": {
         "unroll": 1000,
@@ -57,8 +57,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0; movgr2cf $fcc0, $r4' --asm 'bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0; bcnez $fcc0, 0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 not-taken branches measured at unroll=1000."
     },
@@ -77,8 +77,8 @@
         "48000500  bcnez       \t$fcc0, 4\t# 0x20"
       ],
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "measurement": {
         "unroll": 10,
@@ -87,8 +87,8 @@
       "command": "./bench --unroll 10 --iters 10000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; movgr2cf $fcc0, $r4' --asm 'bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4; bcnez $fcc0, 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 taken branches measured at unroll=10 to stay within BTB capacity."
     }

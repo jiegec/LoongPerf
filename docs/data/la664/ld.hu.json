@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "high-unroll load-to-ALU chain",
@@ -60,9 +60,9 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'addi.d $r20, $sp, -1024; li.d $r4, 8; st.h $r4, $r20, 0; li.d $r4, -8; st.h $r4, $r20, 8' --asm 'ld.hu $r4, $r20, 0; slli.d $r4, $r4, 48; srai.d $r4, $r4, 48; add.d $r20, $r20, $r4'",
           "result": {
             "instructions_retired": 4,
-            "core_cycles": 7.0
+            "core_cycles": 7
           },
-          "chain_latency": 3.0,
+          "chain_latency": 3,
           "notes": "L1D hit, load-to-ALU latency 4 cycles. The unsigned result is explicitly sign-extended with slli/srai so the base pointer can alternate +8/-8; chain_latency subtracts 2 shift cycles and 1 add. Measured with unroll=100000.",
           "machine_code": [
             "02f00074  addi.d      \t$t8, $sp, -1024",
@@ -97,13 +97,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024' --asm 'ld.hu $r12, $r20, 0; ld.hu $r13, $r20, 8; ld.hu $r14, $r20, 16; ld.hu $r15, $r20, 24; ld.hu $r16, $r20, 32; ld.hu $r17, $r20, 40; ld.hu $r18, $r20, 48; ld.hu $r19, $r20, 56'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }

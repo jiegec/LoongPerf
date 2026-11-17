@@ -37,7 +37,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -53,8 +53,8 @@
           ],
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --init 'addi.d $r12, $r0, 1' --asm 'lu32i.d $r12, 1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 1.0
+            "instructions_retired": 1,
+            "core_cycles": 1
           },
           "notes": "Consecutive unrolled copies form a dependency chain."
         }
@@ -79,13 +79,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --asm 'lu32i.d $r12, 1; lu32i.d $r13, 1; lu32i.d $r14, 1; lu32i.d $r15, 1; lu32i.d $r16, 1; lu32i.d $r17, 1; lu32i.d $r18, 1; lu32i.d $r19, 1'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 2.0
+        "instructions_retired": 8,
+        "core_cycles": 2
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4.0
+        "ipc": 4
       },
       "notes": "8 independent instructions take 2.00 cycles."
     }

@@ -38,9 +38,9 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 10.0,
-      "cycles_min": 8.0,
-      "cycles_max": 37.0,
+      "cycles": 10,
+      "cycles_min": 8,
+      "cycles_max": 37,
       "experiments": [
         {
           "name": "dependent vector chain with reset helper",
@@ -54,7 +54,7 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'xvfsqrt.d $xr0, $xr0; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4'",
           "result": {
-            "instructions_retired": 6.0,
+            "instructions_retired": 6,
             "core_cycles": 19.07
           },
           "chain_latency": 9.07,
@@ -83,8 +83,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr0, $r4; li.d $r5, 1; li.d $r6, 4607182418800017408' --asm 'xvadd.b $xr0, $xr0, $xr0; xvpickve2gr.d $r4, $xr0, 0; and $r4, $r4, $r5; or $r4, $r4, $r6; xvreplgr2vr.d $xr0, $r4'",
           "result": {
-            "instructions_retired": 6.0,
-            "core_cycles": 10.0
+            "instructions_retired": 6,
+            "core_cycles": 10
           },
           "notes": "Same helper chain with vadd.b replacing the variable-latency operation.",
           "machine_code": [
@@ -110,7 +110,7 @@
       "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4' --asm 'xvfsqrt.d $xr0, $xr8; xvfsqrt.d $xr1, $xr9; xvfsqrt.d $xr2, $xr10; xvfsqrt.d $xr3, $xr11; xvfsqrt.d $xr4, $xr12; xvfsqrt.d $xr5, $xr13; xvfsqrt.d $xr6, $xr14; xvfsqrt.d $xr7, $xr15'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 31.99
       },
       "throughput": {
@@ -125,5 +125,5 @@
       "notes": "Throughput range over 11 operand values: min CPI 3.00 at 0, max CPI 17.50 at maxsub. Sample uses 1."
     }
   ],
-  "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."
 }

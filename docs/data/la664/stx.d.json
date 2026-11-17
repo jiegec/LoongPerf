@@ -58,13 +58,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r12, $r0, 0; addi.d $r13, $r0, 8; addi.d $r14, $r0, 16; addi.d $r15, $r0, 24; addi.d $r16, $r0, 32; addi.d $r17, $r0, 40; addi.d $r18, $r0, 48; addi.d $r19, $r0, 56' --asm 'stx.d $r4, $r20, $r12; stx.d $r5, $r20, $r13; stx.d $r6, $r20, $r14; stx.d $r7, $r20, $r15; stx.d $r8, $r20, $r16; stx.d $r9, $r20, $r17; stx.d $r10, $r20, $r18; stx.d $r11, $r20, $r19'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }

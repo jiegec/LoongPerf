@@ -46,7 +46,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 2.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,8 +60,8 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86srai.w $r12, 1'",
           "result": {
-            "instructions_retired": 1.0,
-            "core_cycles": 2.0
+            "instructions_retired": 1,
+            "core_cycles": 2
           },
           "notes": "rd -> rd chain: the destination is also a source.",
           "machine_code": [
@@ -78,7 +78,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -92,11 +92,11 @@
           },
           "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86srai.w $r12, 1; x86mfflag $r12, 1'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted.",
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "005c0420  x86mtflag   \t$zero, 0x1",
@@ -115,16 +115,16 @@
       "init": "x86mtflag $r0, 1",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'x86mtflag $r0, 1' --asm 'x86srai.w $r12, 1; x86srai.w $r13, 1; x86srai.w $r14, 1; x86srai.w $r15, 1; x86srai.w $r16, 1; x86srai.w $r17, 1; x86srai.w $r18, 1; x86srai.w $r19, 1'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "8 independent instructions take 16.02 cycles. The measured CPI 2.0025 is the nominal 2 within measurement noise; the value is reported as the nominal figure."
     }
   ],
-  "notes": "LBT x86-style instruction with an immediate operand. Latency is recorded for the rd accumulator path and the EFLAGS path. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "LBT x86-style instruction with an immediate operand. Latency is recorded for the rd accumulator path and the EFLAGS path."
 }

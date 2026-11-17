@@ -46,7 +46,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 3,
       "experiments": [
         {
           "name": "rd -> ARMFLAGS via armmfflag",
@@ -56,15 +56,15 @@
           "chain_instructions": [
             "armmfflag $r12, 0xf"
           ],
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "machine_code": [
             "005c3c6c  armmtflag $t0, 0xf",
             "005c3c4c  armmfflag $t0, 0xf"
           ],
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0xf' --asm 'armmtflag $r12, 0xf; armmfflag $r12, 0xf'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 4.0
+            "instructions_retired": 2,
+            "core_cycles": 4
           },
           "notes": "Total = L(armmtflag) + L(armmfflag) = 4.00 (4.01 measured)."
         },
@@ -80,8 +80,8 @@
           ],
           "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0xf' --asm 'armmtflag $r12, 0xf; armmfflag $r12, 0xf; armmfflag $r12, 0xf'",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 3.0
+            "instructions_retired": 3,
+            "core_cycles": 3
           },
           "notes": "Adding one armmfflag adds about 1.00 cycle, so L(armmfflag) = 1.00 and L(armmtflag) = 3.00."
         }
@@ -106,12 +106,12 @@
       ],
       "command": "./bench --unroll 10000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0xf' --asm 'armmtflag $r4, 0xf; armmtflag $r5, 0xf; armmtflag $r6, 0xf; armmtflag $r7, 0xf; armmtflag $r8, 0xf; armmtflag $r9, 0xf; armmtflag $r10, 0xf; armmtflag $r11, 0xf'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 16.0
+        "instructions_retired": 8,
+        "core_cycles": 16
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 2.0,
+        "cpi": 2,
         "ipc": 0.5
       },
       "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter."

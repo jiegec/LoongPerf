@@ -60,10 +60,10 @@
           },
           "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.d $r22, $r20, 0; li.d $r22, -8; st.d $r22, $r20, 8; li.d $r21, 0' --asm 'fldx.d $f0, $r20, $r21; movfr2gr.d $r4, $f0; add.d $r20, $r20, $r4'",
           "result": {
-            "instructions_retired": 3.0,
+            "instructions_retired": 3,
             "core_cycles": 7.98
           },
-          "chain_latency": 4.0,
+          "chain_latency": 4,
           "notes": "rj -> fd chain; the movfr2gr.d (3) + add.d (1) closure is subtracted.",
           "machine_code": [
             "02e00074  addi.d      \t$t8, $sp, -2048",
@@ -101,10 +101,10 @@
           },
           "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r22, 8; st.d $r22, $r20, 0; li.d $r4, 0' --asm 'fldx.d $f0, $r20, $r4; movfr2gr.d $r4, $f0; andi $r4, $r4, 7'",
           "result": {
-            "instructions_retired": 3.0,
+            "instructions_retired": 3,
             "core_cycles": 8.98
           },
-          "chain_latency": 4.0,
+          "chain_latency": 4,
           "notes": "rk -> fd chain with the index loop-carried and masked; the movfr2gr.d (3) + andi (1) closure is subtracted.",
           "machine_code": [
             "02e00074  addi.d      \t$t8, $sp, -2048",
@@ -139,13 +139,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56' --asm 'fldx.d $f0, $r20, $r4; fldx.d $f1, $r20, $r5; fldx.d $f2, $r20, $r6; fldx.d $f3, $r20, $r7; fldx.d $f4, $r20, $r8; fldx.d $f5, $r20, $r9; fldx.d $f6, $r20, $r10; fldx.d $f7, $r20, $r11'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }

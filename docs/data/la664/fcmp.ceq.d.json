@@ -45,7 +45,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -59,11 +59,11 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.ceq.d $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f0, $r4'",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 5.0
+            "instructions_retired": 3,
+            "core_cycles": 5
           },
           "notes": "fj -> fcc chain; the loop is closed through movcf2gr and movgr2fr, and that closure costs the same for both entries.",
-          "chain_latency": 4.0,
+          "chain_latency": 4,
           "machine_code": [
             "030ffc04  lu52i.d     \t$a0, $zero, 1023",
             "0114a880  movgr2fr.d  \t$fa0, $a0",
@@ -81,7 +81,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -95,11 +95,11 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4' --asm 'fcmp.ceq.d $fcc0, $f0, $f1; movcf2gr $r4, $fcc0; movgr2fr.d $f1, $r4'",
           "result": {
-            "instructions_retired": 3.0,
-            "core_cycles": 5.0
+            "instructions_retired": 3,
+            "core_cycles": 5
           },
           "notes": "fk -> fcc chain; the loop is closed through movcf2gr and movgr2fr.",
-          "chain_latency": 4.0,
+          "chain_latency": 4,
           "machine_code": [
             "030ffc04  lu52i.d     \t$a0, $zero, 1023",
             "0114a880  movgr2fr.d  \t$fa0, $a0",
@@ -130,13 +130,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; movgr2fr.d $f9, $r4; movgr2fr.d $f10, $r4; movgr2fr.d $f11, $r4; movgr2fr.d $f12, $r4; movgr2fr.d $f13, $r4; movgr2fr.d $f14, $r4; movgr2fr.d $f15, $r4; movgr2fr.d $f16, $r4; movgr2fr.d $f17, $r4; movgr2fr.d $f18, $r4; movgr2fr.d $f19, $r4; movgr2fr.d $f20, $r4; movgr2fr.d $f21, $r4; movgr2fr.d $f22, $r4; movgr2fr.d $f23, $r4' --asm 'fcmp.ceq.d $fcc0, $f8, $f9; fcmp.ceq.d $fcc1, $f10, $f11; fcmp.ceq.d $fcc2, $f12, $f13; fcmp.ceq.d $fcc3, $f14, $f15; fcmp.ceq.d $fcc4, $f16, $f17; fcmp.ceq.d $fcc5, $f18, $f19; fcmp.ceq.d $fcc6, $f20, $f21; fcmp.ceq.d $fcc7, $f22, $f23'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent comparisons take 3.98 cycles. The measured CPI 0.4975 is the nominal 0.5 within measurement noise; the value is reported as the nominal figure."
     }

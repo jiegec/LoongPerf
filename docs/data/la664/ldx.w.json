@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 4.0,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -60,10 +60,10 @@
           },
           "command": "./bench --method slope --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r21, -64; and $r20, $r20, $r21; li.d $r21, 0; li.d $r22, 1; st.d $r22, $r20, 0' --asm 'ldx.w $r4, $r20, $r21; add.d $r20, $r20, $r4'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 5.0
+            "instructions_retired": 2,
+            "core_cycles": 5
           },
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "notes": "rj -> rd chain: the base register is updated from the loaded value and the index stays 0; the add.d is subtracted.",
           "machine_code": [
             "02e00074  addi.d      \t$t8, $sp, -2048",
@@ -84,7 +84,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 5.0,
+      "cycles": 5,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -98,10 +98,10 @@
           },
           "command": "./bench --method slope --unroll 1000 --unroll2 4000 --iters 1000 --warmup 10 --reps 20 --init 'addi.d $r20, $sp, -2048; li.d $r21, -64; and $r20, $r20, $r21; li.d $r22, 8; st.d $r22, $r20, 0; li.d $r4, 0' --asm 'ldx.w $r4, $r20, $r4; andi $r4, $r4, 7'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 6.0
+            "instructions_retired": 2,
+            "core_cycles": 6
           },
-          "chain_latency": 1.0,
+          "chain_latency": 1,
           "notes": "rk -> rd chain: the index register is loop-carried; andi keeps it inside the buffer and its 1 cycle is subtracted.",
           "machine_code": [
             "02e00074  addi.d      \t$t8, $sp, -2048",
@@ -135,13 +135,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024; addi.d $r4, $r0, 0; addi.d $r5, $r0, 8; addi.d $r6, $r0, 16; addi.d $r7, $r0, 24; addi.d $r8, $r0, 32; addi.d $r9, $r0, 40; addi.d $r10, $r0, 48; addi.d $r11, $r0, 56' --asm 'ldx.w $r12, $r20, $r4; ldx.w $r13, $r20, $r5; ldx.w $r14, $r20, $r6; ldx.w $r15, $r20, $r7; ldx.w $r16, $r20, $r8; ldx.w $r17, $r20, $r9; ldx.w $r18, $r20, $r10; ldx.w $r19, $r20, $r11'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 4.0
+        "instructions_retired": 8,
+        "core_cycles": 4
       },
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0
+        "ipc": 2
       },
       "notes": "8 independent memory operations take 4.00 cycles. Buffer is at $sp-1024."
     }

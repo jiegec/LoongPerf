@@ -45,7 +45,7 @@
         1
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 1,
       "experiments": [
         {
           "name": "dependent chain",
@@ -59,8 +59,8 @@
           },
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 7 --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r5, 1' --asm 'xvinsgr2vr.w $xr0, $r5, 0'",
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 1.0
+            "instructions_retired": 2,
+            "core_cycles": 1
           },
           "notes": "Dependent chain.",
           "machine_code": [
@@ -81,16 +81,16 @@
       "init": "li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4; li.d $r4, 1; xvreplgr2vr.b $xr3, $r4; li.d $r4, 1; xvreplgr2vr.b $xr4, $r4; li.d $r4, 1; xvreplgr2vr.b $xr5, $r4; li.d $r4, 1; xvreplgr2vr.b $xr6, $r4; li.d $r4, 1; xvreplgr2vr.b $xr7, $r4; li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --counter 0xfa --init 'li.d $r4, 1; xvreplgr2vr.b $xr0, $r4; li.d $r4, 1; xvreplgr2vr.b $xr1, $r4; li.d $r4, 1; xvreplgr2vr.b $xr2, $r4; li.d $r4, 1; xvreplgr2vr.b $xr3, $r4; li.d $r4, 1; xvreplgr2vr.b $xr4, $r4; li.d $r4, 1; xvreplgr2vr.b $xr5, $r4; li.d $r4, 1; xvreplgr2vr.b $xr6, $r4; li.d $r4, 1; xvreplgr2vr.b $xr7, $r4; li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'xvinsgr2vr.w $xr0, $r4, 0; xvinsgr2vr.w $xr1, $r5, 0; xvinsgr2vr.w $xr2, $r6, 0; xvinsgr2vr.w $xr3, $r7, 0; xvinsgr2vr.w $xr4, $r8, 0; xvinsgr2vr.w $xr5, $r9, 0; xvinsgr2vr.w $xr6, $r10, 0; xvinsgr2vr.w $xr7, $r11, 0'",
       "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 8.0,
+        "instructions_retired": 16,
+        "core_cycles": 8,
         "counters": {
-          "0xfa": 1.0
+          "0xfa": 1
         }
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent instructions take 8.00 cycles. Counter 0xfa normalised per instruction."
     }

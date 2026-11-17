@@ -57,7 +57,7 @@
         "38767ba7  fstgt.s     \t$fa7, $s6, $s7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 8.04
       },
       "measurement": {
@@ -67,8 +67,8 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r20, $sp, -1024; addi.d $r21, $r20, 0; addi.d $r23, $r20, 8; addi.d $r24, $r20, 16; addi.d $r25, $r20, 24; addi.d $r26, $r20, 32; addi.d $r27, $r20, 40; addi.d $r28, $r20, 48; addi.d $r29, $r20, 56; addi.d $r30, $r20, -8; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f0, $r4; movgr2fr.d $f1, $r4; movgr2fr.d $f2, $r4; movgr2fr.d $f3, $r4; movgr2fr.d $f4, $r4; movgr2fr.d $f5, $r4; movgr2fr.d $f6, $r4; movgr2fr.d $f7, $r4' --asm 'fstgt.s $f0, $r21, $r30; fstgt.s $f1, $r23, $r30; fstgt.s $f2, $r24, $r30; fstgt.s $f3, $r25, $r30; fstgt.s $f4, $r26, $r30; fstgt.s $f5, $r27, $r30; fstgt.s $f6, $r28, $r30; fstgt.s $f7, $r29, $r30'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       }
     }
   ],

@@ -38,17 +38,17 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 13.0,
+      "cycles": 13,
       "experiments": [
         {
           "name": "condition-code dependency chain",
           "role": "measurement",
           "asm": "movgr2cf $fcc0, $r4; movcf2gr $r4, $fcc0",
           "init": "li.d $r4, 0",
-          "chain_latency": 9.0,
+          "chain_latency": 9,
           "result": {
-            "instructions_retired": 2.0,
-            "core_cycles": 22.0
+            "instructions_retired": 2,
+            "core_cycles": 22
           },
           "measurement": {
             "unroll": 10000,
@@ -77,7 +77,7 @@
         "0114d967  movgr2cf    \t$fcc7, $a7"
       ],
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 120.01
       },
       "measurement": {
@@ -87,11 +87,10 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1; li.d $r5, 2; li.d $r6, 3; li.d $r7, 4; li.d $r8, 5; li.d $r9, 6; li.d $r10, 7; li.d $r11, 8' --asm 'movgr2cf $fcc0, $r4; movgr2cf $fcc1, $r5; movgr2cf $fcc2, $r6; movgr2cf $fcc3, $r7; movgr2cf $fcc4, $r8; movgr2cf $fcc5, $r9; movgr2cf $fcc6, $r10; movgr2cf $fcc7, $r11'",
       "throughput": {
         "lanes": 8,
-        "cpi": 15.0,
+        "cpi": 15,
         "ipc": 0.0667
       },
       "notes": "8 independent instructions take 120.01 cycles."
     }
-  ],
-  "notes": "Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  ]
 }

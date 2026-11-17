@@ -56,13 +56,13 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r20, $sp, -1024' --asm 'preld 0, $r20, 0; preld 0, $r20, 8; preld 0, $r20, 16; preld 0, $r20, 24; preld 0, $r20, 32; preld 0, $r20, 40; preld 0, $r20, 48; preld 0, $r20, 56'",
       "result": {
-        "instructions_retired": 8.0,
-        "core_cycles": 8.0
+        "instructions_retired": 8,
+        "core_cycles": 8
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0
+        "cpi": 1,
+        "ipc": 1
       },
       "notes": "8 independent memory operations take 8.00 cycles. Buffer is at $sp-1024."
     }

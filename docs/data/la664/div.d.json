@@ -46,7 +46,7 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 38.0,
+      "cycles": 38,
       "experiments": [
         {
           "name": "high-unroll fixed-operand chain",
@@ -61,9 +61,9 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 5 --init 'li.d $r12, 9223372036854775807; li.d $r13, 2; li.d $r5, 1; li.d $r6, 9223372036854775806' --asm 'div.d $r12, $r12, $r13; and $r12, $r12, $r5; or $r12, $r12, $r6'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 40.0
+            "core_cycles": 40
           },
-          "chain_latency": 2.0,
+          "chain_latency": 2,
           "notes": "Fixed dividend=max, divisor=2, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain.",
           "machine_code": [
             "02bffc0c  li.w        \t$t0, -1",
@@ -87,7 +87,7 @@
         3
       ],
       "to_operand": 1,
-      "cycles": 38.0,
+      "cycles": 38,
       "experiments": [
         {
           "name": "high-unroll fixed-operand chain",
@@ -102,9 +102,9 @@
           "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 5 --init 'li.d $r12, 2; li.d $r13, 9223372036854775807; li.d $r5, 1; li.d $r6, 2' --asm 'div.d $r12, $r13, $r12; and $r12, $r12, $r5; or $r12, $r12, $r6'",
           "result": {
             "instructions_retired": 3,
-            "core_cycles": 40.0
+            "core_cycles": 40
           },
-          "chain_latency": 2.0,
+          "chain_latency": 2,
           "notes": "Fixed divisor=2, dividend=max, measured with unroll=100000. chain_latency 2 subtracts the and+or reset chain.",
           "machine_code": [
             "0380080c  li.w        \t$t0, 0x2",
@@ -140,7 +140,7 @@
       ],
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'div.d $r12, $r4, $r20; div.d $r13, $r5, $r21; div.d $r14, $r6, $r23; div.d $r15, $r7, $r24; div.d $r16, $r8, $r25; div.d $r17, $r9, $r26; div.d $r18, $r10, $r27; div.d $r19, $r11, $r28'",
       "result": {
-        "instructions_retired": 8.0,
+        "instructions_retired": 8,
         "core_cycles": 27.99
       },
       "throughput": {
@@ -148,12 +148,12 @@
         "cpi": 3.49875,
         "ipc": 0.28581636298678104,
         "cpi_min": 3.5,
-        "cpi_max": 20.0,
+        "cpi_max": 20,
         "ipc_min": 0.05,
         "ipc_max": 0.2857
       },
       "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 3.499 at divisor=0x8000000000000000; max CPI 20.001 at divisor=0xffffffffffffffff; dividend=0x7fffffffffffffff."
     }
   ],
-  "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent. Latency values are reported as whole cycles; earlier two-decimal values and +/-0.1 bands were rounding artifacts of the measurement pipeline."
+  "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent."
 }
