@@ -56,17 +56,13 @@ Counts are normalised per execution of the unrolled sequence and have the
 empty-function baseline subtracted, the same way as `instructions retired` and
 `cycles`.
 
-### Useful raw counters on LA664
+### Common raw counters (LA464 and LA664)
 
-These are vendor events outside the public Linux event map. The meanings below
-are inferred from controlled instruction-mix experiments.
+These configs have the same meaning on both microarchitectures:
 
 | Config | Meaning |
 | --- | --- |
-| `0x01` | Retired uops (this is what `PERF_COUNT_HW_INSTRUCTIONS` counts on this machine) |
-| `0xfb` | LSX vector uops |
-| `0xfa` | LASX vector uops |
-| `0xfc` | Scalar floating-point uops |
+| `0x01` | Retired uops (`PERF_COUNT_HW_INSTRUCTIONS`) |
 | `0xa8` | Load operations (one per load instruction, not per uop) |
 | `0xb0` | Store operations (one per store instruction, not per uop) |
 
@@ -80,19 +76,29 @@ the distinction clear: `amadd.w` retires as two uops, but contributes one load
 and one store. `llacq.w` contributes one load, and `sc.q` contributes one
 store, even though each is a two-uop instruction.
 
-### Useful raw counters on LA464
+### LA664-specific raw counters
+
+The following vendor events are specific to LA664 (Loongson-3C6000):
+
+| Config | Meaning |
+| --- | --- |
+| `0xfb` | LSX vector uops |
+| `0xfa` | LASX vector uops |
+| `0xfc` | Scalar floating-point uops |
+
+These are outside the public Linux event map. The meanings are inferred from
+controlled instruction-mix experiments.
+
+### LA464-specific raw counters
 
 The LA464 (Loongson-3C5000) PMU uses a different raw event map. The LA664
 configs `0xfb`, `0xfa`, and `0xfc` read zero on LA464; use these instead:
 
 | Config | Meaning |
 | --- | --- |
-| `0x01` | Retired uops (same meaning as on LA664) |
 | `0x30` | Scalar floating-point uops |
 | `0x25` | Vector instructions (LSX and LASX combined, one per instruction) |
 | `0x31` | Vector uops (LSX and LASX combined) |
-| `0xa8` | Load operations (same meaning as on LA664) |
-| `0xb0` | Store operations (same meaning as on LA664) |
 
 On LA464, `0x25` counts each LSX/LASX instruction once, while `0x31` counts
 the vector uops. For example, `vadd.b` gives `0x25 = 1` and `0x31 = 1`, but a
@@ -105,9 +111,15 @@ Scalar floating-point examples for `0x30`: `fadd.d = 1`, `fdiv.d = 1`,
 
 ## Multi-uop instructions
 
-`0x01` counts retired uops, so a multi-uop instruction has a counter value
-larger than its static instruction count. In the current LA664 data set 112 of
-1270 measured instructions are two-uop instructions:
+On both microarchitectures, `0x01` counts retired uops, so a multi-uop
+instruction has a counter value larger than its static instruction count. The
+details of how to separate instructions and uops differ between LA464 and
+LA664.
+
+### LA664
+
+In the current LA664 data set 112 of 1270 measured instructions are two-uop
+instructions:
 
 | Category | Count |
 | --- | ---: |
@@ -139,9 +151,35 @@ latency separated by a memory-assisted decomposition; the resulting nominal
 latencies are 4 cycles for `vpickve2gr.*`, 6 cycles for `xvpickve2gr.w/d`,
 2 cycles for `vreplgr2vr.b/h`, and 1 cycle for `vreplgr2vr.w/d`.
 
+### LA464
+
+In the current LA464 data set 41 of 348 measured instructions are two-uop
+instructions:
+
+| Category | Count |
+| --- | ---: |
+| Atomic `am*` | 36 |
+| `fsel` | 1 |
+| `movgr2frh.w` | 1 |
+| `rdtime.d`, `rdtimeh.w`, `rdtimel.w` | 3 |
+
+Unlike LA664, LA464 has a vector-instruction counter (`0x25`) as well as a
+vector-uop counter (`0x31`), so the vector relationship can be measured
+directly:
+
+```text
+vector uops per instruction = 0x31 / 0x25
+```
+
+For example, `vadd.b` gives `0x25 = 1` and `0x31 = 1`, while a two-uop vector
+conversion gives `0x25 = 1` and `0x31 = 2`. LA464 does not expose separate LSX
+and LASX uop counters; `0x31` is the combined LSX+LASX vector-uop count. The
+current LA464 data set has fewer vector conversion pages than LA664, so this
+counter pair should be used when adding those instructions later.
+
 ## CPUCFG and trapped instructions
 
-`cpucfg` is a special case for the instruction-retired counter. It is trapped
+On LA664, `cpucfg` is a special case for the instruction-retired counter. It is trapped
 and emulated: in a 10M-instruction `cpucfg` loop, `instructions:u` is only about
 0.13M while the all-mode `instructions` count is about 31M, so roughly 30M
 retired instructions happen in the kernel. `bench` excludes kernel events, so
