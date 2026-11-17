@@ -116,5 +116,6 @@
       },
       "notes": "8 independent lanes take 8.00 cycles, i.e. 1 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter."
     }
-  ]
+  ],
+  "notes": "Latency 1 cycle(s) and throughput 1 CPI for the operand combination(s) recorded above, measured with ./bench on LA664."
 }

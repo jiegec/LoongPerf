@@ -116,5 +116,6 @@
       },
       "notes": "8 instructions take 16.00 cycles: 2.00 cycles per instruction."
     }
-  ]
+  ],
+  "notes": "Latency 3 cycle(s) and throughput 2 CPI for the operand combination(s) recorded above, measured with ./bench on LA664."
 }
