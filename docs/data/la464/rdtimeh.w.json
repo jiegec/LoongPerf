@@ -35,7 +35,7 @@
   "latencies": [],
   "throughput": [
     {
-      "name": "rj == 0, 8 independent lanes",
+      "name": "8 independent lanes (rj == $r0 and rj != 0)",
       "asm": "rdtimeh.w $r12, $r0; rdtimeh.w $r13, $r0; rdtimeh.w $r14, $r0; rdtimeh.w $r15, $r0; rdtimeh.w $r16, $r0; rdtimeh.w $r17, $r0; rdtimeh.w $r18, $r0; rdtimeh.w $r19, $r0",
       "init": "",
       "machine_code": [
@@ -61,36 +61,8 @@
         "lanes": 8,
         "cpi": 11.0,
         "ipc": 0.0909
-      }
-    },
-    {
-      "name": "rj != 0, 8 independent lanes",
-      "asm": "rdtimeh.w $r4, $r12; rdtimeh.w $r5, $r13; rdtimeh.w $r6, $r14; rdtimeh.w $r7, $r15; rdtimeh.w $r8, $r16; rdtimeh.w $r9, $r17; rdtimeh.w $r10, $r18; rdtimeh.w $r11, $r19",
-      "init": "",
-      "machine_code": [
-        "00006584  rdtimeh.w   \t$a0, $t0",
-        "000065a5  rdtimeh.w   \t$a1, $t1",
-        "000065c6  rdtimeh.w   \t$a2, $t2",
-        "000065e7  rdtimeh.w   \t$a3, $t3",
-        "00006608  rdtimeh.w   \t$a4, $t4",
-        "00006629  rdtimeh.w   \t$a5, $t5",
-        "0000664a  rdtimeh.w   \t$a6, $t6",
-        "0000666b  rdtimeh.w   \t$a7, $t7"
-      ],
-      "result": {
-        "instructions_retired": 16.0,
-        "core_cycles": 87.97
       },
-      "measurement": {
-        "unroll": 1000,
-        "iters": 1000
-      },
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --asm 'rdtimeh.w $r4, $r12; rdtimeh.w $r5, $r13; rdtimeh.w $r6, $r14; rdtimeh.w $r7, $r15; rdtimeh.w $r8, $r16; rdtimeh.w $r9, $r17; rdtimeh.w $r10, $r18; rdtimeh.w $r11, $r19'",
-      "throughput": {
-        "lanes": 8,
-        "cpi": 11.0,
-        "ipc": 0.0909
-      }
+      "notes": "Both rj == $r0 and rj != 0 measure 11 CPI on LA464; the rj == $r0 sequence is shown."
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput only."
