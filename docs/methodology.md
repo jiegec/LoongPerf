@@ -404,6 +404,14 @@ instructions per cycle: at `--unroll 250/1000` an eight-lane body is 2,000 and
 `--unroll 50/200`, and four lanes measure 3 cycles instead of 1 because the
 3-cycle latency cannot be filled by four independent results. For these units use
 a small unroll and enough lanes.
+
+LA464 is stricter about the wide body. The thirty-accumulator `(x)vmadd{wev,wod}.q.*`
+body at `--unroll 250/1000` is 120 KiB of code there and measures 23.4 cycles per
+30 instructions (0.779 CPI); the identical body at `--unroll 50/200` is 24 KiB and
+measures exactly 15.00 cycles, 0.5 CPI. So the multiply-add family is 2 IPC on
+both cores, and the 0.78 CPI that a loose unroll reports is the fetch path, not
+the unit. Fifteen lanes at `--unroll 250/1000` are 60 KiB and already read 7.5
+cycles, the first sign that the body is outgrowing L1I.
 * `ldgt.*`/`ldle.*` raise a bounds-check exception on LA464 when the range check
   fails instead of writing zero, and this kernel does not emulate it: the process
   dies with `SIGSEGV` whose `si_addr` is the load address `rj`, even when that
