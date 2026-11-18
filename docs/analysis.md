@@ -452,56 +452,62 @@ Cases that need a helper instruction also record its calibrated cost as
 
 ## LA664 versus LA464
 
+Only the differences are listed. `A -> B` means LA464 -> LA664; throughput is
+in instructions per cycle (higher is faster) and latency in cycles (lower is
+faster).
+
 ### Base
 
-**Floating point.** `fadd.*` and `fsub.*` fall from 5 to 3 cycles, and 54 scalar
-FP instructions double from 2 to 4 per cycle: add/sub, min/max, abs/neg,
-`fclass`, `fcopysign`, `fmov`, `frint`, `fscaleb`, `flogb` and the integer/FP
-conversions. `fsel` goes from 1 to 2 IPC. `fcmp` latency falls from 2 to 1 cycle
-for all 22 predicates and both widths.
+Floating point: `fadd.*` and `fsub.*` fall from 5 to 3 cycles; the 54 scalar
+FP ALU and conversion instructions (add/sub included) double from 2 to 4 IPC:
+add/sub, min/max, abs/neg, `fclass`, `fcopysign`, `fmov`, `frint`, `fscaleb`,
+`flogb` and the integer/FP conversions. `fsel` doubles from 1 to 2 IPC. `fcmp`
+latency falls from 2 to 1 cycle for all 22 predicates and both widths.
 
-**FCC moves.** `movcf2gr` falls from 7 to 2 cycles and `movgr2cf` from 15 to 2,
-so the closed round trip drops from 22 to 4 cycles; their throughput rises from
-7/15 to 1 CPI.
+FCC moves: `movcf2gr` falls from 7 to 2 cycles and `movgr2cf` from 15 to 2,
+so the closed round trip drops from 22 to 4 cycles; throughput rises from
+0.14/0.07 to 1 IPC.
 
-**Integer and memory.** Indexed loads `ldx.*` rise from 1 to 2 IPC, stores
-`st.*` from 1 to 2 IPC, the indexed FP load `fldx.*` from 1 to 2 and the FP
-stores `fst.*`/`fstx.*` from 1 to 2. `ld.d`/`ldptr.d` gain a 3-cycle address
-path (the ALU path stays 4). `bstrins`, `bytepick` and `alsl` go from 2 to 4
-IPC.
+Integer and memory: Indexed loads `ldx.*` double from 1 to 2 IPC, stores
+`st.*` from 1 to 2 IPC, the indexed FP load `fldx.*` from 1 to 2 IPC and the FP
+stores `fst.*`/`fstx.*` from 1 to 2 IPC. `ld.d`/`ldptr.d` gain a 3-cycle
+address path (the ALU path stays 4 cycles). `bstrins`, `bytepick` and `alsl`
+double from 2 to 4 IPC.
 
-**Branches.** A not-taken conditional branch rises from 1 to 2 IPC.
+Branches: A not-taken conditional branch doubles from 1 to 2 IPC.
 
-**Atomics.** The normal AMOs drop from 15 to 13 cycles while the `_db` forms
-rise from 15 to 16. `sc.d`/`sc.w` throughput drops from 14 to 15 CPI.
+Atomics: The normal AMOs fall from 15 to 13 cycles, so throughput rises
+from 0.067 to 0.077 IPC; the `_db` forms rise from 15 to 16 cycles, so
+throughput drops from 0.067 to 0.063 IPC. `sc.d`/`sc.w` throughput drops from
+0.071 to 0.067 IPC (14 -> 15 cycles).
 
-**System and integer divide.** `cpucfg` rises from 8 to 11 cycles possibly due
-to trapped upon every execution. `rdtime`, `rdtimeh.w` and `rdtimel.w` rise from
-11 CPI to 1 CPI with `rj == $0` and 2 CPI otherwise.
+System: `cpucfg` slows from 8 to 11 cycles and from 1 to
+0.09 IPC (it traps on every execution). `rdtime.d`, `rdtimeh.w` and `rdtimel.w`
+rise from 0.09 to 1 IPC with `rj == $0` and 0.5 IPC otherwise. 
 
-**CRC.** The CRC unit is the largest single change: `crc.w.b.w`/`.h`/`.w`/`.d`
-and their `crcc` forms fall from 5/7/11/19 to 1 cycle and from 3.5/4.5/6.5/10.5
-to 0.5 CPI.
+CRC: The CRC unit is the largest single change: `crc.w.b.w`/`.h`/`.w`/`.d`
+and their `crcc` forms fall from 5/7/11/19 to 1 cycle and rise from
+0.29/0.22/0.15/0.10 to 2 IPC.
 
 ### LSX
 
-312 instructions double from 2 to 4 per cycle (2 -> 4 IPC): the simple
-integer and FP ALU ops (add/sub, logic, shifts, compare, min/max, average,
-rotate). Another 109 go from 1 to 2 IPC (widening/narrowing shifts, the
-`vfcvt`/`vffint`/`vftint` conversions, `vldx`), and the vector stores
-`vst`/`vstelm`/`vstx` do the same.
+312 instructions double from 2 to 4 IPC: the simple integer and FP ALU ops
+(add/sub, logic, shifts, compare, min/max, average, rotate). Another 109 double
+from 1 to 2 IPC (widening/narrowing shifts, the `vfcvt`/`vffint`/`vftint`
+conversions, `vldx`), and the vector stores `vst`/`vstelm`/`vstx` do the same.
 
 `vfadd`/`vfsub` fall from 5 to 3 cycles and `vrotr`/`vrotri` from 2 to 1.
 
 ### LASX
 
-LASX mirrors LSX: 336 instructions from 2 to 4 per cycle, 109 from 1 to 2 IPC
+LASX mirrors LSX: 336 instructions from 2 to 4 IPC, 109 from 1 to 2 IPC
 (widening/narrowing, conversions, `xvldx`), and the vector stores
-`xvst`/`xvstelm`/`xvstx` 1 -> 2. `xvfadd`/`xvfsub` fall from 5 to 3 cycles,
-`xvrotr`/`xvrotri` from 2 to 1, and the ten `xvset*`/`xvseteqz`/`xvsetnez` from
-4 to 3. `xvpermi.q` doubles from 2 to 4 IPC.
+`xvst`/`xvstelm`/`xvstx` from 1 to 2 IPC. `xvfadd`/`xvfsub` fall from 5 to 3
+cycles, `xvrotr`/`xvrotri` from 2 to 1, and the ten `xvset*`/`xvseteqz`/
+`xvsetnez` from 4 to 3 cycles. `xvpermi.q` doubles
+from 2 to 4 IPC.
 
 ### LBT
 
-The LBT differences are small and mostly negative: `x86mttop` drops from 4 to 1
-IPC, and `movscr2gr` from 2 to 1.
+The LBT differences are negative: `x86mttop` drops from 4 to 1 IPC and
+`movscr2gr` from 2 to 1 IPC.
