@@ -289,8 +289,6 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 65535; vreplgr2vr.h $vr8, $r4; li.d $r4, 1; vreplgr2vr.h $vr16, $r4; li.d $r4, 65535; vreplgr2vr.h $vr9, $r4; li.d $r4, 1; vreplgr2vr.h $vr17, $r4; li.d $r4, 65535; vreplgr2vr.h $vr10, $r4; li.d $r4, 1; vreplgr2vr.h $vr18, $r4; li.d $r4, 65535; vreplgr2vr.h $vr11, $r4; li.d $r4, 1; vreplgr2vr.h $vr19, $r4; li.d $r4, 65535; vreplgr2vr.h $vr12, $r4; li.d $r4, 1; vreplgr2vr.h $vr20, $r4; li.d $r4, 65535; vreplgr2vr.h $vr13, $r4; li.d $r4, 1; vreplgr2vr.h $vr21, $r4; li.d $r4, 65535; vreplgr2vr.h $vr14, $r4; li.d $r4, 1; vreplgr2vr.h $vr22, $r4; li.d $r4, 65535; vreplgr2vr.h $vr15, $r4; li.d $r4, 1; vreplgr2vr.h $vr23, $r4' --asm 'vmod.hu $vr0, $vr8, $vr16; vmod.hu $vr1, $vr9, $vr17; vmod.hu $vr2, $vr10, $vr18; vmod.hu $vr3, $vr11, $vr19; vmod.hu $vr4, $vr12, $vr20; vmod.hu $vr5, $vr13, $vr21; vmod.hu $vr6, $vr14, $vr22; vmod.hu $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 25,
-        "ipc": 0.04,
         "cpi_min": 9,
         "cpi_max": 25,
         "ipc_min": 0.04,

@@ -289,8 +289,6 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1073741823; xvreplgr2vr.w $xr8, $r4; li.d $r4, 3; xvreplgr2vr.w $xr16, $r4; li.d $r4, 1073741823; xvreplgr2vr.w $xr9, $r4; li.d $r4, 3; xvreplgr2vr.w $xr17, $r4; li.d $r4, 1073741823; xvreplgr2vr.w $xr10, $r4; li.d $r4, 3; xvreplgr2vr.w $xr18, $r4; li.d $r4, 1073741823; xvreplgr2vr.w $xr11, $r4; li.d $r4, 3; xvreplgr2vr.w $xr19, $r4; li.d $r4, 1073741823; xvreplgr2vr.w $xr12, $r4; li.d $r4, 3; xvreplgr2vr.w $xr20, $r4; li.d $r4, 1073741823; xvreplgr2vr.w $xr13, $r4; li.d $r4, 3; xvreplgr2vr.w $xr21, $r4; li.d $r4, 1073741823; xvreplgr2vr.w $xr14, $r4; li.d $r4, 3; xvreplgr2vr.w $xr22, $r4; li.d $r4, 1073741823; xvreplgr2vr.w $xr15, $r4; li.d $r4, 3; xvreplgr2vr.w $xr23, $r4' --asm 'xvmod.w $xr0, $xr8, $xr16; xvmod.w $xr1, $xr9, $xr17; xvmod.w $xr2, $xr10, $xr18; xvmod.w $xr3, $xr11, $xr19; xvmod.w $xr4, $xr12, $xr20; xvmod.w $xr5, $xr13, $xr21; xvmod.w $xr6, $xr14, $xr22; xvmod.w $xr7, $xr15, $xr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 17,
-        "ipc": 0.0588,
         "cpi_min": 6,
         "cpi_max": 17,
         "ipc_min": 0.0588,

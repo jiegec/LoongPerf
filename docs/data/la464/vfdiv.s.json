@@ -404,8 +404,6 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.d $r4, 1065353216; vreplgr2vr.w $vr15, $r4' --asm 'vfdiv.s $vr0, $vr8, $vr16; vfdiv.s $vr1, $vr9, $vr17; vfdiv.s $vr2, $vr10, $vr18; vfdiv.s $vr3, $vr11, $vr19; vfdiv.s $vr4, $vr12, $vr20; vfdiv.s $vr5, $vr13, $vr21; vfdiv.s $vr6, $vr14, $vr22; vfdiv.s $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 6,
-        "ipc": 0.1667,
         "cpi_min": 6,
         "cpi_max": 9,
         "ipc_min": 0.1111,

@@ -354,6 +354,9 @@ previous one finishes, but the *initiation interval* depends on the operands, so
 throughput number is only meaningful together with the operands it was measured
 with. Both ends are recorded as two experiments per instruction:
 
+The ranges below are initiation intervals in cycles per instruction, rounded to a
+quarter cycle; each row is stored as two experiments, one per operand mix.
+
 | instruction | shortest operands | longest operands |
 | --- | --- | --- |
 | `div.w`, `div.wu`, `mod.w`, `mod.wu` | 3.5 | 12 |
@@ -380,6 +383,10 @@ which terminates after one digit; the longest ones use `max/1`, `1.0/3.0`,
 `sqrt(2)` and `rsqrt(2)`. The vector integer divide is operand-independent across
 the *worst* classes (all-zero lanes and all-maximum lanes both measure the same),
 but it is still faster on the shortest class, so both are kept.
+
+A taken branch is the opposite case: its spread comes from the branch target buffer,
+not from the operands, so it stays a single experiment with a `cpi_min`/`cpi_max`
+range of 1 to 3 cycles rather than two experiments.
 
 Because the lanes are independent and the unit is pipelined, the eight-lane body
 measures the initiation interval and not the latency. That only holds while the

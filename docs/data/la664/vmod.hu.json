@@ -212,14 +212,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1; vreplgr2vr.h $vr8, $r4; li.w $r4, 1; vreplgr2vr.h $vr16, $r4; li.w $r4, 1; vreplgr2vr.h $vr9, $r4; li.w $r4, 1; vreplgr2vr.h $vr17, $r4; li.w $r4, 1; vreplgr2vr.h $vr10, $r4; li.w $r4, 1; vreplgr2vr.h $vr18, $r4; li.w $r4, 1; vreplgr2vr.h $vr11, $r4; li.w $r4, 1; vreplgr2vr.h $vr19, $r4; li.w $r4, 1; vreplgr2vr.h $vr12, $r4; li.w $r4, 1; vreplgr2vr.h $vr20, $r4; li.w $r4, 1; vreplgr2vr.h $vr13, $r4; li.w $r4, 1; vreplgr2vr.h $vr21, $r4; li.w $r4, 1; vreplgr2vr.h $vr14, $r4; li.w $r4, 1; vreplgr2vr.h $vr22, $r4; li.w $r4, 1; vreplgr2vr.h $vr15, $r4; li.w $r4, 1; vreplgr2vr.h $vr23, $r4' --asm 'vmod.hu $vr0, $vr8, $vr16; vmod.hu $vr1, $vr9, $vr17; vmod.hu $vr2, $vr10, $vr18; vmod.hu $vr3, $vr11, $vr19; vmod.hu $vr4, $vr12, $vr20; vmod.hu $vr5, $vr13, $vr21; vmod.hu $vr6, $vr14, $vr22; vmod.hu $vr7, $vr15, $vr23'",
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 123.99
+        "core_cycles": 124.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 15.4987,
+        "cpi": 15.5,
         "ipc": 0.0645
       },
-      "notes": "Range over the same pairs: min CPI 7.50 at 0/65535, max CPI 23.50 at 65535/1. Sample uses 1/1. Both ends are recorded as separate experiments, so the range is the spread between them.",
+      "notes": "Range over the same pairs: min CPI 7.50 at 0/65535, max CPI 23.50 at 65535/1. Sample uses 1/1. Both ends are recorded as separate experiments, so the range is the spread between them. Raw measurement was 123.99 cycles, rounded to 15.5 CPI.",
       "machine_code": [
         "03800404  li.w        \t$a0, 0x1",
         "729f0488  vreplgr2vr.h\t$vr8, $a0",
@@ -275,14 +275,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 21.5038,
+        "cpi": 21.5,
         "ipc": 0.0465
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 172.03
+        "core_cycles": 172.0
       },
-      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest. Raw measurement was 172.03 cycles, rounded to 21.5 CPI."
     }
   ],
   "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."

@@ -280,8 +280,6 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 255; vreplgr2vr.b $vr8, $r4; li.d $r4, 1; vreplgr2vr.b $vr16, $r4; li.d $r4, 255; vreplgr2vr.b $vr9, $r4; li.d $r4, 1; vreplgr2vr.b $vr17, $r4; li.d $r4, 255; vreplgr2vr.b $vr10, $r4; li.d $r4, 1; vreplgr2vr.b $vr18, $r4; li.d $r4, 255; vreplgr2vr.b $vr11, $r4; li.d $r4, 1; vreplgr2vr.b $vr19, $r4; li.d $r4, 255; vreplgr2vr.b $vr12, $r4; li.d $r4, 1; vreplgr2vr.b $vr20, $r4; li.d $r4, 255; vreplgr2vr.b $vr13, $r4; li.d $r4, 1; vreplgr2vr.b $vr21, $r4; li.d $r4, 255; vreplgr2vr.b $vr14, $r4; li.d $r4, 1; vreplgr2vr.b $vr22, $r4; li.d $r4, 255; vreplgr2vr.b $vr15, $r4; li.d $r4, 1; vreplgr2vr.b $vr23, $r4' --asm 'vdiv.bu $vr0, $vr8, $vr16; vdiv.bu $vr1, $vr9, $vr17; vdiv.bu $vr2, $vr10, $vr18; vdiv.bu $vr3, $vr11, $vr19; vdiv.bu $vr4, $vr12, $vr20; vdiv.bu $vr5, $vr13, $vr21; vdiv.bu $vr6, $vr14, $vr22; vdiv.bu $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 35,
-        "ipc": 0.0286,
         "cpi_min": 15,
         "cpi_max": 35,
         "ipc_min": 0.0286,

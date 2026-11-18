@@ -79,8 +79,6 @@
       "command": "./bench --unroll 4 --unroll2 5 --iters 30000 --warmup 10 --reps 9 --core 0 --init 'addi.d $r4, $r0, 0' --asm 'beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 1.0,
-        "ipc": 1.0,
         "cpi_min": 1.0,
         "cpi_max": 1.0,
         "ipc_min": 1.0,
@@ -104,8 +102,6 @@
       "command": "./bench --unroll 120 --unroll2 128 --iters 1000 --warmup 10 --reps 9 --core 0 --init 'addi.d $r4, $r0, 0' --asm 'beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4; beqz $r4, 4'",
       "throughput": {
         "lanes": 8,
-        "cpi": 3.0,
-        "ipc": 0.3333,
         "cpi_min": 2.805,
         "cpi_max": 3.0,
         "ipc_min": 0.3333,

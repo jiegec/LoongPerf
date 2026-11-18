@@ -364,6 +364,14 @@ A few more traps specific to this data:
   are partly zero measures below the worst case; build the operand pattern with
   `vinsgr2vr.*` if the number of active lanes matters;
 
+A throughput entry carries either a single rate or a range, never both: `cpi` (and
+`ipc`) describe one measurement, while `cpi_min`/`cpi_max` (and `ipc_min`/`ipc_max`)
+describe a spread that no single run can express, such as a taken branch that costs
+one cycle while the static footprint fits the BTB and three once it does not. The
+validator and the schema enforce the exclusivity. When the spread is *caused by the
+operands* of a pipelined unit, the two ends are recorded as two separate
+experiments instead, because each has its own `init` and command.
+
 A second trap for throughput is the operand choice. The divider and the
 transcendental units start a new operation before the previous one retires, but the
 initiation interval depends on the operands: `div.d` accepts eight independent

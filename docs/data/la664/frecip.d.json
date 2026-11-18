@@ -209,14 +209,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 5.2625,
-        "ipc": 0.19
+        "cpi": 5.25,
+        "ipc": 0.1905
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 42.1
+        "core_cycles": 42.0
       },
-      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest. Raw measurement was 42.1 cycles, rounded to 5.25 CPI."
     }
   ],
   "notes": "Latency and throughput are data-dependent. The latency range was re-measured with unroll=100000; unroll=1000 produced values about 0.2 cycles lower because the per-call overhead was not fully amortised. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."

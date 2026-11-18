@@ -237,14 +237,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4' --asm 'xvfrsqrt.d $xr0, $xr8; xvfrsqrt.d $xr1, $xr9; xvfrsqrt.d $xr2, $xr10; xvfrsqrt.d $xr3, $xr11; xvfrsqrt.d $xr4, $xr12; xvfrsqrt.d $xr5, $xr13; xvfrsqrt.d $xr6, $xr14; xvfrsqrt.d $xr7, $xr15'",
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 51.99
+        "core_cycles": 52.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 6.4988,
-        "ipc": 0.1539
+        "cpi": 6.5,
+        "ipc": 0.1538
       },
-      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 26.50 at maxsub. Sample uses 1.",
+      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 26.50 at maxsub. Sample uses 1. Raw measurement was 51.99 cycles, rounded to 6.5 CPI.",
       "machine_code": [
         "030ffc04  lu52i.d     \t$a0, $zero, 1023",
         "769f0c88  xvreplgr2vr.d\t$xr8, $a0",
@@ -284,14 +284,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 25.9975,
+        "cpi": 26.0,
         "ipc": 0.0385
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 207.98
+        "core_cycles": 208.0
       },
-      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest. Raw measurement was 207.98 cycles, rounded to 26.0 CPI."
     }
   ],
   "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

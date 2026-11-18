@@ -237,14 +237,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4' --asm 'vfrsqrt.d $vr0, $vr8; vfrsqrt.d $vr1, $vr9; vfrsqrt.d $vr2, $vr10; vfrsqrt.d $vr3, $vr11; vfrsqrt.d $vr4, $vr12; vfrsqrt.d $vr5, $vr13; vfrsqrt.d $vr6, $vr14; vfrsqrt.d $vr7, $vr15'",
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 51.99
+        "core_cycles": 52.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 6.4988,
-        "ipc": 0.1539
+        "cpi": 6.5,
+        "ipc": 0.1538
       },
-      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 26.50 at maxsub. Sample uses 1.",
+      "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 26.50 at maxsub. Sample uses 1. Raw measurement was 51.99 cycles, rounded to 6.5 CPI.",
       "machine_code": [
         "030ffc04  lu52i.d     \t$a0, $zero, 1023",
         "729f0c88  vreplgr2vr.d\t$vr8, $a0",
@@ -284,14 +284,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 26.0075,
+        "cpi": 26.0,
         "ipc": 0.0385
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 208.06
+        "core_cycles": 208.0
       },
-      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest. Raw measurement was 208.06 cycles, rounded to 26.0 CPI."
     }
   ],
   "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

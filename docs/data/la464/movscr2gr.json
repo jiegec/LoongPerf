@@ -59,7 +59,6 @@
       "command": "./bench --unroll 100 --unroll2 200 --iters 2000 --warmup 10 --reps 9 --core 0 --init 'movgr2scr $scr0, $r0; movgr2scr $scr1, $r0; movgr2scr $scr2, $r0; movgr2scr $scr3, $r0' --asm 'movscr2gr $r12, $scr0; movscr2gr $r13, $scr0; movscr2gr $r14, $scr0; movscr2gr $r15, $scr0; movscr2gr $r16, $scr0; movscr2gr $r17, $scr0; movscr2gr $r18, $scr0; movscr2gr $r19, $scr0'",
       "throughput": {
         "lanes": 8,
-        "cpi": 0.5,
         "ipc": 2.0,
         "cpi_min": 0.5,
         "cpi_max": 0.5

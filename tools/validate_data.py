@@ -394,12 +394,32 @@ def check_throughput(path: Path, data: dict) -> None:
             continue
         lanes = throughput["lanes"]
         result = experiment["result"]
-        expected_cpi = (result["core_cycles"] - experiment.get("baseline_cycles", 0)) / lanes
+        measured = (result["core_cycles"] - experiment.get("baseline_cycles", 0)) / lanes
         eps = 0.06 if path.parent.name == "la464" else EPS
-        if not close(throughput["cpi"], expected_cpi, eps):
-            error(path, f"throughput CPI {throughput['cpi']} != core_cycles/lanes ({expected_cpi})")
-        if not close(throughput["ipc"], 1.0 / throughput["cpi"]):
-            error(path, f"throughput IPC {throughput['ipc']} != 1/CPI")
+        lo, hi = throughput.get("cpi_min"), throughput.get("cpi_max")
+        if "cpi" in throughput:
+            if not close(throughput["cpi"], measured, eps):
+                error(path, f"throughput CPI {throughput['cpi']} != core_cycles/lanes ({measured})")
+            if lo is not None or hi is not None:
+                error(path, "throughput has both a single CPI and a CPI range; keep the range only")
+        else:
+            if lo is None or hi is None:
+                error(path, "throughput needs either cpi or cpi_min and cpi_max")
+            else:
+                if lo > hi:
+                    error(path, f"cpi_min {lo} exceeds cpi_max {hi}")
+                if not (lo - eps <= measured <= hi + eps):
+                    error(path, f"measured CPI {measured:.3f} outside cpi_min/cpi_max {lo}-{hi}")
+                ilo, ihi = throughput.get("ipc_min"), throughput.get("ipc_max")
+                if ilo is not None and not close(ilo, 1.0 / hi, 0.01):
+                    error(path, f"ipc_min {ilo} != 1/cpi_max ({1.0 / hi:.4f})")
+                if ihi is not None and not close(ihi, 1.0 / lo, 0.01):
+                    error(path, f"ipc_max {ihi} != 1/cpi_min ({1.0 / lo:.4f})")
+        if "ipc" in throughput:
+            if "cpi" in throughput and not close(throughput["ipc"], 1.0 / throughput["cpi"]):
+                error(path, f"throughput IPC {throughput['ipc']} != 1/CPI")
+            if "ipc_min" in throughput or "ipc_max" in throughput:
+                error(path, "throughput has both a single IPC and an IPC range; keep the range only")
 
 
 def check_file(path: Path, schema: dict) -> None:

@@ -187,8 +187,6 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1065353216; xvreplgr2vr.w $xr8, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr9, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr10, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr11, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr12, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr13, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr14, $r4; li.d $r4, 1065353216; xvreplgr2vr.w $xr15, $r4' --asm 'xvfsqrt.s $xr0, $xr8; xvfsqrt.s $xr1, $xr9; xvfsqrt.s $xr2, $xr10; xvfsqrt.s $xr3, $xr11; xvfsqrt.s $xr4, $xr12; xvfsqrt.s $xr5, $xr13; xvfsqrt.s $xr6, $xr14; xvfsqrt.s $xr7, $xr15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 8,
-        "ipc": 0.125,
         "cpi_min": 6,
         "cpi_max": 21,
         "ipc_min": 0.0476,

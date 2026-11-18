@@ -273,14 +273,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 21.505,
+        "cpi": 21.5,
         "ipc": 0.0465
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 172.04
+        "core_cycles": 172.0
       },
-      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest. Raw measurement was 172.04 cycles, rounded to 21.5 CPI."
     }
   ],
   "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."

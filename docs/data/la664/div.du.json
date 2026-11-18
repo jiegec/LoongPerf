@@ -283,14 +283,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 20.075,
-        "ipc": 0.0498
+        "cpi": 20.0,
+        "ipc": 0.05
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 160.6
+        "core_cycles": 160.0
       },
-      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest. Raw measurement was 160.6 cycles, rounded to 20.0 CPI."
     }
   ],
   "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent."

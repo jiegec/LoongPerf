@@ -368,8 +368,6 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fdiv.d $f0, $f8, $f8; fdiv.d $f1, $f9, $f9; fdiv.d $f2, $f10, $f10; fdiv.d $f3, $f11, $f11; fdiv.d $f4, $f12, $f12; fdiv.d $f5, $f13, $f13; fdiv.d $f6, $f14, $f14; fdiv.d $f7, $f15, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi": 5.5,
-        "ipc": 0.1818,
         "cpi_min": 4.5,
         "cpi_max": 12.5,
         "ipc_min": 0.08,

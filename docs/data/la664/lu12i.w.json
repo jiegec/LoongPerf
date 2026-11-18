@@ -54,8 +54,6 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 0.2083,
-        "ipc": 4.8,
         "cpi_min": 0.207,
         "cpi_max": 0.209,
         "ipc_min": 4.78,

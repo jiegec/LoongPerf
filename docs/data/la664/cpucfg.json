@@ -81,14 +81,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 0; addi.d $r5, $r0, 0; addi.d $r6, $r0, 0; addi.d $r7, $r0, 0; addi.d $r8, $r0, 0; addi.d $r9, $r0, 0; addi.d $r10, $r0, 0; addi.d $r11, $r0, 0' --asm 'cpucfg $r12, $r4; cpucfg $r13, $r5; cpucfg $r14, $r6; cpucfg $r15, $r7; cpucfg $r16, $r8; cpucfg $r17, $r9; cpucfg $r18, $r10; cpucfg $r19, $r11'",
       "result": {
         "instructions_retired": 0,
-        "core_cycles": 88.69
+        "core_cycles": 88.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 11.09,
-        "ipc": 0.09
+        "cpi": 11.0,
+        "ipc": 0.0909
       },
-      "notes": "8 independent CPUCFG operations take 88.69 cycles. Instruction-retired is 0 for CPUCFG on this machine."
+      "notes": "8 independent CPUCFG operations take 88.69 cycles. Instruction-retired is 0 for CPUCFG on this machine. Raw measurement was 88.69 cycles, rounded to 11.0 CPI."
     }
   ]
 }

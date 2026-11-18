@@ -265,14 +265,14 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'div.w $r12, $r4, $r20; div.w $r13, $r5, $r21; div.w $r14, $r6, $r23; div.w $r15, $r7, $r24; div.w $r16, $r8, $r25; div.w $r17, $r9, $r26; div.w $r18, $r10, $r27; div.w $r19, $r11, $r28'",
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 27.99
+        "core_cycles": 28.0
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 3.49875,
-        "ipc": 0.28581636298678104
+        "cpi": 3.5,
+        "ipc": 0.2857
       },
-      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 3.499 at divisor=0x80000000; max CPI 12.005 at divisor=0x2; dividend=0x7fffffff."
+      "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 3.499 at divisor=0x80000000; max CPI 12.005 at divisor=0x2; dividend=0x7fffffff. Raw measurement was 27.99 cycles, rounded to 3.5 CPI."
     },
     {
       "name": "8 independent lanes, worst-case operands",
@@ -286,14 +286,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 12.0437,
-        "ipc": 0.083
+        "cpi": 12.0,
+        "ipc": 0.0833
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 96.35
+        "core_cycles": 96.0
       },
-      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest. Raw measurement was 96.35 cycles, rounded to 12.0 CPI."
     }
   ],
   "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent."

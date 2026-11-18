@@ -288,8 +288,6 @@
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 1095216660735; xvreplgr2vr.w $xr8, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr16, $r4; li.d $r4, 1095216660735; xvreplgr2vr.w $xr9, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr17, $r4; li.d $r4, 1095216660735; xvreplgr2vr.w $xr10, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr18, $r4; li.d $r4, 1095216660735; xvreplgr2vr.w $xr11, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr19, $r4; li.d $r4, 1095216660735; xvreplgr2vr.w $xr12, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr20, $r4; li.d $r4, 1095216660735; xvreplgr2vr.w $xr13, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr21, $r4; li.d $r4, 1095216660735; xvreplgr2vr.w $xr14, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr22, $r4; li.d $r4, 1095216660735; xvreplgr2vr.w $xr15, $r4; li.d $r4, 4294967297; xvreplgr2vr.w $xr23, $r4' --asm 'xvdiv.bu $xr0, $xr8, $xr16; xvdiv.bu $xr1, $xr9, $xr17; xvdiv.bu $xr2, $xr10, $xr18; xvdiv.bu $xr3, $xr11, $xr19; xvdiv.bu $xr4, $xr12, $xr20; xvdiv.bu $xr5, $xr13, $xr21; xvdiv.bu $xr6, $xr14, $xr22; xvdiv.bu $xr7, $xr15, $xr23'",
       "throughput": {
         "lanes": 8,
-        "cpi": 20,
-        "ipc": 0.05,
         "cpi_min": 15,
         "cpi_max": 20,
         "ipc_min": 0.05,

@@ -263,14 +263,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 10.5025,
+        "cpi": 10.5,
         "ipc": 0.0952
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 84.02
+        "core_cycles": 84.0
       },
-      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest."
+      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest. Raw measurement was 84.02 cycles, rounded to 10.5 CPI."
     }
   ],
   "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

@@ -376,9 +376,7 @@
     "throughput": {
       "type": "object",
       "required": [
-        "lanes",
-        "cpi",
-        "ipc"
+        "lanes"
       ],
       "properties": {
         "lanes": {
@@ -410,7 +408,73 @@
           "exclusiveMinimum": 0
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Throughput of one experiment. Either a single rate (`cpi` and/or `ipc`) or a range (`cpi_min`/`cpi_max` and `ipc_min`/`ipc_max`). A range and a single value are mutually exclusive: one entry describes one operand mix or one BTB situation, so repeated runs are recorded as separate experiments.",
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "required": [
+                "cpi"
+              ]
+            },
+            {
+              "required": [
+                "cpi_min",
+                "cpi_max"
+              ]
+            }
+          ]
+        },
+        {
+          "not": {
+            "required": [
+              "cpi",
+              "cpi_min"
+            ]
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "cpi",
+              "cpi_max"
+            ]
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "ipc",
+              "ipc_min"
+            ]
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "ipc",
+              "ipc_max"
+            ]
+          }
+        },
+        {
+          "dependentRequired": {
+            "cpi_min": [
+              "cpi_max"
+            ],
+            "cpi_max": [
+              "cpi_min"
+            ],
+            "ipc_min": [
+              "ipc_max"
+            ],
+            "ipc_max": [
+              "ipc_min"
+            ]
+          }
+        }
+      ]
     },
     "measurement_override": {
       "type": "object",
