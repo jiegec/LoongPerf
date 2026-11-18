@@ -193,7 +193,28 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes, best-case operands",
+      "name": "8 independent lanes, zero operands",
+      "asm": "frsqrt.s $f0, $f16; frsqrt.s $f1, $f16; frsqrt.s $f2, $f16; frsqrt.s $f3, $f16; frsqrt.s $f4, $f16; frsqrt.s $f5, $f16; frsqrt.s $f6, $f16; frsqrt.s $f7, $f16",
+      "init": "li.d $r4, 0; movgr2fr.w $f16, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 0; movgr2fr.w $f16, $r4' --asm 'frsqrt.s $f0, $f16; frsqrt.s $f1, $f16; frsqrt.s $f2, $f16; frsqrt.s $f3, $f16; frsqrt.s $f4, $f16; frsqrt.s $f5, $f16; frsqrt.s $f6, $f16; frsqrt.s $f7, $f16'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 2.25,
+        "ipc": 0.4444
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 18.0
+      },
+      "notes": "The units short-circuit a zero operand, so this is the fastest class; it is faster than the shortest non-zero quotient recorded in the next experiment."
+    },
+    {
+      "name": "8 independent lanes, shortest non-zero operands",
       "asm": "frsqrt.s $f0, $f8; frsqrt.s $f1, $f9; frsqrt.s $f2, $f10; frsqrt.s $f3, $f11; frsqrt.s $f4, $f12; frsqrt.s $f5, $f13; frsqrt.s $f6, $f14; frsqrt.s $f7, $f15",
       "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
       "machine_code": [
@@ -219,10 +240,10 @@
       "notes": "Data-dependent. 8 independent lanes. CPI ~2.25 for special values, ~3.25 for exact squares, ~7.75 for general inputs, up to ~8.0 with maxsub/minsub. CPI is unchanged for 1-20 independent lanes; mixed fast/slow lanes are additive. Both ends are recorded as separate experiments, so the range is the spread between them."
     },
     {
-      "name": "8 independent lanes, worst-case operands",
+      "name": "8 independent lanes, subnormal or widest operands",
       "asm": "frsqrt.s $f0, $f16; frsqrt.s $f1, $f16; frsqrt.s $f2, $f16; frsqrt.s $f3, $f16; frsqrt.s $f4, $f16; frsqrt.s $f5, $f16; frsqrt.s $f6, $f16; frsqrt.s $f7, $f16",
-      "init": "li.d $r4, 1073741824; movgr2fr.w $f16, $r4",
-      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 1073741824; movgr2fr.w $f16, $r4' --asm 'frsqrt.s $f0, $f16; frsqrt.s $f1, $f16; frsqrt.s $f2, $f16; frsqrt.s $f3, $f16; frsqrt.s $f4, $f16; frsqrt.s $f5, $f16; frsqrt.s $f6, $f16; frsqrt.s $f7, $f16'",
+      "init": "li.d $r4, 8388607; movgr2fr.w $f16, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 8388607; movgr2fr.w $f16, $r4' --asm 'frsqrt.s $f0, $f16; frsqrt.s $f1, $f16; frsqrt.s $f2, $f16; frsqrt.s $f3, $f16; frsqrt.s $f4, $f16; frsqrt.s $f5, $f16; frsqrt.s $f6, $f16; frsqrt.s $f7, $f16'",
       "measurement": {
         "unroll": 250,
         "iters": 1000,
@@ -230,14 +251,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 7.75,
-        "ipc": 0.129
+        "cpi": 8.0,
+        "ipc": 0.125
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 62.0
+        "core_cycles": 64.0
       },
-      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest. Raw measurement was 62.06 cycles, rounded to 7.75 CPI."
+      "notes": "Operands chosen to hit the slowest class: a subnormal operand for the floating-point units, and the widest possible quotient for the integer remainders."
     }
   ],
   "notes": "Latency and throughput are data-dependent. The latency range was re-measured with unroll=100000; unroll=1000 produced values about 0.2 cycles lower because the per-call overhead was not fully amortised. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."

@@ -352,47 +352,52 @@ measured-and-equal.
 The divider and the transcendental units accept a new operation before the
 previous one finishes, but the *initiation interval* depends on the operands, so a
 throughput number is only meaningful together with the operands it was measured
-with. Both ends are recorded as two experiments per instruction:
+with. Three classes appear everywhere, and each is a separate experiment:
 
-The ranges below are initiation intervals in cycles per instruction, rounded to a
-quarter cycle; each row is stored as two experiments, one per operand mix.
+| instruction | zero operand | short quotient | subnormal operand or widest quotient |
+| --- | --- | --- | --- |
+| `div.w`, `mod.w` | — | 3.5 | 12 |
+| `div.wu`, `mod.wu` | — | 3.5 | 12.5 |
+| `div.d`, `mod.d` | — | 3.5 | 20 |
+| `div.du`, `mod.du` | — | 3.5 | 20.5 |
+| `vdiv.b` / `vmod.b` | 13.5 | 25.5 / 29.5 | 29.5 / 33.5 |
+| `vdiv.bu` / `vmod.bu` | 13.5 | 25.5 / 29.5 | 33.5 / 37.5 |
+| `vdiv.h` / `vmod.h` | 7.5 | 13.5 / 15.5 | 19.5 / 21.5 |
+| `vdiv.hu` / `vmod.hu` | 7.5 | 13.5 / 15.5 | 21.5 / 23.5 |
+| `vdiv.w` / `vmod.w` | 4.5 | 7.5 / 8.5 | 14.5 / 15.5 |
+| `vdiv.wu` / `vmod.wu` | 4.5 | 7.5 / 8.5 | 15.5 / 16.5 |
+| `vdiv.d` / `vmod.d` | 3 | 4.5 / 5 | 12 / 12.5 |
+| `vdiv.du` / `vmod.du` | 3 | 4.5 / 5 | 12.5 / 13 |
+| `fdiv.s`, `frecip.s` | 1.5 | 2 | 3.75 |
+| `fdiv.d`, `frecip.d` | 1.5 | 2 | 5.5 |
+| `fsqrt.s` | 1.5 | 2 | 5.25 |
+| `fsqrt.d` | 1.5 | 2 | 8.75 |
+| `frsqrt.s` | 2.25 | 3.25 | 8 |
+| `frsqrt.d` | 2.25 | 3.25 | 13.25 |
+| `vfdiv.s`, `vfrecip.s` | 4.5 | 6.5 | 13.5 |
+| `vfdiv.d`, `vfrecip.d` | 3 | 4 | 11 |
+| `vfsqrt.s` | 4.5 | 6.5 | 19.5 |
+| `vfsqrt.d` | 3 | 4 | 17.5 |
+| `vfrsqrt.s` | 7.5 | 11.5 | 30.5 |
+| `vfrsqrt.d` | 4.5 | 6.5 | 26.5 |
 
-| instruction | shortest operands | longest operands |
-| --- | --- | --- |
-| `div.w`, `div.wu`, `mod.w`, `mod.wu` | 3.5 | 12 |
-| `div.d`, `div.du`, `mod.d`, `mod.du` | 3.5 | 20 |
-| `vdiv.b` / `.bu`, `vmod.b` / `.bu` | 25.5 / 29.5 | 29.5 / 33.5 |
-| `vdiv.h` / `.hu`, `vmod.h` / `.hu` | 13.5 / 15.5 | 19.5 / 21.5 |
-| `vdiv.w` / `.wu`, `vmod.w` / `.wu` | 7.5 / 8.5 | 14.5 / 15.5 |
-| `vdiv.d` / `.du`, `vmod.d` / `.du` | 4.5 / 5 | 12 / 12.5 |
-| `fdiv.s`, `frecip.s` | 2 | 3.5 |
-| `fdiv.d`, `frecip.d` | 2 | 5.25 |
-| `fsqrt.s` | 2 | 5 |
-| `fsqrt.d` | 2 | 8.5 |
-| `frsqrt.s` | 3.25 | 7.75 |
-| `frsqrt.d` | 3.25 | 13 |
-| `vfdiv.s`, `vfrecip.s` | 6.5 | 12.5 |
-| `vfdiv.d`, `vfrecip.d` | 4 | 10.5 |
-| `vfsqrt.s` | 6.5 | 18.5 |
-| `vfsqrt.d` | 4 | 17 |
-| `vfrsqrt.s` | 11.5 | 29.5 |
-| `vfrsqrt.d` | 6.5 | 26 |
+The zero-operand class exists only for the vector integer divides of an exact
+quotient and for the floating-point units: a zero dividend short-circuits the
+divider, and the transcendental units short-circuit on a zero input. The short
+class is `1/1`, `1.0/1.0`, `sqrt(1)` and `rsqrt(1)`, which terminate after one
+digit. The slow class is the longest latency class: a subnormal operand
+(`1.0/maxsub`, `sqrt(maxsub)`, `rsqrt(maxsub)`), and for the integer remainders an
+unsigned maximum divided by 1, which needs the widest possible quotient. The
+scalar integer dividers have no zero-operand shortcut, so they only record two.
 
-The shortest-operand bodies use division by 1 (`1.0/1.0`, `sqrt(1)`, `rsqrt(1)`),
-which terminates after one digit; the longest ones use `max/1`, `1.0/3.0`,
-`sqrt(2)` and `rsqrt(2)`. The vector integer divide is operand-independent across
-the *worst* classes (all-zero lanes and all-maximum lanes both measure the same),
-but it is still faster on the shortest class, so both are kept.
+The eight-lane bodies measure the initiation interval, not the latency, because
+the lanes are independent and the unit is pipelined. That holds as long as the
+lane count is at least the interval, which it is here: the tightest ratio is
+`vdiv.d` at 26/12 and `fdiv.s` at 16/3.75.
 
-A taken branch is the opposite case: its spread comes from the branch target buffer,
-not from the operands, so it stays a single experiment with a `cpi_min`/`cpi_max`
-range of 1 to 3 cycles rather than two experiments.
-
-Because the lanes are independent and the unit is pipelined, the eight-lane body
-measures the initiation interval and not the latency. That only holds while the
-lane count is at least the interval, which it is everywhere here: the smallest
-latency-to-interval ratio in the table is `vdiv.d` at 26/12 and `fdiv.s` at
-16/3.5.
+A taken branch is the opposite case: its spread comes from the branch target
+buffer, not from the operands, so it stays one experiment with a
+`cpi_min`/`cpi_max` range of 1 to 3 cycles instead of several experiments.
 
 ## Summary
 

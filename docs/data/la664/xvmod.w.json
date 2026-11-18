@@ -206,7 +206,28 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes, best-case operands",
+      "name": "8 independent lanes, zero operands",
+      "asm": "xvmod.w $xr0, $xr30, $xr31; xvmod.w $xr1, $xr30, $xr31; xvmod.w $xr2, $xr30, $xr31; xvmod.w $xr3, $xr30, $xr31; xvmod.w $xr4, $xr30, $xr31; xvmod.w $xr5, $xr30, $xr31; xvmod.w $xr6, $xr30, $xr31; xvmod.w $xr7, $xr30, $xr31",
+      "init": "li.d $r4, 0; xvreplgr2vr.w $xr30, $r4; li.d $r4, 1; xvreplgr2vr.w $xr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 0; xvreplgr2vr.w $xr30, $r4; li.d $r4, 1; xvreplgr2vr.w $xr31, $r4' --asm 'xvmod.w $xr0, $xr30, $xr31; xvmod.w $xr1, $xr30, $xr31; xvmod.w $xr2, $xr30, $xr31; xvmod.w $xr3, $xr30, $xr31; xvmod.w $xr4, $xr30, $xr31; xvmod.w $xr5, $xr30, $xr31; xvmod.w $xr6, $xr30, $xr31; xvmod.w $xr7, $xr30, $xr31'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 4.5,
+        "ipc": 0.2222
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 36.0
+      },
+      "notes": "The units short-circuit a zero operand, so this is the fastest class; it is faster than the shortest non-zero quotient recorded in the next experiment."
+    },
+    {
+      "name": "8 independent lanes, shortest non-zero operands",
       "asm": "xvmod.w $xr0, $xr8, $xr16; xvmod.w $xr1, $xr9, $xr17; xvmod.w $xr2, $xr10, $xr18; xvmod.w $xr3, $xr11, $xr19; xvmod.w $xr4, $xr12, $xr20; xvmod.w $xr5, $xr13, $xr21; xvmod.w $xr6, $xr14, $xr22; xvmod.w $xr7, $xr15, $xr23",
       "init": "li.w $r4, 1; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1; xvreplgr2vr.w $xr16, $r4; li.w $r4, 1; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1; xvreplgr2vr.w $xr17, $r4; li.w $r4, 1; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1; xvreplgr2vr.w $xr18, $r4; li.w $r4, 1; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1; xvreplgr2vr.w $xr19, $r4; li.w $r4, 1; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1; xvreplgr2vr.w $xr20, $r4; li.w $r4, 1; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1; xvreplgr2vr.w $xr21, $r4; li.w $r4, 1; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1; xvreplgr2vr.w $xr22, $r4; li.w $r4, 1; xvreplgr2vr.w $xr15, $r4; li.w $r4, 1; xvreplgr2vr.w $xr23, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1; xvreplgr2vr.w $xr16, $r4; li.w $r4, 1; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1; xvreplgr2vr.w $xr17, $r4; li.w $r4, 1; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1; xvreplgr2vr.w $xr18, $r4; li.w $r4, 1; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1; xvreplgr2vr.w $xr19, $r4; li.w $r4, 1; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1; xvreplgr2vr.w $xr20, $r4; li.w $r4, 1; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1; xvreplgr2vr.w $xr21, $r4; li.w $r4, 1; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1; xvreplgr2vr.w $xr22, $r4; li.w $r4, 1; xvreplgr2vr.w $xr15, $r4; li.w $r4, 1; xvreplgr2vr.w $xr23, $r4' --asm 'xvmod.w $xr0, $xr8, $xr16; xvmod.w $xr1, $xr9, $xr17; xvmod.w $xr2, $xr10, $xr18; xvmod.w $xr3, $xr11, $xr19; xvmod.w $xr4, $xr12, $xr20; xvmod.w $xr5, $xr13, $xr21; xvmod.w $xr6, $xr14, $xr22; xvmod.w $xr7, $xr15, $xr23'",
@@ -264,10 +285,10 @@
       ]
     },
     {
-      "name": "8 independent lanes, worst-case operands",
+      "name": "8 independent lanes, subnormal or widest operands",
       "asm": "xvmod.w $xr0, $xr30, $xr31; xvmod.w $xr1, $xr30, $xr31; xvmod.w $xr2, $xr30, $xr31; xvmod.w $xr3, $xr30, $xr31; xvmod.w $xr4, $xr30, $xr31; xvmod.w $xr5, $xr30, $xr31; xvmod.w $xr6, $xr30, $xr31; xvmod.w $xr7, $xr30, $xr31",
-      "init": "li.d $r4, 2147483647; xvreplgr2vr.w $xr30, $r4; li.d $r4, 3; xvreplgr2vr.w $xr31, $r4",
-      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 2147483647; xvreplgr2vr.w $xr30, $r4; li.d $r4, 3; xvreplgr2vr.w $xr31, $r4' --asm 'xvmod.w $xr0, $xr30, $xr31; xvmod.w $xr1, $xr30, $xr31; xvmod.w $xr2, $xr30, $xr31; xvmod.w $xr3, $xr30, $xr31; xvmod.w $xr4, $xr30, $xr31; xvmod.w $xr5, $xr30, $xr31; xvmod.w $xr6, $xr30, $xr31; xvmod.w $xr7, $xr30, $xr31'",
+      "init": "li.d $r4, 2147483647; xvreplgr2vr.w $xr30, $r4; li.d $r4, 1; xvreplgr2vr.w $xr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 2147483647; xvreplgr2vr.w $xr30, $r4; li.d $r4, 1; xvreplgr2vr.w $xr31, $r4' --asm 'xvmod.w $xr0, $xr30, $xr31; xvmod.w $xr1, $xr30, $xr31; xvmod.w $xr2, $xr30, $xr31; xvmod.w $xr3, $xr30, $xr31; xvmod.w $xr4, $xr30, $xr31; xvmod.w $xr5, $xr30, $xr31; xvmod.w $xr6, $xr30, $xr31; xvmod.w $xr7, $xr30, $xr31'",
       "measurement": {
         "unroll": 250,
         "iters": 1000,
@@ -282,7 +303,7 @@
         "instructions_retired": 8,
         "core_cycles": 124.0
       },
-      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest. Raw measurement was 124.06 cycles, rounded to 15.5 CPI."
+      "notes": "Operands chosen to hit the slowest class: a subnormal operand for the floating-point units, and the widest possible quotient for the integer remainders."
     }
   ],
   "notes": "LASX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."
