@@ -204,7 +204,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "xvdiv.w $xr0, $xr8, $xr16; xvdiv.w $xr1, $xr9, $xr17; xvdiv.w $xr2, $xr10, $xr18; xvdiv.w $xr3, $xr11, $xr19; xvdiv.w $xr4, $xr12, $xr20; xvdiv.w $xr5, $xr13, $xr21; xvdiv.w $xr6, $xr14, $xr22; xvdiv.w $xr7, $xr15, $xr23",
       "init": "li.w $r4, 1; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1; xvreplgr2vr.w $xr16, $r4; li.w $r4, 1; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1; xvreplgr2vr.w $xr17, $r4; li.w $r4, 1; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1; xvreplgr2vr.w $xr18, $r4; li.w $r4, 1; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1; xvreplgr2vr.w $xr19, $r4; li.w $r4, 1; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1; xvreplgr2vr.w $xr20, $r4; li.w $r4, 1; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1; xvreplgr2vr.w $xr21, $r4; li.w $r4, 1; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1; xvreplgr2vr.w $xr22, $r4; li.w $r4, 1; xvreplgr2vr.w $xr15, $r4; li.w $r4, 1; xvreplgr2vr.w $xr23, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1; xvreplgr2vr.w $xr8, $r4; li.w $r4, 1; xvreplgr2vr.w $xr16, $r4; li.w $r4, 1; xvreplgr2vr.w $xr9, $r4; li.w $r4, 1; xvreplgr2vr.w $xr17, $r4; li.w $r4, 1; xvreplgr2vr.w $xr10, $r4; li.w $r4, 1; xvreplgr2vr.w $xr18, $r4; li.w $r4, 1; xvreplgr2vr.w $xr11, $r4; li.w $r4, 1; xvreplgr2vr.w $xr19, $r4; li.w $r4, 1; xvreplgr2vr.w $xr12, $r4; li.w $r4, 1; xvreplgr2vr.w $xr20, $r4; li.w $r4, 1; xvreplgr2vr.w $xr13, $r4; li.w $r4, 1; xvreplgr2vr.w $xr21, $r4; li.w $r4, 1; xvreplgr2vr.w $xr14, $r4; li.w $r4, 1; xvreplgr2vr.w $xr22, $r4; li.w $r4, 1; xvreplgr2vr.w $xr15, $r4; li.w $r4, 1; xvreplgr2vr.w $xr23, $r4' --asm 'xvdiv.w $xr0, $xr8, $xr16; xvdiv.w $xr1, $xr9, $xr17; xvdiv.w $xr2, $xr10, $xr18; xvdiv.w $xr3, $xr11, $xr19; xvdiv.w $xr4, $xr12, $xr20; xvdiv.w $xr5, $xr13, $xr21; xvdiv.w $xr6, $xr14, $xr22; xvdiv.w $xr7, $xr15, $xr23'",
@@ -215,13 +215,9 @@
       "throughput": {
         "lanes": 8,
         "cpi": 7.4988,
-        "ipc": 0.1334,
-        "cpi_min": 4.497,
-        "cpi_max": 14.499,
-        "ipc_min": 0.069,
-        "ipc_max": 0.2223
+        "ipc": 0.1334
       },
-      "notes": "Range over the same pairs: min CPI 4.50 at 0/1, max CPI 14.50 at 2147483647/1. Sample uses 1/1.",
+      "notes": "Range over the same pairs: min CPI 4.50 at 0/1, max CPI 14.50 at 2147483647/1. Sample uses 1/1. Both ends are recorded as separate experiments, so the range is the spread between them.",
       "machine_code": [
         "03800404  li.w        \t$a0, 0x1",
         "769f0888  xvreplgr2vr.w\t$xr8, $a0",
@@ -264,6 +260,27 @@
         "74e159c6  xvdiv.w     \t$xr6, $xr14, $xr22",
         "74e15de7  xvdiv.w     \t$xr7, $xr15, $xr23"
       ]
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "xvdiv.w $xr0, $xr30, $xr31; xvdiv.w $xr1, $xr30, $xr31; xvdiv.w $xr2, $xr30, $xr31; xvdiv.w $xr3, $xr30, $xr31; xvdiv.w $xr4, $xr30, $xr31; xvdiv.w $xr5, $xr30, $xr31; xvdiv.w $xr6, $xr30, $xr31; xvdiv.w $xr7, $xr30, $xr31",
+      "init": "li.d $r4, 2147483647; xvreplgr2vr.w $xr30, $r4; li.d $r4, 1; xvreplgr2vr.w $xr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 2147483647; xvreplgr2vr.w $xr30, $r4; li.d $r4, 1; xvreplgr2vr.w $xr31, $r4' --asm 'xvdiv.w $xr0, $xr30, $xr31; xvdiv.w $xr1, $xr30, $xr31; xvdiv.w $xr2, $xr30, $xr31; xvdiv.w $xr3, $xr30, $xr31; xvdiv.w $xr4, $xr30, $xr31; xvdiv.w $xr5, $xr30, $xr31; xvdiv.w $xr6, $xr30, $xr31; xvdiv.w $xr7, $xr30, $xr31'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 14.5337,
+        "ipc": 0.0688
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 116.27
+      },
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
     }
   ],
   "notes": "LASX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."

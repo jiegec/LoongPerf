@@ -204,7 +204,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "vdiv.bu $vr0, $vr8, $vr16; vdiv.bu $vr1, $vr9, $vr17; vdiv.bu $vr2, $vr10, $vr18; vdiv.bu $vr3, $vr11, $vr19; vdiv.bu $vr4, $vr12, $vr20; vdiv.bu $vr5, $vr13, $vr21; vdiv.bu $vr6, $vr14, $vr22; vdiv.bu $vr7, $vr15, $vr23",
       "init": "li.w $r4, 1; vreplgr2vr.b $vr8, $r4; li.w $r4, 1; vreplgr2vr.b $vr16, $r4; li.w $r4, 1; vreplgr2vr.b $vr9, $r4; li.w $r4, 1; vreplgr2vr.b $vr17, $r4; li.w $r4, 1; vreplgr2vr.b $vr10, $r4; li.w $r4, 1; vreplgr2vr.b $vr18, $r4; li.w $r4, 1; vreplgr2vr.b $vr11, $r4; li.w $r4, 1; vreplgr2vr.b $vr19, $r4; li.w $r4, 1; vreplgr2vr.b $vr12, $r4; li.w $r4, 1; vreplgr2vr.b $vr20, $r4; li.w $r4, 1; vreplgr2vr.b $vr13, $r4; li.w $r4, 1; vreplgr2vr.b $vr21, $r4; li.w $r4, 1; vreplgr2vr.b $vr14, $r4; li.w $r4, 1; vreplgr2vr.b $vr22, $r4; li.w $r4, 1; vreplgr2vr.b $vr15, $r4; li.w $r4, 1; vreplgr2vr.b $vr23, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1; vreplgr2vr.b $vr8, $r4; li.w $r4, 1; vreplgr2vr.b $vr16, $r4; li.w $r4, 1; vreplgr2vr.b $vr9, $r4; li.w $r4, 1; vreplgr2vr.b $vr17, $r4; li.w $r4, 1; vreplgr2vr.b $vr10, $r4; li.w $r4, 1; vreplgr2vr.b $vr18, $r4; li.w $r4, 1; vreplgr2vr.b $vr11, $r4; li.w $r4, 1; vreplgr2vr.b $vr19, $r4; li.w $r4, 1; vreplgr2vr.b $vr12, $r4; li.w $r4, 1; vreplgr2vr.b $vr20, $r4; li.w $r4, 1; vreplgr2vr.b $vr13, $r4; li.w $r4, 1; vreplgr2vr.b $vr21, $r4; li.w $r4, 1; vreplgr2vr.b $vr14, $r4; li.w $r4, 1; vreplgr2vr.b $vr22, $r4; li.w $r4, 1; vreplgr2vr.b $vr15, $r4; li.w $r4, 1; vreplgr2vr.b $vr23, $r4' --asm 'vdiv.bu $vr0, $vr8, $vr16; vdiv.bu $vr1, $vr9, $vr17; vdiv.bu $vr2, $vr10, $vr18; vdiv.bu $vr3, $vr11, $vr19; vdiv.bu $vr4, $vr12, $vr20; vdiv.bu $vr5, $vr13, $vr21; vdiv.bu $vr6, $vr14, $vr22; vdiv.bu $vr7, $vr15, $vr23'",
@@ -215,13 +215,9 @@
       "throughput": {
         "lanes": 8,
         "cpi": 25.5025,
-        "ipc": 0.0392,
-        "cpi_min": 13.499,
-        "cpi_max": 33.502,
-        "ipc_min": 0.0298,
-        "ipc_max": 0.0741
+        "ipc": 0.0392
       },
-      "notes": "Range over the same pairs: min CPI 13.50 at 0/1, max CPI 33.50 at 255/1. Sample uses 1/1.",
+      "notes": "Range over the same pairs: min CPI 13.50 at 0/1, max CPI 33.50 at 255/1. Sample uses 1/1. Both ends are recorded as separate experiments, so the range is the spread between them.",
       "machine_code": [
         "03800404  li.w        \t$a0, 0x1",
         "729f0088  vreplgr2vr.b\t$vr8, $a0",
@@ -264,6 +260,27 @@
         "70e459c6  vdiv.bu     \t$vr6, $vr14, $vr22",
         "70e45de7  vdiv.bu     \t$vr7, $vr15, $vr23"
       ]
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "vdiv.bu $vr0, $vr30, $vr31; vdiv.bu $vr1, $vr30, $vr31; vdiv.bu $vr2, $vr30, $vr31; vdiv.bu $vr3, $vr30, $vr31; vdiv.bu $vr4, $vr30, $vr31; vdiv.bu $vr5, $vr30, $vr31; vdiv.bu $vr6, $vr30, $vr31; vdiv.bu $vr7, $vr30, $vr31",
+      "init": "li.d $r4, 255; vreplgr2vr.b $vr30, $r4; li.d $r4, 1; vreplgr2vr.b $vr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 255; vreplgr2vr.b $vr30, $r4; li.d $r4, 1; vreplgr2vr.b $vr31, $r4' --asm 'vdiv.bu $vr0, $vr30, $vr31; vdiv.bu $vr1, $vr30, $vr31; vdiv.bu $vr2, $vr30, $vr31; vdiv.bu $vr3, $vr30, $vr31; vdiv.bu $vr4, $vr30, $vr31; vdiv.bu $vr5, $vr30, $vr31; vdiv.bu $vr6, $vr30, $vr31; vdiv.bu $vr7, $vr30, $vr31'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 33.5275,
+        "ipc": 0.0298
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 268.22
+      },
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
     }
   ],
   "notes": "LSX variable-latency integer divide/modulo. Latency uses an element-0 reset helper; throughput uses 8 independent lanes. Ranges cover positive operands including powers of two and max values. Both vector sources are recorded separately; they share the same result path where the hardware is symmetric."

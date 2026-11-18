@@ -364,6 +364,14 @@ A few more traps specific to this data:
   are partly zero measures below the worst case; build the operand pattern with
   `vinsgr2vr.*` if the number of active lanes matters;
 
+A second trap for throughput is the operand choice. The divider and the
+transcendental units start a new operation before the previous one retires, but the
+initiation interval depends on the operands: `div.d` accepts eight independent
+divides of `1 / 2` in 28 cycles (3.5 CPI) and eight divides of `max / 1` in 160
+cycles (20 CPI), and `fsqrt.d` runs 2 CPI on `sqrt(1)` against 8.5 CPI on
+`sqrt(2)`. Record both ends as two experiments, with the operands in `init`, so a
+reader can see which operand mix a number belongs to.
+
 For **throughput** there is a related trap that is easy to miss: an instruction
 whose destination is also an accumulation input (`vmadd*`, `vmsub*`, the atomics)
 can only issue one lane per latency, so a body of eight lanes caps the rate at

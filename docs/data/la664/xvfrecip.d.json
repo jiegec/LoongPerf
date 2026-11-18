@@ -210,7 +210,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "xvfrecip.d $xr0, $xr8; xvfrecip.d $xr1, $xr9; xvfrecip.d $xr2, $xr10; xvfrecip.d $xr3, $xr11; xvfrecip.d $xr4, $xr12; xvfrecip.d $xr5, $xr13; xvfrecip.d $xr6, $xr14; xvfrecip.d $xr7, $xr15",
       "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4' --asm 'xvfrecip.d $xr0, $xr8; xvfrecip.d $xr1, $xr9; xvfrecip.d $xr2, $xr10; xvfrecip.d $xr3, $xr11; xvfrecip.d $xr4, $xr12; xvfrecip.d $xr5, $xr13; xvfrecip.d $xr6, $xr14; xvfrecip.d $xr7, $xr15'",
@@ -221,11 +221,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 4,
-        "ipc": 0.25,
-        "cpi_min": 3,
-        "cpi_max": 11,
-        "ipc_min": 0.0909,
-        "ipc_max": 0.3333
+        "ipc": 0.25
       },
       "notes": "Throughput range over 11 operand values: min CPI 3.00 at 0, max CPI 11.00 at maxsub. Sample uses 1.",
       "machine_code": [
@@ -254,6 +250,27 @@
         "769cf9c6  xvfrecip.d  \t$xr6, $xr14",
         "769cf9e7  xvfrecip.d  \t$xr7, $xr15"
       ]
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "xvfrecip.d $xr0, $xr30; xvfrecip.d $xr1, $xr30; xvfrecip.d $xr2, $xr30; xvfrecip.d $xr3, $xr30; xvfrecip.d $xr4, $xr30; xvfrecip.d $xr5, $xr30; xvfrecip.d $xr6, $xr30; xvfrecip.d $xr7, $xr30",
+      "init": "li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr30, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 4613937818241073152; xvreplgr2vr.d $xr30, $r4' --asm 'xvfrecip.d $xr0, $xr30; xvfrecip.d $xr1, $xr30; xvfrecip.d $xr2, $xr30; xvfrecip.d $xr3, $xr30; xvfrecip.d $xr4, $xr30; xvfrecip.d $xr5, $xr30; xvfrecip.d $xr6, $xr30; xvfrecip.d $xr7, $xr30'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 10.5025,
+        "ipc": 0.0952
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 84.02
+      },
+      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest."
     }
   ],
   "notes": "LASX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

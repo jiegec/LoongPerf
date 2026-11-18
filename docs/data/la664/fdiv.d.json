@@ -369,7 +369,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "fdiv.d $f0, $f8, $f8; fdiv.d $f1, $f9, $f9; fdiv.d $f2, $f10, $f10; fdiv.d $f3, $f11, $f11; fdiv.d $f4, $f12, $f12; fdiv.d $f5, $f13, $f13; fdiv.d $f6, $f14, $f14; fdiv.d $f7, $f15, $f15",
       "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
       "machine_code": [
@@ -390,13 +390,30 @@
       "throughput": {
         "lanes": 8,
         "cpi": 2,
-        "ipc": 0.5,
-        "cpi_min": 1.5,
-        "cpi_max": 5.5,
-        "ipc_min": 0.182,
-        "ipc_max": 0.667
+        "ipc": 0.5
       },
-      "notes": "Data-dependent. 8 independent lanes. CPI over operand values: ~1.5 for inf/NaN fast path, ~2.0 for exact quotients such as 1/1, ~5.25 for general division, ~5.5 with subnormal inputs. CPI is unchanged for 1-20 independent lanes, so throughput is initiation-interval bound rather than latency bound."
+      "notes": "Data-dependent. 8 independent lanes. CPI over operand values: ~1.5 for inf/NaN fast path, ~2.0 for exact quotients such as 1/1, ~5.25 for general division, ~5.5 with subnormal inputs. CPI is unchanged for 1-20 independent lanes, so throughput is initiation-interval bound rather than latency bound. Both ends are recorded as separate experiments, so the range is the spread between them."
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "fdiv.d $f0, $f16, $f17; fdiv.d $f1, $f16, $f17; fdiv.d $f2, $f16, $f17; fdiv.d $f3, $f16, $f17; fdiv.d $f4, $f16, $f17; fdiv.d $f5, $f16, $f17; fdiv.d $f6, $f16, $f17; fdiv.d $f7, $f16, $f17",
+      "init": "li.d $r4, 4607182418800017408; movgr2fr.d $f16, $r4; li.d $r4, 4613937818241073152; movgr2fr.d $f17, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 4607182418800017408; movgr2fr.d $f16, $r4; li.d $r4, 4613937818241073152; movgr2fr.d $f17, $r4' --asm 'fdiv.d $f0, $f16, $f17; fdiv.d $f1, $f16, $f17; fdiv.d $f2, $f16, $f17; fdiv.d $f3, $f16, $f17; fdiv.d $f4, $f16, $f17; fdiv.d $f5, $f16, $f17; fdiv.d $f6, $f16, $f17; fdiv.d $f7, $f16, $f17'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 5.2475,
+        "ipc": 0.1906
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 41.98
+      },
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
     }
   ],
   "notes": "Latency and throughput are data-dependent. The latency range was re-measured with unroll=100000; unroll=1000 produced values about 0.2 cycles lower because the per-call overhead was not fully amortised. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."

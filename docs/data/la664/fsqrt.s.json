@@ -172,7 +172,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "fsqrt.s $f0, $f8; fsqrt.s $f1, $f9; fsqrt.s $f2, $f10; fsqrt.s $f3, $f11; fsqrt.s $f4, $f12; fsqrt.s $f5, $f13; fsqrt.s $f6, $f14; fsqrt.s $f7, $f15",
       "init": "li.w $r4, 0x3f800000; movgr2fr.w $f8, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f9, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f10, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f11, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f12, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f13, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f14, $r4; li.w $r4, 0x3f800000; movgr2fr.w $f15, $r4",
       "machine_code": [
@@ -193,13 +193,30 @@
       "throughput": {
         "lanes": 8,
         "cpi": 2,
-        "ipc": 0.5,
-        "cpi_min": 1.5,
-        "cpi_max": 5.25,
-        "ipc_min": 0.19,
-        "ipc_max": 0.667
+        "ipc": 0.5
       },
-      "notes": "Data-dependent. 8 independent lanes. CPI ~1.5 for special values, ~2.0 for exact squares, ~5.0 for general inputs, up to ~5.25 with maxsub/minsub. CPI is unchanged for 1-20 independent lanes; mixed fast/slow lanes are additive."
+      "notes": "Data-dependent. 8 independent lanes. CPI ~1.5 for special values, ~2.0 for exact squares, ~5.0 for general inputs, up to ~5.25 with maxsub/minsub. CPI is unchanged for 1-20 independent lanes; mixed fast/slow lanes are additive. Both ends are recorded as separate experiments, so the range is the spread between them."
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "fsqrt.s $f0, $f16; fsqrt.s $f1, $f16; fsqrt.s $f2, $f16; fsqrt.s $f3, $f16; fsqrt.s $f4, $f16; fsqrt.s $f5, $f16; fsqrt.s $f6, $f16; fsqrt.s $f7, $f16",
+      "init": "li.d $r4, 1073741824; movgr2fr.w $f16, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 1073741824; movgr2fr.w $f16, $r4' --asm 'fsqrt.s $f0, $f16; fsqrt.s $f1, $f16; fsqrt.s $f2, $f16; fsqrt.s $f3, $f16; fsqrt.s $f4, $f16; fsqrt.s $f5, $f16; fsqrt.s $f6, $f16; fsqrt.s $f7, $f16'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 5.0175,
+        "ipc": 0.1993
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 40.14
+      },
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
     }
   ],
   "notes": "Latency and throughput are data-dependent. The latency range was re-measured with unroll=100000; unroll=1000 produced values about 0.2 cycles lower because the per-call overhead was not fully amortised. Throughput is initiation-interval bound: CPI is unchanged from 1 to 20 independent lanes, and mixed fast/slow lanes are additive."

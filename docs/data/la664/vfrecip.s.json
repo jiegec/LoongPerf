@@ -231,7 +231,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "vfrecip.s $vr0, $vr8; vfrecip.s $vr1, $vr9; vfrecip.s $vr2, $vr10; vfrecip.s $vr3, $vr11; vfrecip.s $vr4, $vr12; vfrecip.s $vr5, $vr13; vfrecip.s $vr6, $vr14; vfrecip.s $vr7, $vr15",
       "init": "li.w $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr15, $r4' --asm 'vfrecip.s $vr0, $vr8; vfrecip.s $vr1, $vr9; vfrecip.s $vr2, $vr10; vfrecip.s $vr3, $vr11; vfrecip.s $vr4, $vr12; vfrecip.s $vr5, $vr13; vfrecip.s $vr6, $vr14; vfrecip.s $vr7, $vr15'",
@@ -242,11 +242,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 6.4988,
-        "ipc": 0.1539,
-        "cpi_min": 4.499,
-        "cpi_max": 13.499,
-        "ipc_min": 0.0741,
-        "ipc_max": 0.2223
+        "ipc": 0.1539
       },
       "notes": "Throughput range over 11 operand values: min CPI 4.50 at 0, max CPI 13.50 at maxsub. Sample uses 1.",
       "machine_code": [
@@ -275,6 +271,27 @@
         "729cf5c6  vfrecip.s   \t$vr6, $vr14",
         "729cf5e7  vfrecip.s   \t$vr7, $vr15"
       ]
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "vfrecip.s $vr0, $vr30; vfrecip.s $vr1, $vr30; vfrecip.s $vr2, $vr30; vfrecip.s $vr3, $vr30; vfrecip.s $vr4, $vr30; vfrecip.s $vr5, $vr30; vfrecip.s $vr6, $vr30; vfrecip.s $vr7, $vr30",
+      "init": "li.d $r4, 1077936128; vreplgr2vr.w $vr30, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 1077936128; vreplgr2vr.w $vr30, $r4' --asm 'vfrecip.s $vr0, $vr30; vfrecip.s $vr1, $vr30; vfrecip.s $vr2, $vr30; vfrecip.s $vr3, $vr30; vfrecip.s $vr4, $vr30; vfrecip.s $vr5, $vr30; vfrecip.s $vr6, $vr30; vfrecip.s $vr7, $vr30'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 12.53,
+        "ipc": 0.0798
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 100.24
+      },
+      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest."
     }
   ],
   "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

@@ -210,7 +210,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "vfsqrt.d $vr0, $vr8; vfsqrt.d $vr1, $vr9; vfsqrt.d $vr2, $vr10; vfsqrt.d $vr3, $vr11; vfsqrt.d $vr4, $vr12; vfsqrt.d $vr5, $vr13; vfsqrt.d $vr6, $vr14; vfsqrt.d $vr7, $vr15",
       "init": "li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.d $r4, 4607182418800017408; vreplgr2vr.d $vr8, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr9, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr10, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr11, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr12, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr13, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr14, $r4; li.d $r4, 4607182418800017408; vreplgr2vr.d $vr15, $r4' --asm 'vfsqrt.d $vr0, $vr8; vfsqrt.d $vr1, $vr9; vfsqrt.d $vr2, $vr10; vfsqrt.d $vr3, $vr11; vfsqrt.d $vr4, $vr12; vfsqrt.d $vr5, $vr13; vfsqrt.d $vr6, $vr14; vfsqrt.d $vr7, $vr15'",
@@ -221,11 +221,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 4,
-        "ipc": 0.25,
-        "cpi_min": 3,
-        "cpi_max": 17.5,
-        "ipc_min": 0.0571,
-        "ipc_max": 0.3333
+        "ipc": 0.25
       },
       "notes": "Throughput range over 11 operand values: min CPI 3.00 at 0, max CPI 17.50 at maxsub. Sample uses 1.",
       "machine_code": [
@@ -254,6 +250,27 @@
         "729ce9c6  vfsqrt.d    \t$vr6, $vr14",
         "729ce9e7  vfsqrt.d    \t$vr7, $vr15"
       ]
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "vfsqrt.d $vr0, $vr30; vfsqrt.d $vr1, $vr30; vfsqrt.d $vr2, $vr30; vfsqrt.d $vr3, $vr30; vfsqrt.d $vr4, $vr30; vfsqrt.d $vr5, $vr30; vfsqrt.d $vr6, $vr30; vfsqrt.d $vr7, $vr30",
+      "init": "li.d $r4, 4611686018427387904; vreplgr2vr.d $vr30, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 4611686018427387904; vreplgr2vr.d $vr30, $r4' --asm 'vfsqrt.d $vr0, $vr30; vfsqrt.d $vr1, $vr30; vfsqrt.d $vr2, $vr30; vfsqrt.d $vr3, $vr30; vfsqrt.d $vr4, $vr30; vfsqrt.d $vr5, $vr30; vfsqrt.d $vr6, $vr30; vfsqrt.d $vr7, $vr30'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 17.0212,
+        "ipc": 0.0588
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 136.17
+      },
+      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest."
     }
   ],
   "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."

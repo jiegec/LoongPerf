@@ -347,6 +347,46 @@ access that crosses a cache line is counted as two operations by the load counte
 taken with aligned buffers, so unaligned latency is unmeasured rather than
 measured-and-equal.
 
+## Throughput of the variable-latency units
+
+The divider and the transcendental units accept a new operation before the
+previous one finishes, but the *initiation interval* depends on the operands, so a
+throughput number is only meaningful together with the operands it was measured
+with. Both ends are recorded as two experiments per instruction:
+
+| instruction | shortest operands | longest operands |
+| --- | --- | --- |
+| `div.w`, `div.wu`, `mod.w`, `mod.wu` | 3.5 | 12 |
+| `div.d`, `div.du`, `mod.d`, `mod.du` | 3.5 | 20 |
+| `vdiv.b` / `.bu`, `vmod.b` / `.bu` | 25.5 / 29.5 | 29.5 / 33.5 |
+| `vdiv.h` / `.hu`, `vmod.h` / `.hu` | 13.5 / 15.5 | 19.5 / 21.5 |
+| `vdiv.w` / `.wu`, `vmod.w` / `.wu` | 7.5 / 8.5 | 14.5 / 15.5 |
+| `vdiv.d` / `.du`, `vmod.d` / `.du` | 4.5 / 5 | 12 / 12.5 |
+| `fdiv.s`, `frecip.s` | 2 | 3.5 |
+| `fdiv.d`, `frecip.d` | 2 | 5.25 |
+| `fsqrt.s` | 2 | 5 |
+| `fsqrt.d` | 2 | 8.5 |
+| `frsqrt.s` | 3.25 | 7.75 |
+| `frsqrt.d` | 3.25 | 13 |
+| `vfdiv.s`, `vfrecip.s` | 6.5 | 12.5 |
+| `vfdiv.d`, `vfrecip.d` | 4 | 10.5 |
+| `vfsqrt.s` | 6.5 | 18.5 |
+| `vfsqrt.d` | 4 | 17 |
+| `vfrsqrt.s` | 11.5 | 29.5 |
+| `vfrsqrt.d` | 6.5 | 26 |
+
+The shortest-operand bodies use division by 1 (`1.0/1.0`, `sqrt(1)`, `rsqrt(1)`),
+which terminates after one digit; the longest ones use `max/1`, `1.0/3.0`,
+`sqrt(2)` and `rsqrt(2)`. The vector integer divide is operand-independent across
+the *worst* classes (all-zero lanes and all-maximum lanes both measure the same),
+but it is still faster on the shortest class, so both are kept.
+
+Because the lanes are independent and the unit is pipelined, the eight-lane body
+measures the initiation interval and not the latency. That only holds while the
+lane count is at least the interval, which it is everywhere here: the smallest
+latency-to-interval ratio in the table is `vdiv.d` at 26/12 and `fdiv.s` at
+16/3.5.
+
 ## Summary
 
 | instruction | range (cycles) | long-path cost |

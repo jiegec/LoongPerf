@@ -255,7 +255,7 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, best-case operands",
       "asm": "mod.d $r12, $r4, $r20; mod.d $r13, $r5, $r21; mod.d $r14, $r6, $r23; mod.d $r15, $r7, $r24; mod.d $r16, $r8, $r25; mod.d $r17, $r9, $r26; mod.d $r18, $r10, $r27; mod.d $r19, $r11, $r28",
       "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
       "machine_code": [
@@ -276,13 +276,30 @@
       "throughput": {
         "lanes": 8,
         "cpi": 3.49875,
-        "ipc": 0.28581636298678104,
-        "cpi_min": 3.5,
-        "cpi_max": 20,
-        "ipc_min": 0.05,
-        "ipc_max": 0.2857
+        "ipc": 0.28581636298678104
       },
       "notes": "Data-dependent. Min/max measured over a range of divisors with 8 independent lanes.\n\nMin CPI 3.503 at divisor=0x8000000000000000; max CPI 20.002 at divisor=0xffffffffffffffff; dividend=0x7fffffffffffffff."
+    },
+    {
+      "name": "8 independent lanes, worst-case operands",
+      "asm": "mod.d $r4, $r12, $r13; mod.d $r5, $r12, $r13; mod.d $r6, $r12, $r13; mod.d $r7, $r12, $r13; mod.d $r8, $r12, $r13; mod.d $r9, $r12, $r13; mod.d $r10, $r12, $r13; mod.d $r11, $r12, $r13",
+      "init": "li.d $r12, 9223372036854775807; li.d $r13, 3",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r12, 9223372036854775807; li.d $r13, 3' --asm 'mod.d $r4, $r12, $r13; mod.d $r5, $r12, $r13; mod.d $r6, $r12, $r13; mod.d $r7, $r12, $r13; mod.d $r8, $r12, $r13; mod.d $r9, $r12, $r13; mod.d $r10, $r12, $r13; mod.d $r11, $r12, $r13'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 20.065,
+        "ipc": 0.0498
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 160.52
+      },
+      "notes": "Operands chosen to hit the longest latency class of this instruction; the first experiment uses the shortest."
     }
   ],
   "notes": "Latency: fixed-operand and+or chain with unroll=100000; 2 cycles subtracted for and+or. Throughput: 8 independent lanes with the same dividend/divisor pair. Both latency and throughput are data-dependent."

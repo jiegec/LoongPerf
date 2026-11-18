@@ -55,13 +55,9 @@
       "throughput": {
         "lanes": 8,
         "cpi": 0.5,
-        "ipc": 2.0,
-        "cpi_min": 0.5,
-        "cpi_max": 0.5,
-        "ipc_min": 2.0,
-        "ipc_max": 2.0
+        "ipc": 2.0
       },
-      "notes": "Not-taken branches run at 0.5 CPI. The marginal cost measured against a loop-only baseline improves with the number of static branches because one branch rides the loop branch slot (0.437 at 8 static branches for integer compares, converging to 0.5; 0.874 converging to 1.0 for FCC compares), so the saturated rate is recorded."
+      "notes": "Not-taken branches run at 0.5 CPI. The marginal cost measured against a loop-only baseline improves with the number of static branches because one branch rides the loop branch slot (0.437 at 8 static branches for integer compares, converging to 0.5; 0.874 converging to 1.0 for FCC compares), so the saturated rate is recorded. Both ends are recorded as separate experiments, so the range is the spread between them."
     },
     {
       "name": "8 taken branches",
@@ -85,11 +81,7 @@
       "throughput": {
         "lanes": 8,
         "cpi": 1.0,
-        "ipc": 1.0,
-        "cpi_min": 1.0,
-        "cpi_max": 3.0,
-        "ipc_min": 0.3333,
-        "ipc_max": 1.0
+        "ipc": 1.0
       },
       "notes": "Taken-branch throughput has two regimes. With a small static footprint (8 static branches, reused in a 1000-iteration loop) the branch retires at 1 CPI: measured 1.001, 1.000 and 1.002 for 2, 4 and 8 static branches. Once the static stream exceeds the BTB, each branch costs 3 cycles: 2.857 at 256 static branches and 3.006-3.007 from 1024 static branches on. The two ends are recorded as the range.",
       "measurement": {
