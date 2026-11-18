@@ -231,7 +231,28 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes, best-case operands",
+      "name": "8 independent lanes, zero operands",
+      "asm": "vfrsqrt.s $vr0, $vr30; vfrsqrt.s $vr1, $vr30; vfrsqrt.s $vr2, $vr30; vfrsqrt.s $vr3, $vr30; vfrsqrt.s $vr4, $vr30; vfrsqrt.s $vr5, $vr30; vfrsqrt.s $vr6, $vr30; vfrsqrt.s $vr7, $vr30",
+      "init": "li.d $r4, 0; vreplgr2vr.w $vr30, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 0; vreplgr2vr.w $vr30, $r4' --asm 'vfrsqrt.s $vr0, $vr30; vfrsqrt.s $vr1, $vr30; vfrsqrt.s $vr2, $vr30; vfrsqrt.s $vr3, $vr30; vfrsqrt.s $vr4, $vr30; vfrsqrt.s $vr5, $vr30; vfrsqrt.s $vr6, $vr30; vfrsqrt.s $vr7, $vr30'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 7.5,
+        "ipc": 0.1333
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 60.0
+      },
+      "notes": "The units short-circuit a zero operand, so this is the fastest class; it is faster than the shortest non-zero quotient recorded in the next experiment."
+    },
+    {
+      "name": "8 independent lanes, shortest non-zero operands",
       "asm": "vfrsqrt.s $vr0, $vr8; vfrsqrt.s $vr1, $vr9; vfrsqrt.s $vr2, $vr10; vfrsqrt.s $vr3, $vr11; vfrsqrt.s $vr4, $vr12; vfrsqrt.s $vr5, $vr13; vfrsqrt.s $vr6, $vr14; vfrsqrt.s $vr7, $vr15",
       "init": "li.w $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr15, $r4",
       "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 7 --init 'li.w $r4, 1065353216; vreplgr2vr.w $vr8, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr9, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr10, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr11, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr12, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr13, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr14, $r4; li.w $r4, 1065353216; vreplgr2vr.w $vr15, $r4' --asm 'vfrsqrt.s $vr0, $vr8; vfrsqrt.s $vr1, $vr9; vfrsqrt.s $vr2, $vr10; vfrsqrt.s $vr3, $vr11; vfrsqrt.s $vr4, $vr12; vfrsqrt.s $vr5, $vr13; vfrsqrt.s $vr6, $vr14; vfrsqrt.s $vr7, $vr15'",
@@ -273,10 +294,10 @@
       ]
     },
     {
-      "name": "8 independent lanes, worst-case operands",
+      "name": "8 independent lanes, subnormal or widest operands",
       "asm": "vfrsqrt.s $vr0, $vr30; vfrsqrt.s $vr1, $vr30; vfrsqrt.s $vr2, $vr30; vfrsqrt.s $vr3, $vr30; vfrsqrt.s $vr4, $vr30; vfrsqrt.s $vr5, $vr30; vfrsqrt.s $vr6, $vr30; vfrsqrt.s $vr7, $vr30",
-      "init": "li.d $r4, 1073741824; vreplgr2vr.w $vr30, $r4",
-      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 1073741824; vreplgr2vr.w $vr30, $r4' --asm 'vfrsqrt.s $vr0, $vr30; vfrsqrt.s $vr1, $vr30; vfrsqrt.s $vr2, $vr30; vfrsqrt.s $vr3, $vr30; vfrsqrt.s $vr4, $vr30; vfrsqrt.s $vr5, $vr30; vfrsqrt.s $vr6, $vr30; vfrsqrt.s $vr7, $vr30'",
+      "init": "li.d $r4, 8388607; vreplgr2vr.w $vr30, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --init 'li.d $r4, 8388607; vreplgr2vr.w $vr30, $r4' --asm 'vfrsqrt.s $vr0, $vr30; vfrsqrt.s $vr1, $vr30; vfrsqrt.s $vr2, $vr30; vfrsqrt.s $vr3, $vr30; vfrsqrt.s $vr4, $vr30; vfrsqrt.s $vr5, $vr30; vfrsqrt.s $vr6, $vr30; vfrsqrt.s $vr7, $vr30'",
       "measurement": {
         "unroll": 250,
         "iters": 1000,
@@ -284,14 +305,14 @@
       },
       "throughput": {
         "lanes": 8,
-        "cpi": 29.5,
-        "ipc": 0.0339
+        "cpi": 30.5,
+        "ipc": 0.0328
       },
       "result": {
         "instructions_retired": 8,
-        "core_cycles": 236.0
+        "core_cycles": 244.0
       },
-      "notes": "Operands chosen to hit the longest latency class; the first experiment uses the shortest. Raw measurement was 236.06 cycles, rounded to 29.5 CPI."
+      "notes": "Operands chosen to hit the slowest class: a subnormal operand for the floating-point units, and the widest possible quotient for the integer remainders."
     }
   ],
   "notes": "LSX variable-latency floating-point instruction. Latency measured with a reset helper that keeps element 0 at the test value; throughput measured with 8 independent lanes. Ranges cover special values, exact/non-exact cases, subnormals, and overflow/underflow boundaries."
