@@ -43,14 +43,45 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 3.0,
+      "cycles": 1.0,
+      "cycles_min": 1,
+      "cycles_max": 1,
       "experiments": [
         {
-          "name": "round trip through xvpickve2gr",
+          "name": "vector-source chain",
           "role": "measurement",
-          "asm": "xvreplve.h $xr0, $xr0, $r4; xvpickve2gr.d $r4, $xr0, 0",
-          "init": "li.d $r4, 0; xvld $xr0, $sp, -512",
-          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'li.d $r4, 0; xvld $xr0, $sp, -512' --asm 'xvreplve.h $xr0, $xr0, $r4; xvpickve2gr.d $r4, $xr0, 0'",
+          "asm": "xvreplve.h $xr0, $xr1, $r6; xvadd.b $xr1, $xr0, $xr0",
+          "init": "li.d $r4, 0; li.d $r6, 0; addi.d $r20, $sp, -512; xvld $xr1, $r20, 0",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'li.d $r4, 0; li.d $r6, 0; addi.d $r20, $sp, -512; xvld $xr1, $r20, 0' --asm 'xvreplve.h $xr0, $xr1, $r6; xvadd.b $xr1, $xr0, $xr0'",
+          "measurement": {
+            "unroll": 800,
+            "iters": 40,
+            "reps": 7
+          },
+          "result": {
+            "instructions_retired": 3.0,
+            "core_cycles": 1.98
+          },
+          "chain_latency": 1.0
+        }
+      ],
+      "notes": "Latency from the vector source xj to the destination: 1 cycle, the shortest path in the vector unit. The chain replicates element 0 and feeds the result back into the source through one xvadd.b (1 cycle, subtracted); chaining two replicas reads 1.97 cycles, i.e. 1 cycle each."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 3,
+      "cycles_min": 3,
+      "cycles_max": 3,
+      "experiments": [
+        {
+          "name": "index chain",
+          "role": "measurement",
+          "asm": "xvreplve.h $xr0, $xr1, $r4; xvpickve2gr.d $r4, $xr0, 0",
+          "init": "li.d $r4, 0; li.d $r6, 0; addi.d $r20, $sp, -512; xvld $xr1, $r20, 0",
+          "command": "./bench --method slope --unroll 800 --unroll2 1600 --iters 40 --warmup 10 --reps 7 --init 'li.d $r4, 0; li.d $r6, 0; addi.d $r20, $sp, -512; xvld $xr1, $r20, 0' --asm 'xvreplve.h $xr0, $xr1, $r4; xvpickve2gr.d $r4, $xr0, 0'",
           "measurement": {
             "unroll": 800,
             "iters": 40,
@@ -63,9 +94,7 @@
           "chain_latency": 5.0
         }
       ],
-      "notes": "Latency from the index register to the vector destination, measured as a round trip through xvpickve2gr.d (7.97 cycles) with the 5-cycle pick subtracted, which leaves 3. A chain that only depends on vd measures 1 cycle because the self-dependency is renamed away.",
-      "cycles_min": 3,
-      "cycles_max": 3
+      "notes": "Latency from the rj index register to the destination: 3 cycles, two more than the vector-source path because the GPR value has to select the lane before the data can be moved. Measured through xvpickve2gr.d (3 cycles subtracted, 5 for the double-width pick); a chain that also reads the destination measures the same 7.97 cycles, so the source self-dependency is renamed away and does not hide the index path."
     }
   ],
   "throughput": [
@@ -89,5 +118,6 @@
       },
       "notes": "Throughput measured with 8 independent lanes."
     }
-  ]
+  ],
+  "notes": "Latency measured from each source operand: 1 cycle from the vector source and 3 cycles from the index register. Both are register-to-register paths inside the vector unit, measured with a closed chain that subtracts the known cost of the helper (xvadd.b or a pick)."
 }

@@ -382,16 +382,19 @@ There is also no address bypass for a floating-point value: it has to pass throu
 | `vinsgr2vr.*`, `xvinsgr2vr.*` | 3 | 3 |
 | `vreplgr2vr.w/d`, `xvreplgr2vr.w/d` | 2 | 2 |
 | `vreplgr2vr.b/h`, `xvreplgr2vr.b/h` | 3 | 3 |
-| `vreplve.*`, `xvreplve.*` from the vector operand | 1 | 3 |
-| `vreplve.*`, `xvreplve.*` from the index register | 3 | — |
+| `vreplve.*`, `xvreplve.*` from the vector operand | 1 | 1 |
+| `vreplve.*`, `xvreplve.*` from the index register | 3 | 3 |
 | `vpickve2gr.b/h`, `vpickve2gr.w/d` | 3 | 3 |
 | `xvpickve2gr.*` | 5 | 5 |
 
-The gathers are the one place where the two cores disagree: LA664 gives 1 cycle
-when the destination vector feeds itself and 3 when the index is carried through,
-while LA464 measures 3 for the direct chain, so LA464 may be measuring a different
-path. Everything else, including the two-cycle calibration of the cross-domain
-moves, matches.
+The gathers were measured per source operand on LA464 and agree with LA664: 1
+cycle from the vector source and 3 from the index register. The earlier LA464
+figure of 3 for the vector operand came from a chain that read the index back
+through a pick, so it was the index path wearing the wrong operand label. Feeding
+the vector source back through one `vadd.b` instead gives 1.96 cycles for the
+chain, i.e. 1 for the gather, and two chained gathers read 1.96 as well; the
+index path through `vpickve2gr` reads 5.94-5.97, i.e. 3 after the 3-cycle pick
+(7.96 with the 5-cycle `xvpickve2gr`).
 
 ### What does not change the latency
 
