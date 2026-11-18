@@ -278,27 +278,109 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
-      "asm": "vmod.wu $vr0, $vr8, $vr16; vmod.wu $vr1, $vr9, $vr17; vmod.wu $vr2, $vr10, $vr18; vmod.wu $vr3, $vr11, $vr19; vmod.wu $vr4, $vr12, $vr20; vmod.wu $vr5, $vr13, $vr21; vmod.wu $vr6, $vr14, $vr22; vmod.wu $vr7, $vr15, $vr23",
-      "init": "li.d $r4, 4294967295; vreplgr2vr.w $vr8, $r4; li.d $r4, 1; vreplgr2vr.w $vr16, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr9, $r4; li.d $r4, 1; vreplgr2vr.w $vr17, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr10, $r4; li.d $r4, 1; vreplgr2vr.w $vr18, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr11, $r4; li.d $r4, 1; vreplgr2vr.w $vr19, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr12, $r4; li.d $r4, 1; vreplgr2vr.w $vr20, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr13, $r4; li.d $r4, 1; vreplgr2vr.w $vr21, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr14, $r4; li.d $r4, 1; vreplgr2vr.w $vr22, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr15, $r4; li.d $r4, 1; vreplgr2vr.w $vr23, $r4",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 143.96
-      },
+      "name": "8 independent lanes, zero operands",
+      "asm": "vmod.wu $vr0, $vr30, $vr31; vmod.wu $vr1, $vr30, $vr31; vmod.wu $vr2, $vr30, $vr31; vmod.wu $vr3, $vr30, $vr31; vmod.wu $vr4, $vr30, $vr31; vmod.wu $vr5, $vr30, $vr31; vmod.wu $vr6, $vr30, $vr31; vmod.wu $vr7, $vr30, $vr31",
+      "init": "li.d $r4, 0; vreplgr2vr.w $vr30, $r4; li.d $r4, 1; vreplgr2vr.w $vr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 0; vreplgr2vr.w $vr30, $r4; li.d $r4, 1; vreplgr2vr.w $vr31, $r4' --asm 'vmod.wu $vr0, $vr30, $vr31; vmod.wu $vr1, $vr30, $vr31; vmod.wu $vr2, $vr30, $vr31; vmod.wu $vr3, $vr30, $vr31; vmod.wu $vr4, $vr30, $vr31; vmod.wu $vr5, $vr30, $vr31; vmod.wu $vr6, $vr30, $vr31; vmod.wu $vr7, $vr30, $vr31'",
       "measurement": {
-        "unroll": 1000,
+        "unroll": 250,
         "iters": 1000,
-        "reps": 5
+        "reps": 10
       },
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 4294967295; vreplgr2vr.w $vr8, $r4; li.d $r4, 1; vreplgr2vr.w $vr16, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr9, $r4; li.d $r4, 1; vreplgr2vr.w $vr17, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr10, $r4; li.d $r4, 1; vreplgr2vr.w $vr18, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr11, $r4; li.d $r4, 1; vreplgr2vr.w $vr19, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr12, $r4; li.d $r4, 1; vreplgr2vr.w $vr20, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr13, $r4; li.d $r4, 1; vreplgr2vr.w $vr21, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr14, $r4; li.d $r4, 1; vreplgr2vr.w $vr22, $r4; li.d $r4, 4294967295; vreplgr2vr.w $vr15, $r4; li.d $r4, 1; vreplgr2vr.w $vr23, $r4' --asm 'vmod.wu $vr0, $vr8, $vr16; vmod.wu $vr1, $vr9, $vr17; vmod.wu $vr2, $vr10, $vr18; vmod.wu $vr3, $vr11, $vr19; vmod.wu $vr4, $vr12, $vr20; vmod.wu $vr5, $vr13, $vr21; vmod.wu $vr6, $vr14, $vr22; vmod.wu $vr7, $vr15, $vr23'",
       "throughput": {
         "lanes": 8,
-        "cpi_min": 6,
-        "cpi_max": 18,
-        "ipc_min": 0.0556,
-        "ipc_max": 0.1667
+        "cpi": 6.0,
+        "ipc": 0.1667
       },
-      "notes": "Data-dependent. CPI ranges 6 to 18 over the same operand pairs; the stored experiment uses 4294967295/1."
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 48.0
+      },
+      "notes": "8 independent lanes, zero operands: 48.00 cycles for 8 independent lanes, 6 CPI (0.1667 IPC); the same body on LA664 measures 4.5 CPI."
+    },
+    {
+      "name": "8 independent lanes, shortest non-zero operands",
+      "asm": "vmod.wu $vr0, $vr8, $vr16; vmod.wu $vr1, $vr9, $vr17; vmod.wu $vr2, $vr10, $vr18; vmod.wu $vr3, $vr11, $vr19; vmod.wu $vr4, $vr12, $vr20; vmod.wu $vr5, $vr13, $vr21; vmod.wu $vr6, $vr14, $vr22; vmod.wu $vr7, $vr15, $vr23",
+      "init": "li.w $r4, 1; vreplgr2vr.w $vr8, $r4; li.w $r4, 1; vreplgr2vr.w $vr16, $r4; li.w $r4, 1; vreplgr2vr.w $vr9, $r4; li.w $r4, 1; vreplgr2vr.w $vr17, $r4; li.w $r4, 1; vreplgr2vr.w $vr10, $r4; li.w $r4, 1; vreplgr2vr.w $vr18, $r4; li.w $r4, 1; vreplgr2vr.w $vr11, $r4; li.w $r4, 1; vreplgr2vr.w $vr19, $r4; li.w $r4, 1; vreplgr2vr.w $vr12, $r4; li.w $r4, 1; vreplgr2vr.w $vr20, $r4; li.w $r4, 1; vreplgr2vr.w $vr13, $r4; li.w $r4, 1; vreplgr2vr.w $vr21, $r4; li.w $r4, 1; vreplgr2vr.w $vr14, $r4; li.w $r4, 1; vreplgr2vr.w $vr22, $r4; li.w $r4, 1; vreplgr2vr.w $vr15, $r4; li.w $r4, 1; vreplgr2vr.w $vr23, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.w $r4, 1; vreplgr2vr.w $vr8, $r4; li.w $r4, 1; vreplgr2vr.w $vr16, $r4; li.w $r4, 1; vreplgr2vr.w $vr9, $r4; li.w $r4, 1; vreplgr2vr.w $vr17, $r4; li.w $r4, 1; vreplgr2vr.w $vr10, $r4; li.w $r4, 1; vreplgr2vr.w $vr18, $r4; li.w $r4, 1; vreplgr2vr.w $vr11, $r4; li.w $r4, 1; vreplgr2vr.w $vr19, $r4; li.w $r4, 1; vreplgr2vr.w $vr12, $r4; li.w $r4, 1; vreplgr2vr.w $vr20, $r4; li.w $r4, 1; vreplgr2vr.w $vr13, $r4; li.w $r4, 1; vreplgr2vr.w $vr21, $r4; li.w $r4, 1; vreplgr2vr.w $vr14, $r4; li.w $r4, 1; vreplgr2vr.w $vr22, $r4; li.w $r4, 1; vreplgr2vr.w $vr15, $r4; li.w $r4, 1; vreplgr2vr.w $vr23, $r4' --asm 'vmod.wu $vr0, $vr8, $vr16; vmod.wu $vr1, $vr9, $vr17; vmod.wu $vr2, $vr10, $vr18; vmod.wu $vr3, $vr11, $vr19; vmod.wu $vr4, $vr12, $vr20; vmod.wu $vr5, $vr13, $vr21; vmod.wu $vr6, $vr14, $vr22; vmod.wu $vr7, $vr15, $vr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 80.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 10.0,
+        "ipc": 0.1
+      },
+      "notes": "8 independent lanes, shortest non-zero operands: 80.00 cycles for 8 independent lanes, 10 CPI (0.1 IPC); the same body on LA664 measures 8.5 CPI.",
+      "machine_code": [
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0888  vreplgr2vr.w\t$vr8, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0890  vreplgr2vr.w\t$vr16, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0889  vreplgr2vr.w\t$vr9, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0891  vreplgr2vr.w\t$vr17, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f088a  vreplgr2vr.w\t$vr10, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0892  vreplgr2vr.w\t$vr18, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f088b  vreplgr2vr.w\t$vr11, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0893  vreplgr2vr.w\t$vr19, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f088c  vreplgr2vr.w\t$vr12, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0894  vreplgr2vr.w\t$vr20, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f088d  vreplgr2vr.w\t$vr13, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0895  vreplgr2vr.w\t$vr21, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f088e  vreplgr2vr.w\t$vr14, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0896  vreplgr2vr.w\t$vr22, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f088f  vreplgr2vr.w\t$vr15, $a0",
+        "03800404  li.w        \t$a0, 0x1",
+        "729f0897  vreplgr2vr.w\t$vr23, $a0",
+        "70e74100  vmod.wu     \t$vr0, $vr8, $vr16",
+        "70e74521  vmod.wu     \t$vr1, $vr9, $vr17",
+        "70e74942  vmod.wu     \t$vr2, $vr10, $vr18",
+        "70e74d63  vmod.wu     \t$vr3, $vr11, $vr19",
+        "70e75184  vmod.wu     \t$vr4, $vr12, $vr20",
+        "70e755a5  vmod.wu     \t$vr5, $vr13, $vr21",
+        "70e759c6  vmod.wu     \t$vr6, $vr14, $vr22",
+        "70e75de7  vmod.wu     \t$vr7, $vr15, $vr23"
+      ],
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      }
+    },
+    {
+      "name": "8 independent lanes, subnormal or widest operands",
+      "asm": "vmod.wu $vr0, $vr30, $vr31; vmod.wu $vr1, $vr30, $vr31; vmod.wu $vr2, $vr30, $vr31; vmod.wu $vr3, $vr30, $vr31; vmod.wu $vr4, $vr30, $vr31; vmod.wu $vr5, $vr30, $vr31; vmod.wu $vr6, $vr30, $vr31; vmod.wu $vr7, $vr30, $vr31",
+      "init": "li.d $r4, 4294967295; vreplgr2vr.w $vr30, $r4; li.d $r4, 1; vreplgr2vr.w $vr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 4294967295; vreplgr2vr.w $vr30, $r4; li.d $r4, 1; vreplgr2vr.w $vr31, $r4' --asm 'vmod.wu $vr0, $vr30, $vr31; vmod.wu $vr1, $vr30, $vr31; vmod.wu $vr2, $vr30, $vr31; vmod.wu $vr3, $vr30, $vr31; vmod.wu $vr4, $vr30, $vr31; vmod.wu $vr5, $vr30, $vr31; vmod.wu $vr6, $vr30, $vr31; vmod.wu $vr7, $vr30, $vr31'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 18.0,
+        "ipc": 0.0556
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 144.0
+      },
+      "notes": "8 independent lanes, subnormal or widest operands: 144.00 cycles for 8 independent lanes, 18 CPI (0.05556 IPC); the same body on LA664 measures 16.5 CPI."
     }
   ],
   "notes": "Vector variable-latency divide/modulo. Latency 10-34 cycles and throughput CPI 6-18 are data-dependent. 32-bit lanes are not divided fully in parallel: with one slow lane the latency is 22 (vdiv.w) / 21 (xvdiv.w), and as soon as two or more lanes need many quotient bits the divider costs roughly one extra pass, giving ~32 (vdiv.w) / ~31 (xvdiv.w); the number of slow lanes beyond two does not change it further (8 slow lanes measure 31). The recorded cycles_max reflects that multi-slow-lane case. 64-bit lanes, by contrast, are fully parallel and only the slowest lane matters. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."

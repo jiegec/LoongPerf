@@ -344,7 +344,28 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
+      "name": "8 independent lanes, zero operands",
+      "asm": "fdiv.d $f0, $f16, $f17; fdiv.d $f1, $f16, $f17; fdiv.d $f2, $f16, $f17; fdiv.d $f3, $f16, $f17; fdiv.d $f4, $f16, $f17; fdiv.d $f5, $f16, $f17; fdiv.d $f6, $f16, $f17; fdiv.d $f7, $f16, $f17",
+      "init": "li.d $r4, 0; movgr2fr.d $f16, $r4; li.d $r4, 4607182418800017408; movgr2fr.d $f17, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 0; movgr2fr.d $f16, $r4; li.d $r4, 4607182418800017408; movgr2fr.d $f17, $r4' --asm 'fdiv.d $f0, $f16, $f17; fdiv.d $f1, $f16, $f17; fdiv.d $f2, $f16, $f17; fdiv.d $f3, $f16, $f17; fdiv.d $f4, $f16, $f17; fdiv.d $f5, $f16, $f17; fdiv.d $f6, $f16, $f17; fdiv.d $f7, $f16, $f17'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 4.5,
+        "ipc": 0.2222
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 36.0
+      },
+      "notes": "8 independent lanes, zero operands: 36.00 cycles for 8 independent lanes, 4.5 CPI (0.2222 IPC); the same body on LA664 measures 1.5 CPI."
+    },
+    {
+      "name": "8 independent lanes, shortest non-zero operands",
       "asm": "fdiv.d $f0, $f8, $f8; fdiv.d $f1, $f9, $f9; fdiv.d $f2, $f10, $f10; fdiv.d $f3, $f11, $f11; fdiv.d $f4, $f12, $f12; fdiv.d $f5, $f13, $f13; fdiv.d $f6, $f14, $f14; fdiv.d $f7, $f15, $f15",
       "init": "li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4",
       "machine_code": [
@@ -357,23 +378,43 @@
         "010739c6  fdiv.d      \t$fa6, $ft6, $ft6",
         "01073de7  fdiv.d      \t$fa7, $ft7, $ft7"
       ],
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fdiv.d $f0, $f8, $f8; fdiv.d $f1, $f9, $f9; fdiv.d $f2, $f10, $f10; fdiv.d $f3, $f11, $f11; fdiv.d $f4, $f12, $f12; fdiv.d $f5, $f13, $f13; fdiv.d $f6, $f14, $f14; fdiv.d $f7, $f15, $f15'",
       "result": {
-        "instructions_retired": 8,
-        "core_cycles": 43.96
+        "instructions_retired": 8.0,
+        "core_cycles": 44.0
       },
-      "measurement": {
-        "unroll": 1000,
-        "iters": 1000
-      },
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 0x3ff0000000000000; movgr2fr.d $f8, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f9, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f10, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f11, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f12, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f13, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f14, $r4; li.d $r4, 0x3ff0000000000000; movgr2fr.d $f15, $r4' --asm 'fdiv.d $f0, $f8, $f8; fdiv.d $f1, $f9, $f9; fdiv.d $f2, $f10, $f10; fdiv.d $f3, $f11, $f11; fdiv.d $f4, $f12, $f12; fdiv.d $f5, $f13, $f13; fdiv.d $f6, $f14, $f14; fdiv.d $f7, $f15, $f15'",
       "throughput": {
         "lanes": 8,
-        "cpi_min": 4.5,
-        "cpi_max": 12.5,
-        "ipc_min": 0.08,
-        "ipc_max": 0.2222
+        "cpi": 5.5,
+        "ipc": 0.1818
       },
-      "notes": "Data-dependent throughput: CPI 4.5 for special values; 5.5 for 1/1 and 1/2; 12.0 for general quotients and max/1; 5.0 for max/minnorm; 12.5 for maxsub/1 and 1/maxsub. Throughput is initiation-interval bound."
+      "notes": "8 independent lanes, shortest non-zero operands: 44.00 cycles for 8 independent lanes, 5.5 CPI (0.1818 IPC); the same body on LA664 measures 2 CPI.",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      }
+    },
+    {
+      "name": "8 independent lanes, subnormal or widest operands",
+      "asm": "fdiv.d $f0, $f16, $f17; fdiv.d $f1, $f16, $f17; fdiv.d $f2, $f16, $f17; fdiv.d $f3, $f16, $f17; fdiv.d $f4, $f16, $f17; fdiv.d $f5, $f16, $f17; fdiv.d $f6, $f16, $f17; fdiv.d $f7, $f16, $f17",
+      "init": "li.d $r4, 4607182418800017408; movgr2fr.d $f16, $r4; li.d $r4, 4503599627370495; movgr2fr.d $f17, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 4607182418800017408; movgr2fr.d $f16, $r4; li.d $r4, 4503599627370495; movgr2fr.d $f17, $r4' --asm 'fdiv.d $f0, $f16, $f17; fdiv.d $f1, $f16, $f17; fdiv.d $f2, $f16, $f17; fdiv.d $f3, $f16, $f17; fdiv.d $f4, $f16, $f17; fdiv.d $f5, $f16, $f17; fdiv.d $f6, $f16, $f17; fdiv.d $f7, $f16, $f17'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 12.5,
+        "ipc": 0.08
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 100.0
+      },
+      "notes": "8 independent lanes, subnormal or widest operands: 100.00 cycles for 8 independent lanes, 12.5 CPI (0.08 IPC); the same body on LA664 measures 5.5 CPI."
     }
   ],
   "notes": "Latency model: 8 cycles for special operands, 10 when the divisor is a power of two (the stored sample uses 1.0/1.0), 23 for a general divisor, up to +1 with a subnormal operand. The stored experiment runs the division twice, so cycles = (core_cycles - 6) / 2. 64-bit vector lanes match the scalar numbers and run in parallel (slowest lane dominates); 32-bit vector lanes cost 2 x scalar - 5."

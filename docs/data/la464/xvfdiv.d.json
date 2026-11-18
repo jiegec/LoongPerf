@@ -349,27 +349,109 @@
   ],
   "throughput": [
     {
-      "name": "8 independent lanes",
-      "asm": "xvfdiv.d $xr0, $xr8, $xr16; xvfdiv.d $xr1, $xr9, $xr17; xvfdiv.d $xr2, $xr10, $xr18; xvfdiv.d $xr3, $xr11, $xr19; xvfdiv.d $xr4, $xr12, $xr20; xvfdiv.d $xr5, $xr13, $xr21; xvfdiv.d $xr6, $xr14, $xr22; xvfdiv.d $xr7, $xr15, $xr23",
-      "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 36
-      },
+      "name": "8 independent lanes, zero operands",
+      "asm": "xvfdiv.d $xr0, $xr30, $xr31; xvfdiv.d $xr1, $xr30, $xr31; xvfdiv.d $xr2, $xr30, $xr31; xvfdiv.d $xr3, $xr30, $xr31; xvfdiv.d $xr4, $xr30, $xr31; xvfdiv.d $xr5, $xr30, $xr31; xvfdiv.d $xr6, $xr30, $xr31; xvfdiv.d $xr7, $xr30, $xr31",
+      "init": "li.d $r4, 0; xvreplgr2vr.d $xr30, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 0; xvreplgr2vr.d $xr30, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr31, $r4' --asm 'xvfdiv.d $xr0, $xr30, $xr31; xvfdiv.d $xr1, $xr30, $xr31; xvfdiv.d $xr2, $xr30, $xr31; xvfdiv.d $xr3, $xr30, $xr31; xvfdiv.d $xr4, $xr30, $xr31; xvfdiv.d $xr5, $xr30, $xr31; xvfdiv.d $xr6, $xr30, $xr31; xvfdiv.d $xr7, $xr30, $xr31'",
       "measurement": {
-        "unroll": 1000,
+        "unroll": 250,
         "iters": 1000,
-        "reps": 5
+        "reps": 10
       },
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4' --asm 'xvfdiv.d $xr0, $xr8, $xr16; xvfdiv.d $xr1, $xr9, $xr17; xvfdiv.d $xr2, $xr10, $xr18; xvfdiv.d $xr3, $xr11, $xr19; xvfdiv.d $xr4, $xr12, $xr20; xvfdiv.d $xr5, $xr13, $xr21; xvfdiv.d $xr6, $xr14, $xr22; xvfdiv.d $xr7, $xr15, $xr23'",
       "throughput": {
         "lanes": 8,
-        "cpi_min": 4.5,
-        "cpi_max": 6,
-        "ipc_min": 0.1667,
-        "ipc_max": 0.2222
+        "cpi": 4.5,
+        "ipc": 0.2222
       },
-      "notes": "Data-dependent throughput, 8 independent lanes. CPI ranges 4.5-6 over the same 26-value sweep; the stored experiment uses 1.0."
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 36.0
+      },
+      "notes": "8 independent lanes, zero operands: 36.00 cycles for 8 independent lanes, 4.5 CPI (0.2222 IPC); the same body on LA664 measures 3 CPI."
+    },
+    {
+      "name": "8 independent lanes, shortest non-zero operands",
+      "asm": "xvfdiv.d $xr0, $xr8, $xr16; xvfdiv.d $xr1, $xr9, $xr17; xvfdiv.d $xr2, $xr10, $xr18; xvfdiv.d $xr3, $xr11, $xr19; xvfdiv.d $xr4, $xr12, $xr20; xvfdiv.d $xr5, $xr13, $xr21; xvfdiv.d $xr6, $xr14, $xr22; xvfdiv.d $xr7, $xr15, $xr23",
+      "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr16, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr17, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr18, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr19, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr20, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr21, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr22, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr23, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr8, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr16, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr9, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr17, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr10, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr18, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr11, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr19, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr12, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr20, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr13, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr21, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr14, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr22, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr15, $r4; li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr23, $r4' --asm 'xvfdiv.d $xr0, $xr8, $xr16; xvfdiv.d $xr1, $xr9, $xr17; xvfdiv.d $xr2, $xr10, $xr18; xvfdiv.d $xr3, $xr11, $xr19; xvfdiv.d $xr4, $xr12, $xr20; xvfdiv.d $xr5, $xr13, $xr21; xvfdiv.d $xr6, $xr14, $xr22; xvfdiv.d $xr7, $xr15, $xr23'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 44.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 5.5,
+        "ipc": 0.1818
+      },
+      "notes": "8 independent lanes, shortest non-zero operands: 44.00 cycles for 8 independent lanes, 5.5 CPI (0.1818 IPC); the same body on LA664 measures 4 CPI.",
+      "machine_code": [
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c88  xvreplgr2vr.d\t$xr8, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c90  xvreplgr2vr.d\t$xr16, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c89  xvreplgr2vr.d\t$xr9, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c91  xvreplgr2vr.d\t$xr17, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c8a  xvreplgr2vr.d\t$xr10, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c92  xvreplgr2vr.d\t$xr18, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c8b  xvreplgr2vr.d\t$xr11, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c93  xvreplgr2vr.d\t$xr19, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c8c  xvreplgr2vr.d\t$xr12, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c94  xvreplgr2vr.d\t$xr20, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c8d  xvreplgr2vr.d\t$xr13, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c95  xvreplgr2vr.d\t$xr21, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c8e  xvreplgr2vr.d\t$xr14, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c96  xvreplgr2vr.d\t$xr22, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c8f  xvreplgr2vr.d\t$xr15, $a0",
+        "030ffc04  lu52i.d     \t$a0, $zero, 1023",
+        "769f0c97  xvreplgr2vr.d\t$xr23, $a0",
+        "753b4100  xvfdiv.d    \t$xr0, $xr8, $xr16",
+        "753b4521  xvfdiv.d    \t$xr1, $xr9, $xr17",
+        "753b4942  xvfdiv.d    \t$xr2, $xr10, $xr18",
+        "753b4d63  xvfdiv.d    \t$xr3, $xr11, $xr19",
+        "753b5184  xvfdiv.d    \t$xr4, $xr12, $xr20",
+        "753b55a5  xvfdiv.d    \t$xr5, $xr13, $xr21",
+        "753b59c6  xvfdiv.d    \t$xr6, $xr14, $xr22",
+        "753b5de7  xvfdiv.d    \t$xr7, $xr15, $xr23"
+      ],
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      }
+    },
+    {
+      "name": "8 independent lanes, subnormal or widest operands",
+      "asm": "xvfdiv.d $xr0, $xr30, $xr31; xvfdiv.d $xr1, $xr30, $xr31; xvfdiv.d $xr2, $xr30, $xr31; xvfdiv.d $xr3, $xr30, $xr31; xvfdiv.d $xr4, $xr30, $xr31; xvfdiv.d $xr5, $xr30, $xr31; xvfdiv.d $xr6, $xr30, $xr31; xvfdiv.d $xr7, $xr30, $xr31",
+      "init": "li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr30, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr31, $r4",
+      "command": "./bench --method slope --unroll 250 --unroll2 1000 --iters 1000 --warmup 10 --reps 10 --core 0 --init 'li.d $r4, 4607182418800017408; xvreplgr2vr.d $xr30, $r4; li.d $r4, 4503599627370495; xvreplgr2vr.d $xr31, $r4' --asm 'xvfdiv.d $xr0, $xr30, $xr31; xvfdiv.d $xr1, $xr30, $xr31; xvfdiv.d $xr2, $xr30, $xr31; xvfdiv.d $xr3, $xr30, $xr31; xvfdiv.d $xr4, $xr30, $xr31; xvfdiv.d $xr5, $xr30, $xr31; xvfdiv.d $xr6, $xr30, $xr31; xvfdiv.d $xr7, $xr30, $xr31'",
+      "measurement": {
+        "unroll": 250,
+        "iters": 1000,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 12.5,
+        "ipc": 0.08
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 100.0
+      },
+      "notes": "8 independent lanes, subnormal or widest operands: 100.00 cycles for 8 independent lanes, 12.5 CPI (0.08 IPC); the same body on LA664 measures 11 CPI."
     }
   ],
   "notes": "Latency model: 8 cycles for special operands, 10 when the divisor is a power of two (the stored sample uses 1.0/1.0), 23 for a general divisor, up to +1 with a subnormal operand. The stored experiment runs the division twice, so cycles = (core_cycles - 9.98) / 2. 64-bit vector lanes match the scalar numbers and run in parallel (slowest lane dominates); 32-bit vector lanes cost 2 x scalar - 5. Re-derived with the two-cycle cross-domain calibration: movfr2gr and movgr2fr are 2 cycles each, movgr2frh.w is 3, the flag pair is 7/15, vpickve2gr is 3, xvpickve2gr is 5, and vreplgr2vr/xvreplgr2vr are 2 (3 for the byte and half-word broadcast)."
