@@ -483,7 +483,7 @@ throughput drops from 0.067 to 0.063 IPC. `sc.d`/`sc.w` throughput drops from
 
 System: `cpucfg` slows from 8 to 11 cycles and from 1 to
 0.09 IPC (it traps on every execution). `rdtime.d`, `rdtimeh.w` and `rdtimel.w`
-rise from 0.09 to 1 IPC with `rj == $0` and 0.5 IPC otherwise. 
+rise from 0.09 to 1 IPC with `rj == $0` and 0.5 IPC otherwise.
 
 CRC: The CRC unit is the largest single change: `crc.w.b.w`/`.h`/`.w`/`.d`
 and their `crcc` forms fall from 5/7/11/19 to 1 cycle and rise from
@@ -509,5 +509,4 @@ from 2 to 4 IPC.
 
 ### LBT
 
-The LBT differences are negative: `x86mttop` drops from 4 to 1 IPC and
-`movscr2gr` from 2 to 1 IPC.
+`x86mttop` drops from 4 to 1 IPC and `movscr2gr` from 2 to 1 IPC.
