@@ -395,6 +395,15 @@ the lanes are independent and the unit is pipelined. That holds as long as the
 lane count is at least the interval, which it is here: the tightest ratio is
 `vdiv.d` at 26/12 and `fdiv.s` at 16/3.75.
 
+LA464 measures the same classes with a longer initiation interval. Its scalar
+floating-point divider needs 4.5, 5.5 and 9 cycles per instruction for `fdiv.s` and
+4.5, 5.5 and 12.5 for `fdiv.d`, against 1.5, 2 and 3.75 or 5.5 on LA664, so the
+scalar unit is about three times slower there even though the latency classes are
+identical. The vector forms are much closer (`vfdiv.d` 4.5/5.5/12.5 against
+3/4/11), because LA464 divides several lanes per pass instead of widening the
+scalar datapath. The integer dividers are the same on both cores: 3.5 for the short
+class and 12 to 20.5 for the widest quotient.
+
 A taken branch is the opposite case: its spread comes from the branch target
 buffer, not from the operands, so it stays one experiment with a
 `cpi_min`/`cpi_max` range of 1 to 3 cycles instead of several experiments.
