@@ -318,6 +318,16 @@ instead (`vinsgr2vr.b $vr0, $r5, 0; vpickve2gr.b $r5, $vr0, 0` = 5.97, minus the
 `vreplve` and `xvreplve`, and the same recipe gives 3 for `xvinsgr2vr` through
 `xvpickve2gr` (7.95 - 5).
 
+The x86-style LBT instructions are a related trap: they write **only EFLAGS**,
+never a general-purpose register. Closing a chain through the nominal destination
+therefore measures nothing — the register is never written, so the loop runs at
+the retirement rate (1.17 cycles for `x86mul.w`, 2 for `x86add.b`) and looks like
+a very fast multiply. Verify the read/write set of an unfamiliar instruction with
+a native test program before trusting a chain: run it on known register values
+and print the registers and `x86mfflag` afterwards. The real latency of the
+family is source-to-EFLAGS, measured with `x86mul.w $r12, $r13; x86mfflag $r12, 1`
+for `x86mul.*` (7 cycles raw minus the 1-cycle `x86mfflag`).
+
 Do not trust a single closure for these moves. On LA464 a chain that ends in
 `movfr2gr` and one that ends in `fst` disagree by four cycles, because a store
 whose data comes straight from a GPR bypasses the floating-point register file:

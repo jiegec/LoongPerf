@@ -2,17 +2,17 @@
   "instruction": {
     "name": "x86rcri.h",
     "extension": "LBT",
-    "form": "x86rcri.h rd, imm",
+    "form": "x86rcri.h rj, imm",
     "description": "x86-style rotate right through carry by immediate on 16-bit values."
   },
   "operands": [
     {
       "index": 1,
-      "name": "rd",
+      "name": "rj",
       "kind": "gpr",
-      "access": "read-write",
+      "access": "read",
       "bits": 64,
-      "description": "accumulator and destination"
+      "description": "first source"
     },
     {
       "index": 2,
@@ -43,41 +43,9 @@
   "latencies": [
     {
       "from_operands": [
-        1
-      ],
-      "to_operand": 1,
-      "cycles": 2,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "x86rcri.h $r12, 1",
-          "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
-          "chain_latency": 0,
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 2
-          },
-          "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 20
-          },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86rcri.h $r12, 1'",
-          "machine_code": [
-            "02c0040c  addi.d      \t$t0, $zero, 1",
-            "005c0420  x86mtflag   \t$zero, 1",
-            "00544591  x86rcri.h   \t$t0, 1"
-          ]
-        }
-      ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 0 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
-    },
-    {
-      "from_operands": [
         3
       ],
-      "to_operand": 1,
+      "to_operand": 3,
       "cycles": 1,
       "experiments": [
         {
@@ -104,7 +72,7 @@
           ]
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 3 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it. The stored experiment is that chain; the 1-cycle cost of the closing instruction is subtracted."
     },
     {
       "from_operands": [
@@ -160,7 +128,8 @@
         "cpi": 2,
         "ipc": 0.5
       },
-      "notes": "Slope method, 8 independent lanes."
+      "notes": "The instruction writes no general-purpose register, so the 8 lanes differ in their source registers and each one retires an EFLAGS write; 16.00 cycles for 8 instructions is the flag-write throughput, 2 CPI (0.5 IPC)."
     }
-  ]
+  ],
+  "notes": "Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF)."
 }

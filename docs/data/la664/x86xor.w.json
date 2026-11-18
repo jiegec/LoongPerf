@@ -2,17 +2,17 @@
   "instruction": {
     "name": "x86xor.w",
     "extension": "LBT",
-    "form": "x86xor.w rd, rk",
+    "form": "x86xor.w rj, rk",
     "description": "x86-style bitwise XOR on 32-bit values."
   },
   "operands": [
     {
       "index": 1,
-      "name": "rd",
+      "name": "rj",
       "kind": "gpr",
-      "access": "read-write",
+      "access": "read",
       "bits": 64,
-      "description": "accumulator and destination"
+      "description": "first source"
     },
     {
       "index": 2,
@@ -42,76 +42,6 @@
     "date": "2026-11-17"
   },
   "latencies": [
-    {
-      "from_operands": [
-        1
-      ],
-      "to_operand": 1,
-      "cycles": 2,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "x86xor.w $r12, $r13",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "measurement": {
-            "unroll": 20000,
-            "iters": 100,
-            "reps": 10
-          },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86xor.w $r12, $r13'",
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 2
-          },
-          "notes": "rd -> rd chain: the destination is also a source.",
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "02c0080d  li.d        \t$t1, 2",
-            "02c00c0e  li.d        \t$t2, 3",
-            "005c0420  x86mtflag   \t$zero, 0x1",
-            "003fb59a  x86xor.w    \t$t0, $t1"
-          ]
-        }
-      ],
-      "notes": "rd -> rd chain: the destination is also a source."
-    },
-    {
-      "from_operands": [
-        2
-      ],
-      "to_operand": 1,
-      "cycles": 2,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "x86xor.w $r13, $r12; x86xor.w $r12, $r13",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "measurement": {
-            "unroll": 20000,
-            "iters": 100,
-            "reps": 10
-          },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86xor.w $r13, $r12; x86xor.w $r12, $r13'",
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 4
-          },
-          "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved.",
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "02c0080d  li.d        \t$t1, 2",
-            "02c00c0e  li.d        \t$t2, 3",
-            "005c0420  x86mtflag   \t$zero, 0x1",
-            "003fb1ba  x86xor.w    \t$t1, $t0",
-            "003fb59a  x86xor.w    \t$t0, $t1"
-          ]
-        }
-      ],
-      "notes": "rk -> rd chain: two copies alternate rd/rk, so the measured cycles are halved.",
-      "cycles_divisor": 2
-    },
     {
       "from_operands": [
         1
@@ -199,7 +129,7 @@
         "cpi": 2,
         "ipc": 0.5
       },
-      "notes": "8 independent instructions take 16.00 cycles.",
+      "notes": "The instruction writes no general-purpose register, so the 8 lanes differ in their source registers and each one retires an EFLAGS write; 16.00 cycles for 8 instructions is the flag-write throughput, 2 CPI (0.5 IPC).",
       "machine_code": [
         "02c00404  li.d        \t$a0, 1",
         "02c00805  li.d        \t$a1, 2",
@@ -221,5 +151,5 @@
       ]
     }
   ],
-  "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path."
+  "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path. Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF)."
 }
