@@ -171,7 +171,8 @@
     .uarch-detail > h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 0 0 8px; }
     .links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
     .empty { padding: 30px; text-align: center; color: var(--muted); }
-    .pager { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--muted); }
+    .pager-block { margin: 12px 0; }
+    .pager { display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
     .pager button { padding: 6px 12px; }
     .pager button:disabled { opacity: 0.45; cursor: default; }
     .page-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
@@ -257,6 +258,14 @@
     </div>
     <div id="loading-detail" class="loading-detail">Connecting…</div>
   </div>
+  <div class="pager-block" data-pager>
+    <div class="pager">
+      <button class="prev-page" type="button">Previous</button>
+      <span class="page-info"></span>
+      <button class="next-page" type="button">Next</button>
+    </div>
+    <div class="page-links" role="navigation" aria-label="Page navigation"></div>
+  </div>
   <div class="table-scroll">
     <table id="table">
       <colgroup id="colgroup"></colgroup>
@@ -267,12 +276,14 @@
   <div id="sticky-head" class="sticky-head" hidden aria-hidden="true">
     <div id="sticky-head-scroll" class="sticky-head-scroll"></div>
   </div>
-  <div class="pager">
-    <button id="prev-page" type="button">Previous</button>
-    <span id="page-info"></span>
-    <button id="next-page" type="button">Next</button>
+  <div class="pager-block" data-pager>
+    <div class="pager">
+      <button class="prev-page" type="button">Previous</button>
+      <span class="page-info"></span>
+      <button class="next-page" type="button">Next</button>
+    </div>
+    <div class="page-links" role="navigation" aria-label="Page navigation"></div>
   </div>
-  <div id="page-links" class="page-links" role="navigation" aria-label="Page navigation"></div>
 </div>
 
 <dialog id="compare-dialog" class="compare-dialog" aria-labelledby="compare-title">
@@ -320,6 +331,7 @@
 
   const $ = (id) => document.getElementById(id);
   const tableScroller = document.querySelector(".table-scroll");
+  const pagers = [...document.querySelectorAll("[data-pager]")];
   const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[ch]));
@@ -1191,6 +1203,39 @@
     return result;
   }
 
+  function renderPagers(totalPages, count) {
+    const info = pageSize === Infinity
+      ? "All " + count + " instructions"
+      : "Page " + page + " of " + totalPages;
+    for (const pager of pagers) {
+      pager.querySelector(".page-info").textContent = info;
+      pager.querySelector(".prev-page").disabled = page <= 1;
+      pager.querySelector(".next-page").disabled = page >= totalPages;
+      const pageLinks = pager.querySelector(".page-links");
+      pageLinks.innerHTML = "";
+      for (const p of pageItems(page, totalPages)) {
+        if (p === "…") {
+          const ellipsis = document.createElement("span");
+          ellipsis.className = "ellipsis";
+          ellipsis.setAttribute("aria-hidden", "true");
+          ellipsis.textContent = "…";
+          pageLinks.appendChild(ellipsis);
+          continue;
+        }
+        const link = document.createElement("button");
+        link.type = "button";
+        link.textContent = String(p);
+        link.title = "Go to page " + p;
+        if (p === page) {
+          link.className = "current";
+          link.setAttribute("aria-current", "page");
+        }
+        link.addEventListener("click", () => { page = p; render(); });
+        pageLinks.appendChild(link);
+      }
+    }
+  }
+
   function render(resetPage = false) {
     if (resetPage) page = 1;
     const selected = selectedUarches();
@@ -1249,34 +1294,8 @@
         (missing ? ", " + missing + " not measured on a selected core" : "") +
         (hideEmpty ? ", rows without data hidden" : "");
     }
-    $("page-info").textContent = pageSize === Infinity
-      ? "All " + visible.length + " instructions"
-      : "Page " + page + " of " + totalPages;
-    $("prev-page").disabled = page <= 1;
-    $("next-page").disabled = page >= totalPages;
+    renderPagers(totalPages, visible.length);
     $("export").disabled = !selected.length || !extensions.length || !visible.length;
-    const pageLinks = $("page-links");
-    pageLinks.innerHTML = "";
-    for (const p of pageItems(page, totalPages)) {
-      if (p === "…") {
-        const ellipsis = document.createElement("span");
-        ellipsis.className = "ellipsis";
-        ellipsis.setAttribute("aria-hidden", "true");
-        ellipsis.textContent = "…";
-        pageLinks.appendChild(ellipsis);
-        continue;
-      }
-      const link = document.createElement("button");
-      link.type = "button";
-      link.textContent = String(p);
-      link.title = "Go to page " + p;
-      if (p === page) {
-        link.className = "current";
-        link.setAttribute("aria-current", "page");
-      }
-      link.addEventListener("click", () => { page = p; render(); });
-      pageLinks.appendChild(link);
-    }
     updateUrl(selected, extensions);
     saveSettings();
     stabilizeTableLayout();
@@ -1414,12 +1433,14 @@
     toggleRow(tr);
   });
 
-  $("prev-page").addEventListener("click", () => {
-    if (page > 1) { page -= 1; render(); }
-  });
-  $("next-page").addEventListener("click", () => {
-    page += 1; render();
-  });
+  for (const pager of pagers) {
+    pager.querySelector(".prev-page").addEventListener("click", () => {
+      if (page > 1) { page -= 1; render(); }
+    });
+    pager.querySelector(".next-page").addEventListener("click", () => {
+      page += 1; render();
+    });
+  }
 
   window.addEventListener("resize", () => {
     updateStickyHeaderHeight();
