@@ -339,6 +339,26 @@ Every load number in the data is the load latency itself. Where a chain contains
 an extra operation, the recorded `chain_latency` subtracts it, so a page never
 shows a chain cost as if it were the load.
 
+### Vector register traffic
+
+The cross-domain moves and lane shuffles are identical on both cores:
+
+| instruction | latency |
+| --- | --- |
+| `vinsgr2vr.*`, `xvinsgr2vr.*` | 3 |
+| `vreplgr2vr.w/d`, `xvreplgr2vr.w/d` | 2 |
+| `vreplgr2vr.b/h`, `xvreplgr2vr.b/h` | 3 |
+| `vreplve.*`, `xvreplve.*` from the vector operand | 1 |
+| `vreplve.*`, `xvreplve.*` from the index register | 3 |
+| `vpickve2gr.b/h`, `vpickve2gr.w/d` | 3 |
+| `xvpickve2gr.*` | 5 |
+
+The insert and gather numbers are round trips against a pick, so they rest on the
+same two-cycle calibration of the cross-domain moves that the floating-point
+loads use: an insert plus the matching pick measures 6 cycles on LSX and 8 on
+LASX, which puts the insert at 3 in both cases, and the gather measures 1 from the
+vector operand and 3 from the index register.
+
 ### What does not change the latency
 
 All of these numbers are L1D hits with a hot, 64-byte-aligned buffer. A vector
