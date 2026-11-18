@@ -2,17 +2,17 @@
   "instruction": {
     "name": "armmov.d",
     "extension": "LBT",
-    "form": "armmov.d rd, cond",
+    "form": "armmov.d rj, cond",
     "description": "ARM-style move on 64-bit values."
   },
   "operands": [
     {
       "index": 1,
-      "name": "rd",
+      "name": "rj",
       "kind": "gpr",
-      "access": "read-write",
+      "access": "read",
       "bits": 64,
-      "description": "accumulator and destination"
+      "description": "first source"
     },
     {
       "index": 2,
@@ -41,38 +41,6 @@
     "date": "2026-11-17"
   },
   "latencies": [
-    {
-      "from_operands": [
-        1
-      ],
-      "to_operand": 1,
-      "cycles": 2,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "armmov.d $r12, 14",
-          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "chain_latency": 0,
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 2
-          },
-          "measurement": {
-            "unroll": 100000,
-            "iters": 100,
-            "reps": 20
-          },
-          "command": "./bench --unroll 100000 --iters 100 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armmov.d $r12, 14'",
-          "machine_code": [
-            "02c0040c  addi.d      \t$t0, $zero, 1",
-            "005ce460  armmtflag   \t$zero, 57",
-            "003ff99e  armmov.d    \t$t0, 14"
-          ]
-        }
-      ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 1.95-1.97 cycles; 0 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
-    },
     {
       "from_operands": [
         1
@@ -129,5 +97,6 @@
         "reps": 5
       }
     }
-  ]
+  ],
+  "notes": " Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."
 }

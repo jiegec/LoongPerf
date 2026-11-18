@@ -2,17 +2,17 @@
   "instruction": {
     "name": "armrrx.w",
     "extension": "LBT",
-    "form": "armrrx.w rd, cond",
+    "form": "armrrx.w rj, cond",
     "description": "ARM-style rotate right extended on 32-bit values."
   },
   "operands": [
     {
       "index": 1,
-      "name": "rd",
+      "name": "rj",
       "kind": "gpr",
-      "access": "read-write",
+      "access": "read",
       "bits": 64,
-      "description": "accumulator and destination"
+      "description": "first source"
     },
     {
       "index": 2,
@@ -43,41 +43,9 @@
   "latencies": [
     {
       "from_operands": [
-        1
-      ],
-      "to_operand": 1,
-      "cycles": 2,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "armrrx.w $r12, 14",
-          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "measurement": {
-            "unroll": 20000,
-            "iters": 100,
-            "reps": 10
-          },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14'",
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 2
-          },
-          "notes": "rd -> rd chain.",
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "005ce460  armmtflag   \t$zero, 0x39",
-            "003ff99f  armrrx.w    \t$t0, 0xe"
-          ]
-        }
-      ],
-      "notes": "rd -> rd chain. Raw slope-method measurement was 2.01; the nominal value is 2 cycle(s)."
-    },
-    {
-      "from_operands": [
         3
       ],
-      "to_operand": 1,
+      "to_operand": 3,
       "cycles": 1,
       "experiments": [
         {
@@ -105,7 +73,7 @@
           ]
         }
       ],
-      "notes": "ARMFLAGS -> rd chain closed by armmtflag; 3 cycles subtracted. Raw slope-method measurement was 1.01; the nominal value is 1 cycle(s)."
+      "notes": "ARMFLAGS -> ARMFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it."
     },
     {
       "from_operands": [
@@ -171,5 +139,5 @@
       ]
     }
   ],
-  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path."
+  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path. Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."
 }

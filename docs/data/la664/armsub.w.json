@@ -2,17 +2,17 @@
   "instruction": {
     "name": "armsub.w",
     "extension": "LBT",
-    "form": "armsub.w rd, rk, cond",
+    "form": "armsub.w rj, rk, cond",
     "description": "ARM-style subtract on 32-bit values."
   },
   "operands": [
     {
       "index": 1,
-      "name": "rd",
+      "name": "rj",
       "kind": "gpr",
-      "access": "read-write",
+      "access": "read",
       "bits": 64,
-      "description": "accumulator and destination"
+      "description": "first source"
     },
     {
       "index": 2,
@@ -49,76 +49,6 @@
     "date": "2026-11-17"
   },
   "latencies": [
-    {
-      "from_operands": [
-        1
-      ],
-      "to_operand": 1,
-      "cycles": 2,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "armsub.w $r12, $r13, 14",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "measurement": {
-            "unroll": 20000,
-            "iters": 100,
-            "reps": 10
-          },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r12, $r13, 14'",
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 2
-          },
-          "notes": "rd -> rd chain.",
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "02c0080d  li.d        \t$t1, 2",
-            "02c00c0e  li.d        \t$t2, 3",
-            "005ce460  armmtflag   \t$zero, 0x39",
-            "0037b59e  armsub.w    \t$t0, $t1, 0xe"
-          ]
-        }
-      ],
-      "notes": "rd -> rd chain. Raw slope-method measurement was 2.00; the nominal value is 2 cycle(s)."
-    },
-    {
-      "from_operands": [
-        2
-      ],
-      "to_operand": 1,
-      "cycles": 2,
-      "experiments": [
-        {
-          "name": "operand dependency chain",
-          "role": "measurement",
-          "asm": "armsub.w $r13, $r12, 14; armsub.w $r12, $r13, 14",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "measurement": {
-            "unroll": 20000,
-            "iters": 100,
-            "reps": 10
-          },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armsub.w $r13, $r12, 14; armsub.w $r12, $r13, 14'",
-          "result": {
-            "instructions_retired": 2,
-            "core_cycles": 4
-          },
-          "notes": "rk -> rd chain: two copies alternate rd/rk, cycles halved.",
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "02c0080d  li.d        \t$t1, 2",
-            "02c00c0e  li.d        \t$t2, 3",
-            "005ce460  armmtflag   \t$zero, 0x39",
-            "0037b1be  armsub.w    \t$t1, $t0, 0xe",
-            "0037b59e  armsub.w    \t$t0, $t1, 0xe"
-          ]
-        }
-      ],
-      "notes": "rk -> rd chain: two copies alternate rd/rk, cycles halved. Raw slope-method measurement was 2.00; the nominal value is 2 cycle(s).",
-      "cycles_divisor": 2
-    },
     {
       "from_operands": [
         1
@@ -193,5 +123,5 @@
       ]
     }
   ],
-  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path."
+  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path. Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."
 }
