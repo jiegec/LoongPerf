@@ -98,5 +98,5 @@
       "notes": "8 independent instructions take 2.00 cycles."
     }
   ],
-  "notes": "Latency 1 cycle(s) and throughput 0.25 CPI for the operand combination(s) recorded above, measured with ./bench on LA664."
+  "notes": "LBT rotate on a 64-bit element: 1 cycle and 4 IPC, the same as a plain ALU operation. Measured with eight independent destinations and --unroll 50/200 to stay inside L1I."
 }

@@ -146,5 +146,5 @@
       ]
     }
   ],
-  "notes": "LBT instruction. Each source-to-result path is recorded separately."
+  "notes": "LBT rotate on a 16-bit element: extract, rotate and merge cost 2 cycles, and the instruction issues on one slot per cycle, 1 CPI, while the 32- and 64-bit forms reach 4 IPC. Measured with eight independent destinations and --unroll 50/200 to stay inside L1I."
 }

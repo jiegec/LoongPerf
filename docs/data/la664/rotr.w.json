@@ -128,5 +128,5 @@
       "notes": "8 independent instructions take 2.00 cycles."
     }
   ],
-  "notes": "Latency 1 / 1 cycle(s) and throughput 0.25 CPI for the operand combination(s) recorded above, measured with ./bench on LA664."
+  "notes": "LBT rotate on a 32-bit element: the value is a wide ALU operation, so the latency is 1 cycle and the throughput is 4 IPC, the same as `add.d`. Measured with eight independent destinations and --unroll 50/200; with a large unroll the body overflows L1I and the same measurement degrades to 0.47 CPI."
 }

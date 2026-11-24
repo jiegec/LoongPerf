@@ -108,5 +108,5 @@
       ]
     }
   ],
-  "notes": "LBT instruction. Only the register source feeds the result."
+  "notes": "LBT rotate on an 8-bit element: the rotate field is extracted, rotated and merged back, which costs 2 cycles and keeps the instruction on a single slot per cycle, so the throughput is 1 CPI while the 32- and 64-bit forms reach 4 IPC. Measured with eight independent destinations and a small body (--unroll 50/200); a large unroll makes the 0.25 CPI forms look like 0.47 because the body leaves L1I."
 }
