@@ -1,0 +1,67 @@
+{
+  "instruction": {
+    "name": "str.w",
+    "extension": "LBT",
+    "form": "str.w rd, rj, imm",
+    "description": "store right part of a value to an unaligned 32-bit address"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "value to store"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 50,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-24"
+  },
+  "latencies": [],
+  "notes": "LBT MIPS-style unaligned store, measured with a 64-byte-aligned stack buffer on LA464. No latency is recorded because a store has no register result.",
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "str.w $r4, $r20, 4; str.w $r5, $r20, 0; str.w $r6, $r20, 4; str.w $r7, $r20, 0; str.w $r8, $r20, 4; str.w $r9, $r20, 0; str.w $r10, $r20, 4; str.w $r11, $r20, 0",
+      "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22",
+      "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22' --asm 'str.w $r4, $r20, 4; str.w $r5, $r20, 0; str.w $r6, $r20, 4; str.w $r7, $r20, 0; str.w $r8, $r20, 4; str.w $r9, $r20, 0; str.w $r10, $r20, 4; str.w $r11, $r20, 0'",
+      "measurement": {
+        "unroll": 50,
+        "iters": 1000,
+        "reps": 20
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 8.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "Eight independent stores to the same aligned base. A store has no register result, so only the throughput is recorded."
+    }
+  ]
+}

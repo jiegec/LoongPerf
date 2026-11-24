@@ -1,0 +1,28 @@
+{
+  "instruction": {
+    "name": "jiscr1",
+    "extension": "LBT",
+    "form": "jiscr1 imm",
+    "description": "Jump through scratch register 1, saving the current PC to SCR[0] first."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 50,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-24"
+  },
+  "latencies": [],
+  "notes": "Control-flow instruction that transfers control through a scratch register, so it cannot be placed in a dependency chain and neither a latency nor a throughput is recorded."
+}

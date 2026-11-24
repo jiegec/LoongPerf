@@ -1,0 +1,43 @@
+{
+  "instruction": {
+    "name": "x86inctop",
+    "extension": "LBT",
+    "form": "x86inctop",
+    "description": "Increment the x87 top-of-stack pointer (FINCSTP), wrapping modulo 8."
+  },
+  "operands": [],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 50,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-24"
+  },
+  "latencies": [],
+  "notes": "LBT x87 top-of-stack increment. No register result, so only the rate is recorded.",
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86inctop; x86inctop; x86inctop; x86inctop; x86inctop; x86inctop; x86inctop; x86inctop",
+      "init": "li.d $r12, 5",
+      "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'li.d $r12, 5' --asm 'x86inctop; x86inctop; x86inctop; x86inctop; x86inctop; x86inctop; x86inctop; x86inctop'",
+      "measurement": {
+        "unroll": 50,
+        "iters": 1000,
+        "reps": 20
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 0.25,
+        "ipc": 4.0
+      },
+      "notes": "Consecutive copies chain through the top-of-stack pointer, so the measured rate is also the latency."
+    }
+  ]
+}

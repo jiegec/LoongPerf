@@ -1,0 +1,97 @@
+{
+  "instruction": {
+    "name": "ldl.d",
+    "extension": "LBT",
+    "form": "ldl.d rd, rj, imm",
+    "description": "load left part of an unaligned 64-bit value and merge it into rd"
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "value merged with the unaligned part"
+    },
+    {
+      "index": 2,
+      "name": "rj",
+      "kind": "gpr",
+      "access": "read",
+      "bits": 64,
+      "description": "base address"
+    },
+    {
+      "index": 3,
+      "name": "imm",
+      "kind": "immediate",
+      "access": "read",
+      "description": "byte offset"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 50,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-24"
+  },
+  "latencies": [
+    {
+      "from_operands": [
+        1
+      ],
+      "to_operand": 1,
+      "cycles": 4.0,
+      "cycles_min": 4.0,
+      "cycles_max": 4.0,
+      "experiments": [
+        {
+          "name": "operand dependency chain",
+          "role": "measurement",
+          "asm": "ldl.d $r12, $r20, 0",
+          "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r12, 8; st.d $r12, $r20, 0; st.d $r12, $r20, 64",
+          "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22; li.d $r12, 8; st.d $r12, $r20, 0; st.d $r12, $r20, 64' --asm 'ldl.d $r12, $r20, 0'",
+          "measurement": {
+            "unroll": 50,
+            "iters": 1000,
+            "reps": 20
+          },
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 3.99
+          },
+          "chain_latency": 0.0
+        }
+      ],
+      "notes": "Latency from the destination register, which is also a merge input for an unaligned load, back to itself: a repeated copy closes the chain and reads the load latency directly. L1D hit, 64-byte-aligned buffer."
+    }
+  ],
+  "notes": "LBT MIPS-style unaligned load, measured with a 64-byte-aligned stack buffer on LA464.",
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "ldl.d $r4, $r20, 4; ldl.d $r5, $r20, 0; ldl.d $r6, $r20, 4; ldl.d $r7, $r20, 0; ldl.d $r8, $r20, 4; ldl.d $r9, $r20, 0; ldl.d $r10, $r20, 4; ldl.d $r11, $r20, 0",
+      "init": "addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22",
+      "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'addi.d $r20, $sp, -2048; li.d $r22, -64; and $r20, $r20, $r22' --asm 'ldl.d $r4, $r20, 4; ldl.d $r5, $r20, 0; ldl.d $r6, $r20, 4; ldl.d $r7, $r20, 0; ldl.d $r8, $r20, 4; ldl.d $r9, $r20, 0; ldl.d $r10, $r20, 4; ldl.d $r11, $r20, 0'",
+      "measurement": {
+        "unroll": 50,
+        "iters": 1000,
+        "reps": 20
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 7.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "notes": "Eight independent destinations reading the same aligned base, so the body measures the load port rather than a chain."
+    }
+  ]
+}

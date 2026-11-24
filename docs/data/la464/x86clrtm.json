@@ -1,0 +1,43 @@
+{
+  "instruction": {
+    "name": "x86clrtm",
+    "extension": "LBT",
+    "form": "x86clrtm",
+    "description": "Clear the x87 translation mode, disabling TOP-based remapping of the FPRs."
+  },
+  "operands": [],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 50,
+    "iters": 1000,
+    "warmup": 10,
+    "reps": 20,
+    "core": 0,
+    "date": "2026-11-24"
+  },
+  "latencies": [],
+  "notes": "LBT clear of the translation-mode bit.",
+  "throughput": [
+    {
+      "name": "8 independent lanes",
+      "asm": "x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm",
+      "init": "li.d $r12, 5",
+      "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'li.d $r12, 5' --asm 'x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm; x86clrtm'",
+      "measurement": {
+        "unroll": 50,
+        "iters": 1000,
+        "reps": 20
+      },
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 55.99
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 7.0,
+        "ipc": 0.1429
+      },
+      "notes": "The instruction clears a global x87 mode bit, so copies serialise."
+    }
+  ]
+}
