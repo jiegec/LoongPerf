@@ -46,14 +46,14 @@
         3
       ],
       "to_operand": 3,
-      "cycles": 1,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armrrx.w $r12, 14; armmtflag $r12, 0x39",
           "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "chain_latency": 3,
+          "chain_latency": 2,
           "result": {
             "instructions_retired": 2,
             "core_cycles": 4
@@ -72,21 +72,23 @@
           ]
         }
       ],
-      "notes": "ARMFLAGS -> ARMFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it."
+      "notes": "ARMFLAGS -> ARMFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it.",
+      "cycles_min": 2,
+      "cycles_max": 2
     },
     {
       "from_operands": [
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armrrx.w $r12, 14; armmfflag $r12, 0x39",
           "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "result": {
             "instructions_retired": 2,
             "core_cycles": 4
@@ -105,30 +107,9 @@
           ]
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.05-4.06 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
-    }
-  ],
-  "throughput": [
-    {
-      "name": "8 independent lanes",
-      "asm": "armrrx.w $r12, 14; armrrx.w $r13, 14; armrrx.w $r14, 14; armrrx.w $r15, 14; armrrx.w $r16, 14; armrrx.w $r17, 14; armrrx.w $r18, 14; armrrx.w $r19, 14",
-      "init": "armmtflag $r0, 0x39",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 16.02
-      },
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14; armrrx.w $r13, 14; armrrx.w $r14, 14; armrrx.w $r15, 14; armrrx.w $r16, 14; armrrx.w $r17, 14; armrrx.w $r18, 14; armrrx.w $r19, 14'",
-      "throughput": {
-        "lanes": 8,
-        "cpi": 2,
-        "ipc": 0.5
-      },
-      "notes": "Slope method, 8 independent lanes; 16.02 cycles per 8 instructions.",
-      "measurement": {
-        "unroll": 1000,
-        "iters": 1000,
-        "reps": 5
-      }
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.05-4.06 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_min": 2,
+      "cycles_max": 2
     }
   ],
   "notes": " Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."

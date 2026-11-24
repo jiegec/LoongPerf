@@ -39,7 +39,12 @@
         "cpi": 0.25,
         "ipc": 4.0
       },
-      "notes": "Slope method, 8 independent lanes."
+      "notes": "Eight copies take 2.00 cycles, sixteen 4.00 and thirty-two 8.01, so the top-of-stack pointer update does not serialise: the instruction sustains 4 IPC (0.25 CPI) on LA464, against 1 IPC on LA664. The body must stay inside L1I: the same eight instructions at unroll 4000 are a 128 KiB body and read 7.18 cycles instead of 2.00.",
+      "measurement": {
+        "unroll": 50,
+        "iters": 1000,
+        "reps": 20
+      }
     }
   ],
   "notes": "No destination data dependency; latency is not defined. Throughput only."

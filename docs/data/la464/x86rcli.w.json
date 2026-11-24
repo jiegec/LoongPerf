@@ -46,14 +46,14 @@
         3
       ],
       "to_operand": 3,
-      "cycles": 1,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86rcli.w $r12, 1; x86mtflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
-          "chain_latency": 3,
+          "chain_latency": 2,
           "result": {
             "instructions_retired": 2,
             "core_cycles": 4
@@ -72,21 +72,23 @@
           ]
         }
       ],
-      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it. The stored experiment is that chain; the 1-cycle cost of the closing instruction is subtracted."
+      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it. The stored experiment is that chain; the 1-cycle cost of the closing instruction is subtracted.",
+      "cycles_min": 2,
+      "cycles_max": 2
     },
     {
       "from_operands": [
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86rcli.w $r12, 1; x86mfflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "result": {
             "instructions_retired": 2,
             "core_cycles": 4
@@ -105,30 +107,9 @@
           ]
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
-    }
-  ],
-  "throughput": [
-    {
-      "name": "8 independent lanes",
-      "asm": "x86rcli.w $r12, 1; x86rcli.w $r13, 1; x86rcli.w $r14, 1; x86rcli.w $r15, 1; x86rcli.w $r16, 1; x86rcli.w $r17, 1; x86rcli.w $r18, 1; x86rcli.w $r19, 1",
-      "init": "x86mtflag $r0, 1",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 15.99
-      },
-      "measurement": {
-        "unroll": 1000,
-        "iters": 1000,
-        "reps": 5
-      },
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'x86mtflag $r0, 1' --asm 'x86rcli.w $r12, 1; x86rcli.w $r13, 1; x86rcli.w $r14, 1; x86rcli.w $r15, 1; x86rcli.w $r16, 1; x86rcli.w $r17, 1; x86rcli.w $r18, 1; x86rcli.w $r19, 1'",
-      "throughput": {
-        "lanes": 8,
-        "cpi": 2,
-        "ipc": 0.5
-      },
-      "notes": "The instruction writes no general-purpose register, so the 8 lanes differ in their source registers and each one retires an EFLAGS write; 15.99 cycles for 8 instructions is the flag-write throughput, 1.999 CPI (0.5003 IPC)."
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_min": 2,
+      "cycles_max": 2
     }
   ],
   "notes": "Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF)."

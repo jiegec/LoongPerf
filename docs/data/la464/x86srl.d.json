@@ -47,14 +47,14 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86srl.d $r12, $r13; x86mfflag $r12, 1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
-          "chain_latency": 1.0,
+          "chain_latency": 2.0,
           "result": {
             "instructions_retired": 2.0,
             "core_cycles": 4.0
@@ -75,21 +75,23 @@
           ]
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_min": 2,
+      "cycles_max": 2
     },
     {
       "from_operands": [
         2
       ],
       "to_operand": 3,
-      "cycles": 3.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "x86srl.d $r12, $r13; x86mfflag $r13, 1",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; x86mtflag $r0, 1",
-          "chain_latency": 1.0,
+          "chain_latency": 2.0,
           "result": {
             "instructions_retired": 2.0,
             "core_cycles": 4.0
@@ -109,7 +111,9 @@
           ]
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), median of three runs; 1 cycles of flag-helper latency subtracted where the chain closes through x86mtflag/x86mfflag. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_min": 2,
+      "cycles_max": 2
     }
   ],
   "throughput": [

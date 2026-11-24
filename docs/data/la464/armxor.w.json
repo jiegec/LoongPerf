@@ -54,14 +54,14 @@
         1
       ],
       "to_operand": 4,
-      "cycles": 3.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
           "role": "measurement",
           "asm": "armxor.w $r12, $r13, 14; armmfflag $r12, 0x39",
           "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
-          "chain_latency": 1.0,
+          "chain_latency": 2.0,
           "result": {
             "instructions_retired": 2.0,
             "core_cycles": 4.0
@@ -82,16 +82,18 @@
           ]
         }
       ],
-      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.05-4.10 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0."
+      "notes": "Slope method (--unroll 100000, --unroll2 200000), three independent runs, raw spread 4.05-4.10 cycles; 1 cycles of ARMFLAGS helper latency subtracted where a chain closes through armmtflag/armmfflag. Measured on 2026-11-17 on LA464, core 0.",
+      "cycles_min": 2,
+      "cycles_max": 2
     },
     {
       "from_operands": [
         2
       ],
       "to_operand": 4,
-      "cycles": 3.0,
-      "cycles_min": 3.0,
-      "cycles_max": 3.0,
+      "cycles": 2,
+      "cycles_min": 2,
+      "cycles_max": 2,
       "experiments": [
         {
           "name": "rk to ARMFLAGS chain",
@@ -108,7 +110,7 @@
             "instructions_retired": 2.0,
             "core_cycles": 4.0
           },
-          "chain_latency": 1.0,
+          "chain_latency": 2.0,
           "notes": "rk -> ARMFLAGS, closed with armmfflag (1 cycle subtracted)."
         }
       ],

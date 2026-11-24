@@ -46,7 +46,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "rd -> ARMFLAGS via armmfflag",
@@ -56,7 +56,7 @@
           "chain_instructions": [
             "armmfflag $r12, 0xf"
           ],
-          "chain_latency": 1,
+          "chain_latency": 2.0,
           "result": {
             "instructions_retired": 2,
             "core_cycles": 4
@@ -71,7 +71,8 @@
             "005c3c60  armmtflag   \t$zero, 15",
             "005c3c6c  armmtflag   \t$t0, 15",
             "005c3c4c  armmfflag   \t$t0, 15"
-          ]
+          ],
+          "notes": "Register round trip through the flag register: armmtflag followed by armmfflag measures 4.00 cycles, so each direction is 2 cycles; the 2-cycle armmfflag is subtracted."
         },
         {
           "name": "extra armmfflag calibration",
@@ -94,10 +95,13 @@
             "005c3c6c  armmtflag   \t$t0, 15",
             "005c3c4c  armmfflag   \t$t0, 15",
             "005c3c4c  armmfflag   \t$t0, 15"
-          ]
+          ],
+          "chain_latency": 2.0
         }
       ],
-      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "1 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 3.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2,
+      "cycles_max": 2
     }
   ],
   "throughput": [

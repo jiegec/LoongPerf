@@ -120,7 +120,7 @@
         4
       ],
       "to_operand": 1,
-      "cycles": 1.0,
+      "cycles": 2,
       "experiments": [
         {
           "name": "CF -> rd via x86mtflag",
@@ -130,7 +130,7 @@
           "chain_instructions": [
             "x86mtflag $r12, 0x1"
           ],
-          "chain_latency": 3.0,
+          "chain_latency": 2.0,
           "result": {
             "instructions_retired": 2.0,
             "core_cycles": 4.0
@@ -225,7 +225,9 @@
           ]
         }
       ],
-      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "3 cycles of helper latency are subtracted. Unroll 10000, iters 1000. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread.",
+      "cycles_min": 2,
+      "cycles_max": 2
     }
   ],
   "throughput": [
