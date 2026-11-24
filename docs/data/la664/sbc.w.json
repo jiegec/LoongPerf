@@ -82,8 +82,8 @@
           ]
         }
       ],
-      "notes": "Register source path: 2 cycles. Across all sources the instruction latency spans 1-2 cycles: the EFLAGS/CF input reaches rd in 1 cycle, while rj/rk need 2. Measured with --method slope on 2026-11-17 (LA664, core 0, --unroll 1000 --unroll2 4000).",
-      "cycles_min": 1,
+      "notes": "All three source paths are 2 cycles: rj, rk and the carry input. The carry path is measured with `sbc.w $r12, $r13, $r14; x86mtflag $r12, 1`, which reads 4.00 cycles, less the 2-cycle flag move. The instruction reads CF without writing it: two copies with distinct registers take 2.00 cycles, so they run at 1 CPI and do not serialise on the flag register, which is also the measured throughput with eight copies.",
+      "cycles_min": 2,
       "cycles_max": 2
     },
     {
@@ -119,9 +119,9 @@
           ]
         }
       ],
-      "notes": "Register source path: 2 cycles. Across all sources the instruction latency spans 1-2 cycles: the EFLAGS/CF input reaches rd in 1 cycle, while rj/rk need 2. Measured with --method slope on 2026-11-17 (LA664, core 0, --unroll 1000 --unroll2 4000).",
+      "notes": "All three source paths are 2 cycles: rj, rk and the carry input. The carry path is measured with `sbc.w $r12, $r13, $r14; x86mtflag $r12, 1`, which reads 4.00 cycles, less the 2-cycle flag move. The instruction reads CF without writing it: two copies with distinct registers take 2.00 cycles, so they run at 1 CPI and do not serialise on the flag register, which is also the measured throughput with eight copies.",
       "cycles_divisor": 2,
-      "cycles_min": 1,
+      "cycles_min": 2,
       "cycles_max": 2
     },
     {
@@ -158,8 +158,8 @@
           ]
         }
       ],
-      "notes": "Carry-in path: 1 cycle. Across all sources the instruction latency spans 1-2 cycles: the EFLAGS/CF input reaches rd in 1 cycle, while rj/rk need 2. Measured with --method slope on 2026-11-17 (LA664, core 0, --unroll 1000 --unroll2 4000); the chain reads 4.00 cycles and x86mtflag rd -> EFLAGS is 2.99, so this path is exactly 1 cycle.",
-      "cycles_min": 1,
+      "notes": "All three source paths are 2 cycles: rj, rk and the carry input. The carry path is measured with `sbc.w $r12, $r13, $r14; x86mtflag $r12, 1`, which reads 4.00 cycles, less the 2-cycle flag move. The instruction reads CF without writing it: two copies with distinct registers take 2.00 cycles, so they run at 1 CPI and do not serialise on the flag register, which is also the measured throughput with eight copies.",
+      "cycles_min": 2,
       "cycles_max": 2
     }
   ],
