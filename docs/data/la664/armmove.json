@@ -33,7 +33,7 @@
       "index": 4,
       "name": "ARMFLAGS",
       "kind": "flags",
-      "access": "write",
+      "access": "read",
       "bits": 4,
       "description": "ARM flags",
       "implicit": true
@@ -121,39 +121,30 @@
     },
     {
       "from_operands": [
-        1
+        4
       ],
-      "to_operand": 4,
-      "cycles": 0,
+      "to_operand": 1,
+      "cycles": 2,
       "experiments": [
         {
-          "name": "operand dependency chain",
+          "name": "flags to rd chain",
           "role": "measurement",
-          "asm": "armmove $r12, $r13, 14; armmfflag $r12, 0x39",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39",
+          "asm": "armmtflag $r12, 0xff; armmove $r12, $r13, 14",
+          "init": "li.d $r12, 5; li.d $r13, 7; li.d $r14, 9; li.d $r15, 11; armmtflag $r12, 0xff",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r12, 5; li.d $r13, 7; li.d $r14, 9; li.d $r15, 11; armmtflag $r12, 0xff' --asm 'armmtflag $r12, 0xff; armmove $r12, $r13, 14'",
           "measurement": {
             "unroll": 20000,
             "iters": 100,
             "reps": 10
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; armmtflag $r0, 0x39' --asm 'armmove $r12, $r13, 14; armmfflag $r12, 0x39'",
           "result": {
             "instructions_retired": 2,
-            "core_cycles": 2
+            "core_cycles": 4.0
           },
-          "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
-          "chain_latency": 2,
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "02c0080d  li.d        \t$t1, 2",
-            "02c00c0e  li.d        \t$t2, 3",
-            "005ce460  armmtflag   \t$zero, 0x39",
-            "003679ac  armmove     \t$t0, $t1, 0xe",
-            "005ce44c  armmfflag   \t$t0, 0x39"
-          ]
+          "chain_latency": 2
         }
       ],
-      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 2 cycles subtracted. Measured 1.01-1.07; the nominal value is 1 cycle and the residual is calibration noise. Raw measurement was 1.07; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 1.00; the nominal value is 1 cycle(s)."
+      "notes": "ARMFLAGS -> rd: the move is conditional, so it consumes the condition flags; the chain closes through `armmtflag` writing them from rd and the measured 4.00 cycles less the 2-cycle flag move give 2. The instruction does not write ARMFLAGS: with distinct registers two copies take 2.00 cycles, so they do not serialise on the flag register, and an earlier `rd -> ARMFLAGS` entry was wrong."
     }
   ],
   "throughput": [
@@ -193,5 +184,5 @@
       ]
     }
   ],
-  "notes": "LBT ARM-style instruction. Latency is recorded for each source operand: rd -> rd (2), rk -> rd (2), rd -> ARMFLAGS (1)."
+  "notes": "LBT ARM-style instruction. Conditional move: it reads ARMFLAGS as the condition and does not write them. Latency is recorded for each source operand: rd -> rd (2), rk -> rd (2) and ARMFLAGS -> rd (2)."
 }
