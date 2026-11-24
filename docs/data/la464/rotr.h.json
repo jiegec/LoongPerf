@@ -94,7 +94,8 @@
             "instructions_retired": 2.0,
             "core_cycles": 3.99
           },
-          "chain_latency": 0.0
+          "chain_latency": 1.99,
+          "notes": "Two alternating copies close the rk chain; the chain_latency carries the second copy, so the latency per instruction is 2 cycles."
         }
       ],
       "notes": "Latency from rk (the rotate amount) to rd: 2 cycles, measured with two alternating copies so the raw cycles are halved."
