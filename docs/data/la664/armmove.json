@@ -193,5 +193,5 @@
       ]
     }
   ],
-  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path."
+  "notes": "LBT ARM-style instruction. Latency is recorded for each source operand: rd -> rd (2), rk -> rd (2), rd -> ARMFLAGS (1)."
 }

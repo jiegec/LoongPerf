@@ -122,42 +122,5 @@
       "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted. Raw slope-method measurement was 3.00; the nominal value is 3 cycle(s)."
     }
   ],
-  "throughput": [
-    {
-      "name": "8 independent lanes",
-      "asm": "armsbc.w $r12, $r4, 14; armsbc.w $r13, $r5, 14; armsbc.w $r14, $r6, 14; armsbc.w $r15, $r7, 14; armsbc.w $r16, $r8, 14; armsbc.w $r17, $r9, 14; armsbc.w $r18, $r10, 14; armsbc.w $r19, $r11, 14",
-      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; armmtflag $r0, 0x39' --asm 'armsbc.w $r12, $r4, 14; armsbc.w $r13, $r5, 14; armsbc.w $r14, $r6, 14; armsbc.w $r15, $r7, 14; armsbc.w $r16, $r8, 14; armsbc.w $r17, $r9, 14; armsbc.w $r18, $r10, 14; armsbc.w $r19, $r11, 14'",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 16
-      },
-      "throughput": {
-        "lanes": 8,
-        "cpi": 2,
-        "ipc": 0.5
-      },
-      "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter.",
-      "machine_code": [
-        "02c00404  li.d        \t$a0, 1",
-        "02c00805  li.d        \t$a1, 2",
-        "02c00c06  li.d        \t$a2, 3",
-        "02c01007  li.d        \t$a3, 4",
-        "02c01408  li.d        \t$a4, 5",
-        "02c01809  li.d        \t$a5, 6",
-        "02c01c0a  li.d        \t$a6, 7",
-        "02c0200b  li.d        \t$a7, 8",
-        "005ce460  armmtflag   \t$zero, 0x39",
-        "0038919e  armsbc.w    \t$t0, $a0, 0xe",
-        "003895be  armsbc.w    \t$t1, $a1, 0xe",
-        "003899de  armsbc.w    \t$t2, $a2, 0xe",
-        "00389dfe  armsbc.w    \t$t3, $a3, 0xe",
-        "0038a21e  armsbc.w    \t$t4, $a4, 0xe",
-        "0038a63e  armsbc.w    \t$t5, $a5, 0xe",
-        "0038aa5e  armsbc.w    \t$t6, $a6, 0xe",
-        "0038ae7e  armsbc.w    \t$t7, $a7, 0xe"
-      ]
-    }
-  ],
-  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path. Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."
+  "notes": "LBT ARM-style instruction. Latency is recorded for each source operand: ARMFLAGS -> ARMFLAGS (1), rj -> ARMFLAGS (3). Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination). Throughput is not measurable for this instruction: it reads and writes the architectural flag register, so every copy depends on the flags written by the previous one and a body of copies is a dependency chain, not a set of independent lanes. Eight copies take 16 cycles, which is exactly the 2-cycle read-modify-write latency, so the only number that can be quoted is that a stream of flag-modifying instructions runs at one per two cycles. The `throughput` array is therefore empty; see the latency entry from EFLAGS to EFLAGS."
 }

@@ -46,34 +46,26 @@
         3
       ],
       "to_operand": 3,
-      "cycles": 1,
+      "cycles": 2,
       "experiments": [
         {
-          "name": "operand dependency chain",
+          "name": "flags read-write loop",
           "role": "measurement",
-          "asm": "x86rcli.d $r12, 1; x86mtflag $r12, 1",
-          "init": "addi.d $r12, $r0, 1; x86mtflag $r0, 1",
+          "asm": "x86rcli.d $r12, 1",
+          "init": "li.d $r12, 5; li.d $r13, 7; li.d $r4, 9; li.d $r5, 11; li.d $r6, 13; li.d $r7, 15; x86mtflag $r12, 0x3f; armmtflag $r12, 0x39",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r12, 5; li.d $r13, 7; li.d $r4, 9; li.d $r5, 11; li.d $r6, 13; li.d $r7, 15; x86mtflag $r12, 0x3f; armmtflag $r12, 0x39' --asm 'x86rcli.d $r12, 1'",
           "measurement": {
             "unroll": 20000,
             "iters": 100,
             "reps": 10
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; x86mtflag $r0, 1' --asm 'x86rcli.d $r12, 1; x86mtflag $r12, 1'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 4
-          },
-          "notes": "EFLAGS -> rd chain closed by x86mtflag; 3 cycles are subtracted.",
-          "chain_latency": 3,
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "005c0420  x86mtflag   \t$zero, 0x1",
-            "0055059b  x86rcli.d   \t$t0, 0x1",
-            "005c042c  x86mtflag   \t$t0, 0x1"
-          ]
+            "instructions_retired": 1,
+            "core_cycles": 2.0
+          }
         }
       ],
-      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it. The stored experiment is that chain; the 1-cycle cost of the closing instruction is subtracted."
+      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so one copy already forms a chain and the measured 2.00 cycles are the read-modify-write path. An earlier chain appended `x86mtflag rd, mask`, but these instructions write no GPR, so that pair had no dependency and only reported the length of a dependency-free sequence."
     },
     {
       "from_operands": [
@@ -110,34 +102,5 @@
       "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted."
     }
   ],
-  "throughput": [
-    {
-      "name": "8 independent lanes",
-      "asm": "x86rcli.d $r12, 1; x86rcli.d $r13, 1; x86rcli.d $r14, 1; x86rcli.d $r15, 1; x86rcli.d $r16, 1; x86rcli.d $r17, 1; x86rcli.d $r18, 1; x86rcli.d $r19, 1",
-      "init": "x86mtflag $r0, 1",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'x86mtflag $r0, 1' --asm 'x86rcli.d $r12, 1; x86rcli.d $r13, 1; x86rcli.d $r14, 1; x86rcli.d $r15, 1; x86rcli.d $r16, 1; x86rcli.d $r17, 1; x86rcli.d $r18, 1; x86rcli.d $r19, 1'",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 16
-      },
-      "throughput": {
-        "lanes": 8,
-        "cpi": 2,
-        "ipc": 0.5
-      },
-      "notes": "The instruction writes no general-purpose register, so the 8 lanes differ in their source registers and each one retires an EFLAGS write; 16.00 cycles for 8 instructions is the flag-write throughput, 2 CPI (0.5 IPC).",
-      "machine_code": [
-        "005c0420  x86mtflag   \t$zero, 0x1",
-        "0055059b  x86rcli.d   \t$t0, 0x1",
-        "005505bb  x86rcli.d   \t$t1, 0x1",
-        "005505db  x86rcli.d   \t$t2, 0x1",
-        "005505fb  x86rcli.d   \t$t3, 0x1",
-        "0055061b  x86rcli.d   \t$t4, 0x1",
-        "0055063b  x86rcli.d   \t$t5, 0x1",
-        "0055065b  x86rcli.d   \t$t6, 0x1",
-        "0055067b  x86rcli.d   \t$t7, 0x1"
-      ]
-    }
-  ],
-  "notes": "LBT x86-style instruction with an immediate operand. Latency is recorded for the rd accumulator path and the EFLAGS path. Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF)."
+  "notes": "LBT x86-style instruction with an immediate operand. Latency is recorded for the rd accumulator path and the EFLAGS path. Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF). Throughput is not measurable for this instruction: it reads and writes the architectural flag register, so every copy depends on the flags written by the previous one and a body of copies is a dependency chain, not a set of independent lanes. Eight copies take 16 cycles, which is exactly the 2-cycle read-modify-write latency, so the only number that can be quoted is that a stream of flag-modifying instructions runs at one per two cycles. The `throughput` array is therefore empty; see the latency entry from EFLAGS to EFLAGS."
 }

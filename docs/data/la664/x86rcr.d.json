@@ -47,36 +47,26 @@
         3
       ],
       "to_operand": 3,
-      "cycles": 1,
+      "cycles": 2,
       "experiments": [
         {
-          "name": "operand dependency chain",
+          "name": "flags read-write loop",
           "role": "measurement",
-          "asm": "x86rcr.d $r12, $r13; x86mtflag $r12, 1",
-          "init": "addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1",
+          "asm": "x86rcr.d $r12, $r13",
+          "init": "li.d $r12, 5; li.d $r13, 7; li.d $r4, 9; li.d $r5, 11; li.d $r6, 13; li.d $r7, 15; x86mtflag $r12, 0x3f; armmtflag $r12, 0x39",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r12, 5; li.d $r13, 7; li.d $r4, 9; li.d $r5, 11; li.d $r6, 13; li.d $r7, 15; x86mtflag $r12, 0x3f; armmtflag $r12, 0x39' --asm 'x86rcr.d $r12, $r13'",
           "measurement": {
             "unroll": 20000,
             "iters": 100,
             "reps": 10
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; x86mtflag $r0, 1' --asm 'x86rcr.d $r12, $r13; x86mtflag $r12, 1'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 4
-          },
-          "notes": "EFLAGS -> rd chain closed by x86mtflag; 3 cycles of x86mtflag rd -> EFLAGS latency are subtracted.",
-          "chain_latency": 3,
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "02c0080d  li.d        \t$t1, 2",
-            "02c00c0e  li.d        \t$t2, 3",
-            "005c0420  x86mtflag   \t$zero, 0x1",
-            "003fb58b  x86rcr.d    \t$t0, $t1",
-            "005c042c  x86mtflag   \t$t0, 0x1"
-          ]
+            "instructions_retired": 1,
+            "core_cycles": 2.0
+          }
         }
       ],
-      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it. The stored experiment is that chain; the 1-cycle cost of the closing instruction is subtracted."
+      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so one copy already forms a chain and the measured 2.00 cycles are the read-modify-write path. An earlier chain appended `x86mtflag rd, mask`, but these instructions write no GPR, so that pair had no dependency and only reported the length of a dependency-free sequence."
     },
     {
       "from_operands": [
@@ -150,42 +140,5 @@
       "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
-  "throughput": [
-    {
-      "name": "8 independent lanes",
-      "asm": "x86rcr.d $r12, $r4; x86rcr.d $r13, $r5; x86rcr.d $r14, $r6; x86rcr.d $r15, $r7; x86rcr.d $r16, $r8; x86rcr.d $r17, $r9; x86rcr.d $r18, $r10; x86rcr.d $r19, $r11",
-      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; x86mtflag $r0, 1' --asm 'x86rcr.d $r12, $r4; x86rcr.d $r13, $r5; x86rcr.d $r14, $r6; x86rcr.d $r15, $r7; x86rcr.d $r16, $r8; x86rcr.d $r17, $r9; x86rcr.d $r18, $r10; x86rcr.d $r19, $r11'",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 16
-      },
-      "throughput": {
-        "lanes": 8,
-        "cpi": 2,
-        "ipc": 0.5
-      },
-      "notes": "The instruction writes no general-purpose register, so the 8 lanes differ in their source registers and each one retires an EFLAGS write; 16.00 cycles for 8 instructions is the flag-write throughput, 2 CPI (0.5 IPC).",
-      "machine_code": [
-        "02c00404  li.d        \t$a0, 1",
-        "02c00805  li.d        \t$a1, 2",
-        "02c00c06  li.d        \t$a2, 3",
-        "02c01007  li.d        \t$a3, 4",
-        "02c01408  li.d        \t$a4, 5",
-        "02c01809  li.d        \t$a5, 6",
-        "02c01c0a  li.d        \t$a6, 7",
-        "02c0200b  li.d        \t$a7, 8",
-        "005c0420  x86mtflag   \t$zero, 0x1",
-        "003f918b  x86rcr.d    \t$t0, $a0",
-        "003f95ab  x86rcr.d    \t$t1, $a1",
-        "003f99cb  x86rcr.d    \t$t2, $a2",
-        "003f9deb  x86rcr.d    \t$t3, $a3",
-        "003fa20b  x86rcr.d    \t$t4, $a4",
-        "003fa62b  x86rcr.d    \t$t5, $a5",
-        "003faa4b  x86rcr.d    \t$t6, $a6",
-        "003fae6b  x86rcr.d    \t$t7, $a7"
-      ]
-    }
-  ],
-  "notes": "LBT x86-style instruction. rd is both source and destination. Latency is recorded per source operand: the rd accumulator path, the rk path, and the EFLAGS path. Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF)."
+  "notes": "LBT x86-style instruction. Latency is recorded for each source operand: EFLAGS -> EFLAGS (2), rj -> EFLAGS (3), rk -> EFLAGS (3). Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF). Throughput is not measurable for this instruction: it reads and writes the architectural flag register, so every copy depends on the flags written by the previous one and a body of copies is a dependency chain, not a set of independent lanes. Eight copies take 16 cycles, which is exactly the 2-cycle read-modify-write latency, so the only number that can be quoted is that a stream of flag-modifying instructions runs at one per two cycles. The `throughput` array is therefore empty; see the latency entry from EFLAGS to EFLAGS."
 }

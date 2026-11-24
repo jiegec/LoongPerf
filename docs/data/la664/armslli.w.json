@@ -112,5 +112,5 @@
       ]
     }
   ],
-  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path. Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."
+  "notes": "LBT ARM-style instruction. Latency is recorded for each source operand: rj -> ARMFLAGS (3). Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."
 }

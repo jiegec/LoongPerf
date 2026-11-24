@@ -46,34 +46,26 @@
         3
       ],
       "to_operand": 3,
-      "cycles": 1,
+      "cycles": 2,
       "experiments": [
         {
-          "name": "operand dependency chain",
+          "name": "flags read-write loop",
           "role": "measurement",
-          "asm": "armrrx.w $r12, 14; armmtflag $r12, 0x39",
-          "init": "addi.d $r12, $r0, 1; armmtflag $r0, 0x39",
+          "asm": "armrrx.w $r12, 14",
+          "init": "li.d $r12, 5; li.d $r13, 7; li.d $r4, 9; li.d $r5, 11; li.d $r6, 13; li.d $r7, 15; x86mtflag $r12, 0x3f; armmtflag $r12, 0x39",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r12, 5; li.d $r13, 7; li.d $r4, 9; li.d $r5, 11; li.d $r6, 13; li.d $r7, 15; x86mtflag $r12, 0x3f; armmtflag $r12, 0x39' --asm 'armrrx.w $r12, 14'",
           "measurement": {
             "unroll": 20000,
             "iters": 100,
             "reps": 10
           },
-          "command": "./bench --unroll 20000 --iters 100 --warmup 10 --reps 10 --init 'addi.d $r12, $r0, 1; armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14; armmtflag $r12, 0x39'",
           "result": {
-            "instructions_retired": 2,
-            "core_cycles": 4
-          },
-          "notes": "ARMFLAGS -> rd chain closed by armmtflag; 3 cycles subtracted.",
-          "chain_latency": 3,
-          "machine_code": [
-            "02c0040c  li.d        \t$t0, 1",
-            "005ce460  armmtflag   \t$zero, 0x39",
-            "003ff99f  armrrx.w    \t$t0, 0xe",
-            "005ce46c  armmtflag   \t$t0, 0x39"
-          ]
+            "instructions_retired": 1,
+            "core_cycles": 2.0
+          }
         }
       ],
-      "notes": "ARMFLAGS -> ARMFLAGS: the instruction reads and writes the flag register, so consecutive copies chain through it."
+      "notes": "EFLAGS -> EFLAGS: the instruction reads and writes the flag register, so one copy already forms a chain and the measured 2.00 cycles are the read-modify-write path. An earlier chain appended `x86mtflag rd, mask`, but these instructions write no GPR, so that pair had no dependency and only reported the length of a dependency-free sequence."
     },
     {
       "from_operands": [
@@ -110,34 +102,5 @@
       "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted. Raw slope-method measurement was 3.01; the nominal value is 3 cycle(s)."
     }
   ],
-  "throughput": [
-    {
-      "name": "8 independent lanes",
-      "asm": "armrrx.w $r12, 14; armrrx.w $r13, 14; armrrx.w $r14, 14; armrrx.w $r15, 14; armrrx.w $r16, 14; armrrx.w $r17, 14; armrrx.w $r18, 14; armrrx.w $r19, 14",
-      "init": "armmtflag $r0, 0x39",
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 10 --init 'armmtflag $r0, 0x39' --asm 'armrrx.w $r12, 14; armrrx.w $r13, 14; armrrx.w $r14, 14; armrrx.w $r15, 14; armrrx.w $r16, 14; armrrx.w $r17, 14; armrrx.w $r18, 14; armrrx.w $r19, 14'",
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 16
-      },
-      "throughput": {
-        "lanes": 8,
-        "cpi": 2,
-        "ipc": 0.5
-      },
-      "notes": "8 independent lanes take 16.00 cycles, i.e. 2 CPI. The instruction is a single uop; its conditional execution limits it to one per two cycles (armmfflag and armmove are not conditional on register data and run at one per cycle). Re-measured on 2026-11-17 on LA664, core 0, with --method slope (--unroll 250 --unroll2 1000) and confirmed with the 0x01 uop counter.",
-      "machine_code": [
-        "005ce460  armmtflag   \t$zero, 0x39",
-        "003ff99f  armrrx.w    \t$t0, 0xe",
-        "003ff9bf  armrrx.w    \t$t1, 0xe",
-        "003ff9df  armrrx.w    \t$t2, 0xe",
-        "003ff9ff  armrrx.w    \t$t3, 0xe",
-        "003ffa1f  armrrx.w    \t$t4, 0xe",
-        "003ffa3f  armrrx.w    \t$t5, 0xe",
-        "003ffa5f  armrrx.w    \t$t6, 0xe",
-        "003ffa7f  armrrx.w    \t$t7, 0xe"
-      ]
-    }
-  ],
-  "notes": "LBT ARM-style instruction. Latency is recorded per register source operand and for the ARMFLAGS path. Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination)."
+  "notes": "LBT ARM-style instruction. Latency is recorded for each source operand: ARMFLAGS -> ARMFLAGS (2), rj -> ARMFLAGS (3). Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination). Throughput is not measurable for this instruction: it reads and writes the architectural flag register, so every copy depends on the flags written by the previous one and a body of copies is a dependency chain, not a set of independent lanes. Eight copies take 16 cycles, which is exactly the 2-cycle read-modify-write latency, so the only number that can be quoted is that a stream of flag-modifying instructions runs at one per two cycles. The `throughput` array is therefore empty; see the latency entry from EFLAGS to EFLAGS."
 }
