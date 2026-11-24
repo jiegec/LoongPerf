@@ -46,7 +46,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -64,7 +64,7 @@
             "core_cycles": 4
           },
           "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "005ce460  armmtflag   \t$zero, 0x39",
@@ -73,7 +73,7 @@
           ]
         }
       ],
-      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 3.00; the nominal value is 3 cycle(s)."
+      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 2 cycles subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread. Raw slope-method measurement was 3.00; the nominal value is 3 cycle(s)."
     }
   ],
   "throughput": [

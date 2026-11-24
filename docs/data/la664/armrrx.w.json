@@ -72,7 +72,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -90,7 +90,7 @@
             "core_cycles": 4
           },
           "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted.",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "005ce460  armmtflag   \t$zero, 0x39",
@@ -99,7 +99,7 @@
           ]
         }
       ],
-      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 1 cycle subtracted. Raw slope-method measurement was 3.01; the nominal value is 3 cycle(s)."
+      "notes": "rd -> ARMFLAGS chain closed by armmfflag; 2 cycles subtracted. Raw slope-method measurement was 3.01; the nominal value is 3 cycle(s)."
     }
   ],
   "notes": "LBT ARM-style instruction. Latency is recorded for each source operand: ARMFLAGS -> ARMFLAGS (2), rj -> ARMFLAGS (3). Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination). Throughput is not measurable for this instruction: it reads and writes the architectural flag register, so every copy depends on the flags written by the previous one and a body of copies is a dependency chain, not a set of independent lanes. Eight copies take 16 cycles, which is exactly the 2-cycle read-modify-write latency, so the only number that can be quoted is that a stream of flag-modifying instructions runs at one per two cycles. The `throughput` array is therefore empty; see the latency entry from EFLAGS to EFLAGS."

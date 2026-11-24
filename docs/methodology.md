@@ -326,7 +326,7 @@ retirement rate instead of a latency (1.17 cycles for `x86mul.w`, 2 for
 native test program before trusting such a chain: run the instruction on known
 values and print the registers and the flag register afterwards. The real latency
 is source-to-flags, `x86mul.w $r12, $r13; x86mfflag $r12, 1` = 7 cycles raw for
-`x86mul.*`, minus the 1-cycle `x86mfflag`.
+`x86mul.*`, minus the 2-cycle `x86mfflag`.
 
 Do not trust a single closure for these moves. On LA464 a chain that ends in
 `movfr2gr` and one that ends in `fst` disagree by four cycles, because a store

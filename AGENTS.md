@@ -158,11 +158,11 @@ add.d $r12, $r12, $r13
 # rk -> rd: two alternating copies, divide the result by 2
 rotr.b $r13, $r12, $r13 ; rotr.b $r12, $r13, $r12
 
-# flags -> rd, closed through x86mtflag (3 cycles) or armmtflag
-adc.b $r12, $r13, $r14 ; x86mtflag $r12, 1
+# flags -> rd, closed through x86mfflag (2 cycles) or armmfflag
+adc.b $r12, $r13, $r14 ; x86mfflag $r12, 1
 
-# rd -> flags, closed through x86mfflag (1 cycle)
-x86add.b $r12, $r13 ; x86mfflag $r12, 1
+# rd -> flags, closed through x86mtflag (2 cycles)
+x86add.b $r12, $r13 ; x86mtflag $r12, 1
 ```
 
 Rules and pitfalls:

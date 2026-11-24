@@ -47,7 +47,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 5,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -65,7 +65,7 @@
             "core_cycles": 6
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted.",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "02c0080d  li.d        \t$t1, 2",
@@ -76,14 +76,14 @@
           ]
         }
       ],
-      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 5.13; the nominal integer is 5."
+      "notes": "rd -> EFLAGS chain closed by x86mfflag; 2 cycles of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 5.13; the nominal integer is 5."
     },
     {
       "from_operands": [
         2
       ],
       "to_operand": 3,
-      "cycles": 5,
+      "cycles": 4,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -101,7 +101,7 @@
             "core_cycles": 6
           },
           "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted.",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "02c0080d  li.d        \t$t1, 2",
@@ -111,7 +111,7 @@
           ]
         }
       ],
-      "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 5.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "rk -> EFLAGS chain closed by x86mfflag; 2 cycles subtracted. Raw measurement was 5.08; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "throughput": [

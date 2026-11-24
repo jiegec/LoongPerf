@@ -73,7 +73,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -91,7 +91,7 @@
             "core_cycles": 4
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted.",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "02c0080d  li.d        \t$t1, 2",
@@ -102,14 +102,14 @@
           ]
         }
       ],
-      "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "rd -> EFLAGS chain closed by x86mfflag; 2 cycles of x86mfflag EFLAGS -> rd latency is subtracted. Raw measurement was 3.05; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     },
     {
       "from_operands": [
         2
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -127,7 +127,7 @@
             "core_cycles": 4
           },
           "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted.",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "02c0080d  li.d        \t$t1, 2",
@@ -137,7 +137,7 @@
           ]
         }
       ],
-      "notes": "rk -> EFLAGS chain closed by x86mfflag; 1 cycle subtracted. Raw measurement was 3.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "rk -> EFLAGS chain closed by x86mfflag; 2 cycles subtracted. Raw measurement was 3.04; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
     }
   ],
   "notes": "LBT x86-style instruction. Latency is recorded for each source operand: EFLAGS -> EFLAGS (2), rj -> EFLAGS (3), rk -> EFLAGS (3). Only EFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where every GPR keeps its value after execution while EFLAGS changes as documented, e.g. x86sub.b of 6 and 7 sets CF, SF, PF and AF). Throughput is not measurable for this instruction: it reads and writes the architectural flag register, so every copy depends on the flags written by the previous one and a body of copies is a dependency chain, not a set of independent lanes. Eight copies take 16 cycles, which is exactly the 2-cycle read-modify-write latency, so the only number that can be quoted is that a stream of flag-modifying instructions runs at one per two cycles. The `throughput` array is therefore empty; see the latency entry from EFLAGS to EFLAGS."

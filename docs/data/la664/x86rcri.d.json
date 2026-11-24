@@ -72,7 +72,7 @@
         1
       ],
       "to_operand": 3,
-      "cycles": 3,
+      "cycles": 2,
       "experiments": [
         {
           "name": "operand dependency chain",
@@ -90,7 +90,7 @@
             "core_cycles": 4
           },
           "notes": "rd -> EFLAGS chain closed by x86mfflag; 1 cycle is subtracted.",
-          "chain_latency": 1,
+          "chain_latency": 2,
           "machine_code": [
             "02c0040c  li.d        \t$t0, 1",
             "005c0420  x86mtflag   \t$zero, 0x1",
