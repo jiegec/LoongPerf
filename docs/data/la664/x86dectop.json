@@ -1,0 +1,43 @@
+{
+  "instruction": {
+    "name": "x86dectop",
+    "extension": "LBT",
+    "form": "x86dectop",
+    "description": "Decrement the x87 top-of-stack pointer (FDECSTP), wrapping modulo 8."
+  },
+  "operands": [],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 2000,
+    "iters": 100,
+    "warmup": 10,
+    "reps": 10,
+    "core": 0,
+    "date": "2026-11-24"
+  },
+  "latencies": [],
+  "throughput": [
+    {
+      "name": "8 instructions per body",
+      "asm": "x86dectop; x86dectop; x86dectop; x86dectop; x86dectop; x86dectop; x86dectop; x86dectop",
+      "init": "li.d $r12, 5",
+      "command": "./bench --method slope --unroll 2000 --unroll2 8000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r12, 5' --asm 'x86dectop; x86dectop; x86dectop; x86dectop; x86dectop; x86dectop; x86dectop; x86dectop'",
+      "measurement": {
+        "unroll": 2000,
+        "iters": 100,
+        "reps": 10
+      },
+      "throughput": {
+        "lanes": 8,
+        "cpi": 1.0,
+        "ipc": 1.0
+      },
+      "result": {
+        "instructions_retired": 8,
+        "core_cycles": 8.0
+      },
+      "notes": "Consecutive copies chain through the internal top-of-stack pointer: 1 cycle per instruction, which is both the latency and the achievable rate."
+    }
+  ],
+  "notes": "Consecutive copies chain through the internal top-of-stack pointer: 1 cycle per instruction, which is both the latency and the achievable rate. The instruction has no register operands, so no latency entry can be attached to one; the chain is over internal x87 state."
+}
