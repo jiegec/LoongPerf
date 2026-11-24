@@ -1,7 +1,7 @@
 {
   "instruction": {
     "name": "rotri.d",
-    "extension": "LBT",
+    "extension": "Base",
     "form": "rotri.d rd, rj, imm",
     "description": "Rotate the 64-bit value right by an immediate."
   },

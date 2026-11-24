@@ -1,7 +1,7 @@
 {
   "instruction": {
     "name": "rotr.w",
-    "extension": "LBT",
+    "extension": "Base",
     "form": "rotr.w rd, rj, rk",
     "description": "Rotate the low 32-bit word of rj right by the amount in rk."
   },
