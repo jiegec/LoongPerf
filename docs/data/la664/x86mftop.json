@@ -54,5 +54,5 @@
       ]
     }
   ],
-  "notes": "The TOP pointer is renamed and mftop/mttop do not form a latency chain through it: a mttop/mftop loop runs at about 1.2 cycles per pair, which is throughput, not latency. Only throughput is recorded."
+  "notes": "`x86mftop` reads the x86 top-of-stack pointer into a GPR. The state has no register input, so a dependency chain cannot be closed and no latency can be measured: two copies of `x86mttop 1; x86mftop rd` read 1.00 cycles and a single copy 0.50, which are throughput numbers, not latencies."
 }

@@ -74,6 +74,33 @@
         }
       ],
       "notes": "rj -> rd chain. Raw measurement was 1.09; the residual is a systematic +0.03..0.1 calibration offset, so the recorded value is the nominal integer with the observed spread."
+    },
+    {
+      "from_operands": [
+        3
+      ],
+      "to_operand": 1,
+      "cycles": 1,
+      "experiments": [
+        {
+          "name": "flags to rd chain",
+          "role": "measurement",
+          "asm": "x86mtflag $r12, 0x3f; setx86loope $r12, $r13",
+          "init": "li.d $r12, 5; li.d $r13, 7; li.d $r14, 9; li.d $r15, 11; armmtflag $r12, 0xff; x86mtflag $r12, 0x3f",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r12, 5; li.d $r13, 7; li.d $r14, 9; li.d $r15, 11; armmtflag $r12, 0xff; x86mtflag $r12, 0x3f' --asm 'x86mtflag $r12, 0x3f; setx86loope $r12, $r13'",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 3.0
+          },
+          "chain_latency": 2
+        }
+      ],
+      "notes": "EFLAGS -> rd: the loop condition depends on ZF, and the chain closes through `x86mtflag` writing the flags from rd, so 3.00 cycles less the 2-cycle flag move give 1."
     }
   ],
   "throughput": [

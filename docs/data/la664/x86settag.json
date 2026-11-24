@@ -1,0 +1,43 @@
+{
+  "instruction": {
+    "name": "x86settag",
+    "extension": "LBT",
+    "form": "x86settag rd, imm1, imm2",
+    "description": "Set or clear an x87 tag word bit in rd according to imm1 and imm2."
+  },
+  "operands": [
+    {
+      "index": 1,
+      "name": "rd",
+      "kind": "gpr",
+      "access": "read-write",
+      "bits": 64,
+      "description": "x87 tag word bits"
+    },
+    {
+      "index": 2,
+      "name": "imm1",
+      "kind": "immediate",
+      "access": "read",
+      "description": "operation selector"
+    },
+    {
+      "index": 3,
+      "name": "imm2",
+      "kind": "immediate",
+      "access": "read",
+      "description": "target bit position"
+    }
+  ],
+  "measurement": {
+    "tool": "./bench",
+    "unroll": 2000,
+    "iters": 100,
+    "warmup": 10,
+    "reps": 10,
+    "core": 0,
+    "date": "2026-11-24"
+  },
+  "latencies": [],
+  "notes": "Touches the x87 tag word and raises a BTE (binary translation exception) on an invalid state transition. In user mode the process dies before the measurement completes, so neither latency nor throughput is recorded."
+}

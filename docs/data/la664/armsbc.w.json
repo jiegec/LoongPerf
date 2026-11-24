@@ -120,6 +120,33 @@
         }
       ],
       "notes": "rd -> ARMFLAGS chain closed by armmfflag; 2 cycles subtracted. Raw slope-method measurement was 3.00; the nominal value is 3 cycle(s)."
+    },
+    {
+      "from_operands": [
+        2
+      ],
+      "to_operand": 4,
+      "cycles": 2,
+      "experiments": [
+        {
+          "name": "rk to flags chain",
+          "role": "measurement",
+          "asm": "armsbc.w $r12, $r13, 14; armmfflag $r13, 0xff",
+          "init": "li.d $r12, 5; li.d $r13, 7; li.d $r14, 9; li.d $r15, 11; armmtflag $r12, 0xff; x86mtflag $r12, 0x3f",
+          "command": "./bench --method slope --unroll 20000 --unroll2 40000 --iters 100 --warmup 10 --reps 10 --init 'li.d $r12, 5; li.d $r13, 7; li.d $r14, 9; li.d $r15, 11; armmtflag $r12, 0xff; x86mtflag $r12, 0x3f' --asm 'armsbc.w $r12, $r13, 14; armmfflag $r13, 0xff'",
+          "measurement": {
+            "unroll": 20000,
+            "iters": 100,
+            "reps": 10
+          },
+          "result": {
+            "instructions_retired": 2,
+            "core_cycles": 4.0
+          },
+          "chain_latency": 2
+        }
+      ],
+      "notes": "rk -> ARMFLAGS: the chain closes through `armmfflag` writing rk back from the flags, so the measured 4.00 cycles less the 2-cycle flag move leave 2, the same as the rj path."
     }
   ],
   "notes": "LBT ARM-style instruction. Latency is recorded for each source operand: ARMFLAGS -> ARMFLAGS (1), rj -> ARMFLAGS (3). Only ARMFLAGS is written: the general-purpose registers are read-only sources for this instruction (verified with a native test program, where armadd.w, armsub.w, armand.w, armmov.w, armrotr.w and armrrx.w leave every GPR unchanged while ARMFLAGS changes; the conditional move armMove is the exception and does write its destination). Throughput is not measurable for this instruction: it reads and writes the architectural flag register, so every copy depends on the flags written by the previous one and a body of copies is a dependency chain, not a set of independent lanes. Eight copies take 16 cycles, which is exactly the 2-cycle read-modify-write latency, so the only number that can be quoted is that a stream of flag-modifying instructions runs at one per two cycles. The `throughput` array is therefore empty; see the latency entry from EFLAGS to EFLAGS."

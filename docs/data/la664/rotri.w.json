@@ -1,7 +1,7 @@
 {
   "instruction": {
     "name": "rotri.w",
-    "extension": "Base",
+    "extension": "LBT",
     "form": "rotri.w rd, rj, imm",
     "description": "Rotate the low 32-bit word right by an immediate."
   },

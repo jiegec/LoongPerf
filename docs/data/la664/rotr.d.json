@@ -1,7 +1,7 @@
 {
   "instruction": {
     "name": "rotr.d",
-    "extension": "Base",
+    "extension": "LBT",
     "form": "rotr.d rd, rj, rk",
     "description": "Rotate rj right by the amount in rk."
   },

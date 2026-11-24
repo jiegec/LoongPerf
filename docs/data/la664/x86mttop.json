@@ -53,5 +53,5 @@
       ]
     }
   ],
-  "notes": "The TOP pointer is renamed; a mttop/mftop loop runs at about 1.2 cycles per pair, so no latency chain through TOP is observable. Only throughput is recorded."
+  "notes": "`x86mttop` writes the x86 top-of-stack pointer from an immediate. Nothing can feed it, so the written state cannot be read back inside a chain and no latency can be measured; the recorded throughput with eight copies is 1 cycle per instruction."
 }
