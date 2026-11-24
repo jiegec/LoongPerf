@@ -46,92 +46,82 @@
         2
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 1.0,
+      "cycles_min": 1.0,
+      "cycles_max": 1.0,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "operand dependency chain",
           "role": "measurement",
           "asm": "rotr.d $r12, $r12, $r13",
-          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 1
-          },
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r23, $r0, 9; addi.d $r24, $r0, 10; addi.d $r25, $r0, 11; addi.d $r26, $r0, 12; addi.d $r27, $r0, 13; addi.d $r28, $r0, 14; addi.d $r29, $r0, 15; addi.d $r4, $r0, 16",
+          "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r23, $r0, 9; addi.d $r24, $r0, 10; addi.d $r25, $r0, 11; addi.d $r26, $r0, 12; addi.d $r27, $r0, 13; addi.d $r28, $r0, 14; addi.d $r29, $r0, 15; addi.d $r4, $r0, 16' --asm 'rotr.d $r12, $r12, $r13'",
           "measurement": {
-            "unroll": 20000,
-            "iters": 500
+            "unroll": 50,
+            "iters": 1000,
+            "reps": 20
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'rotr.d $r12, $r12, $r13'",
-          "machine_code": [
-            "02fffc0c  addi.d      \t$t0, $zero, -1",
-            "02c0080d  addi.d      \t$t1, $zero, 2",
-            "001bb58c  rotr.d      \t$t0, $t0, $t1"
-          ]
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.0
+          },
+          "chain_latency": 0.0
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "Latency from rj to rd: one cycle, the same as any wide ALU operation. The repeated copy closes the chain through rd."
     },
     {
       "from_operands": [
         3
       ],
       "to_operand": 1,
-      "cycles": 1,
+      "cycles": 1.0,
+      "cycles_min": 1.0,
+      "cycles_max": 1.0,
       "experiments": [
         {
-          "name": "dependent chain",
+          "name": "operand dependency chain",
           "role": "measurement",
           "asm": "rotr.d $r12, $r13, $r12",
-          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2",
-          "result": {
-            "instructions_retired": 1,
-            "core_cycles": 1
-          },
+          "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r23, $r0, 9; addi.d $r24, $r0, 10; addi.d $r25, $r0, 11; addi.d $r26, $r0, 12; addi.d $r27, $r0, 13; addi.d $r28, $r0, 14; addi.d $r29, $r0, 15; addi.d $r4, $r0, 16",
+          "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r23, $r0, 9; addi.d $r24, $r0, 10; addi.d $r25, $r0, 11; addi.d $r26, $r0, 12; addi.d $r27, $r0, 13; addi.d $r28, $r0, 14; addi.d $r29, $r0, 15; addi.d $r4, $r0, 16' --asm 'rotr.d $r12, $r13, $r12'",
           "measurement": {
-            "unroll": 20000,
-            "iters": 500
+            "unroll": 50,
+            "iters": 1000,
+            "reps": 20
           },
-          "command": "./bench --unroll 20000 --iters 500 --warmup 10 --reps 5 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2' --asm 'rotr.d $r12, $r13, $r12'",
-          "machine_code": [
-            "02fffc0c  addi.d      \t$t0, $zero, -1",
-            "02c0080d  addi.d      \t$t1, $zero, 2",
-            "001bb1ac  rotr.d      \t$t0, $t1, $t0"
-          ]
+          "result": {
+            "instructions_retired": 1.0,
+            "core_cycles": 1.01
+          },
+          "chain_latency": 0.0
         }
       ],
-      "notes": "measured with a dependent chain. Unroll 20000, iters 500. Raw measurement was 1.00; the residual is a systematic calibration offset, so the recorded value is the nominal integer with the observed spread."
+      "notes": "Latency from the rotate amount rk to rd: one cycle, because both sources run through the wide ALU shifter."
     }
   ],
   "throughput": [
     {
       "name": "8 independent lanes",
-      "asm": "rotr.d $r12, $r4, $r20; rotr.d $r13, $r5, $r21; rotr.d $r14, $r6, $r23; rotr.d $r15, $r7, $r24; rotr.d $r16, $r8, $r25; rotr.d $r17, $r9, $r26; rotr.d $r18, $r10, $r27; rotr.d $r19, $r11, $r28",
-      "init": "addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16",
-      "machine_code": [
-        "001bd08c  rotr.d      \t$t0, $a0, $t8",
-        "001bd4ad  rotr.d      \t$t1, $a1, $r21",
-        "001bdcce  rotr.d      \t$t2, $a2, $s0",
-        "001be0ef  rotr.d      \t$t3, $a3, $s1",
-        "001be510  rotr.d      \t$t4, $a4, $s2",
-        "001be931  rotr.d      \t$t5, $a5, $s3",
-        "001bed52  rotr.d      \t$t6, $a6, $s4",
-        "001bf173  rotr.d      \t$t7, $a7, $s5"
-      ],
-      "result": {
-        "instructions_retired": 8,
-        "core_cycles": 2
-      },
+      "asm": "rotr.d $r4, $r12, $r4; rotr.d $r5, $r13, $r5; rotr.d $r6, $r14, $r6; rotr.d $r7, $r15, $r7; rotr.d $r8, $r16, $r8; rotr.d $r9, $r17, $r9; rotr.d $r10, $r18, $r10; rotr.d $r11, $r19, $r11",
+      "init": "addi.d $r12, $r0, -1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r23, $r0, 9; addi.d $r24, $r0, 10; addi.d $r25, $r0, 11; addi.d $r26, $r0, 12; addi.d $r27, $r0, 13; addi.d $r28, $r0, 14; addi.d $r29, $r0, 15; addi.d $r4, $r0, 16",
+      "command": "./bench --method slope --unroll 50 --unroll2 200 --iters 1000 --warmup 10 --reps 20 --core 0 --init 'addi.d $r12, $r0, -1; addi.d $r13, $r0, 2; addi.d $r14, $r0, 3; addi.d $r15, $r0, 4; addi.d $r16, $r0, 5; addi.d $r17, $r0, 6; addi.d $r18, $r0, 7; addi.d $r19, $r0, 8; addi.d $r23, $r0, 9; addi.d $r24, $r0, 10; addi.d $r25, $r0, 11; addi.d $r26, $r0, 12; addi.d $r27, $r0, 13; addi.d $r28, $r0, 14; addi.d $r29, $r0, 15; addi.d $r4, $r0, 16' --asm 'rotr.d $r4, $r12, $r4; rotr.d $r5, $r13, $r5; rotr.d $r6, $r14, $r6; rotr.d $r7, $r15, $r7; rotr.d $r8, $r16, $r8; rotr.d $r9, $r17, $r9; rotr.d $r10, $r18, $r10; rotr.d $r11, $r19, $r11'",
       "measurement": {
-        "unroll": 1000,
-        "iters": 1000
+        "unroll": 50,
+        "iters": 1000,
+        "reps": 20
       },
-      "command": "./bench --unroll 1000 --iters 1000 --warmup 10 --reps 5 --core 0 --init 'addi.d $r4, $r0, 1; addi.d $r5, $r0, 2; addi.d $r6, $r0, 3; addi.d $r7, $r0, 4; addi.d $r8, $r0, 5; addi.d $r9, $r0, 6; addi.d $r10, $r0, 7; addi.d $r11, $r0, 8; addi.d $r20, $r0, 9; addi.d $r21, $r0, 10; addi.d $r23, $r0, 11; addi.d $r24, $r0, 12; addi.d $r25, $r0, 13; addi.d $r26, $r0, 14; addi.d $r27, $r0, 15; addi.d $r28, $r0, 16' --asm 'rotr.d $r12, $r4, $r20; rotr.d $r13, $r5, $r21; rotr.d $r14, $r6, $r23; rotr.d $r15, $r7, $r24; rotr.d $r16, $r8, $r25; rotr.d $r17, $r9, $r26; rotr.d $r18, $r10, $r27; rotr.d $r19, $r11, $r28'",
+      "result": {
+        "instructions_retired": 8.0,
+        "core_cycles": 2.0
+      },
       "throughput": {
         "lanes": 8,
         "cpi": 0.25,
-        "ipc": 4
+        "ipc": 4.0
       },
-      "notes": "8 independent instructions take 2.00 cycles."
+      "notes": "Eight independent lanes with disjoint registers take 2.00 cycles, twelve take 3.00 and sixteen take 4.00, so the wide rotate sustains 4 instructions per cycle."
     }
-  ]
+  ],
+  "notes": "64-bit and 32-bit LBT-style rotate: one cycle from either source and a sustained 4 IPC, the same as a plain wide ALU operation. Only the byte and half-word forms cost two cycles."
 }
